@@ -1,0 +1,49 @@
+<div *ngIf="isLoggedIn === false">
+	<div class="group-admin-wrap">
+		<div class="group-admin-header">
+			<figure><img src="./assets/images/convosight_logo.svg" alt="" /></figure>
+		</div>
+		<div class="group-admin-body">
+			<figure>
+				<img src="./assets/images/mobile-banner.png" alt="" />
+			</figure>
+			<h5>All-in-one toolkit to monetize your Facebook group</h5>
+			<h6>Manage your group and earn with brands on the #1 community monetization platform in the world.</h6>
+		</div>
+		<div class="group-admin-footer">
+			<p>Log in or sign up</p>
+			<button class="btn-facebook" (click)="signIn($event)" [disabled]="isLoading">
+				<span class="bt-spinner-center" *ngIf="isLoading; else fbLogo"></span>
+				<span class="btn-text">Continue with Facebook</span>
+			</button>
+		</div>
+	</div>
+	<ng-template #fbLogo>
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M10.0001 0.0415039C4.47724 0.0415039 0 4.51874 0 10.0416C0 14.9949 3.60522 19.0971 8.33225 19.8914V12.1278H5.91994V9.33405H8.33225V7.27401C8.33225 4.88377 9.79213 3.58123 11.9247 3.58123C12.9461 3.58123 13.8238 3.65734 14.0786 3.69086V6.18929L12.5995 6.19001C11.44 6.19001 11.2165 6.7409 11.2165 7.54957V9.33262H13.9832L13.6223 12.1264H11.2165V19.9582C16.1642 19.3561 20 15.1494 20 10.0387C20 4.51874 15.5228 0.0415039 10.0001 0.0415039Z"
+				fill="white"
+			></path>
+		</svg>
+	</ng-template>
+</div>
+
+<!-- Shimmers wrap-->
+<ng-container *ngIf="isLoggedIn === null || isLoggedIn === true">
+	<div class="group-admin-wrap">
+		<div class="group-admin-header">
+			<div class="loading-strip loading-strip-primary mt-2"></div>
+		</div>
+
+		<div class="group-admin-body">
+			<div class="loading-strip loading-strip-secondary"></div>
+			<div class="loading-strip loading-strip-primary mt-3"></div>
+			<div class="loading-strip mt-2"></div>
+		</div>
+
+		<div class="group-admin-footer">
+			<div class="loading-strip"></div>
+			<div class="loading-strip loading-strip-primary mt-2"></div>
+		</div>
+	</div>
+</ng-container>

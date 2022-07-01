@@ -1,0 +1,24 @@
+<ng-container *ngIf="chartObject; else loadingCommentsPerPostReport">
+	<div *ngIf="!chartObject.isEmpty; else emptyCommentsPerPostReport">
+		<div *ngIf="getChartOption() as chartOptions">
+			<highcharts-chart
+				[Highcharts]="Highcharts"
+				[options]="chartOptions"
+				style="width: 100%; display: block"
+			></highcharts-chart>
+		</div>
+	</div>
+	<ng-template #emptyCommentsPerPostReport>
+		<div class="no-data-wrapper">
+			<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+			<p class="primary-text">No data for selected time period</p>
+			<p class="secondary-text">Select another time period</p>
+		</div>
+	</ng-template>
+</ng-container>
+<ng-template #loadingCommentsPerPostReport>
+	<div class="loader-wrapper">
+		<div class="loader"></div>
+		<p class="loading-text">Loading data</p>
+	</div>
+</ng-template>

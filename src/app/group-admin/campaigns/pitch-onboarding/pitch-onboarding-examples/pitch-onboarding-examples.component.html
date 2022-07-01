@@ -1,0 +1,836 @@
+<div class="onboarding-head">
+	<button
+		class="back-button"
+		data-cs-id="b559d450-48d4-4fd9-8552-68d826643a4d"
+		data-cs-label="Prev page"
+		data-cs-source="page"
+		type="button"
+		(click)="recordButtonClick($event, group)"
+		[routerLink]="'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/'"
+	>
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M19.0005 11.0007H7.83047L12.7105 6.1207C13.1005 5.7307 13.1005 5.0907 12.7105 4.7007C12.3205 4.3107 11.6905 4.3107 11.3005 4.7007L4.71047 11.2907C4.32047 11.6807 4.32047 12.3107 4.71047 12.7007L11.3005 19.2907C11.6905 19.6807 12.3205 19.6807 12.7105 19.2907C13.1005 18.9007 13.1005 18.2707 12.7105 17.8807L7.83047 13.0007H19.0005C19.5505 13.0007 20.0005 12.5507 20.0005 12.0007C20.0005 11.4507 19.5505 11.0007 19.0005 11.0007Z"
+				fill="#707084"
+			/>
+		</svg>
+	</button>
+	<div *ngIf="profilePage" class="head-profile-data">
+		<div class="head-profile-image">
+			<img
+				[fbEntityId]="profilePage?.fbGroupId"
+				alt=""
+				class="banner-background"
+				src="{{ profilePage?.coverImageUrl }}"
+			/>
+		</div>
+		<div class="head-profile-description">
+			<h5 class="head-name-profile">
+				{{ profilePage?.name }}
+			</h5>
+			<span>{{ profilePage?.keyStats.totalMembers | shortNumber }} members </span>
+		</div>
+	</div>
+	<app-loading-shimmer *ngIf="!profilePage" [type]="4"></app-loading-shimmer>
+</div>
+
+<div class="pitch-examples-page">
+	<!-- <div>Wait...</div> -->
+	<div class="pitch-examples-frame" *ngIf="!isLoading">
+		<div class="pitch-examples-content">
+			<div class="pitch-examples-head">
+				<h1>See how one group can have 3 brand pitches for 3 different brands</h1>
+				<svg
+					class="line-separator"
+					width="78"
+					height="4"
+					viewBox="0 0 78 4"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M76.8643 3C74.5916 3 74.5916 1 72.4096 1C70.137 1 70.137 3 67.955 3C65.6824 3 65.6824 1 63.5004 0.999999C61.2278 0.999999 61.2278 3 59.0458 3C56.7732 3 56.7732 0.999999 54.5912 0.999999C52.4092 0.999999 52.4092 3 50.1366 3C47.8639 3 47.8639 0.999999 45.6819 0.999999C43.5 0.999999 43.5 3 41.2273 3C38.9547 3 38.9547 0.999998 36.7727 0.999998C34.5001 0.999998 34.5001 3 32.3181 3C30.0455 3 30.0455 0.999998 27.8635 0.999998C25.5909 0.999998 25.5909 3 23.4089 3C21.1362 3 21.1362 0.999998 18.9543 0.999997C16.6816 0.999997 16.6816 3 14.4996 3C12.227 3 12.227 0.999997 10.045 0.999997C7.77239 0.999997 7.77239 3 5.5904 3C3.40841 3 3.31778 0.999997 1.13579 0.999997"
+						stroke="#ADADB9"
+						stroke-miterlimit="10"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+				<h4 class="pitch-example-title">Select a brand category</h4>
+				<img src="assets/images/finger_down.png" alt="" class="brand-img" />
+				<div class="pitch-example-navigation">
+					<div class="container">
+						<div class="nav-link-wrap">
+							<ul class="list-unstyled">
+								<li
+									(click)="recordButtonClick($event, group)"
+									data-cs-id="28040947-7f90-4d6e-aaa5-639fb7b78877"
+									data-cs-label="First"
+									data-cs-source="page"
+								>
+									<a (click)="changeSection($event)" class="active" dataHref="pitch-nutrition">Nutrition brand</a>
+								</li>
+								<li
+									(click)="recordButtonClick($event, group)"
+									data-cs-id="1e807efb-3788-4e2c-b6c3-9d095eff02d0"
+									data-cs-label="Parenting brand"
+									data-cs-source="page"
+								>
+									<a (click)="changeSection($event)" dataHref="pitch-parenting">Parenting brand</a>
+								</li>
+								<li
+									(click)="recordButtonClick($event, group)"
+									data-cs-id="90a0792b-dd5a-4c08-b46e-06a73a6ecfad"
+									data-cs-label="Healthcare brand"
+									data-cs-source="page"
+								>
+									<a (click)="changeSection($event)" dataHref="pitch-healthcare">Healthcare brand</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<ng-container *ngIf="currentBrand === 'pitch-nutrition'">
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Overview</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									In the ‘About group’ section the group admin has mentioned how they ran campaigns for
+									<strong>nutrition brands</strong> previously.
+								</p>
+							</div>
+
+							<div class="overview-row">
+								<div class="overview-left">
+									<h6>About group</h6>
+									<div class="about-description" id="descriptionSection" [class.active]="showFullDescription">
+										We have a lot of discussions in the group about Nutrition for mothers and babies<br />
+										Mothers love to ask questions about their children's diet which would help their babies grow and
+										build more immunity<br />
+										They also love to share details about their diet for others mothers to benefit.<br />
+										We have worked with a lot of nutrition brands in the group like Pediasure, Horlicks, Danone and more
+									</div>
+									<button
+										*ngIf="false"
+										(click)="
+											showFullDescription = !showFullDescription;
+											scrollToTop();
+											recordButtonClick($event, null, null, null, groupProfilePage)
+										"
+										class="see-more-link"
+										data-cs-id="86819329-5ba7-4a7b-a581-92553e5b8a2b"
+										[attr.data-cs-label]="showFullDescription ? 'See Less' : 'See More'"
+										data-cs-source="page"
+									>
+										{{ showFullDescription ? 'See less' : 'See more' }}
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M15.2458 8.08748L14.0708 6.91248L10.2458 10.7291L6.42085 6.91248L5.24585 8.08747L10.2458 13.0875L15.2458 8.08748Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</div>
+								<div class="overview-right">
+									<ul class="list-unstyled">
+										<li>
+											<h6>Category</h6>
+											<div class="row-with-icon">
+												<img alt="" src="./assets/images/groupCategoryIcons/Parenting.png" />
+												<span>Parenting</span>
+											</div>
+										</li>
+										<li>
+											<h6>Location</h6>
+											<div class="row-with-icon">
+												<span class="country-row">
+													<span class="iti-flag in"></span>
+													<span>India</span>
+												</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12.5013 3.33268V9.16602H4.30964L3.81797 9.65768L3.33464 10.141V3.33268H12.5013ZM13.3346 1.66602H2.5013C2.04297 1.66602 1.66797 2.04102 1.66797 2.49935V14.166L5.0013 10.8327H13.3346C13.793 10.8327 14.168 10.4577 14.168 9.99935V2.49935C14.168 2.04102 13.793 1.66602 13.3346 1.66602ZM17.5013 4.99935H15.8346V12.4993H5.0013V14.166C5.0013 14.6243 5.3763 14.9993 5.83464 14.9993H15.0013L18.3346 18.3327V5.83268C18.3346 5.37435 17.9596 4.99935 17.5013 4.99935Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Popular topics</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>The admin has mentioned <strong>topics related to Nutrition</strong> here.</p>
+							</div>
+
+							<div class="topic-body">
+								<div>
+									<ul class="list-unstyled">
+										<li>#diet</li>
+										<li>#nutrition</li>
+										<li>#baby</li>
+										<li>#immunity</li>
+										<li>#grow</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M3.33464 14.3077V3.33268H16.668V8.33268H18.3346V3.33268C18.3346 2.41602 17.5846 1.66602 16.668 1.66602H3.33464C2.41797 1.66602 1.6763 2.41602 1.6763 3.33268L1.66797 18.3327L5.0013 14.9993H12.5013V13.3327H4.30964L3.33464 14.3077Z"
+									fill="#707084"
+								/>
+								<path
+									d="M18.7513 13.3327H16.918L18.3346 9.99935H14.168V14.9993H15.8346V19.166L18.7513 13.3327Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Featured conversations</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									The admin has <strong>uploaded conversations related to Nutrition</strong> here to impress the brand
+									who is also in Nutrition category.
+								</p>
+							</div>
+							<div class="profile-card-body">
+								<div class="featured-conversations-posts-wrap">
+									<div>
+										<div class="pills-wrap">
+											<ng-container *ngFor="let conv of featureNutritionConversations; let i = index">
+												<button
+													class="pill"
+													[class.active]="selectedPills === i"
+													data-target="#show-tag-modal"
+													data-toggle="modal"
+													data-cs-id="efd902f9-808f-45f2-b455-9929bb475069"
+													data-cs-label="Topic pills"
+													data-cs-source="page"
+													(click)="
+														selectConversationToDisplay(conv, i);
+														recordButtonClick($event, null, null, null, groupProfilePage)
+													"
+												>
+													{{ conv?.topicName }}
+												</button>
+											</ng-container>
+										</div>
+										<ul class="list-unstyled">
+											<li *ngFor="let convScreenShot of conversation?.screenShots; let i = index">
+												<img
+													[src]="convScreenShot?.screenShotUrl"
+													(click)="openImageGallery($event, i, conversation?.screenShots)"
+													data-cs-id="1cf39cc8-0917-4bef-9353-1a40c7f4763f"
+													data-cs-label="See screenshots"
+													data-cs-source="page"
+													alt=""
+													class="screenshot-img"
+												/>
+											</li>
+										</ul>
+
+										<button
+											class="convo-btn-primary convo-btn-normal screenshot-btn"
+											data-cs-id="4d1d0d14-79cc-4db7-8eda-4ffc4b4dce25"
+											data-cs-label="See screenshots"
+											data-cs-source="page"
+											(click)="openImageGallery($event, 0, conversation?.screenShots)"
+										>
+											<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8 0L9.53333 1.53333L7.60667 3.44667L8.55333 4.39333L10.4667 2.46667L12 4V0H8ZM0 4L1.53333 2.46667L3.44667 4.39333L4.39333 3.44667L2.46667 1.53333L4 0H0V4ZM4 12L2.46667 10.4667L4.39333 8.55333L3.44667 7.60667L1.53333 9.53333L0 8V12H4ZM12 8L10.4667 9.53333L8.55333 7.60667L7.60667 8.55333L9.53333 10.4667L8 12H12V8Z"
+													fill="white"
+												/>
+											</svg>
+											<span>See screenshots</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="currentBrand === 'pitch-parenting'">
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Overview</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									In the ‘About group’ section the group admin has mentioned how they ran campaigns for
+									<strong>parenting brands</strong> previously.
+								</p>
+							</div>
+
+							<div class="overview-row">
+								<div class="overview-left">
+									<h6>About group</h6>
+									<div class="about-description" id="descriptionSection" [class.active]="showFullDescription">
+										This group is all about Moms discussing tips and things that they follow to keep their children
+										happy and healthy.<br />
+										These conversations range from the right nutrition for the child to the right exercise for the child
+										to what kind of skin cream to use and a lot more.<br />
+										We have collaborated with a lot of parenting brands like Aveeno, Pediasure, Horlicks, Danone and
+										more
+									</div>
+									<button
+										*ngIf="!hideSeeMoreBtn"
+										(click)="
+											showFullDescription = !showFullDescription;
+											scrollToTop();
+											recordButtonClick($event, null, null, null, groupProfilePage)
+										"
+										class="see-more-link"
+										data-cs-id="86819329-5ba7-4a7b-a581-92553e5b8a2b"
+										[attr.data-cs-label]="showFullDescription ? 'See Less' : 'See More'"
+										data-cs-source="page"
+									>
+										{{ showFullDescription ? 'See less' : 'See more' }}
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M15.2458 8.08748L14.0708 6.91248L10.2458 10.7291L6.42085 6.91248L5.24585 8.08747L10.2458 13.0875L15.2458 8.08748Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</div>
+								<div class="overview-right">
+									<ul class="list-unstyled">
+										<li>
+											<h6>Category</h6>
+											<div class="row-with-icon">
+												<img alt="" src="./assets/images/groupCategoryIcons/Parenting.png" />
+												<span>Parenting</span>
+											</div>
+										</li>
+										<li>
+											<h6>Location</h6>
+											<div class="row-with-icon">
+												<span class="country-row">
+													<span class="iti-flag in"></span>
+													<span>India</span>
+												</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12.5013 3.33268V9.16602H4.30964L3.81797 9.65768L3.33464 10.141V3.33268H12.5013ZM13.3346 1.66602H2.5013C2.04297 1.66602 1.66797 2.04102 1.66797 2.49935V14.166L5.0013 10.8327H13.3346C13.793 10.8327 14.168 10.4577 14.168 9.99935V2.49935C14.168 2.04102 13.793 1.66602 13.3346 1.66602ZM17.5013 4.99935H15.8346V12.4993H5.0013V14.166C5.0013 14.6243 5.3763 14.9993 5.83464 14.9993H15.0013L18.3346 18.3327V5.83268C18.3346 5.37435 17.9596 4.99935 17.5013 4.99935Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Popular topics</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>The admin has mentioned <strong>topics related to Parenting category</strong> here.</p>
+							</div>
+
+							<div class="topic-body">
+								<div>
+									<ul class="list-unstyled">
+										<li>#diet</li>
+										<li>#nutrition</li>
+										<li>#Skin care</li>
+										<li>#baby</li>
+										<li>#immunity</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M3.33464 14.3077V3.33268H16.668V8.33268H18.3346V3.33268C18.3346 2.41602 17.5846 1.66602 16.668 1.66602H3.33464C2.41797 1.66602 1.6763 2.41602 1.6763 3.33268L1.66797 18.3327L5.0013 14.9993H12.5013V13.3327H4.30964L3.33464 14.3077Z"
+									fill="#707084"
+								/>
+								<path
+									d="M18.7513 13.3327H16.918L18.3346 9.99935H14.168V14.9993H15.8346V19.166L18.7513 13.3327Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Featured conversations</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									The admin has <strong>uploaded conversations related to Parenting</strong> here to impress the brand
+									who is also in Parenting category.
+								</p>
+							</div>
+							<div class="profile-card-body">
+								<div class="featured-conversations-posts-wrap">
+									<div>
+										<div class="pills-wrap">
+											<ng-container *ngFor="let conv of featureParentingConversations; let i = index">
+												<button
+													class="pill"
+													[class.active]="selectedPills === i"
+													data-target="#show-tag-modal"
+													data-toggle="modal"
+													data-cs-id="efd902f9-808f-45f2-b455-9929bb475069"
+													data-cs-label="Topic pills"
+													data-cs-source="page"
+													(click)="
+														selectConversationToDisplay(conv, i);
+														recordButtonClick($event, null, null, null, groupProfilePage)
+													"
+												>
+													{{ conv?.topicName }}
+												</button>
+											</ng-container>
+										</div>
+										<ul class="list-unstyled">
+											<li *ngFor="let convScreenShot of conversation?.screenShots; let i = index">
+												<img
+													[src]="convScreenShot?.screenShotUrl"
+													(click)="openImageGallery($event, i, conversation?.screenShots)"
+													data-cs-id="1cf39cc8-0917-4bef-9353-1a40c7f4763f"
+													data-cs-label="See screenshots"
+													data-cs-source="page"
+													alt=""
+													class="screenshot-img"
+												/>
+											</li>
+										</ul>
+
+										<button
+											class="convo-btn-primary convo-btn-normal screenshot-btn"
+											data-cs-id="4d1d0d14-79cc-4db7-8eda-4ffc4b4dce25"
+											data-cs-label="See screenshots"
+											data-cs-source="page"
+											(click)="openImageGallery($event, 0, conversation?.screenShots)"
+										>
+											<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8 0L9.53333 1.53333L7.60667 3.44667L8.55333 4.39333L10.4667 2.46667L12 4V0H8ZM0 4L1.53333 2.46667L3.44667 4.39333L4.39333 3.44667L2.46667 1.53333L4 0H0V4ZM4 12L2.46667 10.4667L4.39333 8.55333L3.44667 7.60667L1.53333 9.53333L0 8V12H4ZM12 8L10.4667 9.53333L8.55333 7.60667L7.60667 8.55333L9.53333 10.4667L8 12H12V8Z"
+													fill="white"
+												/>
+											</svg>
+											<span>See screenshots</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="currentBrand === 'pitch-healthcare'">
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Overview</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									In the ‘About group’ section the group admin has mentioned how they ran campaigns for
+									<strong>healthcare brands</strong> previously.
+								</p>
+							</div>
+
+							<div class="overview-row">
+								<div class="overview-left">
+									<h6>About group</h6>
+									<div class="about-description" id="descriptionSection" [class.active]="showFullDescription">
+										We as mothers care a lot about our baby's health and our own health. <br />
+										This is why we talk and discuss a lot about how can we improve our health with the right food,
+										exercise and habits.<br />
+										Mothers love to share tips and tricks they are using to get more healthy and make their babies even
+										more healthier.
+									</div>
+									<button
+										*ngIf="false"
+										(click)="
+											showFullDescription = !showFullDescription;
+											scrollToTop();
+											recordButtonClick($event, null, null, null, groupProfilePage)
+										"
+										class="see-more-link"
+										data-cs-id="86819329-5ba7-4a7b-a581-92553e5b8a2b"
+										[attr.data-cs-label]="showFullDescription ? 'See Less' : 'See More'"
+										data-cs-source="page"
+									>
+										{{ showFullDescription ? 'See less' : 'See more' }}
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M15.2458 8.08748L14.0708 6.91248L10.2458 10.7291L6.42085 6.91248L5.24585 8.08747L10.2458 13.0875L15.2458 8.08748Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</div>
+								<div class="overview-right">
+									<ul class="list-unstyled">
+										<li>
+											<h6>Category</h6>
+											<div class="row-with-icon">
+												<img alt="" src="./assets/images/groupCategoryIcons/Parenting.png" />
+												<span>Parenting</span>
+											</div>
+										</li>
+										<li>
+											<h6>Location</h6>
+											<div class="row-with-icon">
+												<span class="country-row">
+													<span class="iti-flag in"></span>
+													<span>India</span>
+												</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12.5013 3.33268V9.16602H4.30964L3.81797 9.65768L3.33464 10.141V3.33268H12.5013ZM13.3346 1.66602H2.5013C2.04297 1.66602 1.66797 2.04102 1.66797 2.49935V14.166L5.0013 10.8327H13.3346C13.793 10.8327 14.168 10.4577 14.168 9.99935V2.49935C14.168 2.04102 13.793 1.66602 13.3346 1.66602ZM17.5013 4.99935H15.8346V12.4993H5.0013V14.166C5.0013 14.6243 5.3763 14.9993 5.83464 14.9993H15.0013L18.3346 18.3327V5.83268C18.3346 5.37435 17.9596 4.99935 17.5013 4.99935Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Popular topics</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>The admin has mentioned <strong>topics related to Healthcare category</strong> here.</p>
+							</div>
+
+							<div class="topic-body">
+								<div>
+									<ul class="list-unstyled">
+										<li>#health tips</li>
+										<li>#baby</li>
+										<li>#mother</li>
+										<li>#excercise</li>
+										<li>#nutrition</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pitch-card">
+						<div class="pitch-card-head">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M3.33464 14.3077V3.33268H16.668V8.33268H18.3346V3.33268C18.3346 2.41602 17.5846 1.66602 16.668 1.66602H3.33464C2.41797 1.66602 1.6763 2.41602 1.6763 3.33268L1.66797 18.3327L5.0013 14.9993H12.5013V13.3327H4.30964L3.33464 14.3077Z"
+									fill="#707084"
+								/>
+								<path
+									d="M18.7513 13.3327H16.918L18.3346 9.99935H14.168V14.9993H15.8346V19.166L18.7513 13.3327Z"
+									fill="#707084"
+								/>
+							</svg>
+							<h5>Featured conversations</h5>
+						</div>
+						<div class="pitch-card-content">
+							<div class="pitch-card-warning">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+										fill="#E08E15"
+									/>
+								</svg>
+								<p>
+									The admin has <strong>uploaded conversations related to Healthcare</strong> here to impress the brand
+									who is also in Healthcare category.
+								</p>
+							</div>
+							<div class="profile-card-body">
+								<div class="featured-conversations-posts-wrap">
+									<div>
+										<div class="pills-wrap">
+											<ng-container *ngFor="let conv of featureHealthcareConversations; let i = index">
+												<button
+													class="pill"
+													[class.active]="selectedPills === i"
+													data-target="#show-tag-modal"
+													data-toggle="modal"
+													data-cs-id="efd902f9-808f-45f2-b455-9929bb475069"
+													data-cs-label="Topic pills"
+													data-cs-source="page"
+													(click)="
+														selectConversationToDisplay(conv, i);
+														recordButtonClick($event, null, null, null, groupProfilePage)
+													"
+												>
+													{{ conv?.topicName }}
+												</button>
+											</ng-container>
+										</div>
+										<ul class="list-unstyled">
+											<li *ngFor="let convScreenShot of conversation?.screenShots; let i = index">
+												<img
+													[src]="convScreenShot?.screenShotUrl"
+													(click)="openImageGallery($event, i, conversation?.screenShots)"
+													data-cs-id="1cf39cc8-0917-4bef-9353-1a40c7f4763f"
+													data-cs-label="See screenshots"
+													data-cs-source="page"
+													alt=""
+													class="screenshot-img"
+												/>
+											</li>
+										</ul>
+
+										<button
+											class="convo-btn-primary convo-btn-normal screenshot-btn"
+											data-cs-id="4d1d0d14-79cc-4db7-8eda-4ffc4b4dce25"
+											data-cs-label="See screenshots"
+											data-cs-source="page"
+											(click)="openImageGallery($event, 0, conversation?.screenShots)"
+										>
+											<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8 0L9.53333 1.53333L7.60667 3.44667L8.55333 4.39333L10.4667 2.46667L12 4V0H8ZM0 4L1.53333 2.46667L3.44667 4.39333L4.39333 3.44667L2.46667 1.53333L4 0H0V4ZM4 12L2.46667 10.4667L4.39333 8.55333L3.44667 7.60667L1.53333 9.53333L0 8V12H4ZM12 8L10.4667 9.53333L8.55333 7.60667L7.60667 8.55333L9.53333 10.4667L8 12H12V8Z"
+													fill="white"
+												/>
+											</svg>
+											<span>See screenshots</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+		<div class="pitch-examples-frame-footer" *ngIf="renderedOn === 'Desktop'">
+			<button
+				class="convo-btn-outline convo-btn-normal"
+				data-cs-id="67e838f6-dfea-4157-95d3-eca23e3d949f"
+				data-cs-label="Back"
+				data-cs-source="page"
+				(click)="recordButtonClick($event, group)"
+				[routerLink]="'/group-admin/campaigns/' + group?.id + '/profile-pages/' + projectId + '/pitch-onboarding/intro'"
+			>
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.5143 5.41078C10.799 5.12602 10.799 4.66434 10.5143 4.37958C10.2295 4.09483 9.76785 4.09483 9.48309 4.37958L4.37893 9.48375C4.09417 9.76851 4.09417 10.2302 4.37893 10.5149L9.48309 15.6191C9.76785 15.9039 10.2295 15.9039 10.5143 15.6191C10.799 15.3344 10.799 14.8727 10.5143 14.5879L6.65488 10.7285H15.1029C15.5056 10.7285 15.832 10.4021 15.832 9.99934C15.832 9.59664 15.5056 9.27018 15.1029 9.27018H6.65489L10.5143 5.41078Z"
+						fill="#3654FF"
+					/>
+				</svg>
+				<span>Back</span>
+			</button>
+			<button
+				(click)="openCreatePitchModal(); recordButtonClick($event, group)"
+				class="convo-btn-primary convo-btn-normal"
+				data-cs-id="8555b30f-084e-43d4-a245-2aef29993087"
+				data-target="#duplicateProfilePageModal"
+				data-cs-label="Create brand pitch"
+				data-cs-source="page"
+			>
+				<span>Create brand pitch</span>
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						opacity="0.95"
+						d="M9.48571 5.41078C9.20095 5.12602 9.20095 4.66434 9.48571 4.37958C9.77047 4.09483 10.2322 4.09483 10.5169 4.37958L15.6211 9.48375C15.9058 9.76851 15.9058 10.2302 15.6211 10.5149L10.5169 15.6191C10.2322 15.9039 9.77047 15.9039 9.48571 15.6191C9.20095 15.3344 9.20095 14.8727 9.48571 14.5879L13.3451 10.7285H4.89714C4.49443 10.7285 4.16797 10.4021 4.16797 9.99934C4.16797 9.59664 4.49443 9.27018 4.89714 9.27018H13.3451L9.48571 5.41078Z"
+						fill="white"
+					/>
+				</svg>
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="pitch-examples-frame-footer" *ngIf="renderedOn === 'Mobile'">
+	<button
+		class="convo-btn-outline convo-btn-normal"
+		data-cs-id="67e838f6-dfea-4157-95d3-eca23e3d949f"
+		data-cs-label="Back"
+		data-cs-source="page"
+		(click)="recordButtonClick($event, group)"
+		[routerLink]="'/group-admin/campaigns/' + group?.id + '/profile-pages/' + projectId + '/pitch-onboarding/intro'"
+	>
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M10.5143 5.41078C10.799 5.12602 10.799 4.66434 10.5143 4.37958C10.2295 4.09483 9.76785 4.09483 9.48309 4.37958L4.37893 9.48375C4.09417 9.76851 4.09417 10.2302 4.37893 10.5149L9.48309 15.6191C9.76785 15.9039 10.2295 15.9039 10.5143 15.6191C10.799 15.3344 10.799 14.8727 10.5143 14.5879L6.65488 10.7285H15.1029C15.5056 10.7285 15.832 10.4021 15.832 9.99934C15.832 9.59664 15.5056 9.27018 15.1029 9.27018H6.65489L10.5143 5.41078Z"
+				fill="#3654FF"
+			/>
+		</svg>
+		<span>Back</span>
+	</button>
+	<button
+		(click)="openCreatePitchModal(); recordButtonClick($event, group)"
+		class="convo-btn-primary convo-btn-normal"
+		data-cs-id="8555b30f-084e-43d4-a245-2aef29993087"
+		data-target="#duplicateProfilePageModal"
+		data-cs-label="Create brand pitch"
+		data-cs-source="page"
+	>
+		<span>Create brand pitch</span>
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				opacity="0.95"
+				d="M9.48571 5.41078C9.20095 5.12602 9.20095 4.66434 9.48571 4.37958C9.77047 4.09483 10.2322 4.09483 10.5169 4.37958L15.6211 9.48375C15.9058 9.76851 15.9058 10.2302 15.6211 10.5149L10.5169 15.6191C10.2322 15.9039 9.77047 15.9039 9.48571 15.6191C9.20095 15.3344 9.20095 14.8727 9.48571 14.5879L13.3451 10.7285H4.89714C4.49443 10.7285 4.16797 10.4021 4.16797 9.99934C4.16797 9.59664 4.49443 9.27018 4.89714 9.27018H13.3451L9.48571 5.41078Z"
+				fill="white"
+			/>
+		</svg>
+	</button>
+</div>
+
+<div class="modal file-alert share-modal" *ngIf="selectedProfilePageForDuplication">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">New brand pitch</h5>
+				<button
+					#duplicateProfilePageModalCloseBtn
+					aria-label="Close"
+					(click)="
+						recordButtonClick($event, group, null, null, selectedProfilePageForDuplication);
+						isPageNameExist = false;
+						isPageLimitExceeded = false;
+						closeCreatePitchModal()
+					"
+					data-cs-id="eee8f785-49d0-423d-8975-1ff96c016abf"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="create-pitch-body">
+					<div class="input-wrap">
+						<label>What do you want to call the new brand pitch? <sup>*</sup></label>
+						<input
+							#brandPitchNameInput
+							[ngModel]="setProfileDuplicateName(selectedProfilePageForDuplication.name)"
+							class="convo-input"
+							placeholder="E.g. Brand pitch for Dettol"
+							type="text"
+							id="brandPitchName"
+							(input)="validateProfileName('brandPitchName')"
+							[class.invalid]="isPageNameExist || isPageLimitExceeded"
+						/>
+						<span class="error-msg" *ngIf="isPageNameExist">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name already exists!
+						</span>
+						<span class="error-msg" *ngIf="isPageLimitExceeded">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name is limited to 75 characters!
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="
+						createBrandPitch(brandPitchNameInput.value, duplicateProfilePageModalCloseBtn);
+						recordButtonClick($event, group, null, null, selectedProfilePageForDuplication)
+					"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="0b7571b7-300a-4083-bd0b-f8e14977794b"
+					data-cs-label="Create brand pitch"
+					data-cs-source="page"
+				>
+					<span *ngIf="isUpdateRequestInProgress" class="btn-spinner-white"></span>
+					{{ isUpdateRequestInProgress ? 'Creating...' : 'Create brand pitch' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,293 @@
+<div *ngIf="!loadingData" class="main-campaign-wrap">
+	<ng-container>
+		<div class="campaigns-component-wrapper">
+			<div class="campaigns-header">
+				<div class="campaigns-header-inner">
+					<figure><img alt="" src="assets/images/hello-emoji-icon.svg" /></figure>
+					<div>
+						<h5 data-test-id="campaigns-heading">Hello {{ userName }}!</h5>
+						<h6 data-test-id="campaigns-subheading">
+							Welcome to the world of purpose led marketing, with the biggest brands globally
+						</h6>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="user?.hasAccessToReportGenerationFeature" class="campaigns-body">
+				<div class="container">
+					<div class="report-box" data-test-id="campaigns-report-box">
+						<div class="report-box-content">
+							<figure>
+								<img alt="" data-test-id="campaigns-report-img" src="assets/images/report-emoji.svg" />
+							</figure>
+							<div>
+								<h6 data-test-id="campaigns-report-heading">Reports <span class="badge">ALPHA</span></h6>
+								<p data-test-id="campaigns-report-subheading">
+									Create and share detailed reports for your self sourced campaigns with our new report generator
+								</p>
+							</div>
+						</div>
+						<button
+							(click)="navigateToCampaignReports(); recordButtonClick($event)"
+							class="convo-btn-normal convo-btn-primary btn-report"
+							data-cs-id="2706f598-deb0-4ace-8d3a-7a8e038ce494"
+							data-cs-label="View your reports"
+							data-cs-source="page"
+						>
+							View your reports
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="selectedScreen === 'HasCampaign'" class="campaigns-body">
+				<div class="all-campaigns-list">
+					<div *ngIf="campaignList" class="campaigns-wrap">
+						<h5 *ngIf="campaignList.length > 0" class="content-title">📣 Your Convosight campaigns</h5>
+						<div *ngIf="campaignList.length > 0" class="campaign-report-wrap">
+							<div
+								(click)="showCampaignDetails(campaign, $event)"
+								*ngFor="let campaign of campaignList"
+								class="report-box detail-row"
+							>
+								<div class="report-box-left">
+									<h6>{{ campaign.campaignName }}</h6>
+									<ul class="list-unstyled">
+										<li *ngIf="campaign.groupTaskStatus" class="color-orange">
+											<img [src]="'./assets/images/' + statusToShow(campaign.groupTaskStatus)?.icon" alt="" />
+											<span [class]="statusToShow(campaign.groupTaskStatus)?.class" class="text-success">
+												{{ statusToShow(campaign.groupTaskStatus)?.status }}
+											</span>
+										</li>
+										<li>
+											<span> {{ campaign.groupName }} </span>
+										</li>
+										<li>
+											<img
+												*ngIf="
+													isCampaignUpcoming(campaign.groupTaskStatus) ||
+													!isCampaignUpcomingOrAcceptedOrRejected(campaign.groupTaskStatus)
+												"
+												alt=""
+												src="./assets/images/timelapse-icon.svg"
+											/>
+											<span *ngIf="isCampaignUpcoming(campaign.groupTaskStatus)">Proceed to share content</span>
+											<span *ngIf="!isCampaignUpcomingOrAcceptedOrRejected(campaign.groupTaskStatus)">{{
+												(campaign.startDateAtUTC | date: 'dd MMM') + ' - ' + (campaign.endDateAtUTC | date: 'dd MMM')
+											}}</span>
+										</li>
+										<li *ngIf="!isCampaignUpcomingOrAcceptedOrRejected(campaign.groupTaskStatus)">
+											<span> 1 task scheduled </span>
+										</li>
+									</ul>
+								</div>
+								<div class="report-box-right">
+									<div class="box-action">
+										<!--										<button-->
+										<!--											class="convo-btn-normal convo-btn-primary"-->
+										<!--											(click)="showCampaignDetails(campaign, $event)"-->
+										<!--											*ngIf="isCampaignUpcoming(campaign.groupTaskStatus) && !campaign.isAcceptedByCommunityAdmin"-->
+										<!--										>-->
+										<!--											Proceed to Accept-->
+										<!--										</button>-->
+										<button
+											(click)="showCampaignDetails(campaign, $event)"
+											[attr.data-test-id]="campaign.campaignName + '-action-btn'"
+											class="action-icon-btn"
+										>
+											<img alt="" src="assets/images/right-arrow.svg" />
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div *ngIf="campaignList.length === 0" class="empty-state">
+							<figure><img alt="" src="./assets/images/star-emoji-icon.svg" /></figure>
+							<h6>All your new & active campaigns assigned by Convosight will appear here</h6>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Persona Survey starts here -->
+		<ng-container *ngIf="showPersonaSurvey">
+			<app-persona-survey (closePersonaSurvey)="this.showPersonaSurvey = false"></app-persona-survey>
+		</ng-container>
+		<!-- Persona Survey ends here -->
+
+		<!-- New Design -->
+
+		<div *ngIf="!isCampaignsLoading" class="container">
+			<div class="unlock-campaigns-container">
+				<div *ngIf="selectedScreen === 'LessThan2000Mem'" class="shadow-box mt-4">
+					<h1>Unlock campaigns when you have more than 2000 members in your Facebook group</h1>
+					<div class="progress-slider">
+						<div [style.width]="(headerService.highestMemberInGroup * 100) / 2000 + '%'" class="progress-completed">
+							<div class="completed-tooltip">
+								<svg fill="none" height="32" viewBox="0 0 54 32" width="54" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M20.3465 25.6134L20.2082 25.5H20.0294H4C2.06698 25.5 0.5 23.933 0.5 22V4C0.5 2.067 2.06698 0.5 4 0.5H50C51.933 0.5 53.5 2.067 53.5 4V22C53.5 23.933 51.933 25.5 50 25.5H33.9706H33.7918L33.6535 25.6134L28.0971 30.1697L28.0781 30.1853L28.0606 30.2028C27.4749 30.7886 26.5251 30.7886 25.9394 30.2028L25.9219 30.1853L25.9029 30.1697L20.3465 25.6134Z"
+										fill="white"
+										stroke="#79DABD"
+									/>
+								</svg>
+								<div class="tooltip-text">{{ headerService.highestMemberInGroup }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="unlock-counts">
+						{{ 2000 - headerService.highestMemberInGroup }}
+						more to unlock
+					</div>
+				</div>
+				<!-- Shadow Box End -->
+				<div *ngIf="selectedScreen === 'MoreThan2000Mem'" class="shadow-box mt-4">
+					<div class="box-inner">
+						<div class="box-left">
+							<h3>Would you like to see how you can make money by giving value to your community?</h3>
+							<h6>
+								Setup a call with our experts to understand how can you do Purpose led brand campaigns in your community
+								!!
+							</h6>
+							<button
+								(click)="showTypeForm($event)"
+								[disabled]="talkToExpertClicked"
+								class="convo-btn-primary convo-btn-normal d-flex"
+								data-cs-id="8a1a6dde-690f-492f-9334-6e4419a05c42"
+								data-cs-label="Talk to our Experts"
+								data-cs-source="page"
+								id="typeFormModalBtn"
+							>
+								<span *ngIf="talkToExpertClicked" class="bt-spinner"></span>
+								<span>Talk to our Experts</span>
+							</button>
+						</div>
+						<div class="box-right">
+							<img alt="" src="../../../../../assets/images/fb-community.jpg" />
+						</div>
+					</div>
+				</div>
+				<!-- Shadow Box End -->
+
+				<div *ngIf="selectedScreen === 'ThankYou'" class="shadow-box mt-4">
+					<div class="after-form-submit">
+						<h2>Thank you for sharing your information with us. Our experts will get back to you soon</h2>
+						<p>In the meantime you can checkout our success stories below</p>
+						<div>👇</div>
+					</div>
+				</div>
+				<!-- Shadow Box End -->
+
+				<div *ngIf="selectedScreen !== 'HasCampaign'" class="blogs-sections-wrapper">
+					<h5>Community owners love working with us 🙂</h5>
+					<h6>Checkout our success stories</h6>
+
+					<div class="blog-row">
+						<div class="blog-row-inner">
+							<ul class="list-unstyled">
+								<li>
+									<a
+										(click)="recordButtonClick($event)"
+										data-cs-id="dda20d2a-c78f-405f-aac3-f3a2da879c3c"
+										data-cs-label="This Lecturer Turned Community Entrepreneur Has Made Parenting Smooth For Over 36,000 Mums!"
+										data-cs-source="page"
+										href="https://www.convosight.com/blogs/success-story-of-akansha-bansal/"
+										rel="noopener"
+										target="_blank"
+									>
+										<div>
+											<figure><img alt="" src="../../../../../assets/images/blog-1.jpg" /></figure>
+											<h3>
+												This Lecturer Turned Community Entrepreneur Has Made Parenting Smooth For Over 36,000 Mums!
+											</h3>
+											<div>
+												<small>by <strong>Simran Grover</strong></small>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a
+										(click)="recordButtonClick($event)"
+										data-cs-id="54d1da8a-c283-4077-9917-abc8dcd0165f"
+										data-cs-label="Visual Artist to Community Entrepreneur: Meet The Man Who Has Built 12 Tamil Communities Of Over 1.4 Million Members"
+										data-cs-source="page"
+										href="https://www.convosight.com/blogs/success-story-of-facebook-group-owner-praveen-ganesh/"
+										rel="noopener"
+										target="_blank"
+									>
+										<div>
+											<figure><img alt="" src="../../../../../assets/images/blog-2.jpg" /></figure>
+											<h3>
+												Visual Artist to Community Entrepreneur: Meet The Man Who Has Built 12 Tamil Communities Of Over
+												1.4 Million Members
+											</h3>
+											<div>
+												<small>by <strong>Simran Grover</strong></small>
+											</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a
+										(click)="recordButtonClick($event)"
+										data-cs-id="2685700e-c914-49c3-85c1-bfb4be4fe8dd"
+										data-cs-label="The Top Metrics I Use To Understand The Health Of My Facebook Group"
+										data-cs-source="page"
+										href="https://www.convosight.com/blogs/top-metrics-use-to-understand-the-health-of-facebook-group/"
+										rel="noopener"
+										target="_blank"
+									>
+										<div>
+											<figure><img alt="" src="../../../../../assets/images/blog-3.jpg" /></figure>
+											<h3>The Top Metrics I Use To Understand The Health Of My Facebook Group</h3>
+											<div>
+												<small>by <strong>Tamanna Dhamija</strong></small>
+											</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="text-center">
+							<a
+								(click)="recordButtonClick($event)"
+								class="read-more-btn"
+								data-cs-id="0e8da3e6-44b3-4255-b7b9-8335fb793eed"
+								data-cs-label="See more"
+								data-cs-source="page"
+								href="https://www.convosight.com/blogs/"
+								rel="noopener"
+								target="_blank"
+								>See more</a
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</div>
+
+<!-- Switch FB Account overlay start -->
+<ng-container *ngIf="showSwitchFBAccOverlay">
+	<app-switch-fb-account-overlay
+		[userNameFromQueryString]="userNameFromQueryString"
+		[userNameFromDB]="user.username"
+		(closeSwitchFBOverlay)="closeSwitchFBOverlay($event)"
+	></app-switch-fb-account-overlay>
+</ng-container>
+
+<!-- Switch FB Account overlay start -->
+
+<!-- Loader screen start-->
+<div *ngIf="isCampaignsLoading || loadingData">
+	<div class="loading-wrap">
+		<div class="loading-strip first"></div>
+		<div class="loading-strip second"></div>
+	</div>
+</div>
+<!-- Loader screen end -->

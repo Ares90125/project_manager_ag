@@ -1,0 +1,45 @@
+{
+	"data": {
+		"getUserSelfMonetizationCampaigns": {
+			"__typename": "CampaignConnection",
+			"items": [
+				{
+					"__typename": "Campaign",
+					"campaignId": "fd20243a-dcd8-4fc1-b979-3f31ba9cae43",
+					"createdAtUTC": "2021-06-10T08:32:13.407Z",
+					"updatedAtUTC": "2021-07-13T11:28:03.042Z",
+					"campaignName": "Test  213",
+					"startDateAtUTC": "2021-01-03T18:30:00.000Z",
+					"endDateAtUTC": "2022-06-15T18:30:00.000Z",
+					"groupIds": [
+						"713ce969-bef9-46aa-a6d2-674be9c158bd",
+						"85478556-88c6-44c3-af49-9028fab66f74",
+						"be52327e-2310-4cd0-8b87-2231e8b3def9",
+						"c40d1bd5-4737-40b3-9e40-de78b64454df"
+					],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": [],
+					"campaignSummary": null,
+					"isReportAvailable": true
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "c136e2e0-0388-48b8-8303-67767ca24ac8",
+					"createdAtUTC": "2021-06-14T06:38:42.062Z",
+					"updatedAtUTC": "2021-06-14T06:38:42.062Z",
+					"campaignName": "Automation Test",
+					"startDateAtUTC": "2021-06-07T18:30:00.000Z",
+					"endDateAtUTC": "2021-06-29T18:30:00.000Z",
+					"groupIds": ["c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": ["Test"],
+					"campaignSummary": null,
+					"isReportAvailable": true
+				}
+			],
+			"nextToken": "eyJ2ZXJzaW9uIjoyLCJ0b2tlbiI6IkFRSUNBSGg5OUIvN3BjWU41eE96NDZJMW5GeGM4WUNGeG1acmFOMUpqajZLWkFDQ25BRjUvbTZPVndMVjd1eUMzTFdieHgwM0FBQUN6akNDQXNvR0NTcUdTSWIzRFFFSEJxQ0NBcnN3Z2dLM0FnRUFNSUlDc0FZSktvWklodmNOQVFjQk1CNEdDV0NHU0FGbEF3UUJMakFSQkF5c2ZrR0NTRS9TbEpZeDRmOENBUkNBZ2dLQkJiWE5XSTFVYWprblVDbS9wRXowNktDdTJyUXkvNThzNk0yOWJJN3ZUTVlKd0RGQlI5SDVoQVl0TFB1dERoYkY5M3luZWVveW5oOE5IU2xkbGxhSHY5dXlQOXVuNjl1a3JSdlNuZHphdVZhQkZvclJpeFQ0aXhad0J4czJGczNEYTBiQnNwWGs4ZG1jbVIxVVJ6REhwZHNndGJ3VVIwNW1IeFpGQWtJNUVhank4R0FBOXZxRUt5M2VZTS9ocVRCWi83ZE1Gd3ltaXVzUzVObzhFK0VZM3gyc05EMW5zdlo1YmI3YkpWMGhYc0c5NDE5bHZtdWZQOGJNN1R5SG4vbGtDMmhrazB0S3hhd2Y1NlAyYWxBSXhKa1U2UlRtNnJ5ZkFYejFwMHZWa3hwYm5wVzhqczhEcnNqZFphaVZuRzFUM0VuUm55TTFPK1RWT1Z3RVpqUlM3S1JDRERmRWR4QUJ4UmNGZ1JYU3NkU2xVNEJpMVl0VWF6TlpyMHFQakdBQVBkM3pubUdDdkF5NEs1MmlDcWhCSVk2cnhOc1Z4ZElBMzhVUVdObW93UElNakdCMVV5RkJYUWZ0UkVXRUxrbURSbGpUeHpNeEhqQm8xbXFaOWhwRUZGbU9KcCtFWUZ5ck5GbDMzdllyWERjdi9RSnhmcU92NTNhUmJvRGhHV3lBOE9sTmdkQm91ZGROYXNKb0phUHZkV1BNaWhGSk45Rzd5WW5UNXp2OHNVZXRJQW5IVVB4ZnRQUUs4c3VXZENBQktIZDg3UUNPVzA3VkFMZWdPMElaYldySXBGTlJMNzgxeFA5OFhBYm0xekErVGx4M1YwME5rMDB3dGVoR0I5ckhDQjdIWjc2dkV5THN3QkRZS1Z0ZnBiZy9LTDFYK1JFSGdscjFnNHZWTHlJRVBmYmZyVlNnT0o3N0J6MExocVhOaExsZzJxd2IydWEvTHExSEVHS0VRczY0Z1hJVnEvT3Zud1FFbzdZNUdjZDVqam5NWmp0OFkvcTUxTG00b2x6STlIVEtnZk05MjE5ZEpQOVRjUlVtYXFVbXpKcDlqL3Fic04zQmVSNXVnZDZ0TmNkbjBKZW12eVJubXFRd2R6OHlLQkdRNHlNemZ3bUpQOXpZcHM1S0ZOND0ifQ=="
+		}
+	}
+}

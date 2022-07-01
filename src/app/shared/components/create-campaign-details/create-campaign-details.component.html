@@ -1,0 +1,675 @@
+<div class="campaign-row-body" *ngIf="isFormLoaded">
+	<div [formGroup]="campaignDetailsForm" class="add-details-row">
+		<div class="row">
+			<div class="col-12">
+				<div class="form-group">
+					<label *ngIf="campaignCreatedOn === 'csadmin'"
+						>Name for community marketing solution (this will appear as the title of the campaign report)
+						<sup>*</sup></label
+					>
+					<label *ngIf="campaignCreatedOn !== 'csadmin'">Campaign name <sup>*</sup></label>
+					<input
+						[ngClass]="
+							campaignDetailsForm.get('cmcReportName').errors && isFormFirstTimeSubmitted ? 'error-control' : ''
+						"
+						class="form-control"
+						formControlName="cmcReportName"
+						maxlength="80"
+						placeholder="Campaign Name"
+						type="text"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div
+					[ngClass]="campaignDetailsForm.get('details').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+					class="form-group"
+				>
+					<label
+						>Campaign brief <sup>*</sup>
+						<span class="loading-image-wrapper">{{
+							isCampaignBriefImageLoading ? 'Uploading Image...' : ''
+						}}</span></label
+					>
+					<button class="convo-btn-primary convo-btn-normal mb-2" (click)="openCampaignBriefPage()">
+						Preview brief
+					</button>
+					<div class="invisible-input-cont">
+						<input #quillFile (change)="onSelectingImageInCampaignBrief($event)" type="file" />
+					</div>
+					<quill-editor
+						#meQuill
+						(onEditorCreated)="onCampaignBriefEditorCreation($event)"
+						[modules]="quillConfig"
+						formControlName="details"
+						placeholder="Add Campaign brief"
+					>
+					</quill-editor>
+				</div>
+			</div>
+		</div>
+		<div class="row phase-idea">
+			<div class="col-md-12">
+				<div
+					[ngClass]="campaignDetailsForm.get('phaseIdea').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+					class="form-group"
+				>
+					<label
+						>Phase Idea
+						<span class="loading-image-wrapper">{{ isPhaseIdeaImageLoading ? 'Uploading Image...' : '' }}</span></label
+					>
+					<div class="invisible-input-cont">
+						<input #phaseIdeaFile (change)="onSelectingImageInPhaseIdea($event)" type="file" />
+					</div>
+					<quill-editor
+						[maxLength]="5000"
+						#phaseIdeadQuill
+						(onEditorCreated)="onPhaseIdeaEditorCreation($event)"
+						[modules]="phaseIdeaQuillConfig"
+						formControlName="phaseIdea"
+						placeholder="Please provide the idea behind this phase"
+					>
+					</quill-editor>
+				</div>
+				<div *ngIf="contentPopupControl?.errors?.maxLengthError as error" class="quill-error">
+					Maximum {{ error.maxLength }} characters are allowed.
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="form-group">
+					<label>Typeform ID </label>
+					<input
+						[ngClass]="campaignDetailsForm.get('typeformId').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+						class="form-control"
+						formControlName="typeformId"
+						maxlength="8"
+						placeholder="Typeform ID"
+						type="text"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label>Campaign type <sup>*</sup></label>
+					<div class="kpi-wrapper">
+						<ng-container *ngFor="let cmcTypeItem of cmcTypeList; let i = index">
+							<div
+								[ngClass]="cmcType.length === 0 && isFormFirstTimeSubmitted ? 'error-control' : ''"
+								class="kpi-box cmc-type-box"
+							>
+								<mat-checkbox (change)="selectCmcType($event.checked, i)" [checked]="cmcTypeItem.isSelected">
+									{{ cmcTypeItem.value }}
+								</mat-checkbox>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row date-time-message">
+			<div class="col-md-3">
+				<div class="form-group">
+					<label><strong>Start</strong> date <sup>*</sup></label>
+					<div
+						[ngClass]="campaignDetailsForm.get('startDate').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+						class="datepicker-wrap"
+					>
+						<input
+							(click)="picker.open()"
+							[matDatepicker]="picker"
+							[min]="
+								!this.campaign?.startDateAtUTC
+									? minStartDate
+									: differenceInDates(this.campaign.startDateAtUTC, minStartDate) >= 0
+									? minStartDate
+									: this.campaign.startDateAtUTC
+							"
+							formControlName="startDate"
+							placeholder="Select start date"
+							readonly
+							type="text"
+						/>
+						<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="form-group">
+					<label><strong>End</strong> date <sup>*</sup></label>
+					<div
+						[ngClass]="campaignDetailsForm.get('endDate').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+						class="datepicker-wrap"
+					>
+						<input
+							(click)="picker2.open()"
+							[matDatepicker]="picker2"
+							[min]="minDate"
+							formControlName="endDate"
+							placeholder="Select end date"
+							readonly
+							type="text"
+						/>
+						<mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #picker2></mat-datepicker>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="invalidTaskPublishDate" class="error-message">
+				You have tasks that are outside of the campaign start and end date which is not allowed. Delete the task or edit
+				the task start date to fall in the campaign dates
+			</div>
+		</div>
+
+		<div class="row category-dropdowns">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label><strong>No of phases</strong></label>
+					<input
+						[ngClass]="campaignDetailsForm.get('totalPhase').errors ? 'error-control' : ''"
+						class="form-control"
+						formControlName="totalPhase"
+						maxlength="40"
+						placeholder="If you have a phase for this campaign, please add the number here"
+						type="text"
+					/>
+					<ng-container *ngIf="campaignDetailsForm?.get('totalPhase')?.errors; let error">
+						<span *ngIf="error.pattern" class="mt-2 phase-idea-error"
+							>Only numbers are allowed and minimum 1 number of Phase
+						</span>
+						<span *ngIf="error.max" class="mt-2 phase-idea-error">Maximum 100 phases are allowed </span>
+					</ng-container>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div [ngClass]="{disabled: campaignDetailsForm?.controls?.currentPhase?.disabled}" class="form-group">
+					<label><strong>Select phase number for current campaign </strong></label>
+					<app-custom-dropdown
+						[items]="currentPhaseOptions"
+						data-test-id="drop-down-current-campaign-phase"
+						defaultText="Please select the current phase number for this campaign"
+						formControlName="currentPhase"
+					></app-custom-dropdown>
+					<!-- <input
+            formControlName="currentPhase"
+            maxlength="40"
+            class="form-control"
+            type="text"
+            placeholder="Please select the current phase number for this campaign"
+          /> -->
+				</div>
+			</div>
+		</div>
+
+		<div class="divider"></div>
+		<div>
+			<mat-checkbox
+				(change)="selectProductPurchaseRequired($event.checked)"
+				[checked]="productPurchaseRequired.isSelected"
+			>
+				{{ productPurchaseRequired.value }}
+			</mat-checkbox>
+		</div>
+		<div *ngIf="productPurchaseRequired.isSelected" class="form-group">
+			<label><strong>Enter product information</strong></label>
+			<input class="form-control" formControlName="productPurchaseInfo" placeholder="Product info" type="text" />
+		</div>
+		<div class="divider"></div>
+		<div class="form-group">
+			<label><strong>Enter training link message</strong></label>
+			<input
+				class="form-control"
+				formControlName="trainingLinkMessage"
+				placeholder="Training link message"
+				type="text"
+			/>
+		</div>
+		<div class="divider"></div>
+
+		<div class="d-flex flex-row justify-content-between align-items-center w55">
+			<div>
+				<div>
+					<mat-checkbox (change)="selectAssetsTextRequired($event.checked)" [checked]="assetsTextRequired.isSelected">
+						{{ assetsTextRequired.value }}
+					</mat-checkbox>
+				</div>
+				<div>
+					<mat-checkbox (change)="selectAssetsVideoRequired($event.checked)" [checked]="assetsVideoRequired.isSelected">
+						{{ assetsVideoRequired.value }}
+					</mat-checkbox>
+				</div>
+			</div>
+			<div class="form-group">
+				<label><strong>Enter minimum amount of images assets</strong></label>
+				<input
+					[ngClass]="campaignDetailsForm.get('assetsImagesRequired').errors ? 'error-control' : ''"
+					class="form-control"
+					formControlName="assetsImagesRequired"
+					placeholder="Minimum amount 0 - 10"
+					type="text"
+				/>
+				<ng-container *ngIf="campaignDetailsForm?.get('assetsImagesRequired')?.errors; let error">
+					<span *ngIf="error.pattern" class="mt-2 input-error">Only numbers are allowed </span>
+					<span *ngIf="error.max" class="mt-2 input-error">Maximum 10 images are allowed </span>
+				</ng-container>
+			</div>
+		</div>
+		<div class="divider"></div>
+
+		<div class="row category-dropdowns">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label><strong>Category</strong><sup>*</sup></label>
+					<div
+						[ngClass]="
+							campaignDetailsForm.get('keywordCategory').errors && isFormFirstTimeSubmitted ? 'error-control' : ''
+						"
+						class="custom-dropdown"
+					>
+						<app-custom-dropdown
+							(selectionChange)="getSubCategories($event)"
+							[items]="categories"
+							defaultText="Select Category"
+							formControlName="keywordCategory"
+							data-test-id="drop-down-category-listening-campaign"
+						></app-custom-dropdown>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label><strong>Sub-category </strong> <sup>*</sup></label>
+					<div
+						*ngIf="selectedItems.length > 0"
+						[ngClass]="isFormFirstTimeSubmitted && selectedItems.length === 0 ? 'error-control' : ''"
+						class="custom-dropdown"
+					>
+						<app-custom-dropdown
+							(selectionChange)="getBrands($event, campaignDetailsForm.get('keywordCategory').value)"
+							[items]="subCategories"
+							[isDefaultSelection]="isDefaultSelection"
+							[isMultipleSelection]="'true'"
+							[selectedItems]="selectedItems"
+							[value]="selectedItems[0]"
+							defaultText="Select Sub Category"
+						></app-custom-dropdown>
+					</div>
+					<div
+						*ngIf="selectedItems.length === 0"
+						[ngClass]="isFormFirstTimeSubmitted && selectedItems.length === 0 ? 'error-control' : ''"
+						class="custom-dropdown"
+					>
+						<app-custom-dropdown
+							(selectionChange)="getBrands($event, campaignDetailsForm.get('keywordCategory').value)"
+							[items]="subCategories"
+							[isMultipleSelection]="'true'"
+							[selectedItems]="selectedItems"
+							[value]="''"
+							formControlName="keywordSubCategories"
+							defaultText="Select Sub Category"
+						></app-custom-dropdown>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label><strong>Brand</strong><sup>*</sup></label>
+					<div
+						[ngClass]="
+							campaignDetailsForm.get('keywordBrand').errors && isFormFirstTimeSubmitted ? 'error-control' : ''
+						"
+						class="custom-dropdown"
+					>
+						<app-custom-dropdown
+							[items]="subCategoryBrands"
+							defaultText="Select Brand"
+							formControlName="keywordBrand"
+						></app-custom-dropdown>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row category-dropdowns">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label><strong>Primary campaign objective</strong> <sup>*</sup></label>
+					<input
+						[ngClass]="
+							campaignDetailsForm.get('primaryObjective').errors && isFormFirstTimeSubmitted ? 'error-control' : ''
+						"
+						class="form-control"
+						formControlName="primaryObjective"
+						maxlength="40"
+						placeholder="Primary objective"
+						type="text"
+					/>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label><strong>Secondary campaign objective (optional)</strong></label>
+					<input
+						formControlName="secondaryObjective"
+						maxlength="40"
+						class="form-control"
+						type="text"
+						placeholder="If you have a secondary objective, please add here"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label><strong>Campaign KPIs</strong> <sup>*</sup></label>
+					<div class="kpi-wrapper">
+						<ng-container *ngFor="let kpiItem of kpiList; let i = index">
+							<div [ngClass]="isFormFirstTimeSubmitted && kpi.length === 0 ? 'error-control' : ''" class="kpi-box">
+								<mat-checkbox (change)="selectKPI($event.checked, i)" [checked]="kpiItem.isSelected">
+									{{ kpiItem.value }}
+								</mat-checkbox>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="pb-1">
+					<div class="add-keyword">
+						<small>Keywords to Track:</small>
+						<button
+							(click)="showKeywordIncludedEditor()"
+							class="convo-btn-normal convo-btn-tertiary"
+							data-target="#myModal"
+							data-toggle="modal"
+						>
+							<img alt="" src="assets/images/add_icon.svg" />
+							<span>Add keywords</span>
+						</button>
+					</div>
+					<div class="editable">
+						<div class="filter-tags-wrapper">
+							<ul class="list-unstyled">
+								<li *ngFor="let selectedReport of keywordsToTrack | slice: 0:7; let i = index">
+									<strong>{{ selectedReport }}</strong>
+								</li>
+								<li *ngIf="keywordsToTrack.length > 7" class="reportkeywords">
+									<strong> + {{ keywordsToTrack.length - 7 }} more </strong>
+
+									<ul class="more-keywords-wrap">
+										<li *ngFor="let selectedReport of keywordsToTrack | slice: 7">
+											<strong>{{ selectedReport }}</strong>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="pb-3">
+					<div class="add-keyword">
+						<small>Keywords to Exclude:</small>
+						<button
+							(click)="showKeywordIncludedEditor()"
+							class="convo-btn-normal convo-btn-tertiary"
+							data-target="#mykeywordExcludedModal"
+							data-toggle="modal"
+						>
+							<img alt="" src="assets/images/add_icon.svg" />
+							<span>Add keywords</span>
+						</button>
+					</div>
+					<div class="editable">
+						<div class="filter-tags-wrapper">
+							<ul class="list-unstyled">
+								<li *ngFor="let selectedReport of keywordsToExclude | slice: 0:7; let i = index">
+									<strong>{{ selectedReport }}</strong>
+								</li>
+								<li *ngIf="keywordsToExclude.length > 7" class="reportkeywords">
+									<strong> + {{ keywordsToTrack.length - 7 }} more </strong>
+
+									<ul class="more-keywords-wrap">
+										<li *ngFor="let selectedReport of keywordsToExclude | slice: 7">
+											<strong>{{ selectedReport }}</strong>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="details-more-info-wrap">
+			<h4>Setup Default Task details</h4>
+			<p>
+				Default details will be applied to any new communities added. If any changes are made to the existing Default
+				details, those will only be applicable to the communities added later.
+			</p>
+
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group">
+						<label>Title </label>
+						<input
+							class="form-control"
+							formControlName="taskTitle"
+							maxlength="40"
+							placeholder="Enter title"
+							type="text"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-6">
+					<div class="form-group">
+						<label>Campaign period</label>
+						<input
+							class="form-control"
+							formControlName="campaignPeriod"
+							maxlength="40"
+							placeholder="Enter campaign period"
+							type="text"
+						/>
+					</div>
+				</div>
+				<div class="col-6">
+					<div class="form-group">
+						<label><strong>Post type</strong></label>
+						<div class="custom-dropdown">
+							<app-custom-dropdown
+								[items]="postTypes"
+								defaultText="Select Post Type"
+								formControlName="defaultPostContentType"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-0">
+						<label>Posting date & time </label>
+						<div class="">
+							<div class="datepicker-wrap">
+								<textbox
+									(click)="openDateTimePicker = true"
+									[value]="campaign?.defaultTaskDate"
+									class="input"
+									placeholder="Date"
+									type="text"
+									>{{ (defaultTaskDate ? defaultTaskDate : campaignTaskDate) | date: 'dd MMM YYYY hh:mm a' }}</textbox
+								>
+								<button class="icon-btn">
+									<svg fill="currentColor" focusable="false" height="24px" viewBox="0 0 24 24" width="24px">
+										<path
+											d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+										></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-0">
+						<label>Posting timezone</label>
+						<div *ngIf="timeZoneList?.length > 0" class="custom-dropdown dropdown pills-dropdown timepicker-wrap">
+							<app-searchable-dropdown
+								(optionSelected)="optionSelected($event)"
+								*ngIf="showTimeZoneDropdown"
+								[mainDropDownOptions]="timeZoneList"
+								[placeholder]="timeZonePlaceholder"
+								[selectedValue]="timeZone"
+							></app-searchable-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-6">
+					<div class="form-group">
+						<label>Communication Channel</label>
+						<div class="custom-dropdown">
+							<app-custom-dropdown
+								[items]="communicationChannels"
+								defaultText="Select Communication Channel"
+								formControlName="communicationChannel"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="col-6">
+					<div class="form-group">
+						<label><strong>Currency</strong></label>
+						<div class="custom-dropdown">
+							<app-custom-dropdown
+								[items]="currencyTypes"
+								defaultText="Select Currency"
+								formControlName="currency"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade report-keywords-modal" id="myModal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Enter keywords to track.</h6>
+				<button (click)="enableScrolling()" class="close" data-dismiss="modal" type="button">&times;</button>
+			</div>
+			<div class="small textry p-3">
+				Enter keyword and their transformations in a new line (minimum 1 keyword is required)
+			</div>
+			<div class="modal-body mx-3 mb-3 p-0">
+				<div data-simplebar data-simplebar-auto-hide="false">
+					<div class="keywords-wrapper">
+						<div class="keywords-count">
+							<span *ngFor="let lineNum of lineNumbersForIncludedEditor">
+								{{ lineNum + 1 }}
+							</span>
+						</div>
+						<textarea
+							(ngModelChange)="keywordIncludedListEdited()"
+							[(ngModel)]="keywordIncludedForEditor"
+							id="KeywordEditor"
+							rows="{{ keywordIncludedList.length }}"
+							placeholder="Keyword 1_Transformation1a|Transformation1b"
+						></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="enableScrolling()" class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+				<button
+					(click)="saveKeywordsIncluded()"
+					[disabled]="!isKeywordListEdited"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="mykeywordExcludedModal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Enter keywords to exclude.</h6>
+				<button (click)="enableScrolling()" class="close" data-dismiss="modal" type="button">&times;</button>
+			</div>
+			<div class="small textry p-3">
+				Enter keyword and their transformations in a new line (minimum 1 keyword is required)
+			</div>
+			<div class="modal-body mx-3 mb-3 p-0">
+				<div data-simplebar data-simplebar-auto-hide="false">
+					<div class="keywords-wrapper">
+						<div class="keywords-count">
+							<span *ngFor="let lineNum of lineNumbersForExcludedEditor">
+								{{ lineNum + 1 }}
+							</span>
+						</div>
+						<textarea
+							(ngModelChange)="keywordExcludedListEdited()"
+							[(ngModel)]="keywordExcludedForEditor"
+							id="KeywordExcludedEditor"
+							placeholder="Keyword 1_Transformation1a|Transformation1b"
+							rows="{{ keywordExcludedList.length }}"
+						></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="enableScrolling()" class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+				<button
+					(click)="saveKeywordsExcluded()"
+					[disabled]="!isKeywordListEdited"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<app-custom-datetime-picker
+	(closeDateTimePicker)="openDateTimePicker = false"
+	(dateTimeSelection)="updateDateTime($event)"
+	*ngIf="openDateTimePicker"
+	[maxDate]="campaignDetailsForm?.get('endDate')?.value"
+	[minDate]="
+		!campaignDetailsForm?.get('startDate')?.value
+			? minStartDate
+			: differenceInDates(campaignDetailsForm?.get('startDate')?.value, minStartDate) >= 0
+			? campaignDetailsForm?.get('startDate')?.value
+			: minStartDate
+	"
+></app-custom-datetime-picker>

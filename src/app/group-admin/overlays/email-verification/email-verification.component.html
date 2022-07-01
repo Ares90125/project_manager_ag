@@ -1,0 +1,250 @@
+<div [hidden]="otpModalHide && !isEditEmailClicked" class="verify-email-modal">
+	<div class="overlay"></div>
+	<div [hidden]="sendEmail" class="verify-modal-content step-1">
+		<div class="verify-modal-header">
+			<button (click)="closeModal()" class="close-modal">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<g opacity="0.6">
+						<path
+							d="M11 1.00024L0.999925 11.0001"
+							stroke="#33334F"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+						/>
+						<path
+							d="M11 10.9998L0.999925 0.999941"
+							stroke="#33334F"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+						/>
+					</g>
+				</svg>
+			</button>
+			<figure><img alt="" src="assets/images/Mailing_Icon.svg" /></figure>
+			<h6>Hi {{ user.givenname }}!</h6>
+			<p class="m-0">Verify your email id</p>
+		</div>
+		<div class="verify-modal-body">
+			<mat-card class="custom-card">
+				<mat-card-content>
+					<form class="custom-form">
+						<mat-form-field class="w-100 mb-3">
+							<mat-label>Email</mat-label>
+							<input
+								#email
+								[(ngModel)]="emailToBeVerified"
+								[email]="true"
+								class="custom-input"
+								data-test-id="txt-box-email-verification"
+								matInput
+								name="email"
+								placeholder="Email"
+							/>
+						</mat-form-field>
+						<div *ngIf="emailAlreadyExists" class="warning-message">
+							<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="6" cy="6" fill="#FF9C28" r="6" />
+								<path
+									d="M6.00732 7.96564C5.60336 7.96564 5.26474 8.28692 5.26474 8.6702C5.26474 9.05348 5.60336 9.37476 6.00732 9.37476C6.39643 9.37476 6.74989 9.05348 6.73207 8.68711C6.74989 8.2841 6.41425 7.96564 6.00732 7.96564Z"
+									fill="white"
+								/>
+								<path
+									d="M5.82316 3.01965C5.46969 3.11547 5.24989 3.41984 5.24989 3.78902C5.26771 4.01166 5.28257 4.23712 5.30039 4.45976C5.35088 5.30805 5.40138 6.13943 5.45187 6.98772C5.46969 7.27517 5.70435 7.48372 6.00732 7.48372C6.31029 7.48372 6.54791 7.26108 6.56276 6.97081C6.56276 6.79608 6.56276 6.63544 6.58059 6.45789C6.61326 5.91397 6.6489 5.37005 6.68158 4.82613C6.6994 4.47385 6.73207 4.12157 6.74989 3.7693C6.74989 3.64248 6.73207 3.52975 6.68158 3.41702C6.53009 3.10138 6.17663 2.94074 5.82316 3.01965Z"
+									fill="white"
+								/>
+							</svg>
+							<span>{{ errorMessage }}</span>
+						</div>
+						<button
+							(click)="triggerEmailVerification(false); recordButtonClick($event)"
+							[disabled]="
+								emailToBeVerified === '' ||
+								emailToBeVerified === null ||
+								email.classList.contains('ng-invalid') ||
+								inProgress
+							"
+							class="convo-btn-primary convo-btn-normal"
+							data-cs-id="3621fe78-d9ac-41b1-9942-d7d3a9738b44"
+							data-cs-label="Continue"
+							data-cs-source="dialog"
+							data-test-id="btn-continue-email-verification"
+						>
+							Continue
+						</button>
+						<button
+							(click)="sendEmail = true; recordButtonClick($event)"
+							class="already-have-otp"
+							data-cs-id="d9910ebe-c4f7-47a9-a7e5-8fed069ed879"
+							data-cs-label="I already have an OTP"
+							data-cs-source="dialog"
+						>
+							I already have an OTP
+						</button>
+					</form>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
+
+	<div [hidden]="!sendEmail" class="verify-modal-content step-2 text-center">
+		<div class="verify-modal-header">
+			<button (click)="closeModal()" class="close-modal">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<g opacity="0.6">
+						<path
+							d="M11 1.00024L0.999925 11.0001"
+							stroke="#33334F"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+						/>
+						<path
+							d="M11 10.9998L0.999925 0.999941"
+							stroke="#33334F"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+						/>
+					</g>
+				</svg>
+			</button>
+			<h6 class="m-0">Verify Your Email Id</h6>
+		</div>
+		<div class="verify-modal-body pt-3 pb-4">
+			<p class="m-0">Please enter the OTP we have sent you on</p>
+			<div>
+				<strong>{{ emailToBeVerified.toLowerCase() }}</strong>
+				<button
+					(click)="sendEmail = false; recordButtonClick($event)"
+					class="edit-email"
+					data-cs-id="84be93cb-dd2e-4206-947c-886769a5cec3"
+					data-cs-label="edit"
+					data-cs-source="dialog"
+				>
+					edit
+				</button>
+			</div>
+
+			<div class="otp-input-wrap">
+				<div class="text-left"><small>Enter OTP</small></div>
+				<ul class="list-unstyled">
+					<li>
+						<input
+							(keyup)="changeInput($event, 1)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputOne"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+					<li>
+						<input
+							(keyup)="changeInput($event, 2)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputTwo"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+					<li>
+						<input
+							(keyup)="changeInput($event, 3)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputThree"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+					<li>
+						<input
+							(keyup)="changeInput($event, 4)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputFour"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+					<li>
+						<input
+							(keyup)="changeInput($event, 5)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputFive"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+					<li>
+						<input
+							(keyup)="changeInput($event, 6)"
+							(paste)="pasteOTP($event)"
+							[(ngModel)]="inputSix"
+							maxlength="1"
+							type="text"
+						/>
+					</li>
+				</ul>
+				<button
+					(click)="countdown(); recordButtonClick($event)"
+					*ngIf="!showTimer"
+					class="resend-otp"
+					data-cs-id="92637f7a-5155-4f51-bd2f-1aa32ee147e7"
+					data-cs-label="resend otp"
+					data-cs-source="dialog"
+				>
+					Resend OTP
+				</button>
+				<p *ngIf="showTimer">
+					Resend again in <span>{{ timeLeft }}</span> seconds
+				</p>
+			</div>
+
+			<div *ngIf="otpInvalid" class="warning-message">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<circle cx="6" cy="6" fill="#FF9C28" r="6" />
+					<path
+						d="M6.00732 7.96564C5.60336 7.96564 5.26474 8.28692 5.26474 8.6702C5.26474 9.05348 5.60336 9.37476 6.00732 9.37476C6.39643 9.37476 6.74989 9.05348 6.73207 8.68711C6.74989 8.2841 6.41425 7.96564 6.00732 7.96564Z"
+						fill="white"
+					/>
+					<path
+						d="M5.82316 3.01965C5.46969 3.11547 5.24989 3.41984 5.24989 3.78902C5.26771 4.01166 5.28257 4.23712 5.30039 4.45976C5.35088 5.30805 5.40138 6.13943 5.45187 6.98772C5.46969 7.27517 5.70435 7.48372 6.00732 7.48372C6.31029 7.48372 6.54791 7.26108 6.56276 6.97081C6.56276 6.79608 6.56276 6.63544 6.58059 6.45789C6.61326 5.91397 6.6489 5.37005 6.68158 4.82613C6.6994 4.47385 6.73207 4.12157 6.74989 3.7693C6.74989 3.64248 6.73207 3.52975 6.68158 3.41702C6.53009 3.10138 6.17663 2.94074 5.82316 3.01965Z"
+						fill="white"
+					/>
+				</svg>
+				<span>{{ errorMessage }}</span>
+			</div>
+
+			<button
+				(click)="sendOTP(); recordButtonClick($event)"
+				[disabled]="
+					inputOne === '' ||
+					inputTwo === '' ||
+					inputThree === '' ||
+					inputFour === '' ||
+					inputFive === '' ||
+					inputSix === '' ||
+					inProgress
+				"
+				class="convo-btn-primary convo-btn-normal mt-2"
+				data-cs-id="527e5a9f-678f-4281-baeb-1295669ae6c2"
+				data-cs-label="Continue"
+				data-cs-source="dialog"
+				data-test-id="btn-verify-email-verification"
+			>
+				Verify
+			</button>
+			<div class="text-center">
+				<button
+					(click)="verifyLater(); recordButtonClick($event)"
+					class="verify-later"
+					data-cs-id="2abbda18-4677-4f28-9253-8c5c441d8d3b"
+					data-cs-label="Verify Later"
+					data-cs-source="dialog"
+				>
+					Verify Later
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

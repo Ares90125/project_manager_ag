@@ -1,0 +1,711 @@
+<div class="container">
+	<!-- <a (click)="close()" class="link-go-back">
+		<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+			<path
+				clip-rule="evenodd"
+				d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+				fill-rule="evenodd"
+			/>
+		</svg>
+		Back
+	</a> -->
+	<div class="moderators-component">
+		<!-- No Moderators Found -->
+		<div *ngIf="memberDetails && memberDetails.length === 0 && !isLoading" class="no-results-wrapper">
+			<figure>
+				<img alt="" data-test-id="no-moderator-image" src="assets/images/empty_state_icon.svg" />
+			</figure>
+			<h5 class="primary-text" data-test-id="heading-no-moderator">You have not added any moderators yet</h5>
+			<p class="secondary-text" data-test-id="subheading-no-moderaor">Moderators can help you manage your groups.</p>
+			<p>
+				<button
+					(click)="createModeratorFormOne()"
+					class="new-moderator-btn convo-btn-primary convo-btn-normal"
+					data-target="#addModeratorStep1"
+					data-toggle="modal"
+					id="addmoderator"
+					data-test-id="button-add-moderator"
+				>
+					<img alt="" src="assets/images/add_icon.svg" /> Add new moderator
+				</button>
+			</p>
+			<div>
+				<a
+					class="moderator-permission-btn"
+					data-target="#moderatorPermissions"
+					data-toggle="modal"
+					href="javascript:"
+					data-test-id="link-see-moderator-permission"
+					>See moderators permissions
+				</a>
+			</div>
+		</div>
+
+		<!-- Add Moderator Step 1 -->
+		<div
+			aria-hidden="true"
+			aria-labelledby="addModeratorStep1Label"
+			class="modal moderator-modal"
+			data-backdrop="static"
+			id="addModeratorStep1"
+			role="dialog"
+			tabindex="-1"
+			data-test-id="add-moderator-detail-pop-up"
+		>
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<button
+							aria-label="Close"
+							class="close"
+							data-dismiss="modal"
+							type="button"
+							data-test-id="button-close-add-moderator"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+						<h5 class="modal-title" data-test-id="heading-add-new-moderator">Add new moderator</h5>
+						<div class="secondary-text" data-test-id="subheading-add-new-moderator-popup">
+							Enter the details of the moderator below
+						</div>
+						<mat-card class="custom-card">
+							<mat-card-content>
+								<form [formGroup]="moderatorFormOne" class="custom-form add-moderator-form">
+									<mat-form-field class="w-100">
+										<input
+											class="custom-input"
+											(keyup)="validateName($event.target.value); navigateToModeratorForm2($event)"
+											formControlName="name"
+											matInput
+											placeholder="Name*"
+											data-test-id="field-name-add-moderator-pop-up"
+										/>
+									</mat-form-field>
+									<mat-error *ngIf="moderatorFormOne.get('name').errors && moderatorFormOne.get('name').errors.invalid">
+										Name should be maximum 30 characters long</mat-error
+									>
+									<mat-form-field class="w-100">
+										<input
+											class="custom-input"
+											(keyup)="validateEmail($event.target.value); navigateToModeratorForm2($event)"
+											formControlName="email"
+											matInput
+											placeholder="Email*"
+											data-test-id="field-Email-add-moderator-pop-up"
+										/>
+									</mat-form-field>
+									<div class="info-message">Same as used in their Facebook account</div>
+									<mat-error
+										*ngIf="moderatorFormOne.get('email').errors && moderatorFormOne.get('email').errors.invalid"
+									>
+										Email already exists
+									</mat-error>
+
+									<div
+										[class.phoneError]="
+											moderatorFormOne.get('mobileNumber').errors !== null &&
+											moderatorFormOne.get('mobileNumber').value !== null
+										"
+										class="mobile-number-wrapper"
+									>
+										<ngx-intl-tel-input
+											(keyup)="navigateToModeratorForm2($event)"
+											[enableAutoCountrySelect]="false"
+											[enablePlaceholder]="false"
+											[formControl]="moderatorFormOne.controls['mobileNumber']"
+											[maxLength]="15"
+											[phoneValidation]="true"
+											[preferredCountries]="preferredCountries"
+											[searchCountryFlag]="true"
+											[selectFirstCountry]="false"
+											[selectedCountryISO]="CountryISO.India"
+											[separateDialCode]="separateDialCode"
+											class="w-100"
+											name="mobileNumber"
+											data-test-id="field-mobileNumber-add-moderator-pop-up"
+										>
+										</ngx-intl-tel-input>
+										<div class="placeholder">Mobile number*</div>
+									</div>
+
+									<div class="info-message">Same as used in their Facebook account</div>
+
+									<div class="bottom-wrapper">
+										<button
+											id="continueBtn"
+											(click)="addModerator($event)"
+											[disabled]="isSaving || !moderatorFormOne.valid"
+											data-cs-label="Send invite"
+											data-cs-source="page"
+											data-cs-id="8c77c380-30e7-411b-9f94-9c1c01805295"
+											class="convo-btn-primary custom-btn"
+											data-test-id="button-send-invite"
+										>
+											<span>Send invite</span>
+										</button>
+										<span data-dismiss="modal" hidden id="dismissstep1"></span>
+									</div>
+								</form>
+							</mat-card-content>
+						</mat-card>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Loading -->
+		<div *ngIf="isLoading">
+			<div class="moderators-wrapper">
+				<div class="moderators-header">
+					<div class="moderators-header-left">
+						<div class="loader-shimmer">
+							<div class="loading-strip secondary mb-2"></div>
+							<div class="loading-strip primary"></div>
+						</div>
+					</div>
+					<div class="moderators-header-right">
+						<div class="loader-shimmer"><div class="loading-strip primary"></div></div>
+					</div>
+				</div>
+				<div class="moderator-body loader-shimmer">
+					<div class="moderator-table">
+						<table aria-describedby="">
+							<thead>
+								<tr>
+									<th scope="col">
+										<div class="loading-strip primary"></div>
+									</th>
+									<th scope="col">
+										<div class="loading-strip secondary"></div>
+									</th>
+									<th scope="col">
+										<div class="loading-strip primary"></div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<div class="loading-strip primary"></div>
+									</td>
+									<td>
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td>
+										<div class="loading-strip primary"></div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="loading-strip primary"></div>
+									</td>
+									<td>
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td>
+										<div class="loading-strip primary"></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- All Moderators -->
+		<div class="moderators-wrapper" *ngIf="memberDetails && memberDetails.length > 0 && !isLoading">
+			<div class="page-headers">
+				<h1 data-test-id="heading-add-moderator">Add Moderators</h1>
+				<h6 data-test-id="subheading-add-moderator">Invite other admins and moderators of your group to Convosight</h6>
+			</div>
+			<div class="moderators-header">
+				<div class="moderators-header-left">
+					<h4 data-test-id="moderator-sub-heading-number">
+						All moderators
+						<span class="pill" *ngIf="memberDetails">{{ memberDetails.length }}</span>
+					</h4>
+					<div class="position-relative">
+						<a
+							class="small"
+							data-target="#moderatorPermissions"
+							data-toggle="modal"
+							href="javascript:"
+							(click)="tooltip.toggle()"
+							matTooltip="View moderator permissions"
+							matTooltipPosition="above"
+							#tooltip="matTooltip"
+							data-test-id="heading-moderator-permissions"
+							data-cs-parent-label="Tooltip"
+							data-cs-label="View moderator permissions"
+							data-cs-source="page"
+							(mouseenter)="tooltipHovered($event)"
+						>
+							What can moderators do with your groups?
+						</a>
+					</div>
+				</div>
+				<div class="moderators-header-right">
+					<div class="search-input-wrapper">
+						<input
+							placeholder="Search"
+							data-test-id="search-moderator-field"
+							type="text"
+							(input)="onSearchChange($event.target.value)"
+						/>
+					</div>
+					<button
+						(click)="createModeratorFormOne()"
+						class="new-moderator-btn convo-btn-primary convo-btn-normal"
+						data-target="#addModeratorStep1"
+						data-toggle="modal"
+						data-test-id="button-add-new-moderator"
+					>
+						<img alt="" id="addmoderator" src="assets/images/add_icon.svg" />
+						Add new moderator
+					</button>
+				</div>
+			</div>
+			<div *ngIf="memberDetails" class="moderator-body">
+				<div class="moderator-table">
+					<div class="moderator-table-for-mobile" *ngFor="let member of memberDetails">
+						<div class="mobile-moderator" *ngIf="!member.ishide">
+							<div class="moderator-name-wrapper">
+								<figure><img alt="" [src]="member.fbProfilePic" /></figure>
+								<div>
+									<h6 class="moderator-name">{{ member.fullname }}</h6>
+								</div>
+							</div>
+
+							<div class="moderator-invitation invited" *ngIf="member.isInvited">
+								Invited
+								<button
+									[hidden]="true"
+									class="re-invite"
+									[disabled]="member.resend"
+									(click)="sendInvite(member); tooltip.toggle()"
+									matTooltip="Send invite again"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="Sent invite again"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								></button>
+							</div>
+
+							<div class="moderator-invitation active" *ngIf="!member.isInvited">Active</div>
+
+							<div class="moderator-contact-info">
+								<ul class="list-unstyled">
+									<li *ngIf="member.email" class="email">{{ member.email }}</li>
+									<ng-container *ngIf="!member.isInvited; else showInvitedUser">
+										<li *ngIf="member?.mobileNumberMasked" class="phone">
+											+{{ member.mobileDialCode }} - {{ member?.mobileNumberMasked }}
+										</li>
+									</ng-container>
+									<ng-template #showInvitedUser>
+										<li *ngIf="member?.mobileNumber" class="phone">
+											{{ member?.mobileNumber }}
+										</li>
+									</ng-template>
+								</ul>
+							</div>
+
+							<div class="row-actions">
+								<a
+									aria-expanded="false"
+									aria-haspopup="true"
+									class="dropdown-dots-wrapper"
+									data-toggle="dropdown"
+									id="moderatorOptionsDropdown"
+								>
+									<span class="dropdown-dot"></span>
+									<span class="dropdown-dot"></span>
+									<span class="dropdown-dot"></span>
+								</a>
+								<div aria-labelledby="moderatorOptionsDropdown" class="dropdown-menu dropdown-menu-right">
+									<a class="dropdown-item" data-target="#addModeratorStep1" data-toggle="modal" hidden>
+										Edit details
+									</a>
+									<a
+										(click)="selectedMember = member"
+										class="dropdown-item"
+										data-target="#deleteModerator"
+										data-toggle="modal"
+									>
+										Remove
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<table aria-describedby="">
+						<thead>
+							<tr>
+								<th scope="col">
+									<span data-test-id="moderator-table-name-column">NAME</span>
+									<span (click)="sortModeratorList('fullname')" *ngIf="sortColumn.fullname">
+										<img alt="" class="sort-asc-icon" src="assets/images/asc-sort-icon.png" />
+									</span>
+									<span (click)="sortModeratorList('fullname')" *ngIf="!sortColumn.fullname">
+										<img alt="" class="sort-desc-icon" src="assets/images/desc-sort-icon.png" />
+									</span>
+								</th>
+								<th scope="col" data-test-id="moderator-table-status-column">STATUS</th>
+								<th scope="col">
+									<span data-test-id="moderator-table-contact-column">CONTACT</span>
+									<span (click)="sortModeratorList('email')" *ngIf="sortColumn.email">
+										<img alt="" class="sort-asc-icon" src="assets/images/asc-sort-icon.png" />
+									</span>
+									<span (click)="sortModeratorList('email')" *ngIf="!sortColumn.email">
+										<img alt="" class="sort-desc-icon" src="assets/images/desc-sort-icon.png" />
+									</span>
+								</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let member of memberDetails">
+								<td *ngIf="!member.ishide">
+									<div class="moderator-name-wrapper">
+										<figure>
+											<ng-container *ngIf="member.fbProfilePic; else defaultCoverImage">
+												<img alt="" [src]="member.fbProfilePic" />
+											</ng-container>
+											<ng-template #defaultCoverImage>
+												<img alt="" class="group-img" src="assets/images/default_user.png" />
+											</ng-template>
+										</figure>
+										<div>
+											<h6 class="moderator-name" data-test-id="moderator-name">{{ member.fullname }}</h6>
+										</div>
+									</div>
+								</td>
+								<td *ngIf="!member.ishide">
+									<div
+										class="moderator-invitation invited"
+										*ngIf="member.isInvited"
+										data-test-id="moderator-invitation-status-invited"
+									>
+										Invited
+										<button
+											[hidden]="true"
+											class="re-invite"
+											[disabled]="member.resend"
+											(click)="sendInvite(member); tooltip.toggle()"
+											matTooltip="Send invite again"
+											matTooltipPosition="above"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="Send invite again"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+										></button>
+									</div>
+									<div
+										class="moderator-invitation active"
+										*ngIf="!member.isInvited"
+										data-test-id="moderator-invitation-status"
+									>
+										Active
+									</div>
+								</td>
+								<td *ngIf="!member.ishide">
+									<div class="moderator-contact-info">
+										<ul class="list-unstyled">
+											<li *ngIf="member.email" class="email" data-test-id="moderator-email">
+												{{ member.email }}
+											</li>
+											<ng-container *ngIf="!member.isInvited; else showInvitedUser">
+												<li *ngIf="member?.mobileNumberMasked" class="phone">
+													+{{ member.mobileDialCode }} - {{ member?.mobileNumberMasked }}
+												</li>
+											</ng-container>
+											<ng-template #showInvitedUser>
+												<li data-test-id="moderator-phone" *ngIf="member?.mobileNumber" class="phone">
+													{{ member?.mobileNumber }}
+												</li>
+											</ng-template>
+										</ul>
+									</div>
+								</td>
+								<td *ngIf="!member.ishide" class="text-right">
+									<div class="row-actions">
+										<a
+											aria-expanded="false"
+											aria-haspopup="true"
+											class="dropdown-dots-wrapper"
+											data-toggle="dropdown"
+											id="moderatorOptionsDropdown"
+											data-test-id="edit-existing-moderator"
+										>
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+										</a>
+										<div aria-labelledby="moderatorOptionsDropdown" class="dropdown-menu dropdown-menu-right">
+											<a class="dropdown-item" data-target="#addModeratorStep1" data-toggle="modal" hidden>
+												Edit details
+											</a>
+											<a
+												(click)="selectedMember = member"
+												class="dropdown-item"
+												data-target="#deleteModerator"
+												data-toggle="modal"
+												data-test-id="remove-moderator-permission"
+												>Remove</a
+											>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- Moderator permissions Modal -->
+		<div
+			aria-hidden="true"
+			aria-labelledby="addModeratorStep1Label"
+			class="modal moderator-modal permissions-modal"
+			id="moderatorPermissions"
+			role="dialog"
+			tabindex="-1"
+			data-test-id="moderation-permission-pop-up"
+		>
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" data-test-id="moderator-permission-heading">
+							What can moderators do with your groups?
+						</h5>
+						<button
+							aria-label="Close"
+							class="close"
+							data-dismiss="modal"
+							type="button"
+							data-test-id="button-close-moderator-permission"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-0">
+						<div class="permissions-wrapper">
+							<div class="permissions-table" data-test-id="permission-table-mooderator">
+								<table aria-describedby="">
+									<thead>
+										<tr>
+											<th scope="col"><strong data-test-id="column-first-permission-table">Features</strong></th>
+											<th scope="col"><strong data-test-id="column-second-permission-table">Administrator</strong></th>
+											<th scope="col"><strong data-test-id="column-third-permission-table">Moderator</strong></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td data-test-id="see-insights-permission">See Group Insights</td>
+											<td>
+												<button data-test-id="see-insights-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="see-insights-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="see-trends-permission">See Conversation Trends</td>
+											<td>
+												<button data-test-id="see-trends-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="see-trends-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="see-posting-permission">See posting content recommendations</td>
+											<td>
+												<button data-test-id="see-posting-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="see-posting-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="edit-Urgent-permission">Edit Urgent Alerts</td>
+											<td>
+												<button data-test-id="edit-Urgent-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="edit-Urgent-permission-moderator-value" class="failed"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Urgent-permission">Act upon the Urgent Alerts</td>
+											<td>
+												<button data-test-id="Urgent-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Urgent-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Publish-permission">Publish</td>
+											<td>
+												<button data-test-id="Publish-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Publish-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="post-permission">Create a new post</td>
+											<td>
+												<button data-test-id="post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="post-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Schedule-permission">Schedule a new post</td>
+											<td>
+												<button data-test-id="Schedule-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Schedule-permission-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Edit-post-permission">Edit a scheduled post by Admin</td>
+											<td>
+												<button data-test-id="edit-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="edit-post-moderator-value" class="failed"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Instantly-post-permission">Instantly post to one or many groups</td>
+											<td>
+												<button data-test-id="Instantly-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Instantly-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Delete-post-permission">Delete a scheduled post by Admin</td>
+											<td>
+												<button data-test-id="Delete-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Delete-post-moderator-value" class="failed"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="See-post-permission">See posting time recommendations</td>
+											<td>
+												<button data-test-id="See-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="See-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="See-content-post-permission">See posting content recommendations</td>
+											<td>
+												<button data-test-id="See-content-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="See-content-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="See-suggested-post-permission">See suggested post</td>
+											<td>
+												<button data-test-id="See-suggested-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="See-suggested-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Schedule-suggested-post-permission">Schedule suggested post</td>
+											<td>
+												<button data-test-id="Schedule-suggested-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Schedule-suggested-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="Delete-Edit-post-permission">Edit / Delete / Publish a suggested post</td>
+											<td>
+												<button data-test-id="Delete-Edit-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="Delete-Edit-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+										<tr>
+											<td data-test-id="post-Analytics-post-permission">See post Analytics</td>
+											<td>
+												<button data-test-id="post-Analytics-post-permission-admin-value" class="success"></button>
+											</td>
+											<td>
+												<button data-test-id="post-Analytics-post-moderator-value" class="success"></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Delete Moderator modal -->
+		<div
+			aria-hidden="true"
+			aria-labelledby="deleteModerator"
+			class="modal delete-moderator fade"
+			id="deleteModerator"
+			role="dialog"
+			tabindex="-1"
+		>
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<h5 data-test-id="heading-remove-moderator-pop-up">Are you sure?</h5>
+						<p class="m-0" data-test-id="subHeading-remove-moderator-pop-up">
+							Deleting this moderator will result in that moderator losing moderator access to all your groups.
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button
+							data-test-id="button-cancel-remove-popup"
+							(click)="selectedMember = null"
+							class="btn btn-light"
+							data-dismiss="modal"
+							type="button"
+						>
+							Cancel
+						</button>
+						<button
+							data-test-id="button-remove-moderator-pop-up"
+							(click)="removeModerator(selectedMember)"
+							class="btn btn-danger"
+							data-dismiss="modal"
+							type="button"
+						>
+							Remove
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

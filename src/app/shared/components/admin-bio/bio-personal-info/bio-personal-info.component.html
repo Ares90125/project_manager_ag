@@ -1,0 +1,171 @@
+<div class="bio-card">
+	<div class="profile-box">
+		<div class="change-image-row">
+			<div class="change-image-row-left">
+				<div *ngIf="uploading" class="image-spinner">
+					<p class="spinner btn-spinner"></p>
+				</div>
+				<figure>
+					<img
+						[src]="
+							adminBio?.profilePictureUrl ? adminBio.profilePictureUrl : userProfilePic ? userProfilePic : previewImage
+						"
+						alt=""
+						(error)="showDefaultUserImage($event)"
+					/>
+				</figure>
+				<div>
+					<h5>{{ user?.givenname ?? adminBio.firstName }} {{ user?.familyname ?? adminBio.lastName }}</h5>
+					<h6>
+						<span class="country-row">
+							<span class="iti-flag {{ adminBio.country | lowercase }}"></span>
+							<span>{{ adminBio.countryFullName }}</span>
+						</span>
+					</h6>
+				</div>
+			</div>
+			<div class="change-image-row-right">
+				<input
+					(change)="fileUpload($event)"
+					*ngIf="!uploading"
+					title=" "
+					class="hide-input"
+					type="file"
+					id="profilePicture"
+					name="profilePicture"
+					accept=".jpg,.jpeg,.png"
+				/>
+				<button
+					class="convo-btn-normal convo-btn-bordered convo-btn-small"
+					data-cs-id="b83d4d94-05e4-4049-81da-7a72ef5680d2"
+					data-cs-label="Change Image"
+					data-cs-source="page"
+					(click)="recordButtonClick($event)"
+					*ngIf="!uploading"
+				>
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0)">
+							<path
+								d="M7.99996 2.66636V1.47303C7.99996 1.17303 7.63996 1.02636 7.43329 1.23969L5.56663 3.09969C5.43329 3.23303 5.43329 3.43969 5.56663 3.57303L7.42663 5.43303C7.63996 5.63969 7.99996 5.49303 7.99996 5.19303V3.99969C10.2066 3.99969 12 5.79303 12 7.99969C12 8.52636 11.9 9.0397 11.7066 9.49969C11.6066 9.7397 11.68 10.013 11.86 10.193C12.2 10.533 12.7733 10.413 12.9533 9.96636C13.2 9.35969 13.3333 8.69303 13.3333 7.99969C13.3333 5.05303 10.9466 2.66636 7.99996 2.66636ZM7.99996 11.9997C5.79329 11.9997 3.99996 10.2064 3.99996 7.99969C3.99996 7.47303 4.09996 6.95969 4.29329 6.49969C4.39329 6.2597 4.31996 5.98636 4.13996 5.80636C3.79996 5.46636 3.22663 5.58636 3.04663 6.03303C2.79996 6.6397 2.66663 7.30636 2.66663 7.99969C2.66663 10.9464 5.05329 13.333 7.99996 13.333V14.5264C7.99996 14.8264 8.35996 14.973 8.56663 14.7597L10.4266 12.8997C10.56 12.7664 10.56 12.5597 10.4266 12.4264L8.56663 10.5664C8.35996 10.3597 7.99996 10.5064 7.99996 10.8064V11.9997Z"
+								fill="#3654FF"
+							/>
+						</g>
+						<defs>
+							<clipPath id="clip0">
+								<rect width="16" height="16" fill="white" />
+							</clipPath>
+						</defs>
+					</svg>
+					<span>Change image</span>
+				</button>
+				<button
+					class="convo-btn-normal convo-btn-bordered convo-btn-small"
+					data-cs-id="b83d4d94-05e4-4049-8sPv-7a72ef5680d2"
+					data-cs-label="Cancel Upload"
+					data-cs-source="page"
+					(click)="cancelUpload(); recordButtonClick($event)"
+					*ngIf="uploading"
+				>
+					<span class="btn-spinner"></span>
+					<span>Cancel Upload</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="row-divider"></div>
+
+	<form [formGroup]="bioPersonalForm">
+		<div class="bio-row">
+			<div class="row">
+				<div class="col-md-6 col">
+					<div class="input-wrap">
+						<label>First name <sup>*</sup></label>
+						<input type="text" [value]="user?.givenname ?? adminBio.firstName" class="convo-input" disabled />
+					</div>
+				</div>
+				<div class="col-md-6 col">
+					<div class="input-wrap">
+						<label>Last name <sup>*</sup></label>
+						<input type="text" [value]="user?.familyname ?? adminBio.lastName" class="convo-input" disabled />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="input-wrap pb-0">
+						<label>Location <sup>*</sup></label>
+
+						<div class="custom-dropdown dropdown" ngxDropdown>
+							<button
+								class="btn-block dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+								type="button"
+								dropdown-toggle
+							>
+								<span class="country-row">
+									<span class="iti-flag {{ adminBio.country | lowercase }}"></span>
+									<span>{{ adminBio.countryFullName }}</span>
+								</span>
+							</button>
+							<div
+								class="dropdown-menu-wrapper dropdown-menu"
+								aria-labelledby="dropdownMenu"
+								aria-labelledby="dropdownMenuLink"
+								ngxDropdownMenu
+							>
+								<div class="dropdown-item" *ngFor="let country of countryList" (click)="selectedLocation(country)">
+									<span class="country-row">
+										<span class="iti-flag {{ country.isoCode | lowercase }}"></span>
+										<span>{{ country.name }}</span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-divider"></div>
+
+		<div class="bio-row pb-0">
+			<div class="input-wrap pb-0">
+				<h5><img src="./assets/images/bio-icon.png" alt="" /> About me</h5>
+				<h6>Write a brief description about yourself with regards to your Facebook groups.</h6>
+				<quill-editor
+					class="quill-editor"
+					[modules]="quillConfig"
+					placeholder="Write your bio here..."
+					name="bio"
+					formControlName="bio"
+					(onFocus)="onFocus($event)"
+					(onBlur)="onBlur($event)"
+				></quill-editor>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- Error Modal -->
+<ng-container *ngIf="fileSizeError">
+	<app-error-overlay (closeErrorOverlay)="closeErrorOverlay('fileSizeError')">
+		<h5 class="modal-title" title>File size too large</h5>
+		<p class="m-0" body>
+			That file is too large to upload. Please select a <strong>PNG</strong> or <strong>JPG</strong> file less than
+			<strong>300MB</strong>.
+		</p>
+	</app-error-overlay>
+</ng-container>
+
+<ng-container *ngIf="typeError">
+	<app-error-overlay (closeErrorOverlay)="closeErrorOverlay('typeError')">
+		<h5 class="modal-title" title>File type invalid</h5>
+		<p class="m-0" body>
+			That file is not a valid image file. Please select a <strong>PNG</strong> or <strong>JPG</strong> file less than
+			<strong>300MB</strong>.
+		</p>
+	</app-error-overlay>
+</ng-container>

@@ -1,0 +1,138 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+// Custom Modal
+.custom-modal-wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 10000;
+	.custom-modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background: rgba(0, 0, 0, 0.6);
+	}
+	.custom-modal-content {
+		.modal-header {
+			padding-left: 32px;
+			padding-right: 32px;
+			box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.3);
+			align-items: center;
+			@media (max-width: 767px) {
+				padding-left: 24px;
+				padding-right: 24px;
+			}
+			h5 {
+				font-weight: 700;
+				font-size: 20px;
+				@media (max-width: 767px) {
+					font-size: 16px;
+				}
+			}
+			.close {
+				outline: none;
+			}
+		}
+		.modal-body {
+			padding: 32px;
+			background: #fafafa;
+			@media (max-width: 767px) {
+				padding: 30px 20px;
+			}
+			.how-it-works-content {
+				color: #33334f;
+				padding-left: 36px;
+				padding-right: 36px;
+				position: relative;
+				font-size: 14px;
+				@media (max-width: 767px) {
+					padding-right: 0;
+				}
+				&:after {
+					content: '';
+					position: absolute;
+					left: 0;
+					top: 0;
+					height: 64%;
+					border-left: 0.5px dashed #7171a6;
+					@media (max-width: 767px) {
+						height: 60%;
+					}
+				}
+				.step-title {
+					font-size: 16px;
+					font-weight: 700;
+					position: relative;
+					&:after,
+					&:before {
+						content: '';
+						position: absolute;
+						z-index: 1;
+					}
+					&:after {
+						border: 1px solid #7171a6;
+						height: 16px;
+						width: 16px;
+						border-radius: 20px;
+						left: -43px;
+						top: 0;
+						background: #fff;
+					}
+					&:before {
+						height: 4px;
+						width: 4px;
+						border-radius: 10px;
+						background: #3654ff;
+						left: -37px;
+						z-index: 2;
+						top: 6px;
+					}
+				}
+				p {
+					margin-bottom: 25px;
+				}
+				.note {
+					color: #0450c0;
+				}
+			}
+		}
+		.modal-footer {
+			padding-right: 18px;
+			.add-group-btn {
+				background: #475993;
+				box-shadow: 0px 2px 6px rgba(71, 89, 147, 0.1);
+				border-radius: 3px;
+				min-width: 150px;
+				color: #fff;
+				padding: 5px 10px;
+				font-weight: 500;
+				font-size: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 42px;
+				@media (max-width: 767px) {
+					width: 100%;
+				}
+				.bt-spinner {
+					width: 22px;
+					min-width: 22px;
+					border: 2px solid #f6f4f8;
+					height: 22px;
+					display: flex;
+					margin-right: 10px;
+					animation: 1s spin linear infinite;
+					background-color: transparent;
+					border-top-color: $emp-blue-1;
+					-webkit-animation: 1s spin linear infinite;
+					@include border-radius(50%);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,20 @@
+<div class="spinner-wrapper" [class.spinner-wrapper-block]="iconLg ? true : false">
+	<div *ngIf="inline && !iconLg && heading" class="icon-sm">
+		<p>{{ heading }}</p>
+		<p *ngIf="value === 0">{{ subHeading }}</p>
+		<p *ngIf="value > 0">{{ value }}% complete</p>
+	</div>
+	<div class="progress-spinner-wrapper" [class.inline]="inline">
+		<mat-progress-spinner [strokeWidth]="3" [diameter]="diameter" class="zero" mode="determinate" value="100">
+		</mat-progress-spinner>
+		<mat-progress-spinner [strokeWidth]="3" [diameter]="diameter" mode="determinate" [value]="value">
+		</mat-progress-spinner>
+		<img *ngIf="iconSm" [src]="iconSm" class="img-icon-sm" alt="" />
+		<img *ngIf="iconLg" [src]="iconLg" class="img-icon-lg" alt="" />
+	</div>
+	<div *ngIf="iconLg && heading" class="icon-lg">
+		<p>{{ heading }}</p>
+		<p *ngIf="value === 0">{{ subHeading }}</p>
+		<p *ngIf="value > 0">{{ value }}% complete</p>
+	</div>
+</div>

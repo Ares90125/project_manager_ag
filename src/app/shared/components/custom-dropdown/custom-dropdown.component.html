@@ -1,0 +1,85 @@
+<div class="dropdown" ngxDropdown>
+	<button
+		[disabled]="isDisabled"
+		class="btn-block dropdown-toggle"
+		[class.option-selected]="isOptionSelected"
+		(click)="searchParam = ''; onSearch('')"
+		data-toggle="dropdown"
+		aria-haspopup="true"
+		aria-expanded="false"
+		type="button"
+		data-test-id="button-drop-down"
+		dropdown-toggle
+		[ngClass]="type === 'sort' ? 'sort-by-toggle' : ''"
+	>
+		<span *ngIf="value; else noItem" [ngClass]="isEditable ? 'dropdown-value-text' : ''">
+			<span *ngIf="!isMultipleSelection && type !== 'sort'" [class.is-currency-not-selected]="!isCurrency">
+				{{ value }}
+			</span>
+			<span *ngIf="!isMultipleSelection && type === 'sort'">
+				<span class="sort-by">Sort by (desc):</span> {{ value }}
+			</span>
+			<span *ngIf="isMultipleSelection" class="multiple-badges">
+				<span *ngIf="selectedItems.length === 0">{{ defaultText }}</span>
+				<span *ngIf="isCampaignReport"
+					><span class="badge" *ngFor="let item of selectedItems | slice: 0:3">{{ item?.name }}</span></span
+				>
+				<span *ngIf="selectedItems.length > 3 && isCampaignReport" class="badge color-badge">
+					{{ '+' + (selectedItems.length - 3) + ' more' }}
+				</span>
+				<span *ngIf="selectedItems.length > 0 && !isCampaignReport" class="badge">{{ selectedItems[0].name }}</span>
+				<span *ngIf="selectedItems.length > 1 && !isCampaignReport" class="badge color-badge">
+					{{ '+' + (selectedItems.length - 1) + ' more' }}
+				</span>
+			</span>
+		</span>
+		<ng-template #noItem>
+			<span *ngIf="type !== 'sort'">{{ defaultText }}</span>
+			<span *ngIf="type === 'sort'" class="sort-by-toggle">
+				<span class="sort-by">Sort by (desc):</span> {{ defaultText }}
+			</span>
+		</ng-template>
+	</button>
+
+	<div
+		*ngIf="!isMultipleSelection"
+		class="dropdown-menu-wrapper dropdown-menu"
+		aria-labelledby="dropdownMenu"
+		aria-labelledby="dropdownMenuLink"
+		ngxDropdownMenu
+		data-test-id="value-drop-down"
+	>
+		<div (click)="selectItem(item)" *ngFor="let item of items" class="dropdown-value dropdown-item">
+			{{ toReturnObject ? item?.name : item }}
+		</div>
+	</div>
+
+	<div
+		*ngIf="isMultipleSelection"
+		class="dropdown-menu-wrapper dropdown-menu"
+		aria-labelledby="dropdownMenu"
+		(click)="$event.stopPropagation()"
+		aria-labelledby="dropdownMenuLink"
+		ngxDropdownMenu
+		data-test-id="value-drop-down"
+	>
+		<div class="input-wrap" *ngIf="isCampaignReport">
+			<input [(ngModel)]="searchParam" (input)="onSearch($event?.target?.value)" placeholder="Start typing to search" />
+		</div>
+		<div
+			(click)="selectItem(item)"
+			[hidden]="isCampaignReport && item?.hide"
+			*ngFor="let item of items"
+			class="dropdown-value"
+		>
+			<mat-checkbox
+				(change)="onMultipleSelect(item, $event)"
+				[checked]="item?.isSelected"
+				[disabled]="isDefaultSelection"
+				data-test-id="value-drop-down-checkbox"
+			>
+				{{ item?.name }}
+			</mat-checkbox>
+		</div>
+	</div>
+</div>

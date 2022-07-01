@@ -1,0 +1,128 @@
+<div class="custom-container">
+	<img alt="" class="logo" src="assets/images/convosight_logo.svg" />
+	<img alt="" class="img-logo-illustration" src="assets/images/login_page_illustration.svg" />
+
+	<div class="mobile-full-width">
+		<div class="custom-wrapper">
+			<!-- Material form login -->
+			<mat-card class="custom-card login-card">
+				<div class="text-center">
+					<a class="link-back-to-login" routerLink="/brand-login">
+						<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+							<path
+								clip-rule="evenodd"
+								d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+								fill-rule="evenodd"
+							/>
+						</svg>
+						BACK TO LOGIN
+					</a>
+				</div>
+				<ng-container *ngIf="!success">
+					<div class="form-wrapper">
+						<mat-card-header class="text-center justify-content-center">
+							<mat-card-title>Get access to Convosight!</mat-card-title>
+							<mat-card-subtitle>Just fill up this form</mat-card-subtitle>
+						</mat-card-header>
+						<mat-card-content>
+							<form
+								class="custom-form request-access-form"
+								[formGroup]="requestAccessForm"
+								(ngSubmit)="SubmitForm(requestAccessForm)"
+							>
+								<mat-form-field class="w-100">
+									<input class="custom-input" name="name" formControlName="name" matInput placeholder="Your name" />
+								</mat-form-field>
+								<span class="input-error">Please enter your name.</span>
+
+								<mat-form-field class="w-100">
+									<input
+										class="custom-input"
+										name="companyName"
+										formControlName="companyName"
+										matInput
+										placeholder="Company name"
+									/>
+								</mat-form-field>
+								<span class="input-error">Please enter company name.</span>
+
+								<mat-form-field class="w-100">
+									<input
+										class="custom-input"
+										matInput
+										name="email"
+										formControlName="email"
+										placeholder="Business email"
+									/>
+								</mat-form-field>
+								<span class="input-error">Please enter valid email address.</span>
+
+								<div
+									class="business-phone-wrapper"
+									[class.phoneError]="
+										requestAccessForm.get('phoneNumber').errors !== null && requestAccessForm.get('phoneNumber').value
+									"
+								>
+									<!-- <mat-form-field class="w-100"> -->
+									<ngx-intl-tel-input
+										[preferredCountries]="preferredCountries"
+										[enableAutoCountrySelect]="false"
+										[enablePlaceholder]="false"
+										[searchCountryFlag]="true"
+										[searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+										[selectFirstCountry]="false"
+										[selectedCountryISO]="CountryISO.India"
+										[maxLength]="15"
+										[phoneValidation]="true"
+										[separateDialCode]="separateDialCode"
+										name="phoneNumber"
+										formControlName="phoneNumber"
+									>
+									</ngx-intl-tel-input>
+
+									<!-- </mat-form-field> -->
+									<div class="placeholder">Business phone number</div>
+								</div>
+								<span
+									class="phone-error"
+									*ngIf="
+										requestAccessForm.get('phoneNumber').errors !== null && requestAccessForm.get('phoneNumber').value
+									"
+									>Please enter valid phone number.</span
+								>
+
+								<div class="bottom-wrapper">
+									<button
+										class="convo-btn-primary custom-btn"
+										type="submit"
+										[disabled]="requestAccessForm.invalid"
+										*ngIf="!isLoading"
+									>
+										Request Access
+										<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+											<path
+												clip-rule="evenodd"
+												d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+												fill-rule="evenodd"
+											/>
+										</svg>
+									</button>
+									<div *ngIf="isLoading" class="bt-spinner"></div>
+								</div>
+							</form>
+						</mat-card-content>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="success">
+					<div class="success-wrapper">
+						<img alt="" class="img-success" src=".assets/images/success_icon.svg" />
+						<p class="main-text">Your request is submitted successfully!</p>
+						<p class="bottom-text">We will contact you soon</p>
+					</div>
+				</ng-container>
+			</mat-card>
+			<!-- Material form login -->
+		</div>
+	</div>
+</div>

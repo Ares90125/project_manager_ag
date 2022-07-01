@@ -1,0 +1,123 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.installing-wrapper {
+    max-width: 95%;
+    margin: 50px auto;
+    width: 660px;
+    background-color: $white;
+    @include border-radius(10px);
+
+    .head-wrapper {
+        padding: 16px;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        border-bottom: 1px solid #d9d8e8;
+        .head-text {
+            color: #33334f;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .btn-close {
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            width: 24px;
+            .img-close {
+                max-width: 10px;
+            }
+        }
+    }
+
+    .install-content-wrapper {
+        padding: 30px 30px 0;
+        .process-image {
+            figure {
+                margin: 0;
+            }
+            video {
+                width: 100%;
+            }
+        }
+        .process-steps {
+            ul {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 0;
+                li {
+                    color: $black-40;
+                    cursor: pointer;
+                    &:hover {
+                        color: $black-70;
+                    }
+                    div {
+                        display: flex;
+                        align-items: center;
+                        text-align: left;
+                        figure {
+                            margin: 0;
+                            font-size: 24px;
+                            font-weight: 500;
+                        }
+                        h6 {
+                            margin: 0;
+                            padding-left: 8px;
+                            font-size: 12px;
+                            font-weight: 400;
+                            strong {
+                                font-weight: 500;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .process-btn-wrap {
+        padding: 0px 30px 16px;
+        .convo-btn-normal {
+            background: #2f80ed;
+            box-shadow: none;
+            border-radius: 4px;
+            display: block;
+            height: auto;
+            text-align: center;
+            border: none;
+            padding: 11px;
+            font-weight: 500;
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            small {
+                display: block;
+                opacity: 0.7;
+                font-size: 12px;
+                font-weight: 400;
+                padding-bottom: 3px;
+            }
+        }
+    }
+
+    .foot-wrapper {
+        padding: 20px 30px 24px;
+        color: #4d4d4d;
+        font-size: 14px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        text-align: center;
+        .link-btn {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 16px;
+            color: #2f80ed;
+            cursor: pointer;
+            padding-left: 5px;
+        }
+    }
+}

@@ -1,0 +1,293 @@
+@import '../../../../../../assets/scss/custom/variables';
+@import '../../../../../../assets/scss/custom/mixins';
+
+.group-insight-container {
+	.head-text {
+		color: $primary-1;
+		margin: 0 0 28px;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 19px;
+	}
+	.container {
+		.row {
+			.col-12 {
+				.metrics-wrapper {
+					padding: 29px 33px;
+					position: relative;
+					text-align: center;
+					background-color: $white;
+					box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+					border-radius: 6px;
+					.tooltip-wrapper {
+						top: 8px;
+						right: 8px;
+						position: absolute;
+						line-height: 1;
+					}
+					.metric-name {
+						color: #393e43;
+						margin: 0 0 12px;
+						font-size: 16px;
+						font-weight: 400;
+						line-height: 19px;
+					}
+					.metric-value {
+						color: $primary-1;
+						margin: 0;
+						font-size: 30px;
+						font-weight: bold;
+						line-height: 35px;
+					}
+					.loading-strip {
+						&.primary {
+							margin-bottom: 22px;
+						}
+					}
+				}
+			}
+		}
+	}
+	.graph-tabs {
+		@include flex();
+		align-items: center;
+		border-bottom: none;
+		.nav-item {
+			.description {
+				color: rgba(51, 51, 79, 0.7);
+				margin: 0;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 19px;
+			}
+			.btn-month {
+				color: rgba(51, 51, 79, 0.8);
+				border: none;
+				padding: 4px 10px;
+				font-size: 14px;
+				line-height: 16px;
+				margin-left: 12px;
+				background-color: transparent;
+				@include border-radius(100px);
+				&.active {
+					color: rgba(255, 255, 255, 0.9);
+					background-color: $primary-1;
+				}
+				&:focus {
+					outline: none;
+				}
+			}
+		}
+	}
+	.fixed-tabs {
+		background: #f4f6f8;
+		transition: all 0.25s;
+		position: sticky;
+		top: 50px;
+		z-index: 100;
+		padding: 10px 0;
+		margin-top: 30px;
+		height: 54px;
+		display: flex;
+		align-items: center;
+		@media (max-width: 767px) {
+			position: static;
+			height: auto;
+			display: block;
+		}
+	}
+	.fixed-border {
+		position: sticky;
+		height: 1px;
+		width: 100%;
+		top: 103px;
+		z-index: 99;
+		margin-top: -2px;
+		border-bottom: 1px solid #ddd;
+		background: #ddd;
+		@media (max-width: 767px) {
+			display: none;
+		}
+	}
+	.graph-tab-content {
+		padding: 24px 0;
+		.tab-pane {
+			.container {
+				.row {
+					&:not(:first-of-type) {
+						margin-top: 24px;
+					}
+					.col,
+					.col-12 {
+						.graph-wrapper {
+							padding: 20px 24px;
+							position: relative;
+							min-height: 390px;
+							background-color: $white;
+							box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+							border-radius: 6px;
+							.head-wrapper {
+								@include flex();
+								margin: 0 0 30px;
+								align-items: center;
+								justify-content: space-between;
+								.graph-name {
+									margin: 0;
+								}
+							}
+							.legend-wrapper {
+								@include flex();
+								align-items: center;
+								.legend {
+									position: relative;
+									padding-left: 25px;
+									&:not(:first-of-type) {
+										margin-left: 20px;
+									}
+									.legend-marker-box {
+										top: 50%;
+										left: 0;
+										width: 17px;
+										height: 17px;
+										position: absolute;
+										@include transform(translate(0, -50%));
+										@include border-radius(2px);
+										&.post-box {
+											background-color: rgba(202, 95, 166, 0.8);
+										}
+										&.comments-box {
+											background-color: rgba(88, 187, 229, 0.8);
+										}
+										&.reactions-box {
+											background-color: rgba(57, 199, 176, 0.8);
+										}
+										&.status-box {
+											background-color: rgba(8, 185, 156, 0.8);
+										}
+										&.link-box {
+											background-color: rgba(24, 114, 164, 0.8);
+										}
+										&.video-box {
+											background-color: rgba(202, 95, 166, 0.8);
+										}
+										&.event-box {
+											background-color: rgba(253, 148, 51, 0.8);
+										}
+										&.photo-box {
+											background-color: rgba(46, 170, 223, 0.8);
+										}
+									}
+									.legend-text {
+										color: #393e43;
+										font-size: 13px;
+										line-height: 15px;
+									}
+								}
+							}
+							.graph-container {
+								.legend-wrapper {
+									align-items: flex-start;
+									flex-direction: column;
+									.legend {
+										&:not(:first-of-type) {
+											margin-top: 20px;
+											margin-left: 0;
+										}
+									}
+								}
+							}
+							.col-12 {
+								min-height: 305px;
+							}
+							.graph-name {
+								color: $primary-1;
+								margin: 0 0 30px;
+								font-size: 18px;
+								font-weight: 500;
+								line-height: 21px;
+							}
+							.loader-wrapper {
+								top: 50%;
+								left: 50%;
+								position: absolute;
+								@include transform(translate(-50%, -50%));
+								.loader {
+									width: 44px;
+									border: 6px solid rgba(54, 84, 255, 0.15);
+									height: 44px;
+									margin: 0 auto;
+									animation: spin 2s linear infinite;
+									border-top: 6px solid $emp-blue-1;
+									-webkit-animation: spin 2s linear infinite; /* Safari */
+									@include border-radius(50%);
+								}
+								.loading-text {
+									color: rgba(51, 51, 79, 0.8);
+									margin: 12px 0 0;
+									font-size: 14px;
+									font-weight: 500;
+									line-height: 16px;
+								}
+								/* Safari */
+								@-webkit-keyframes spin {
+									0% {
+										-webkit-transform: rotate(0deg);
+									}
+									100% {
+										-webkit-transform: rotate(360deg);
+									}
+								}
+								@keyframes spin {
+									0% {
+										transform: rotate(0deg);
+									}
+									100% {
+										transform: rotate(360deg);
+									}
+								}
+							}
+							.no-data-wrapper {
+								top: 50%;
+								left: 50%;
+								position: absolute;
+								text-align: center;
+								@include transform(translate(-50%, -50%));
+								.no-data-img {
+									max-width: 100%;
+								}
+								.primary-text {
+									color: $primary-1;
+									margin: 17px 0 0;
+									font-size: 16px;
+									font-weight: 500;
+									line-height: 23px;
+								}
+								.secondary-text {
+									color: rgba(51, 51, 79, 0.8);
+									margin: 5px 0 0;
+									font-size: 14px;
+									font-weight: 400;
+									line-height: 21px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.group-insight-container {
+		.container {
+			.row {
+				.col-12 {
+					.metrics-wrapper {
+						margin-bottom: 16px;
+					}
+				}
+			}
+		}
+	}
+}

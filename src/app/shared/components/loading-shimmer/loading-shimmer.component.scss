@@ -1,0 +1,59 @@
+.shimmer-wrap {
+	.shimmer-row {
+		.group-shimmer {
+			display: flex;
+			align-items: center;
+			.circle {
+				margin-right: 12px;
+			}
+			.square {
+				margin-right: 12px;
+			}
+			small-square {
+				margin-right: 12px;
+			}
+		}
+		.shimmer {
+			height: 15px;
+			animation: shimmer 3s infinite linear;
+			background: linear-gradient(to right, #ebebed 0%, #e7e7e8 46.88%, #ebebed 100%);
+			max-width: 100%;
+			&.top-spacing {
+				margin-top: 14px;
+			}
+			&.top-spacing-small {
+				margin-top: 8px;
+			}
+			&.circle {
+				height: 30px;
+				width: 30px;
+				border-radius: 30px;
+				margin-right: 13px;
+			}
+			&.square {
+				height: 40px;
+				width: 40px;
+				margin-right: 13px;
+			}
+			&.small-square {
+				height: 20px;
+				width: 20px;
+				margin-right: 13px;
+			}
+			&.xm-small {
+				width: 130px;
+				animation-duration: 6s;
+			}
+			&.x-small {
+				width: 82px;
+				animation-duration: 6s;
+			}
+			&.small {
+				width: 264px;
+			}
+			&.large {
+				width: 434px;
+			}
+		}
+	}
+}

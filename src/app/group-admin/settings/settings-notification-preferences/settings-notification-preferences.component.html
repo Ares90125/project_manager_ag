@@ -1,0 +1,305 @@
+<div class="settings-notifications-preference-wrapper">
+	<div [hidden]="renderedOn === 'Desktop'">
+		<div class="mobile-head-wrap" *ngIf="!mobileSearch">
+			<div>
+				<button (click)="router.navigateByUrl('/group-admin/settings')">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19 11H7.83001L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.71001 11.29C4.32001 11.68 4.32001 12.31 4.71001 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.83001 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+							fill="#33334F"
+						/>
+					</svg>
+				</button>
+				<h5>Notification Preferences</h5>
+			</div>
+			<button (click)="ShowMobileSearch()" *ngIf="groups?.length > 10">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M15.5 14H14.71L14.43 13.73C15.63 12.33 16.25 10.42 15.91 8.39002C15.44 5.61002 13.12 3.39002 10.32 3.05002C6.09 2.53002 2.53 6.09001 3.05 10.32C3.39 13.12 5.61 15.44 8.39 15.91C10.42 16.25 12.33 15.63 13.73 14.43L14 14.71V15.5L18.25 19.75C18.66 20.16 19.33 20.16 19.74 19.75C20.15 19.34 20.15 18.67 19.74 18.26L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.50002C5 7.01002 7.01 5.00002 9.5 5.00002C11.99 5.00002 14 7.01002 14 9.50002C14 11.99 11.99 14 9.5 14Z"
+						fill="#33334F"
+					/>
+				</svg>
+			</button>
+		</div>
+
+		<div class="mobile-search-wrap" *ngIf="mobileSearch">
+			<button (click)="hideMobileSearch()">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M19 11H7.82998L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+						fill="#33334F"
+					/>
+				</svg>
+			</button>
+			<input #search placeholder="Search by group name" type="text" (input)="onSearchChange($event.target)" />
+			<button
+				(click)="search.value = ''; onSearchChange('')"
+				class="clear-search-btn"
+				[hidden]="!searchText || searchText?.length === 0"
+			>
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.0001 1.66669C5.39175 1.66669 1.66675 5.39169 1.66675 10C1.66675 14.6084 5.39175 18.3334 10.0001 18.3334C14.6084 18.3334 18.3334 14.6084 18.3334 10C18.3334 5.39169 14.6084 1.66669 10.0001 1.66669ZM13.5834 13.5834C13.2584 13.9084 12.7334 13.9084 12.4084 13.5834L10.0001 11.175L7.59175 13.5834C7.26675 13.9084 6.74175 13.9084 6.41675 13.5834C6.09175 13.2584 6.09175 12.7334 6.41675 12.4084L8.82508 10L6.41675 7.59169C6.09175 7.26669 6.09175 6.74169 6.41675 6.41669C6.74175 6.09169 7.26675 6.09169 7.59175 6.41669L10.0001 8.82502L12.4084 6.41669C12.7334 6.09169 13.2584 6.09169 13.5834 6.41669C13.9084 6.74169 13.9084 7.26669 13.5834 7.59169L11.1751 10L13.5834 12.4084C13.9001 12.725 13.9001 13.2584 13.5834 13.5834Z"
+						fill="#828282"
+					/>
+				</svg>
+			</button>
+		</div>
+	</div>
+
+	<div class="back-btn-wrap" [hidden]="renderedOn === 'Mobile'">
+		<button class="back-btn" (click)="router.navigateByUrl('/group-admin/settings'); setGlobalPreference()">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M12.2582 5.59173C12.5832 5.91673 12.5832 6.44173 12.2582 6.76673L9.02487 10.0001L12.2582 13.2334C12.5832 13.5584 12.5832 14.0834 12.2582 14.4084C11.9332 14.7334 11.4082 14.7334 11.0832 14.4084L7.2582 10.5834C6.9332 10.2584 6.9332 9.73339 7.2582 9.40839L11.0832 5.58339C11.3999 5.26673 11.9332 5.26673 12.2582 5.59173Z"
+					fill="#828282"
+				/>
+			</svg>
+			<span>Settings home</span>
+		</button>
+
+		<h5>Notification Preferences</h5>
+	</div>
+	<div class="settings-notifications-preference">
+		<div class="notifications-preference-left">
+			<h5>Where you receive these notifications</h5>
+			<h6>Comments, Shares, Spam Alerts, Daily Reports, and New Members</h6>
+
+			<div
+				class="not-activated-notice"
+				*ngIf="
+					(!user.receiveWANotifications || user.whatsappSubscriptionStatus !== 'Confirmed') &&
+					!user.receiveEmailNotifications
+				"
+			>
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M0.583496 12.25H13.4168L7.00016 1.16663L0.583496 12.25ZM7.5835 10.5H6.41683V9.33329H7.5835V10.5ZM7.5835 8.16663H6.41683V5.83329H7.5835V8.16663Z"
+						fill="#EB5757"
+					/>
+				</svg>
+				<span>Please activate a notification channel to proceed</span>
+			</div>
+
+			<div class="platform-list">
+				<div class="platform-list-row">
+					<div class="platform-wrap">
+						<figure>
+							<img src="assets/images/icon-whatsapp.svg" alt="" />
+							<figcaption>WhatsApp</figcaption>
+						</figure>
+					</div>
+					<div>
+						<div class="whatapp-subscription-wrapper" [hidden]="user.whatsappSubscriptionStatus !== 'Confirmed'">
+							<div class="bt-spinner" *ngIf="isLoadingWhatsAppSubscriptionRequest"></div>
+							<mat-slide-toggle
+								[disabled]="user.whatsappSubscriptionStatus !== 'Confirmed' || isLoadingWhatsAppSubscriptionRequest"
+								data-cs-id="877c9df8-0371-4c28-b37e-0312e3baf01b"
+								data-cs-label="WhatsApp Toggle"
+								data-cs-source="page"
+								[attr.data-cs-toggle-status]="!user.receiveWANotifications"
+								(click)="recordToggleClicked($event)"
+								[checked]="isWhatsAppPrefOn && user.whatsappSubscriptionStatus === 'Confirmed'"
+								(change)="togglePreferenceForUser('whatsApp')"
+							></mat-slide-toggle>
+						</div>
+					</div>
+
+					<button
+						*ngIf="user.whatsappSubscriptionStatus !== 'Confirmed'"
+						data-cs-id="b12b7221-4cd8-40ef-aacc-84d7efb0623c"
+						data-cs-label="Subscribe Now"
+						data-cs-source="page"
+						data-toggle="modal"
+						data-target="#SubscribeNowOverlay"
+						class="btn-subscribe"
+						(click)="openSubscribeNowOverlay($event)"
+					>
+						Subscribe
+					</button>
+				</div>
+				<div class="platform-list-row">
+					<div class="platform-wrap">
+						<figure>
+							<img src="assets/images/icon-email.svg" alt="" />
+							<figcaption>Email</figcaption>
+						</figure>
+					</div>
+					<div class="platform-wrap-right">
+						<div class="bt-spinner" *ngIf="isLoadingEmailSubscriptionRequest"></div>
+						<mat-slide-toggle
+							[disabled]="isLoadingEmailSubscriptionRequest"
+							[checked]="isEmailPrefOn"
+							(change)="togglePreferenceForUser('email')"
+							data-cs-id="ebf9f191-8793-4dc4-9a40-2f10408ea239"
+							data-cs-label="Email Toggle"
+							data-cs-source="page"
+							[attr.data-cs-toggle-status]="!user.receiveEmailNotifications"
+							(click)="recordToggleClicked($event)"
+						></mat-slide-toggle>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div
+			class="notifications-preference-right"
+			*ngIf="
+				(user.receiveWANotifications && user.whatsappSubscriptionStatus === 'Confirmed') ||
+				user.receiveEmailNotifications
+			"
+		>
+			<div class="preference-right-header">
+				<h5>Your Groups ({{ groups?.length }})</h5>
+				<div class="search-wrap" [hidden]="renderedOn === 'Mobile'" *ngIf="groups?.length > 10">
+					<input
+						#searchDesktop
+						placeholder="Search by group name"
+						type="text"
+						(input)="onSearchChange($event.target)"
+					/>
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M12.9167 11.6667H12.2584L12.025 11.4417C13.025 10.275 13.5417 8.68334 13.2584 6.99167C12.8667 4.675 10.9334 2.825 8.60003 2.54167C5.07503 2.10834 2.10837 5.075 2.5417 8.6C2.82503 10.9333 4.67503 12.8667 6.9917 13.2583C8.68337 13.5417 10.275 13.025 11.4417 12.025L11.6667 12.2583V12.9167L15.2084 16.4583C15.55 16.8 16.1084 16.8 16.45 16.4583C16.7917 16.1167 16.7917 15.5583 16.45 15.2167L12.9167 11.6667ZM7.9167 11.6667C5.8417 11.6667 4.1667 9.99167 4.1667 7.91667C4.1667 5.84167 5.8417 4.16667 7.9167 4.16667C9.9917 4.16667 11.6667 5.84167 11.6667 7.91667C11.6667 9.99167 9.9917 11.6667 7.9167 11.6667Z"
+							fill="#ADADB9"
+						/>
+					</svg>
+					<button
+						(click)="searchDesktop.value = ''; onSearchChange('')"
+						class="clear-search-btn"
+						[hidden]="!searchText || searchText?.length === 0"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M9.99984 1.66667C5.3915 1.66667 1.6665 5.39167 1.6665 10C1.6665 14.6083 5.3915 18.3333 9.99984 18.3333C14.6082 18.3333 18.3332 14.6083 18.3332 10C18.3332 5.39167 14.6082 1.66667 9.99984 1.66667ZM13.5832 13.5833C13.2582 13.9083 12.7332 13.9083 12.4082 13.5833L9.99984 11.175L7.5915 13.5833C7.2665 13.9083 6.7415 13.9083 6.4165 13.5833C6.0915 13.2583 6.0915 12.7333 6.4165 12.4083L8.82484 10L6.4165 7.59167C6.0915 7.26667 6.0915 6.74167 6.4165 6.41667C6.7415 6.09167 7.2665 6.09167 7.5915 6.41667L9.99984 8.825L12.4082 6.41667C12.7332 6.09167 13.2582 6.09167 13.5832 6.41667C13.9082 6.74167 13.9082 7.26667 13.5832 7.59167L11.1748 10L13.5832 12.4083C13.8998 12.725 13.8998 13.2583 13.5832 13.5833Z"
+								fill="#9999A7"
+							/>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<div class="groups-list-wrap">
+				<div class="group-row-header">
+					<div class="group-wrap">
+						<h6>GROUP</h6>
+					</div>
+					<div class="group-actions">
+						<h6 *ngIf="user.receiveWANotifications && user.whatsappSubscriptionStatus === 'Confirmed'">WHATSAPP</h6>
+						<h6 *ngIf="user.receiveEmailNotifications">EMAIL</h6>
+					</div>
+				</div>
+				<div *ngFor="let group of groups">
+					<div class="group-row" *ngIf="!group.hide">
+						<div class="group-wrap">
+							<figure>
+								<app-fb-group-cover-image
+									[coverImageUrl]="group.coverImageUrl"
+									[fbGroupId]="group.fbGroupId"
+								></app-fb-group-cover-image>
+							</figure>
+							<h6>{{ group.name }}</h6>
+						</div>
+						<div class="group-actions">
+							<div class="notification-status" [hidden]="renderedOn === 'Desktop'">
+								<div class="notifications-on">
+									<img
+										src="assets/images/notification_on.svg"
+										*ngIf="
+											(group?.receiveWANotifications &&
+												user.receiveWANotifications &&
+												user.whatsappSubscriptionStatus === 'Confirmed') ||
+											(user.receiveEmailNotifications && group?.receiveEmailNotifications)
+										"
+									/>
+									<span
+										*ngIf="
+											group?.receiveWANotifications &&
+											user.receiveWANotifications &&
+											user.whatsappSubscriptionStatus === 'Confirmed'
+										"
+										>WhatsApp</span
+									>
+									<span *ngIf="user.receiveEmailNotifications && group?.receiveEmailNotifications">Email</span>
+								</div>
+								<div
+									class="notifications-off"
+									*ngIf="
+										(!user.receiveWANotifications ||
+											user.whatsappSubscriptionStatus !== 'Confirmed' ||
+											!group?.receiveWANotifications) &&
+										(!user.receiveEmailNotifications || !group?.receiveEmailNotifications)
+									"
+								>
+									<img src="assets/images/notification_off.svg" alt="" /><span>Notifications Off</span>
+								</div>
+							</div>
+							<a (click)="toggleCheckboxWrapper($event)" class="toggle-arrow"
+								><img src="assets/images/chevron_up.svg" alt=""
+							/></a>
+							<div style="display: none">
+								<div
+									class="checkbox-wrap"
+									*ngIf="user.receiveWANotifications && user.whatsappSubscriptionStatus === 'Confirmed'"
+								>
+									<span [hidden]="renderedOn === 'Desktop'">WhatsApp</span>
+									<mat-checkbox
+										[id]="'checkbox_whatsApp_' + group.id"
+										(change)="togglePreference('whatsApp', $event, group)"
+										[attr.data-cs-toggle-status]="!group.receiveWANotifications"
+										data-cs-id="2abe7401-b724-4686-adfa-07a50ed19254"
+										data-cs-label="WhatsApp"
+										data-cs-source="page"
+										(click)="recordToggleClicked($event, group)"
+										[checked]="group.receiveWANotifications"
+									></mat-checkbox>
+									<span class="bt-spinner" [id]="'spinner_whatsApp_' + group.id" style="display: none"></span>
+								</div>
+								<div class="checkbox-wrap" *ngIf="user.receiveEmailNotifications">
+									<span [hidden]="renderedOn === 'Desktop'">Email</span>
+									<mat-checkbox
+										[id]="'checkbox_email_' + group.id"
+										(change)="togglePreference('email', $event, group)"
+										[attr.data-cs-toggle-status]="!group.receiveEmailNotifications"
+										data-cs-id="46abe72e-3bc5-4f1f-9ebf-767d41bbf83c"
+										data-cs-label="Email"
+										data-cs-source="page"
+										(click)="recordToggleClicked($event, group)"
+										[checked]="group.receiveEmailNotifications"
+									></mat-checkbox>
+									<span class="bt-spinner" [id]="'spinner_email_' + group.id" style="display: none"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="no-results-wrapper" *ngIf="searchResults?.length === 0">
+					<figure>
+						<img src="assets/images/icon-search.svg" alt="" />
+					</figure>
+					<h6>Oops, no results found matching</h6>
+					<p class="m-0">“{{ searchText }}”</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Whatsapp Optin Popup starts here -->
+<div
+	class="convosight-whatsapp-opt-in modal fade"
+	data-backdrop="static"
+	id="convosight-whatsapp-opt"
+	[class.show-did-not-modal]="showDidNotRecievedPopup"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<app-whatsapp-opt-in
+				[showConfirmation]="showConfirmation"
+				[closeConfirmation]="'true'"
+				(hideWAConfirmOptInCard)="hideWAConfirmOptInCard()"
+				(hideWhatsAppOverlay)="hideWhatsAppOverlay()"
+				(didNotReceiveCardStatus)="didNotReceiveCardStatus($event)"
+			></app-whatsapp-opt-in>
+		</div>
+	</div>
+</div>
+<!-- Whatsapp Optin Popup ends here -->

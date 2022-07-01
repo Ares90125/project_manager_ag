@@ -1,0 +1,34 @@
+codecov:
+  bot: 'ravikiranvemula'
+
+coverage:
+  precision: 2
+  round: nearest
+  range: '90...100'
+  notify:
+    slack:
+      default:
+        url: 'https://hooks.slack.com/services/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'
+        threshold: 1%
+        only_pulls: false
+        branches:
+          - 'develop'
+        flags:
+          - 'frontend'
+        paths:
+          - 'src'
+  status:
+    project:
+      default:
+        base: auto
+        target: auto
+        threshold: 0.1%
+        if_ci_failed: ignore #success, failure, error, ignore
+        flags:
+          - frontend
+        paths:
+          - src
+
+comment:
+  layout: 'reach,diff,flags,tree'
+  behavior: default

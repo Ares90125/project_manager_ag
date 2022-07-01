@@ -1,0 +1,64 @@
+@import '../../../../../assets/scss/custom/_variables.scss';
+@import '../../../../../assets/scss/custom/_mixins.scss';
+
+$circle-size: 35px;
+$bar-width: 118px;
+
+.onboarding-progress-wrap {
+	width: $bar-width;
+	.onboarding-progress-bar {
+		position: fixed;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 27px;
+		margin: 0;
+		.progress-option {
+			flex-direction: column;
+			display: flex;
+			align-items: center;
+			.progress-option-core {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				span {
+					text-align: center;
+					font-size: 12px;
+					line-height: 12px;
+					max-width: $bar-width;
+				}
+			}
+			.progress-option-chain {
+				height: 60px;
+				border-left: 1px dashed #707084;
+				margin: 10px 0 12px;
+				display: inline-block;
+				&.chain-status-completed {
+					border-left-style: solid;
+				}
+			}
+		}
+		.progress-circle {
+			width: $circle-size;
+			height: $circle-size;
+			border-radius: 50%;
+
+			justify-content: center;
+			align-items: center;
+			display: flex;
+
+			color: #fff;
+			margin-bottom: 12px;
+
+			&.completed {
+				background-color: $confirmation-green;
+			}
+			&.current {
+				background-color: $emp-blue-1;
+			}
+			&.unbegun {
+				background-color: $borders-grey;
+				color: $primary-1;
+			}
+		}
+	}
+}

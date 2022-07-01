@@ -1,0 +1,196 @@
+<div class="modal modal-component select-group-modal d-block" tabindex="-1" role="dialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" [class.modal-lg]="currentStep !== 0" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" *ngIf="currentStep === 0">Introducing Group Profiles and Brand Pitches</h5>
+				<h5 class="modal-title" *ngIf="currentStep === 1">
+					Pitch to brands with a customised brand pitch created from your group profile
+				</h5>
+				<p class="modal-title top-profiles-header" *ngIf="currentStep === 2">
+					<span>70% of brands respond back positively</span> 👍 after seeing a group profile.
+				</p>
+				<button
+					type="button"
+					data-cs-id="65322df4-ce2a-49c1-b71c-a752223a64fd"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="closePopupHandle($event)"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12Z"
+							fill="#EFEFF1"
+						/>
+						<path
+							d="M16.7782 7.22943C16.4824 6.93364 16.0046 6.93364 15.7088 7.22943L12 10.9306L8.29124 7.22184C7.99545 6.92605 7.51763 6.92605 7.22184 7.22184C6.92605 7.51763 6.92605 7.99545 7.22184 8.29124L10.9306 12L7.22184 15.7088C6.92605 16.0045 6.92605 16.4824 7.22184 16.7782C7.51763 17.0739 7.99545 17.0739 8.29124 16.7782L12 13.0694L15.7088 16.7782C16.0046 17.0739 16.4824 17.0739 16.7782 16.7782C17.0739 16.4824 17.0739 16.0045 16.7782 15.7088L13.0694 12L16.7782 8.29124C17.0664 8.00303 17.0664 7.51763 16.7782 7.22943Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="profile-introduce-step" *ngIf="currentStep === 0">
+					<video
+						class="video"
+						(play)="recordButtonClick($event)"
+						data-cs-id="a5fd361a-b3cd-4409-aea3-266e89369c24"
+						data-cs-label="play video"
+						data-cs-source="dialog"
+						controls
+						id="introducingGroupProfilePagesVideo"
+						src="./assets/videos/group_profiles.mp4"
+					></video>
+					<p>
+						Showcase details about your group - the top topics being discussed, top conversations and more to brands and
+						<strong>do campaigns 💰 with them.</strong>
+					</p>
+				</div>
+				<div class="pitch-introduce-step" *ngIf="currentStep === 1">
+					<img src="assets/images/group_admin/pitch_introduce.png" alt="" />
+					<p>Get more brand campaigns 💰 by pitching with a customised brand pitch created from your group profile.</p>
+				</div>
+				<div class="top-profiles-step" *ngIf="currentStep === 2">
+					<div class="skip-step-frame">
+						<div class="skip-step-description">
+							<span>
+								See the <strong>group profiles of some of the Top Earning groups</strong> before creating your group
+								profile.
+							</span>
+						</div>
+						<ul class="skip-step-list list-unstyled">
+							<li
+								class="skip-step-list-item"
+								data-cs-id="7bf9e453-822f-466a-b4dd-01e9850a4083"
+								data-cs-label="Kids' learning and Milestones ( 3-10 Year)"
+								data-cs-source="page"
+								(click)="
+									openPitchProfile(
+										$event,
+										'https://cnvo.site/kids-learning-and-milestones-3-10-year-kids-learning-and-milestones-3-10-year'
+									)
+								"
+							>
+								<div class="skip-step-img">
+									<img
+										src="https://media.convosight.com/public/pics/34117788_10160316225200063_2197533455951069184_n.jpg"
+										alt=""
+									/>
+								</div>
+								<span>Kids' learning and Milestones ( 3-10 Year)</span>
+								<a href="javascript:void(0)" target="_blank">
+									<button class="convo-btn-primary convo-btn-normal">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</a>
+							</li>
+							<li
+								class="skip-step-list-item"
+								data-cs-id="c28daf61-96af-47fe-b7e0-164f01184e96"
+								data-cs-label="Growth and Monetisation for Facebook Group Admins"
+								data-cs-source="page"
+								(click)="
+									openPitchProfile(
+										$event,
+										'https://cnvo.site/growth-and-monetisation-for-facebook-group-admins-growth-and-monetisation-for-facebook-group-admins-2'
+									)
+								"
+							>
+								<div class="skip-step-img">
+									<img
+										src="https://media.convosight.com/public/pics/273891995_5095919610472623_4891296409821579254_n.jpg"
+										alt=""
+									/>
+								</div>
+								<span>Growth and Monetisation for Facebook Group Admins</span>
+								<a href="javascript:void(0)" target="_blank">
+									<button class="convo-btn-primary convo-btn-normal">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</a>
+							</li>
+							<li
+								class="skip-step-list-item"
+								data-cs-id="8d09b70b-44a9-46a7-bdda-0aab4ba0db32"
+								data-cs-label="Girl Gone International | Global Community"
+								data-cs-source="page"
+								(click)="
+									openPitchProfile($event, 'https://cnvo.site/test-anne-girl-gone-international-global-community')
+								"
+							>
+								<div class="skip-step-img">
+									<img
+										src="https://media.convosight.com/public/pics/255403149_10159269328470469_8325243041134028378_n.jpg"
+										alt=""
+									/>
+								</div>
+								<span>Girl Gone International | Global Community</span>
+								<a href="javascript:void(0)" target="_blank">
+									<button class="convo-btn-primary convo-btn-normal">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<app-circle-step-bar [currentStep]="currentStep" [numberOfSteps]="3"></app-circle-step-bar>
+				<div class="modal-footer" [class.full-nav]="currentStep !== 0">
+					<button
+						(click)="prevStepHandle($event)"
+						*ngIf="currentStep !== 0"
+						class="convo-btn-outline convo-btn-normal back-step-button"
+						data-cs-id="f378e41c-7842-4301-9366-b58de91b88a4"
+						data-cs-label="Back"
+						data-cs-source="page"
+						data-dismiss="modal"
+						type="button"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10.5162 5.41078C10.801 5.12602 10.801 4.66434 10.5162 4.37958C10.2315 4.09483 9.7698 4.09483 9.48504 4.37958L4.38088 9.48375C4.09612 9.76851 4.09612 10.2302 4.38088 10.5149L9.48504 15.6191C9.7698 15.9039 10.2315 15.9039 10.5162 15.6191C10.801 15.3344 10.801 14.8727 10.5162 14.5879L6.65684 10.7285H15.1048C15.5075 10.7285 15.834 10.4021 15.834 9.99934C15.834 9.59664 15.5075 9.27018 15.1048 9.27018H6.65685L10.5162 5.41078Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>Back</span>
+					</button>
+					<button
+						(click)="nextStepHandle($event)"
+						class="convo-btn-primary convo-btn-normal next-step-button"
+						data-cs-id="0e9c4fbd-ce1b-454b-a004-ea9a2fed37bf"
+						data-cs-label="Next"
+						data-cs-source="page"
+						data-dismiss="modal"
+						type="button"
+					>
+						<span *ngIf="fetching" class="bt-spinner"></span>
+						<span *ngIf="!fetching">Next</span>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								opacity="0.95"
+								d="M9.48376 5.41078C9.199 5.12602 9.199 4.66434 9.48376 4.37958C9.76852 4.09483 10.2302 4.09483 10.515 4.37958L15.6191 9.48375C15.9039 9.76851 15.9039 10.2302 15.6191 10.5149L10.515 15.6191C10.2302 15.9039 9.76852 15.9039 9.48376 15.6191C9.199 15.3344 9.199 14.8727 9.48376 14.5879L13.3432 10.7285H4.89518C4.49247 10.7285 4.16602 10.4021 4.16602 9.99934C4.16602 9.59664 4.49247 9.27018 4.89518 9.27018H13.3432L9.48376 5.41078Z"
+								fill="white"
+							/>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

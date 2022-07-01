@@ -1,0 +1,55 @@
+{
+	"data": {
+		"getUserSelfMonetizationCampaigns": {
+			"__typename": "CampaignConnection",
+			"items": [
+				{
+					"__typename": "Campaign",
+					"campaignId": "ea2c44bc-4b3c-47ae-94b4-8430df58d09c",
+					"createdAtUTC": "2021-07-13T06:25:11.368Z",
+					"updatedAtUTC": "2021-07-13T06:25:23.748Z",
+					"campaignName": "Test",
+					"startDateAtUTC": "2021-07-12T18:30:00.000Z",
+					"endDateAtUTC": "2021-07-29T18:30:00.000Z",
+					"groupIds": ["713ce969-bef9-46aa-a6d2-674be9c158bd"],
+					"brandKeywords": ["Test"],
+					"customKeywords": null,
+					"hashtags": null,
+					"campaignSummary": null,
+					"isReportAvailable": true
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "08bfa8e4-e8f2-4a2d-a471-6c07f33e837d",
+					"createdAtUTC": "2021-07-13T11:52:26.761Z",
+					"updatedAtUTC": "2021-07-13T12:38:03.208Z",
+					"campaignName": "Test Campaign",
+					"startDateAtUTC": "2021-06-12T18:30:00.000Z",
+					"endDateAtUTC": "2021-07-19T18:30:00.000Z",
+					"groupIds": ["85478556-88c6-44c3-af49-9028fab66f74", "c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test", "Posted"],
+					"customKeywords": ["#Test", "#Posted"],
+					"hashtags": null,
+					"campaignSummary": null,
+					"isReportAvailable": true
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "7c29e621-eac8-4065-a2fc-022d3f78fd34",
+					"createdAtUTC": "2021-07-13T11:57:35.827Z",
+					"updatedAtUTC": "2021-07-13T12:42:51.561Z",
+					"campaignName": "Test Campaign",
+					"startDateAtUTC": "2021-06-12T18:30:00.000Z",
+					"endDateAtUTC": "2021-07-19T18:30:00.000Z",
+					"groupIds": ["85478556-88c6-44c3-af49-9028fab66f74", "c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test", "Posted"],
+					"customKeywords": ["#Test", "#Posted"],
+					"hashtags": null,
+					"campaignSummary": null,
+					"isReportAvailable": true
+				}
+			],
+			"nextToken": "eyJ2ZXJzaW9uIjoyLCJ0b2tlbiI6IkFRSUNBSGg5OUIvN3BjWU41eE96NDZJMW5GeGM4WUNGeG1acmFOMUpqajZLWkFDQ25BR1ZKTi94RURPN1RITGNCc2luYzhBakFBQUN6akNDQXNvR0NTcUdTSWIzRFFFSEJxQ0NBcnN3Z2dLM0FnRUFNSUlDc0FZSktvWklodmNOQVFjQk1CNEdDV0NHU0FGbEF3UUJMakFSQkF3dHN0d3FYU21HZ2NUSVh0b0NBUkNBZ2dLQjdscVRPWWxhYndSMm03TGJQNkJieEhzbUtubFl4NGJqVjRpV0FsOHliRzhieTVWOVJUYUdwTUdRK0tvL3FERHNFa09sdXRiVExaNUNTYk1qWGg0R3piWnhLS2w3WTFZT3BJQS9aM3VGUEk3R3pPUTRiZkQwQWIycHFyR1FuZWdGVjZHL0g5UTFvMitBcFFzdEVDNG96b0xTdlE2Rm9BbWsvaEViMkx5Y1YxQkp5WTZlUGI4SDNuZFl6bGMwWGRTRGZ0ZFFUU29Edlg4aUV6TEUxQmQ3UjNHRW8rOHJHWnRjTUFyTVliVmRULzNmVXl4TVlVNVkwUzIwR0pjRFJhKzhmelduenpkUytDaGlwbytUQWhsQ1prR29ZOFNPYTZNd0pzbnVPTFI5UnMyVFRPbm83MVI3d29wSjFueEk4WDhTM0p5RDBuOXNUeDlIdHBxa2V0aFR4OUEyQ3JJeXgyNnI5ZUo3VS9sUkdocS9wZ2dsT0VCRWlsVHJGVUFpNUtRNzloT2htNVJqSFBzSTFieko5dTVIN08zL0U4dTRBSFR0Q041VHFRTDZrSUMvVjkyS3VpUUwxR0R1Ukg0a3U3YXU5dGlrU1JZMXRmTm9zcUtpWEY0OFZ1MUUrRXplaGRmeFlFV3NwUnEyZEV0ZUJ5cWF5SkJhMzUxVkZQdkRFYkxoYWtSWUMwYm1wRWVkZ1NQNXdiMEdYc2duaHZnTlRhUUZIYjlOMlBVaSt4OGp6eG1IdzM0K01FREZwSnc3TFJINjNMbWw4ZE1ITWdrdTk5QzdpazRFN1hGcGI4Y0pmdzhNTFZzS09FZStkNVRpbGtUYURoaWU4dUFoLzFUd3V6ZmxKRlZSbXJWWHJDUGgrdGtDbDVScFpOOGFHNXNmeEFqZTdKYUZ6dzFTdjVJb0JTVDZkNjA2SCtJa0FCUkFqMXc4MDgwNXd0WHVGdGJhVU5hSFNRdUd4amNIZFc0dU5SNEdhRjh1QjhqZHZ2NGVsL0VJb0pDOW1CTzY2MGFRTjJta3RibWl2UldIOFY0TmMwWkN2enVZLzY1cmg4Sk1JZ0l3RjJyVDFtUkEvTkJhYVVlZXcvWGFjOWY1clh1bVBwNnRkREhjRVV2NHFudTE3Z080cUx4VlhyZz0ifQ=="
+		}
+	}
+}

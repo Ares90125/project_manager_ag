@@ -1,0 +1,190 @@
+<div class="modal modal-component select-group-modal d-block" tabindex="-1" role="dialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="title-content">
+					<h5>Get started now!</h5>
+					<p>Choose a group to create your group profile</p>
+				</div>
+				<button
+					type="button"
+					data-cs-id="678d318c-ef1a-4b1f-81e6-465800c8bce8"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="closePopupHandle($event)"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12Z"
+							fill="#EFEFF1"
+						/>
+						<path
+							d="M16.7782 7.22943C16.4824 6.93364 16.0046 6.93364 15.7088 7.22943L12 10.9306L8.29124 7.22184C7.99545 6.92605 7.51763 6.92605 7.22184 7.22184C6.92605 7.51763 6.92605 7.99545 7.22184 8.29124L10.9306 12L7.22184 15.7088C6.92605 16.0045 6.92605 16.4824 7.22184 16.7782C7.51763 17.0739 7.99545 17.0739 8.29124 16.7782L12 13.0694L15.7088 16.7782C16.0046 17.0739 16.4824 17.0739 16.7782 16.7782C17.0739 16.4824 17.0739 16.0045 16.7782 15.7088L13.0694 12L16.7782 8.29124C17.0664 8.00303 17.0664 7.51763 16.7782 7.22943Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<ng-container *ngIf="!oneGroupMode; else oneGroupModeItem">
+					<div class="search-group-form" *ngIf="listOfGroupsWithProfilePageAccessObj; else loadingGroupPagesList">
+						<svg
+							class="serach-input-icon"
+							width="20"
+							height="20"
+							viewBox="0 0 20 20"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M12.9167 11.6667H12.2583L12.025 11.4417C12.8417 10.4917 13.3333 9.25833 13.3333 7.91667C13.3333 4.925 10.9083 2.5 7.91667 2.5C4.925 2.5 2.5 4.925 2.5 7.91667C2.5 10.9083 4.925 13.3333 7.91667 13.3333C9.25833 13.3333 10.4917 12.8417 11.4417 12.025L11.6667 12.2583V12.9167L15.8333 17.075L17.075 15.8333L12.9167 11.6667ZM7.91667 11.6667C5.84167 11.6667 4.16667 9.99167 4.16667 7.91667C4.16667 5.84167 5.84167 4.16667 7.91667 4.16667C9.99167 4.16667 11.6667 5.84167 11.6667 7.91667C11.6667 9.99167 9.99167 11.6667 7.91667 11.6667Z"
+								fill="#707084"
+							/>
+						</svg>
+						<!-- (delayedInput)="processSearchTermInput($event)" -->
+						<input
+							appDelayedInput
+							placeholder="Find a group"
+							type="text"
+							(delayedInput)="processSearchTermInput($event)"
+						/>
+						<ul
+							*ngIf="listOfGroupsWithProfilePageAccessObj | appFilter: searchText:'name' as filteredGroups"
+							class="group-list list-unstyled"
+						>
+							<ng-container *ngIf="filteredGroups.length > 0; else noGroupsFound">
+								<li
+									class="group-item"
+									*ngFor="let group of filteredGroups"
+									(click)="selectGroupHandle(group?.id, group?.name)"
+									[class.active]="group?.id === selectedGroupId"
+								>
+									<div class="group-content">
+										<div class="group-image">
+											<img [fbEntityId]="group.fbGroupId" src="{{ group?.coverImageUrl }}" alt="" />
+										</div>
+										<div class="group-description">
+											<h5 class="group-name">{{ group?.name }}</h5>
+											<div class="group-members">
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M9.33398 6.41602C10.3023 6.41602 11.0782 5.63435 11.0782 4.66602C11.0782 3.69768 10.3023 2.91602 9.33398 2.91602C8.36565 2.91602 7.58398 3.69768 7.58398 4.66602C7.58398 5.63435 8.36565 6.41602 9.33398 6.41602ZM4.66732 6.41602C5.63565 6.41602 6.41148 5.63435 6.41148 4.66602C6.41148 3.69768 5.63565 2.91602 4.66732 2.91602C3.69898 2.91602 2.91732 3.69768 2.91732 4.66602C2.91732 5.63435 3.69898 6.41602 4.66732 6.41602ZM4.66732 7.58268C3.30815 7.58268 0.583984 8.26518 0.583984 9.62435V10.4994C0.583984 10.8202 0.846484 11.0827 1.16732 11.0827H8.16732C8.48815 11.0827 8.75065 10.8202 8.75065 10.4994V9.62435C8.75065 8.26518 6.02648 7.58268 4.66732 7.58268ZM9.33398 7.58268C9.16482 7.58268 8.97232 7.59435 8.76815 7.61185C8.77982 7.61768 8.78565 7.62935 8.79148 7.63518C9.45648 8.11935 9.91732 8.76685 9.91732 9.62435V10.4994C9.91732 10.7035 9.87648 10.9019 9.81232 11.0827H12.834C13.1548 11.0827 13.4173 10.8202 13.4173 10.4994V9.62435C13.4173 8.26518 10.6932 7.58268 9.33398 7.58268Z"
+														fill="#9999A7"
+													/>
+												</svg>
+												<span>
+													{{ group?.memberCount | shortNumber }} {{ group?.memberCount === 1 ? 'member' : 'members' }}
+												</span>
+											</div>
+										</div>
+									</div>
+									<svg
+										*ngIf="group?.id === selectedGroupId"
+										class="selected-item-icon"
+										width="20"
+										height="20"
+										viewBox="0 0 20 20"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											d="M9.99935 1.66602C5.39935 1.66602 1.66602 5.39935 1.66602 9.99935C1.66602 14.5993 5.39935 18.3327 9.99935 18.3327C14.5993 18.3327 18.3327 14.5993 18.3327 9.99935C18.3327 5.39935 14.5993 1.66602 9.99935 1.66602ZM8.33268 14.166L4.16602 9.99935L5.34102 8.82435L8.33268 11.8077L14.6577 5.48268L15.8327 6.66602L8.33268 14.166Z"
+											fill="#3654FF"
+										/>
+									</svg>
+								</li>
+							</ng-container>
+						</ul>
+					</div>
+				</ng-container>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="createNewProfilePage(); recordButtonClick($event, group)"
+					[disabled]="!selectedGroupId || fetching"
+					class="convo-btn-primary convo-btn-normal next-step-button"
+					data-cs-id="ad264029-3c3f-4cee-8257-58a9091208e8"
+					data-cs-label="Create Group Profile Page"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span class="bt-spinner" *ngIf="fetching"></span>
+					<span *ngIf="!fetching">Create Group Profile Page</span>
+					<svg
+						*ngIf="!fetching"
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							opacity="0.95"
+							d="M9.48376 5.41078C9.199 5.12602 9.199 4.66434 9.48376 4.37958C9.76852 4.09483 10.2302 4.09483 10.515 4.37958L15.6191 9.48375C15.9039 9.76851 15.9039 10.2302 15.6191 10.5149L10.515 15.6191C10.2302 15.9039 9.76852 15.9039 9.48376 15.6191C9.199 15.3344 9.199 14.8727 9.48376 14.5879L13.3432 10.7285H4.89518C4.49247 10.7285 4.16602 10.4021 4.16602 9.99934C4.16602 9.59664 4.49247 9.27018 4.89518 9.27018H13.3432L9.48376 5.41078Z"
+							fill="white"
+						/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #noGroupsFound>
+	<div class="no-groups">
+		<p class="info m-0">No groups found!</p>
+	</div>
+</ng-template>
+
+<ng-template #loadingGroupPagesList>
+	<div *ngFor="let loader of loaderCount" class="profile-box">
+		<div class="profile-box-body">
+			<div class="profile-box-left">
+				<figure class="loading-strip"></figure>
+				<div>
+					<h6 class="loading-strip"></h6>
+					<small class="loading-strip"></small>
+				</div>
+			</div>
+			<div class="profile-box-right"></div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #oneGroupModeItem>
+	<div class="group-item active single-item">
+		<div class="group-content">
+			<div class="group-image">
+				<img [fbEntityId]="group.fbGroupId" src="{{ group?.coverImageUrl }}" alt="" />
+			</div>
+			<div class="group-description">
+				<h5>{{ group?.name }}</h5>
+				<div class="group-members">
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M9.33398 6.41602C10.3023 6.41602 11.0782 5.63435 11.0782 4.66602C11.0782 3.69768 10.3023 2.91602 9.33398 2.91602C8.36565 2.91602 7.58398 3.69768 7.58398 4.66602C7.58398 5.63435 8.36565 6.41602 9.33398 6.41602ZM4.66732 6.41602C5.63565 6.41602 6.41148 5.63435 6.41148 4.66602C6.41148 3.69768 5.63565 2.91602 4.66732 2.91602C3.69898 2.91602 2.91732 3.69768 2.91732 4.66602C2.91732 5.63435 3.69898 6.41602 4.66732 6.41602ZM4.66732 7.58268C3.30815 7.58268 0.583984 8.26518 0.583984 9.62435V10.4994C0.583984 10.8202 0.846484 11.0827 1.16732 11.0827H8.16732C8.48815 11.0827 8.75065 10.8202 8.75065 10.4994V9.62435C8.75065 8.26518 6.02648 7.58268 4.66732 7.58268ZM9.33398 7.58268C9.16482 7.58268 8.97232 7.59435 8.76815 7.61185C8.77982 7.61768 8.78565 7.62935 8.79148 7.63518C9.45648 8.11935 9.91732 8.76685 9.91732 9.62435V10.4994C9.91732 10.7035 9.87648 10.9019 9.81232 11.0827H12.834C13.1548 11.0827 13.4173 10.8202 13.4173 10.4994V9.62435C13.4173 8.26518 10.6932 7.58268 9.33398 7.58268Z"
+							fill="#9999A7"
+						/>
+					</svg>
+					<span> {{ group?.memberCount | shortNumber }} {{ group?.memberCount === 1 ? 'member' : 'members' }} </span>
+				</div>
+			</div>
+		</div>
+		<svg
+			class="selected-item-icon"
+			width="20"
+			height="20"
+			viewBox="0 0 20 20"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M9.99935 1.66602C5.39935 1.66602 1.66602 5.39935 1.66602 9.99935C1.66602 14.5993 5.39935 18.3327 9.99935 18.3327C14.5993 18.3327 18.3327 14.5993 18.3327 9.99935C18.3327 5.39935 14.5993 1.66602 9.99935 1.66602ZM8.33268 14.166L4.16602 9.99935L5.34102 8.82435L8.33268 11.8077L14.6577 5.48268L15.8327 6.66602L8.33268 14.166Z"
+				fill="#3654FF"
+			/>
+		</svg>
+	</div>
+</ng-template>

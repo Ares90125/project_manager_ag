@@ -1,0 +1,90 @@
+@import '../../../assets/scss/custom/variables';
+@import '../../../assets/scss/custom/mixins';
+
+.bt-spinner {
+	height: 45px;
+	width: 45px;
+	border: 6px solid rgba(54, 84, 255, 0.15);
+	border-top-color: #3654ff;
+	position: relative;
+	margin: 0px auto;
+}
+.login-response-container {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+	.logo {
+		img {
+			width: 180px;
+		}
+	}
+	.loading-wrapper {
+		width: 420px;
+		max-width: 100%;
+		padding: 0 24px;
+		text-align: center;
+		background: #fff;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+		border-radius: 6px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		@media (max-width: 767px) {
+			max-width: calc(100% - 40px);
+		}
+	}
+	.login-info-wrapper {
+		padding: 100px 0;
+		@media (max-width: 767px) {
+			padding: 50px 0;
+		}
+	}
+	.primary-loading-text {
+		margin: 30px 0 20px;
+		opacity: 1;
+		font-size: 16px;
+		line-height: 145%;
+	}
+	.secondary-loading-text {
+		opacity: 0.8;
+		font-size: 15px;
+	}
+	.reconnect-facebook {
+		padding: 30px 10px;
+		background: #fff4e7;
+		border: 1px solid #ff9c28;
+		border-radius: 5px;
+		text-align: center;
+		margin-bottom: 24px;
+		p {
+			font-size: 14px;
+			line-height: 16px;
+			color: #33334f;
+			opacity: 0.8;
+			margin-bottom: 16px;
+			margin-top: 0;
+		}
+	}
+	.btn-login-facebook {
+		color: $white;
+		border: 1px solid #4267b2;
+		height: 36px;
+		margin: 0 auto;
+		padding: 9px 12px;
+		font-size: 15px;
+		align-items: center;
+		font-weight: 500;
+		line-height: 18px;
+		background-color: #4267b2;
+		@include flex();
+		@include box-shadow(0px 2px 6px rgba(54, 84, 255, 0.1));
+		@include border-radius(5px);
+
+		.img-facebook-logo {
+			margin-right: 8px;
+			width: 16px;
+		}
+	}
+}

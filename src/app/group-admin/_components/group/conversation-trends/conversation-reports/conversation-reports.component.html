@@ -1,0 +1,285 @@
+<ng-container *ngIf="group['businessCategory'] === 'Parenting'">
+	<div class="container" [hidden]="noTrendsFound || loadingTrends" id="pdfContainer" style="display: none">
+		<div class="conversation-section" style="height: 775px">
+			<div class="card" style="height: 580px; margin-top: 100px !important">
+				<div class="card-body py-1">
+					<div class="row" style="margin-left: 100px; margin-right: 100px">
+						<div class="col-md-6 mx-auto">
+							<div class="content">
+								<h2>Conversations</h2>
+								<h4>{{ convStartDate | date: 'MMM d, y' }} - {{ currentDate | date: 'MMM d, y' }}</h4>
+								<div class="group-name">
+									<h4>{{ group.name }}</h4>
+									<p>
+										<svg
+											*ngIf="group.privacy !== 'OPEN'"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M11.9998 5.33329H11.3332V3.99996C11.3332 2.15996 9.83984 0.666626 7.99984 0.666626C6.15984 0.666626 4.6665 2.15996 4.6665 3.99996V5.33329H3.99984C3.2665 5.33329 2.6665 5.93329 2.6665 6.66663V13.3333C2.6665 14.0666 3.2665 14.6666 3.99984 14.6666H11.9998C12.7332 14.6666 13.3332 14.0666 13.3332 13.3333V6.66663C13.3332 5.93329 12.7332 5.33329 11.9998 5.33329ZM7.99984 11.3333C7.2665 11.3333 6.6665 10.7333 6.6665 9.99996C6.6665 9.26663 7.2665 8.66663 7.99984 8.66663C8.73317 8.66663 9.33317 9.26663 9.33317 9.99996C9.33317 10.7333 8.73317 11.3333 7.99984 11.3333ZM10.0665 5.33329H5.93317V3.99996C5.93317 2.85996 6.85984 1.93329 7.99984 1.93329C9.13984 1.93329 10.0665 2.85996 10.0665 3.99996V5.33329Z"
+												fill="#9999A7"
+											/>
+										</svg>
+
+										<svg
+											*ngIf="group.privacy === 'OPEN'"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<g opacity="0.5">
+												<path
+													d="M8.00016 1.33337C4.32016 1.33337 1.3335 4.32004 1.3335 8.00004C1.3335 11.68 4.32016 14.6667 8.00016 14.6667C11.6802 14.6667 14.6668 11.68 14.6668 8.00004C14.6668 4.32004 11.6802 1.33337 8.00016 1.33337ZM7.3335 13.2867C4.70016 12.96 2.66683 10.72 2.66683 8.00004C2.66683 7.58671 2.72016 7.19337 2.80683 6.80671L6.00016 10V10.6667C6.00016 11.4 6.60016 12 7.3335 12V13.2867ZM11.9335 11.5934C11.7602 11.0534 11.2668 10.6667 10.6668 10.6667H10.0002V8.66671C10.0002 8.30004 9.70016 8.00004 9.3335 8.00004H5.3335V6.66671H6.66683C7.0335 6.66671 7.3335 6.36671 7.3335 6.00004V4.66671H8.66683C9.40016 4.66671 10.0002 4.06671 10.0002 3.33337V3.06004C11.9535 3.85337 13.3335 5.76671 13.3335 8.00004C13.3335 9.38671 12.8002 10.6467 11.9335 11.5934Z"
+													fill="#33334F"
+												/>
+											</g>
+										</svg>
+										{{ group.privacy === 'OPEN' ? 'Public' : 'Private' }} .
+										{{ group.memberCount | shortNumber }} members
+										<!-- {{ group.memberCount | i18nPlural: pluralWordMapping['member'] |
+                    lowercase }} -->
+									</p>
+								</div>
+								<p>Generated on {{ currentDate | date: 'MMM d, y' }}</p>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="image-content">
+								<img class="img-fluid float-right" src="assets/images/conversation-title.svg" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-footer">
+				<div class="right">
+					<p>powered by</p>
+					<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+				</div>
+			</div>
+		</div>
+		<div class="topics-section" style="height: 775px">
+			<div style="height: 620px; margin-left: 50px; margin-right: 50px; margin-top: 80px !important">
+				<div class="card mt-4" *ngIf="topTopics">
+					<div class="card-header">
+						<div class="page-headers">
+							<h1>Top 10 discussed topics</h1>
+							<h6>These are the keywords that are trending right now in this group</h6>
+						</div>
+						<div class="headers-right">
+							<p class="growth-health">Conversation Insights for {{ group.name }}</p>
+							<p class="date">{{ convStartDate | date: 'MMM d, y' }} - {{ currentDate | date: 'MMM d, y' }}</p>
+						</div>
+					</div>
+					<div class="card-body py-1">
+						<div class="custom-tags-container mt-4" *ngIf="topTopics">
+							<div
+								class="custom-tag topics-tag mb-4"
+								*ngFor="let topic of topTopics | keyvalue: preserveOrder | slice: 0:10; let i = index"
+								matTooltip="View mentions"
+								matTooltipPosition="above"
+							>
+								<h5>{{ topic.key | titlecase }}</h5>
+								<p class="m-0 text-secondary small">{{ topic.value }}+ mentions</p>
+							</div>
+						</div>
+						<!-- <div class="mentions-list" *ngIf="!topTopics">
+              <div class="no-data-wrapper">
+                <p class="primary-text">Nothing to show here, yet</p>
+                <p class="secondary-text">Check back at some other time.</p>
+              </div>
+            </div> -->
+					</div>
+				</div>
+
+				<div class="card mt-4" *ngIf="topCategories">
+					<div class="card-header">
+						<div class="page-headers">
+							<h1>Top 5 categories</h1>
+							<h6>These are some of the categories identified from the conversations in your group</h6>
+						</div>
+					</div>
+					<div class="card-body py-1">
+						<div class="custom-tags-container mt-4" *ngIf="topCategories">
+							<div
+								class="custom-tag category-tag mb-4"
+								*ngFor="let category of topCategories | keyvalue: preserveOrder | slice: 0:5; let i = index"
+								matTooltip="View detailed report"
+								matTooltipPosition="above"
+							>
+								<h5>{{ category.key | titlecase }}</h5>
+								<p class="m-0 text-secondary small">{{ category.value }}+ conversations</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-footer">
+				<div class="left">
+					<p>Reasons why Convosight insights might be lower than Facebook</p>
+					<a
+						href="https://www.notion.so/Why-are-the-numbers-in-my-Convosight-insights-report-lower-d8f880622eb744d1b7c30c5fd2efebc8"
+						>Click here to Learn more</a
+					>
+				</div>
+				<div class="right">
+					<p>powered by</p>
+					<img alt="convosight logo" src="assets/images/logo-grey.svg" class="logo" />
+				</div>
+			</div>
+		</div>
+
+		<div class="topics-section keywords-section" style="height: 765px">
+			<div style="margin-top: 80px !important; margin-left: 50px; margin-right: 50px; height: 600px">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Conversation Insights for {{ group.name }}</p>
+					<p class="date">{{ convStartDate | date: 'MMM d, y' }} - {{ currentDate | date: 'MMM d, y' }}</p>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6" *ngIf="topIssues">
+						<div class="card mt-4">
+							<div class="card-header">
+								<h4 class="font-weight-normal m-0">Top 5 Issue keywords identified</h4>
+							</div>
+							<ul class="mentions-list" *ngIf="topIssues">
+								<li
+									class="text-secondary"
+									(click)="showConversations(issue, 'issue', $event); tooltip.toggle()"
+									*ngFor="let issue of topIssues | keyvalue: preserveOrder | slice: 0:5; let i = index"
+									matTooltip="View mentions"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="View mentions"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<strong>{{ issue.key | titlecase }}</strong>
+									{{ issue.value }}+ mentions
+								</li>
+							</ul>
+							<!-- <div class="mentions-list" *ngIf="!topIssues">
+              <div class="no-data-wrapper">
+                <p class="primary-text">Nothing to show here, yet</p>
+                <p class="secondary-text">Check back at some other time.</p>
+              </div>
+            </div> -->
+						</div>
+					</div>
+					<div class="col-12 col-sm-6" *ngIf="topRemedies">
+						<div class="card mt-4">
+							<div class="card-header">
+								<h4 class="font-weight-normal m-0">Top 5 Remedy keywords identified</h4>
+							</div>
+							<ul class="mentions-list" *ngIf="topRemedies">
+								<li
+									class="text-secondary"
+									(click)="showConversations(remedy, 'remedy', $event); tooltip.toggle()"
+									*ngFor="let remedy of topRemedies | keyvalue: preserveOrder | slice: 0:5; let i = index"
+									matTooltip="View mentions"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="View mentions"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<strong>{{ remedy.key | titlecase }}</strong>
+									{{ remedy.value }}+ mentions
+								</li>
+							</ul>
+							<!-- <div class="mentions-list" *ngIf="!topRemedies">
+              <div class="no-data-wrapper">
+                <p class="primary-text">Nothing to show here, yet</p>
+                <p class="secondary-text">Check back at some other time.</p>
+              </div>
+            </div> -->
+						</div>
+					</div>
+				</div>
+				<div class="row mb-5">
+					<div class="col-12 col-sm-6" *ngIf="topProducts">
+						<div class="card mt-4">
+							<div class="card-header">
+								<h4 class="font-weight-normal m-0">Top 5 Products identified</h4>
+							</div>
+							<ul class="mentions-list" *ngIf="topProducts">
+								<li
+									class="text-secondary"
+									(click)="showConversations(product, 'product', $event); tooltip.toggle()"
+									*ngFor="let product of topProducts | keyvalue: preserveOrder | slice: 0:5; let i = index"
+									matTooltip="View mentions"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="View mentions"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<strong>{{ product.key | titlecase }}</strong>
+									{{ product.value }}+ mentions
+								</li>
+							</ul>
+							<!-- <div class="mentions-list" *ngIf="!topProducts">
+              <div class="no-data-wrapper">
+                <p class="primary-text">Nothing to show here, yet</p>
+                <p class="secondary-text">Check back at some other time.</p>
+              </div>
+            </div> -->
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="card mt-4" *ngIf="topBrands">
+							<div class="card-header">
+								<h4 class="font-weight-normal m-0">Top 5 Brands identified</h4>
+							</div>
+							<ul class="mentions-list" *ngIf="topBrands">
+								<li
+									class="text-secondary"
+									(click)="showConversations(brand, 'brand', $event); tooltip.toggle()"
+									*ngFor="let brand of topBrands | keyvalue: preserveOrder | slice: 0:5; let i = index"
+									matTooltip="View mentions"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="View mentions"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<strong>{{ brand.key | titlecase }}</strong>
+									{{ brand.value }}+ mentions
+								</li>
+							</ul>
+							<!-- <div class="mentions-list" *ngIf="!topBrands">
+              <div class="no-data-wrapper">
+                <p class="primary-text">Nothing to show here, yet</p>
+                <p class="secondary-text">Check back at some other time.</p>
+              </div>
+            </div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="page-footer">
+				<div class="left">
+					<p>Reasons why Convosight insights might be lower than Facebook</p>
+					<a
+						href="https://www.notion.so/Why-are-the-numbers-in-my-Convosight-insights-report-lower-d8f880622eb744d1b7c30c5fd2efebc8"
+						>Click here to Learn more</a
+					>
+				</div>
+				<div class="right">
+					<p>powered by</p>
+					<img alt="convosight logo" src="assets/images/logo-grey.svg" class="logo" />
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

@@ -1,0 +1,178 @@
+.verify-email-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1040;
+	background: rgba(0, 0, 0, 0.54);
+	bottom: 0;
+	right: 0;
+	.verify-modal-content {
+		position: absolute;
+		width: 500px;
+		background: #fff;
+		border-radius: 12px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		max-width: 96%;
+		.verify-modal-header {
+			padding: 30px;
+			text-align: center;
+			background: #f0f6ff;
+			border-radius: 12px 12px 0 0;
+			color: #33334f;
+			.close-modal {
+				position: absolute;
+				top: 0;
+				right: 0;
+				background: none;
+				border: none;
+				padding: 0;
+				width: 40px;
+				height: 40px;
+				outline: none;
+			}
+			h6 {
+				font-size: 24px;
+				font-weight: 700;
+			}
+		}
+		.verify-modal-body {
+			padding: 40px 80px 50px;
+			font-size: 14px;
+			@media (max-width: 767px) {
+				padding: 30px 15px 30px;
+			}
+			.convo-btn-primary {
+				height: 44px;
+				margin-top: 30px;
+				width: 100%;
+				&:disabled {
+					background: #80b2ff;
+					color: #fff;
+					border-color: #80b2ff;
+				}
+			}
+			strong {
+				font-weight: 500;
+				font-size: 14px;
+				color: #7171a6;
+			}
+			.edit-email,
+			.resend-otp {
+				color: #3654ff;
+				font-weight: 500;
+				font-size: 14px;
+				background: none;
+				border: none;
+				text-decoration: underline;
+				text-align: center;
+			}
+			.already-have-otp {
+				color: #3654ff;
+				font-weight: 500;
+				font-size: 14px;
+				background: none;
+				border: none;
+				text-decoration: underline;
+				display: block;
+				margin: 16px auto 0 auto;
+			}
+			.otp-input-wrap {
+				width: 320px;
+				margin: 0px auto;
+				padding-top: 30px;
+				small {
+					font-weight: 500;
+					font-size: 12px;
+					color: #33334f;
+					display: block;
+					padding-bottom: 5px;
+				}
+				ul {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					li {
+						input {
+							border: 1px solid #a8a8a8;
+							box-sizing: border-box;
+							border-radius: 3px;
+							height: 42px;
+							width: 42px;
+							outline: none;
+							font-weight: 500;
+							font-size: 16px;
+							text-align: center;
+							color: #000;
+							&:focus {
+								border-color: #3654ff;
+							}
+						}
+					}
+				}
+			}
+			.warning-message {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				line-height: 16px;
+				color: #ff9c28;
+				margin: 25px 0 0;
+				span {
+					padding-left: 8px;
+				}
+			}
+			.verify-later {
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 19px;
+				color: #7171a6;
+				border: none;
+				background: no-repeat;
+				margin-top: 20px;
+			}
+		}
+	}
+}
+
+:host ::ng-deep {
+	.custom-card mat-card-content .custom-form .mat-form-field {
+		padding: 13px 16px 10px;
+	}
+	.mat-form-field-appearance-legacy.mat-form-field-can-float
+		.mat-form-field-autofill-control:-webkit-autofill
+		+ .mat-form-field-label-wrapper
+		.mat-form-field-label {
+		padding-top: 8px;
+	}
+	.custom-card
+		mat-card-content
+		.custom-form
+		.mat-form-field
+		.mat-form-field-wrapper
+		.mat-form-field-flex
+		.mat-form-field-infix
+		.mat-form-field-label-wrapper
+		.mat-form-field-label {
+		margin: 8px 0 3px;
+		&.mat-form-field-empty {
+			margin: 0 0 3px;
+		}
+	}
+	.custom-card
+		mat-card-content
+		.custom-form
+		.mat-form-field
+		.mat-form-field-wrapper
+		.mat-form-field-flex
+		.mat-form-field-infix
+		.custom-input {
+		&:focus + .mat-form-field-label-wrapper {
+			.mat-form-field-empty {
+				margin: 8px 0 3px;
+			}
+		}
+	}
+}

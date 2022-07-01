@@ -1,0 +1,135 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.brand-chart {
+	padding: 32px 24px 0 24px;
+	background: #fff;
+}
+.card-inner-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+
+	h3 {
+		@include font-label-l-md;
+		color: #33334f;
+	}
+
+	p {
+		@include font-label-xs;
+		color: $black-70;
+		margin-bottom: 32px;
+	}
+}
+.charts {
+	background: #fff;
+	margin-top: 24px;
+	padding: 32px 24px 0 24px;
+}
+.brand-sentiment-lagends {
+	display: flex;
+	flex-direction: column-reverse;	
+}
+.legend {
+	background: #f4f6f8;
+	border: 1px solid #d6d6dc;
+	box-sizing: border-box;
+	border-radius: 4px;
+	padding: 16px 24px;
+	font-size: 14px;
+	line-height: 24px;
+	color: #33334f;
+	height: 200px;
+	overflow: auto;
+	span:nth-child(2) {
+		float: right;
+		color: $black-70;
+		font-weight: 500;
+	}
+	p {
+		color: $black-50;
+		@include font-label-s;
+	}
+}
+.charts {
+	.col-md-4 {
+		&:nth-child(1),
+		&:nth-child(2) {
+			border-right: 1px solid #ebebed;
+		}
+	}
+}
+
+#openReferenceConversationButton {
+	visibility: hidden;
+}
+.supporting-text {
+	background: #fff;
+	border-radius: 4px;
+	width: 100%;
+	display: none;
+	padding: 16px 20px;
+	font-weight: 500;
+	font-size: 16px;
+	color: #3654FF;
+	text-align: left;
+	cursor: pointer;
+	&.show {
+		display: block;
+	}
+}
+.supporting-text-textarea {
+	display: none;
+	justify-content: space-between;
+	&.show {
+		display: flex;
+	}
+
+	textarea {
+		width: calc(100% - 120px);
+		padding: 8px;
+		border-radius: 4px;
+	}
+	.action {
+		width: 100px;
+		button {
+			width: 100px;
+			border-radius: 4px;
+			height: 32px;
+			&.convo-btn-primary {
+				margin-bottom: 8px;
+			}
+			&.btn-outline-primary {
+				background: #fff;
+				&:hover {
+					color: #007bff;
+				}
+			}
+		}
+	}
+}
+.supporting-text-text {
+	text-align: left;
+	display: none;
+	&.show {
+		display: block;
+	}
+	p {
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 20px;
+		color: #33334F;
+	}
+	a {
+		font-weight: 500;
+		font-size: 14px;
+		line-height: 16px;
+		color: #3654ff;
+		img {
+			width: 12px!important;
+			margin-right: 8px;
+			cursor: pointer;
+		}
+	}
+}

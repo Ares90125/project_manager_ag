@@ -1,0 +1,22 @@
+.list-unstyled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 0;
+}
+
+.step-circle {
+	width: 6px;
+	height: 6px;
+	background-color: #e0e0e5;
+	margin-right: 5px;
+	border-radius: 50%;
+	&.active-step {
+		width: 8px;
+		height: 8px;
+		background-color: #33334f;
+	}
+	&:last-child {
+		margin-right: 0;
+	}
+}

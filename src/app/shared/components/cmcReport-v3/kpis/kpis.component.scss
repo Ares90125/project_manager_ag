@@ -1,0 +1,436 @@
+.editButton {
+	display: inline-flex;
+	height: fit-content;
+	font-size: 0.9em;
+	margin-left: 0px;
+	padding: 0px;
+	border: 0px;
+	background: transparent;
+	align-items: flex-end;
+	margin-left: 1%;
+	align-items: center;
+
+	span.material-icons {
+		font-size: 1em;
+	}
+}
+
+.supportingText {
+	hr {
+		width: 102%;
+		display: block;
+	}
+}
+
+.add-text,
+.editButton {
+	color: #3654ff;
+}
+
+.add-text {
+	font-weight: 600;
+	cursor: pointer;
+
+	.plus {
+		font-size: 1.5em;
+		font-weight: normal;
+	}
+}
+
+.hide-from-brand {
+	float: right;
+	font-weight: normal;
+	color: #707084;
+
+	span.material-icons {
+		color: #adadb9;
+		width: 25px;
+	}
+}
+
+:host {
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* Firefox */
+	input[type='number'] {
+		-moz-appearance: textfield;
+	}
+
+	::ng-deep {
+		.mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
+			background: #efeff1 !important;
+		}
+	}
+
+	.target-description {
+		border-radius: 9px;
+		margin: 2% auto;
+		padding: 2%;
+		background: #ffffff;
+		display: inline-flex;
+		border: 1px solid #f2f2f4;
+		width: 100%;
+
+		.target-legend {
+			padding: 1.2%;
+			height: fit-content;
+			display: inline-block;
+			background: #3654ff;
+			border-radius: 3px;
+		}
+
+		.text {
+			width: 100%;
+			display: inline-block;
+			margin-left: 1%;
+			color: #9999a7;
+
+			h6 {
+				color: initial;
+				margin-bottom: 0.5%;
+			}
+		}
+	}
+
+	app-kpi-chart {
+		display: block;
+		width: 100%;
+		height: 110px;
+	}
+
+	.multi-graph-container,
+	.gap-10 {
+		gap: 10px;
+	}
+
+	.multi-graph-container {
+		background: #f4f6f8;
+		border-radius: 5px;
+
+		.horizontal-border {
+			border-bottom: 1px solid #e0e0e5;
+		}
+
+		.vertical-line {
+			display: inline-block;
+			height: 80%;
+			width: 2px;
+			background: #e0e0e5;
+		}
+	}
+
+	span.placeholder {
+		color: #adadb9;
+		font-style: italic;
+		display: inline-block;
+
+		strong {
+			font-weight: 500;
+		}
+	}
+
+	.invisible-input-cont input {
+		width: 0px;
+		height: 0px;
+		display: none;
+	}
+
+	.content {
+		.row {
+			margin: 0px;
+		}
+
+		.metric-section {
+			width: 45%;
+			margin: 0;
+			border-radius: 5px;
+			position: relative;
+			background: #f4f6f8;
+			display: inline-block;
+			position: relative;
+
+			.custom-tooltip {
+				left: 50%;
+				padding-bottom: 3%;
+				background: #33334f;
+				color: white;
+				position: absolute;
+				top: 0px;
+				z-index: 5;
+				min-width: 260px;
+				border-radius: 5px;
+				display: inline-block !important;
+				opacity: 0;
+
+				&.show {
+					animation: bottom-top 0.7s forwards;
+				}
+
+				&.hide {
+					animation: hide 0.7s forwards;
+					z-index: 0 !important;
+					opacity: initial;
+				}
+
+				.arrow {
+					width: 20px;
+					height: 20px;
+					display: inline-block;
+					background: #33334f;
+					left: 50%;
+					transform: translateX(-50%) rotate(45deg) translateY(-50%);
+					position: absolute;
+					border-radius: 3px;
+				}
+
+				table {
+					width: 90%;
+					margin-top: 2em;
+					margin: auto;
+
+					tr td:not(:first-child) {
+						padding-left: 5%;
+					}
+				}
+
+				.legend {
+					width: 20px;
+					height: 20px;
+					display: inline-block;
+					border-radius: 5px;
+				}
+
+				.pre-campaign .legend {
+					background: #a2d9bb;
+				}
+
+				.target .legend {
+					background: #3654ff;
+				}
+
+				.achieved .legend {
+					background: #27ae60;
+				}
+			}
+
+			@keyframes bottom-top {
+				0% {
+					transform: translateY(100%);
+					opacity: 0;
+				}
+
+				100% {
+					transform: translateY(50%);
+					opacity: 1;
+				}
+			}
+
+			@keyframes hide {
+				0% {
+					transform: translateY(50%);
+				}
+
+				100% {
+					transform: translateY(100%);
+					opacity: 0;
+				}
+			}
+
+			.header {
+				margin: 0px;
+
+				.name {
+					font-size: 0.7em;
+					color: #707084;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+
+	.modal-dialog {
+		max-width: 80%;
+	}
+
+	.modal {
+		.modal-title {
+			color: #33334f;
+
+			span {
+				color: #707084;
+			}
+		}
+
+		.kpi-popup-content {
+			background: #f4f6f8;
+			padding: 3% 2%;
+			max-height: 65vh;
+			overflow: auto;
+
+			h5 {
+				font-size: 1em;
+				color: #33334f;
+			}
+
+			.section {
+				width: 100%;
+			}
+
+			::ng-deep {
+				.mat-form-field {
+					padding-right: 0px;
+				}
+
+				.mat-form-field-outline {
+					background: white;
+				}
+
+				.mat-form-field-wrapper {
+					padding-bottom: 0px;
+				}
+			}
+
+			.error-msg {
+				color: #eb5757;
+				white-space: break-spaces;
+			}
+
+			table {
+				width: 100%;
+
+				thead th {
+					color: #808091;
+					border-bottom: 1px solid #e2e2e2;
+					padding-bottom: 1%;
+					padding-left: 3%;
+					width: 19%;
+				}
+
+				th:last-child {
+					width: 18%;
+					padding-left: 0px;
+
+					span {
+						justify-content: center;
+					}
+				}
+
+				th:first-child {
+					padding-left: 1% !important;
+				}
+
+				td {
+					position: relative;
+					padding-left: 3%;
+					padding-top: 1%;
+					padding-bottom: 0%;
+				}
+
+				tbody {
+					tr {
+						td {
+							span {
+								display: inline-flex;
+								align-items: center;
+								justify-content: left;
+								width: 100%;
+								height: 100%;
+								padding: 3% 0px;
+								text-overflow: ellipsis;
+								white-space: nowrap;
+								flex-wrap: wrap;
+							}
+						}
+
+						td:first-child {
+							span {
+								display: block;
+								overflow: hidden;
+							}
+						}
+					}
+
+					tr td:first-child {
+						width: 18%;
+						padding-left: 1%;
+
+						span {
+							background: #efeff1;
+							justify-content: left;
+							padding: 5% 0px 5% 5%;
+							/* font-size: .8em; */
+							border: 1px solid #dadada;
+							border-radius: 5px;
+						}
+					}
+				}
+			}
+
+			.form-section {
+				width: 100%;
+			}
+		}
+
+		.form-group {
+			width: 100%;
+		}
+
+		button.save:not(:disabled) {
+			background: #3654ff;
+		}
+	}
+
+	.edit-text {
+		.editButton {
+			font-size: inherit;
+			margin-left: 0px;
+		}
+	}
+
+	form {
+		textarea {
+			width: 100%;
+			resize: none;
+		}
+
+		::ng-deep {
+			.mat-form-field-appearance-outline {
+				.mat-form-field-infix {
+					padding-top: 0px;
+				}
+
+				.mat-form-field-wrapper {
+					margin: 0px;
+				}
+			}
+		}
+
+		.btn-wrapper {
+			height: 100%;
+
+			button {
+				width: 100%;
+			}
+
+			button.save::enabled {
+				background: #3654ff;
+			}
+
+			button.cancel {
+				color: #3654ff;
+			}
+		}
+
+		.convo-btn-primary {
+			width: 100%;
+		}
+	}
+
+	.header small {
+		color: #808091;
+	}
+}

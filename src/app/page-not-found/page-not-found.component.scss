@@ -1,0 +1,62 @@
+@import '../../assets/scss/custom/_variables.scss';
+@import '../../assets/scss/custom/_mixins.scss';
+
+.page-not-found-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	background: #fff;
+
+	.page-not-found-content {
+		text-align: center;
+		padding: 0 16px;
+		max-width: 100%;
+
+		figure {
+			width: 500px;
+			margin: 0px auto 8px;
+			max-width: 100%;
+
+			img {
+				max-width: 100%;
+			}
+		}
+
+		h5 {
+			margin-bottom: 8px;
+			font-weight: 500;
+			font-size: 16px;
+			line-height: 20px;
+			color: $primary-1;
+		}
+
+		h6 {
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 400;
+			color: #707084;
+			margin: 0 auto 24px;
+			width: 400px;
+			max-width: 100%;
+		}
+
+		.convo-btn {
+			background: #ffffff;
+			border: 2px solid $emp-blue-1;
+			color: $emp-blue-1;
+			border-radius: 6px;
+			width: 260px;
+			max-width: 100%;
+			display: block;
+			text-decoration: none;
+			margin: 0px auto;
+			font-weight: 500;
+			font-size: 16px;
+			line-height: 22px;
+			padding: 11px 20px;
+			outline: none;
+			cursor: pointer;
+		}
+	}
+}

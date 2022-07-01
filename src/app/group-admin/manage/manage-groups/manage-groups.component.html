@@ -1,0 +1,379 @@
+<div class="group-container">
+	<ng-container *ngIf="!isLoading; else loading">
+		<!-- <div *ngIf="totalGroups > 0 && areAllGroupsHasNonInstallState" class="add-group-process">
+			<div class="text-center">
+				<p class="primary-text">You are just 1 step away</p>
+			</div>
+			<ul class="list-unstyled">
+				<li>
+					<div class="group-process-box">
+						<figure>
+							<svg fill="none" height="20" viewBox="0 0 28 20" width="28" xmlns="http://www.w3.org/2000/svg">
+								<path
+									clip-rule="evenodd"
+									d="M27.0588 2.78813L9.45942 20L0 10.75L2.85074 7.96168L9.45925 14.4239L24.2079 0L27.0588 2.78813Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+							</svg>
+						</figure>
+						<p data-test-id="process-text">Sign up</p>
+					</div>
+				</li>
+				<li>
+					<div class="group-process-box">
+						<figure>
+							<svg fill="none" height="20" viewBox="0 0 28 20" width="28" xmlns="http://www.w3.org/2000/svg">
+								<path
+									clip-rule="evenodd"
+									d="M27.0588 2.78813L9.45942 20L0 10.75L2.85074 7.96168L9.45925 14.4239L24.2079 0L27.0588 2.78813Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+							</svg>
+						</figure>
+						<p data-test-id="process-text">Add groups</p>
+					</div>
+				</li>
+				<li>
+					<div class="group-process-box">
+						<figure>
+							<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M18.1684 8.16842H11.8316V1.83158C11.8316 0.821053 11.0105 0 10 0C8.98947 0 8.16842 0.821053 8.16842 1.83158V8.16842H1.83158C0.821053 8.16842 0 8.98947 0 10C0 10.5053 0.210526 10.9684 0.526316 11.3053C0.863158 11.6421 1.32632 11.8316 1.83158 11.8316H8.16842V18.1684C8.16842 18.6737 8.37895 19.1368 8.69474 19.4737C9.03158 19.8105 9.49474 20 10 20C11.0105 20 11.8316 19.1789 11.8316 18.1684V11.8316H18.1684C19.1789 11.8316 20 11.0105 20 10C20 8.98947 19.1789 8.16842 18.1684 8.16842Z"
+									fill="#33334F"
+									opacity="0.7"
+								/>
+							</svg>
+						</figure>
+						<p data-test-id="process-text">Add app to Groups</p>
+					</div>
+				</li>
+				<li>
+					<div class="group-process-box">
+						<figure>
+							<svg fill="none" height="20" viewBox="0 0 27 20" width="27" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M23.3333 0C21.4925 0 20 1.4925 20 3.33333C20 4.09417 20.265 4.7875 20.6942 5.34833L15.595 13.3933C15.4008 13.3583 15.2033 13.3333 15 13.3333C14.7942 13.3333 14.595 13.3583 14.3992 13.3933L11.8767 9.42917C12.2658 8.88417 12.5 8.22083 12.5 7.5C12.5 5.65917 11.0075 4.16667 9.16667 4.16667C7.32583 4.16667 5.83333 5.65917 5.83333 7.5C5.83333 8.22083 6.0675 8.88417 6.45667 9.42917L3.93417 13.3933C3.73833 13.3583 3.53917 13.3333 3.33333 13.3333C1.4925 13.3333 0 14.8258 0 16.6667C0 18.5075 1.4925 20 3.33333 20C5.17417 20 6.66667 18.5075 6.66667 16.6667C6.66667 15.9458 6.4325 15.2825 6.04333 14.7375L8.56583 10.7733C8.76167 10.8083 8.96083 10.8333 9.16667 10.8333C9.3725 10.8333 9.57167 10.8083 9.7675 10.7733L12.29 14.7375C11.9008 15.2825 11.6667 15.9458 11.6667 16.6667C11.6667 18.5075 13.1592 20 15 20C16.8408 20 18.3333 18.5075 18.3333 16.6667C18.3333 15.9442 18.0975 15.2792 17.7058 14.7333L22.85 6.61833C23.0092 6.64167 23.1683 6.66667 23.3333 6.66667C25.1742 6.66667 26.6667 5.17417 26.6667 3.33333C26.6667 1.4925 25.1742 0 23.3333 0Z"
+									fill="#33334F"
+									opacity="0.7"
+								/>
+							</svg>
+						</figure>
+						<p data-test-id="process-text">Get Insights</p>
+					</div>
+				</li>
+			</ul>
+		</div> -->
+
+		<div class="all-groups-info-wrapper new-user-groups-info-wrapper">
+			<ng-container>
+				<app-all-prompt-card [groupsService]="groupsService" [user]="user"></app-all-prompt-card>
+
+				<div class="group-summary-container">
+					<ng-container *ngIf="installedGroups.length > 1">
+						<h3 class="head-text">Summary of your groups</h3>
+
+						<div class="matrics-top-container">
+							<div class="group-summary-wrapper">
+								<div class="group-data-summary">
+									<div class="data-wrapper">
+										<ng-container *ngIf="(totalConversations$ | async) !== null; else summaryCardLoading">
+											<div class="tooltip-wrapper">
+												<app-tooltip [setTooltipText]="'The total number of groups you are an admin of'"></app-tooltip>
+											</div>
+											<p class="group-data-head">Total groups</p>
+											<p class="value">{{ totalGroups }}</p>
+											<p class="bottom-text">admined by you</p>
+										</ng-container>
+									</div>
+								</div>
+								<div class="group-data-summary">
+									<div class="data-wrapper">
+										<ng-container *ngIf="(totalConversations$ | async) !== null; else summaryCardLoading">
+											<div class="tooltip-wrapper">
+												<app-tooltip
+													[setTooltipText]="
+														'These are the total number of conversations (Comments + Posts) happening in your groups, connected to Convosight'
+													"
+												>
+												</app-tooltip>
+											</div>
+											<p class="group-data-head">Total conversations</p>
+											<p class="value">
+												{{ totalConversations$ | async | shortNumber }}
+											</p>
+											<p class="bottom-text">in groups with app added</p>
+										</ng-container>
+									</div>
+								</div>
+								<div class="group-data-summary">
+									<div class="data-wrapper">
+										<ng-container *ngIf="(totalConversations$ | async) !== null; else summaryCardLoading">
+											<div class="tooltip-wrapper">
+												<app-tooltip
+													[setTooltipText]="
+														'These are the total number of members in your groups connected to Convosight'
+													"
+												>
+												</app-tooltip>
+											</div>
+											<p class="group-data-head">Total members</p>
+											<p class="value">{{ totalMemberCount | shortNumber }}</p>
+											<p class="bottom-text">in groups with app added</p>
+										</ng-container>
+									</div>
+								</div>
+								<ng-template #summaryCardLoading>
+									<div class="group-container">
+										<div class="loader-wrapper group-summary-loader">
+											<div class="loading-strip primary"></div>
+											<div class="loading-strip secondary"></div>
+											<div class="loading-strip tertiary"></div>
+										</div>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</ng-container>
+					<div class="admin-group-card">
+						<h3 class="head-text">Pitch yourself to brands</h3>
+						<ng-container *ngIf="!loadingBannerCard; else loadingCard">
+							<div
+								class="group-profile-card"
+								[class.mt-20]="installedGroups.length < 2"
+								[class.mb-22]="groupHavingProfilePages.length === 0"
+							>
+								<div class="group-profile-card-left">
+									<figure><img src="./assets/images/admin-bio-prompt-card.svg" alt="" /></figure>
+									<div>
+										<ng-container *ngIf="user?.isAdminBioCompleted; else bioNotCompleted">
+											<h6>Manage your admin bio</h6>
+											<p>
+												Showcase your achievements as a community leader, to brands with your admin bio, and get brand
+												campaigns
+											</p>
+										</ng-container>
+										<ng-template #bioNotCompleted>
+											<h6>Complete your admin bio</h6>
+											<p>
+												Showcase your achievements as a community leader, to brands with your admin bio, and get brand
+												campaigns
+											</p>
+										</ng-template>
+									</div>
+								</div>
+								<div class="group-profile-card-right">
+									<ng-container *ngIf="user?.isAdminBioCompleted; else bioNotPublished">
+										<button
+											class="convo-btn-primary"
+											data-cs-id="31922eb4-668e-4540-acea-97b643b61589"
+											data-cs-label="Edit Admin Bio"
+											data-cs-source="page"
+											(click)="recordButtonClick($event); navigateToEditAdminBio()"
+										>
+											Edit Admin Bio
+										</button>
+									</ng-container>
+									<ng-template #bioNotPublished>
+										<button
+											class="convo-btn-primary"
+											data-cs-id="e222147d-ea37-4af9-8cf2-2b7f06bde065"
+											data-cs-label="Complete Now"
+											data-cs-source="page"
+											(click)="recordButtonClick($event); openAdminBioJourneyPopup()"
+										>
+											Complete Now
+										</button>
+									</ng-template>
+								</div>
+							</div>
+
+							<div class="group-profile-card mb-22" *ngIf="groupHavingProfilePages.length > 0">
+								<div class="group-profile-card-left">
+									<figure><img src="./assets/images/group-profile-card-icon.svg" alt="" /></figure>
+									<div>
+										<ng-container *ngIf="user?.ownsGroupProfile; else notOnboarded">
+											<h6>Manage your group's profile page</h6>
+											<p>
+												Showcase the top conversations happening in your group, along with important statistics about
+												your group, to brands with your group profile.
+											</p>
+										</ng-container>
+										<ng-template #notOnboarded>
+											<h6>Create your group's profile page</h6>
+
+											<p>
+												Showcase the top conversations happening in your group, along with important statistics about
+												your group, to brands with your group profile.
+											</p>
+										</ng-template>
+									</div>
+								</div>
+								<div class="group-profile-card-right">
+									<ng-container *ngIf="user?.ownsGroupProfile; else notCreatedProfile">
+										<button
+											class="convo-btn-primary"
+											data-cs-id="a94910d7-2e28-4818-ad95-5231bd60f135"
+											data-cs-label="Edit Group Profile"
+											data-cs-source="page"
+											(click)="navigateToGroupProfilePages($event)"
+										>
+											Edit Group Profile
+										</button>
+									</ng-container>
+									<ng-template #notCreatedProfile>
+										<button
+											class="convo-btn-primary"
+											data-cs-id="6e28fda4-207e-4344-b3bc-93406ce842c6"
+											data-cs-label="Create Now"
+											data-cs-source="page"
+											(click)="recordButtonClick($event); checkForGroupBioJourneyPopup()"
+										>
+											Create Now
+										</button>
+									</ng-template>
+								</div>
+							</div>
+						</ng-container>
+
+						<ng-template #loadingCard>
+							<div class="loader-section group-profile-card">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+
+					<div *ngIf="areThereAnyInstalledGroups" class="group-installed-wrapper">
+						<div class="head-text-row">
+							<h3 class="head-text">Your connected groups</h3>
+						</div>
+						<div class="group-list">
+							<div *ngFor="let grp of installedGroups; trackBy: trackByGroupId" class="list-item-wrapper">
+								<app-group-card
+									(openMobileInstallationOverlay)="openMobileOverlay($event)"
+									[group]="grp"
+									[installingGrp]="installingGrp"
+									[isInstalledGroup]="true"
+									[user]="user"
+								>
+								</app-group-card>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+			<div *ngIf="areThereAnyNonInstalledGroups" class="more-groups-wrapper">
+				<ng-container *ngIf="areThereAnyInstalledGroups">
+					<div class="head-text-row">
+						<h3 class="head-text">Your remaining groups</h3>
+					</div>
+				</ng-container>
+				<div class="group-list">
+					<div *ngFor="let grp of nonInstalledGroups; trackBy: trackByGroupId" class="list-item-wrapper">
+						<app-group-card
+							(groupInstallationEventEmitter)="addAppToGroupPopup($event)"
+							(openMobileInstallationOverlay)="openMobileOverlay($event)"
+							[group]="grp"
+							[installingGrp]="installingGrp"
+							[isInstalledGroup]="false"
+							[user]="user"
+						>
+						</app-group-card>
+					</div>
+				</div>
+			</div>
+			<button
+				(click)="getMoreGroupsFromFacebook($event)"
+				*ngIf="user?.userType === 'GroupMember'"
+				[disabled]="gettingGroupsFromFacebook"
+				class="btn btn-primary btn-add-more"
+				data-cs-id="c453db70-8704-4d88-8006-82f15d0b0df9"
+				data-cs-label="Add Groups"
+				data-cs-source="page"
+			>
+				<div *ngIf="!gettingGroupsFromFacebook" class="normal-state">
+					<span class="svg-wrapper">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10.0001 0.041626C4.47724 0.041626 0 4.51886 0 10.0417C0 14.995 3.60522 19.0972 8.33225 19.8916V12.128H5.91994V9.33417H8.33225V7.27413C8.33225 4.88389 9.79213 3.58135 11.9247 3.58135C12.9461 3.58135 13.8238 3.65746 14.0786 3.69098V6.18942L12.5995 6.19013C11.44 6.19013 11.2165 6.74102 11.2165 7.54969V9.33274H13.9832L13.6223 12.1265H11.2165V19.9584C16.1642 19.3562 20 15.1495 20 10.0388C20 4.51886 15.5228 0.041626 10.0001 0.041626Z"
+								fill="#1877F2"
+							/>
+						</svg>
+					</span>
+					<span *ngIf="totalGroups < 1" class="btn-text">Add Groups</span>
+					<span *ngIf="totalGroups >= 1" class="btn-text">Not seeing all your Facebook groups?</span>
+					<svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M1.19305 0.473307C0.933047 0.733307 0.933047 1.15331 1.19305 1.41331L3.77971 3.99997L1.19305 6.58664C0.933047 6.84664 0.933047 7.26664 1.19305 7.52664C1.45305 7.78664 1.87305 7.78664 2.13305 7.52664L5.19305 4.46664C5.45305 4.20664 5.45305 3.78664 5.19305 3.52664L2.13305 0.466641C1.87971 0.213307 1.45305 0.213307 1.19305 0.473307Z"
+							fill="#1877F2"
+						/>
+					</svg>
+				</div>
+				<div *ngIf="gettingGroupsFromFacebook" class="fetching-state">
+					<span class="bt-spinner"></span>
+					<span>Fetching groups</span>
+				</div>
+			</button>
+		</div>
+	</ng-container>
+	<ng-template #loading>
+		<div class="loader-wrapper">
+			<div class="loading-strip primary"></div>
+			<div class="loading-strip secondary"></div>
+		</div>
+	</ng-template>
+</div>
+<!-- Category Survey starts here -->
+<ng-container *ngIf="showCategorySurvey">
+	<app-business-category
+		(closeBusinessCategory)="closeBusinessCategory($event)"
+		[convoTrendPage]="false"
+		[selectedGroup]="selectedGroup"
+	></app-business-category>
+</ng-container>
+<!-- Category Survey ends here -->
+
+<!-- How to Add App to Groups starts here -->
+<ng-container *ngIf="showHowToAddGroupPopup">
+	<app-add-app-to-group-overlay (closeAuthorizeConvoOverlay)="closeAuthorizeConvoOverlay($event)">
+	</app-add-app-to-group-overlay>
+</ng-container>
+<!-- How to Add App to Groups ends here -->
+<!-- Install overlay for mobile starts here -->
+<ng-container *ngIf="showMobileInstallationOverlay">
+	<app-mobile-installation (closeMobileInstallOverlay)="closeMobileInstallOverlay()"></app-mobile-installation>
+</ng-container>
+<!-- Install overlay for mobile ends here -->
+
+<!-- Install overlay for desktop starts here -->
+<div class="convosight-overlay" *ngIf="showInstallationStepsPopup">
+	<app-add-app-installation-popup
+		[fbGroupToBeInstalled]="fbGroupToBeInstalled"
+		(closeInstallationPopup)="closeInstallationPopup($event)"
+	></app-add-app-installation-popup>
+</div>
+<!-- Install overlay for desktop ends here -->
+<app-communication-mode-verification
+	(closeDialog)="showModeOfCommunicationConfirmationDialog = false"
+	*ngIf="
+		user?.modeOfCommunicationVerificationStatus === 'VerificationSent' && showModeOfCommunicationConfirmationDialog
+	"
+	[modeOfCommunicationToBeVerified]="user?.modeOfCommunication"
+	[user]="user"
+></app-communication-mode-verification>
+<!-- Mode of communication verification dialog for campaigns -->
+
+<!-- Admin Bio Card starts here-->
+<ng-container *ngIf="showAdminPromptModal">
+	<app-admin-bio-profile-overlay (closeAdminOverlay)="closeAdminOverlay($event)"></app-admin-bio-profile-overlay>
+</ng-container>
+<!-- Admin Bio Card ends here -->
+
+<!-- Share Modal start here-->
+<ng-container *ngIf="openShareModal">
+	<app-share-widget type="bio" [copyUrl]="shareUrl" (closePopup)="closePopup($event)"></app-share-widget>
+</ng-container>
+<!-- Share Modal ends here -->
+

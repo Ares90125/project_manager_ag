@@ -1,0 +1,37 @@
+<ng-container>
+	<div class="login-response-container">
+		<div class="logo">
+			<img alt="" src="../../../assets/images/logo-black.svg" />
+		</div>
+		<div class="loading-wrapper">
+			<div class="login-info-wrapper">
+				<div>
+					<div class="bt-spinner"></div>
+				</div>
+				<div>
+					<p class="primary-loading-text">{{ primaryMessage }}</p>
+					<p class="secondary-loading-text">{{ secondaryMessage }}</p>
+				</div>
+			</div>
+
+			<div class="reconnect-facebook" *ngIf="showFbLoginBtn">
+				<p>Taking too long to log in?</p>
+				<button
+					(click)="signIn($event)"
+					class="btn-login-facebook"
+					data-cs-id="6fe0096f-15e4-474f-a94a-4c866cd424ce"
+					data-cs-label="Reconnect with Facebook"
+					data-cs-source="page"
+					type="button"
+				>
+					<img
+						alt=""
+						class="img-facebook-logo"
+						src="https://res.cloudinary.com/dnn9o5dvh/image/upload/v1567674400/convosight/facebook-logo_hkdgs1.svg"
+					/>
+					<span class="btn-text">Reconnect with Facebook</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-container>

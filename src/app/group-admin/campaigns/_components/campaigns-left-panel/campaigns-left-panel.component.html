@@ -1,0 +1,134 @@
+<div class="main-sidebar-wrapper" *ngIf="renderedOn === 'Desktop'">
+	<div class="main-sidebar">
+		<div class="links-wrap">
+			<ng-container [ngTemplateOutlet]="menuOptions"></ng-container>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="renderedOn === 'Mobile'" class="mobile-menu-wrap">
+	<nav>
+		<ng-container [ngTemplateOutlet]="menuOptions"></ng-container>
+	</nav>
+</div>
+
+<ng-template #menuOptions>
+	<ul class="list-unstyled">
+		<li>
+			<a
+				routerLink="/group-admin/campaigns/overview"
+				routerLinkActive="active"
+				(click)="recordButtonClick($event)"
+				data-cs-id="e5954608-eb52-4c8b-8340-00d73b75225b"
+				data-cs-label="Overview"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M13.8333 2.16667V3.83333H10.5V2.16667H13.8333ZM5.5 2.16667V7.16667H2.16667V2.16667H5.5ZM13.8333 8.83333V13.8333H10.5V8.83333H13.8333ZM5.5 12.1667V13.8333H2.16667V12.1667H5.5ZM15.5 0.5H8.83333V5.5H15.5V0.5ZM7.16667 0.5H0.5V8.83333H7.16667V0.5ZM15.5 7.16667H8.83333V15.5H15.5V7.16667ZM7.16667 10.5H0.5V15.5H7.16667V10.5Z"
+						fill="#3654FF"
+					/>
+				</svg>
+				<span>Overview</span>
+			</a>
+		</li>
+		<li
+			*ngIf="
+				noOfGroupsEligibleForProfilePages &&
+				noOfGroupsEligibleForProfilePages.length > 0
+			"
+		>
+			<a
+				(click)="recordButtonClick($event)"
+				data-cs-id="f0acd222-e20a-491c-be90-c7c4c4d156a7"
+				data-cs-label="Profile Pages"
+				data-cs-source="page"
+				[routerLink]="['/group-admin/campaigns', noOfGroupsEligibleForProfilePages[0].id, 'profile-pages']"
+				[class.active]="isProfilePageActive"
+			>
+				<svg fill="none" height="14" viewBox="0 0 18 14" width="18" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M15.666 0.333313H2.33268C1.41602 0.333313 0.674349 1.08331 0.674349 1.99998L0.666016 12C0.666016 12.9166 1.41602 13.6666 2.33268 13.6666H15.666C16.5827 13.6666 17.3327 12.9166 17.3327 12V1.99998C17.3327 1.08331 16.5827 0.333313 15.666 0.333313ZM2.33268 4.49998H11.0827V7.41665H2.33268V4.49998ZM2.33268 9.08331H11.0827V12H2.33268V9.08331ZM15.666 12H12.7493V4.49998H15.666V12Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<span>Profile Pages</span>
+			</a>
+		</li>
+		<li *ngIf="false">
+			<a
+				routerLink="/group-admin/campaigns/influencer-teams"
+				routerLinkActive="active"
+				(click)="recordButtonClick($event)"
+				data-cs-id="9c302118-0013-497f-8864-8a1f6aa1bdc0"
+				data-cs-label="Influencer Team"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M7.49935 10C9.10768 10 10.416 8.69169 10.416 7.08335C10.416 5.47502 9.10768 4.16669 7.49935 4.16669C5.89102 4.16669 4.58268 5.47502 4.58268 7.08335C4.58268 8.69169 5.89102 10 7.49935 10ZM7.49935 5.83335C8.19102 5.83335 8.74935 6.39169 8.74935 7.08335C8.74935 7.77502 8.19102 8.33335 7.49935 8.33335C6.80768 8.33335 6.24935 7.77502 6.24935 7.08335C6.24935 6.39169 6.80768 5.83335 7.49935 5.83335ZM7.54102 14.1667H3.97435C4.79935 13.75 6.22435 13.3334 7.49935 13.3334C7.59102 13.3334 7.69102 13.3417 7.78268 13.3417C8.06602 12.7334 8.55768 12.2334 9.14935 11.8334C8.54102 11.725 7.96602 11.6667 7.49935 11.6667C5.54935 11.6667 1.66602 12.6417 1.66602 14.5834V15.8334H7.49935V14.5834C7.49935 14.4417 7.51602 14.3 7.54102 14.1667ZM13.7493 12.0834C12.216 12.0834 9.16602 12.925 9.16602 14.5834V15.8334H18.3327V14.5834C18.3327 12.925 15.2827 12.0834 13.7493 12.0834ZM14.7577 10.5667C15.391 10.2084 15.8327 9.53335 15.8327 8.75002C15.8327 7.60002 14.8993 6.66669 13.7493 6.66669C12.5993 6.66669 11.666 7.60002 11.666 8.75002C11.666 9.53335 12.1077 10.2084 12.741 10.5667C13.041 10.7334 13.3827 10.8334 13.7493 10.8334C14.116 10.8334 14.4577 10.7334 14.7577 10.5667Z"
+					/>
+				</svg>
+
+				<span>Influencer Team</span>
+			</a>
+		</li>
+		<li *ngIf="false">
+			<a
+				routerLink="/group-admin/campaigns/integrity-disclosure"
+				routerLinkActive="active"
+				(click)="recordButtonClick($event)"
+				data-cs-id="ff0f0894-e4ad-4de4-ae2d-72ee49ce34de"
+				data-cs-label="Integrity Disclosure"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.0007 1.66669L3.33398 4.16669V9.24169C3.33398 13.45 6.17565 17.375 10.0007 18.3334C13.8257 17.375 16.6673 13.45 16.6673 9.24169V4.16669L10.0007 1.66669ZM15.0007 9.24169C15.0007 12.575 12.8757 15.6584 10.0007 16.6C7.12565 15.6584 5.00065 12.5834 5.00065 9.24169V5.25835L10.0007 3.49169L15.0007 5.25835V9.24169ZM7.35065 8.82502L6.16732 10L9.11732 12.95L13.834 8.23335L12.659 7.05835L9.12565 10.5917L7.35065 8.82502Z"
+					/>
+				</svg>
+
+				<span>Integrity Disclosure</span>
+			</a>
+		</li>
+		<li *ngIf="false">
+			<a
+				routerLink="/group-admin/campaigns/earnings"
+				routerLinkActive="active"
+				(click)="recordButtonClick($event)"
+				data-cs-id="cafef02d-1308-4c4a-afe9-60159c7cf3f4"
+				data-cs-label="Earnings"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M15.834 11.6666V4.99998C15.834 4.08331 15.084 3.33331 14.1673 3.33331H2.50065C1.58398 3.33331 0.833984 4.08331 0.833984 4.99998V11.6666C0.833984 12.5833 1.58398 13.3333 2.50065 13.3333H14.1673C15.084 13.3333 15.834 12.5833 15.834 11.6666ZM14.1673 11.6666H2.50065V4.99998H14.1673V11.6666ZM8.33398 5.83331C6.95065 5.83331 5.83398 6.94998 5.83398 8.33331C5.83398 9.71665 6.95065 10.8333 8.33398 10.8333C9.71732 10.8333 10.834 9.71665 10.834 8.33331C10.834 6.94998 9.71732 5.83331 8.33398 5.83331ZM19.1673 5.83331V15C19.1673 15.9166 18.4173 16.6666 17.5006 16.6666H3.33398C3.33398 15.8333 3.33398 15.9166 3.33398 15H17.5006V5.83331C18.4173 5.83331 18.334 5.83331 19.1673 5.83331Z"
+					/>
+				</svg>
+				<span>Earnings</span>
+			</a>
+		</li>
+		<li *ngIf="user?.hasAccessToReportGenerationFeature">
+			<a
+				routerLink="/group-admin/campaigns/reports"
+				routerLinkActive="active"
+				(click)="recordButtonClick($event)"
+				data-cs-id="e94f3722-187f-46b5-96f5-7c4a6b0fcc2d"
+				data-cs-label="Reports"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M13.8333 0.5H2.16667C1.25 0.5 0.5 1.25 0.5 2.16667V13.8333C0.5 14.75 1.25 15.5 2.16667 15.5H13.8333C14.75 15.5 15.5 14.75 15.5 13.8333V2.16667C15.5 1.25 14.75 0.5 13.8333 0.5ZM13.8333 13.8333H2.16667V2.16667H13.8333V13.8333Z"
+						fill="#9999A7"
+					/>
+					<path d="M5.5 8H3.83333V12.1667H5.5V8Z" fill="#9999A7" />
+					<path d="M12.1667 3.83333H10.5V12.1667H12.1667V3.83333Z" fill="#9999A7" />
+					<path d="M8.83333 9.66667H7.16667V12.1667H8.83333V9.66667Z" fill="#9999A7" />
+					<path d="M8.83333 6.33333H7.16667V8H8.83333V6.33333Z" fill="#9999A7" />
+				</svg>
+				<span>Reports</span>
+			</a>
+		</li>
+	</ul>
+</ng-template>

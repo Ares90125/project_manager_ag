@@ -1,0 +1,355 @@
+<div *ngIf="campaignDetailsForm" class="marketing-campaign-row {{ isReportEdit ? 'marketing-campaign-modal' : '' }}">
+	<div class="campaign-row-header">
+		<div class="campaign-row-header-description">
+			<p>
+				<strong>Edit {{ isReportEdit ? 'campaign details' : 'solution details' }}</strong>
+			</p>
+		</div>
+		<div *ngIf="!isReportEdit" class="campaign-row-header-actions">
+			<div class="box-actions">
+				<button (click)="createCampaignDetails(campaign)" class="btn-cancel">Discard</button>
+				<button
+					(click)="sendCampaignDetails()"
+					*ngIf="campaignDetailsForm"
+					[disabled]="!campaignDetailsForm.valid || submittingCampaignDetails"
+					class="convo-btn-primary convo-btn-normal ml-2"
+				>
+					{{ submittingCampaignDetails ? 'Saving...' : 'Save Changes' }}
+				</button>
+			</div>
+		</div>
+		<div *ngIf="isReportEdit" class="campaign-row-header-actions">
+			<div class="box-actions">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="campaign-row-body">
+		<div [formGroup]="campaignDetailsForm" class="add-details-row">
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group">
+						<label><strong>Name</strong> for community marketing solution (this name will show in the reports)</label>
+						<input
+							class="form-control"
+							formControlName="communityNameForReports"
+							placeholder="Leave blank to use campaign name instead"
+							type="text"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<div class="row date-time-message">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>Start</strong> Date</label>
+						<div class="datepicker-wrap">
+							<input
+								(click)="picker.open()"
+								[matDatepicker]="picker"
+								formControlName="startDate"
+								placeholder="Date"
+								readonly
+								type="text"
+							/>
+							<mat-datepicker-toggle [for]="picker" matSuffix> </mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>End</strong> Date</label>
+						<div class="datepicker-wrap">
+							<input
+								(click)="picker2.open()"
+								[matDatepicker]="picker2"
+								[min]="minDate"
+								formControlName="endDate"
+								placeholder="Date"
+								readonly
+								type="text"
+							/>
+							<mat-datepicker-toggle [for]="picker2" matSuffix> </mat-datepicker-toggle>
+							<mat-datepicker #picker2></mat-datepicker>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="invalidTaskPublishDate" class="error-message">
+					You have tasks that are outside of the campaign start and end date which is not allowed. Delete the task or
+					edit the task start date to fall in the campaign dates
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label>Campaign <strong>brief</strong> <sup>*</sup></label>
+						<quill-editor [modules]="quillConfig" formControlName="brief" placeholder="Add Campaign brief">
+						</quill-editor>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label>Campaign <strong>objective</strong> <sup>*</sup></label>
+						<quill-editor [modules]="quillConfig" formControlName="objective" placeholder="Add Campaign objective">
+						</quill-editor>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<div class="add-keyword">
+						<small>Keywords tracked:</small>
+						<button
+							(click)="showKeywordEditor()"
+							class="convo-btn-normal convo-btn-tertiary"
+							data-target="#myModal"
+							data-toggle="modal"
+						>
+							<img alt="" src="assets/images/add_icon.svg" />
+							<span>Add keywords</span>
+						</button>
+					</div>
+					<div class="editable">
+						<div class="filter-tags-wrapper">
+							<ul class="list-unstyled">
+								<li *ngFor="let selectedReport of transformedKeywords | slice: 0:7; let i = index">
+									<strong>{{ selectedReport }}</strong>
+								</li>
+								<li *ngIf="transformedKeywords.length > 7" class="reportkeywords">
+									<strong> + {{ transformedKeywords.length - 7 }} more </strong>
+
+									<ul class="more-keywords-wrap">
+										<li *ngFor="let selectedReport of transformedKeywords | slice: 7">
+											<strong>{{ selectedReport }}</strong>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Category <sup></sup></label>
+						<div class="custom-dropdown" *ngIf="keywordCategories">
+							<app-custom-dropdown
+								[items]="keywordCategories"
+								defaultText="Select Category"
+								[value]="keywordCategories[0]"
+								formControlName="keywordCategory"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Sub-Category</label>
+						<div class="custom-dropdown" *ngIf="keywordSubCategories.length > 0">
+							<app-custom-dropdown
+								[items]="keywordSubCategories"
+								[isDefaultSelection]="true"
+								[isMultipleSelection]="'true'"
+								[selectedItems]="keywordSubCategories"
+								[value]="keywordSubCategories[0]"
+								defaultText="Select Sub Category"
+							>
+							</app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Brand</label>
+						<div class="custom-dropdown" *ngIf="keywordBrand">
+							<app-custom-dropdown
+								[items]="keywordBrand"
+								defaultText="Select Brand"
+								[value]="keywordBrand[0]"
+								formControlName="keywordBrand"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group">
+						<label>Default task title</label>
+						<input class="form-control" formControlName="taskTitle" type="text" />
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group">
+						<label>Default campaign period</label>
+						<input class="form-control" formControlName="campaignPeriod" type="text" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="flex-box">
+						<div class="form-group">
+							<label>Default Date</label>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="">
+										<div class="datepicker-wrap">
+											<input
+												(click)="publishPicker.open()"
+												[matDatepicker]="publishPicker"
+												[min]="
+													!campaign?.startDateAtUTC
+														? minStartDate
+														: differenceInDates(campaign.startDateAtUTC, minStartDate) >= 0
+														? minStartDate
+														: campaign.startDateAtUTC
+												"
+												formControlName="defaultTaskDate"
+												placeholder="Date"
+												readonly
+												type="text"
+												(dateChange)="validatePublishTime(publishTime); validatePublishDatesOnTasks()"
+											/>
+											<mat-datepicker-toggle [for]="publishPicker" matSuffix></mat-datepicker-toggle>
+											<mat-datepicker #publishPicker></mat-datepicker>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="custom-dropdown dropdown pills-dropdown timepicker-wrap">
+										<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+											<span class="placeholder">{{ publishTime }}</span>
+										</div>
+										<div class="dropdown-menu-wrapper dropdown-menu">
+											<div class="dropdown-container">
+												<div
+													(click)="publishTime = time; validatePublishTime(time)"
+													*ngFor="let time of timeOptions"
+													class="form-check"
+												>
+													<div class="form-check-label">
+														{{ time }}
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div *ngIf="!isDateValid" class="error-message">
+									Please enter date between start date and end date of campaign
+								</div>
+								<div *ngIf="invalidDefaultPublishDate" class="error-message">
+									You have default date that is outside of the campaign start and end date which is not allowed.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-6">
+					<div class="form-group">
+						<label>Time Zone</label>
+						<div class="custom-dropdown dropdown pills-dropdown timepicker-wrap" *ngIf="timeZoneList?.length > 0">
+							<app-searchable-dropdown
+								(optionSelected)="optionSelected($event)"
+								[mainDropDownOptions]="timeZoneList"
+								[placeholder]="timeZonePlaceholder"
+								[selectedValue]="timeZone"
+							></app-searchable-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="isReportEdit" class="campaign-row-footer">
+		<button (click)="createCampaignDetails(campaign)" class="cancel-btn" data-dismiss="modal" id="cancel" type="button">
+			Cancel
+		</button>
+		<button
+			(click)="sendCampaignDetails()"
+			[disabled]="
+				!campaignDetailsForm.valid ||
+				submittingCampaignDetails ||
+				!isDateValid ||
+				invalidDefaultPublishDate ||
+				invalidTaskPublishDate
+			"
+			class="convo-btn-primary convo-btn-normal ml-4 px-4"
+		>
+			{{ submittingCampaignDetails ? 'Saving...' : 'Save' }}
+		</button>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="myModal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Enter keywords to track.</h6>
+				<button (click)="enableScrolling()" class="close" data-dismiss="modal" type="button">&times;</button>
+			</div>
+			<div class="small textry p-3">
+				Enter keyword and their transformations in a new line (minimum 1 keyword is required)
+			</div>
+			<div class="modal-body mx-3 mb-3 p-0">
+				<div>
+					<div class="keywords-wrapper">
+						<div class="keywords-count">
+							<span *ngFor="let lineNum of lineNumbersForEditor">
+								{{ lineNum + 1 }}
+							</span>
+						</div>
+						<textarea
+							(ngModelChange)="keywordListEdited()"
+							[(ngModel)]="keywordForEditor"
+							id="KeywordEditor"
+							rows="{{ keywordList.length }}"
+							placeholder="Keyword 1_Transformation1a|Transformation1b"
+						></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="enableScrolling()" class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+				<button
+					(click)="saveKeywords()"
+					[disabled]="!isKeywordListEdited"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-type-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Incorrect file format</h6>
+				<p class="m-0">Only files with .csv, .xls or .xlsx extension are allowed</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>

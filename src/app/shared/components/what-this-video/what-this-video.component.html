@@ -1,0 +1,22 @@
+<div class="modal file-alert close-video">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="header-modal">
+					<h5 class="modal-title">{{ title }}</h5>
+					<button
+						(click)="recordButtonClick($event); closeVideo('introducingGroupProfilePagesVideo')"
+						class="close-btn"
+						data-cs-id="d061bd1d-9cb1-4eca-8653-661dd658475b"
+						data-cs-label="Close"
+						data-cs-source="page"
+						type="button"
+					>
+						<img alt="" src="./assets/images/close-icon.svg" />
+					</button>
+				</div>
+				<video class="video" controls id="introducingGroupProfilePagesVideo" src="{{ videoLink }}"></video>
+			</div>
+		</div>
+	</div>
+</div>

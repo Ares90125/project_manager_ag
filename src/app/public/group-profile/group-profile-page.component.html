@@ -1,0 +1,1091 @@
+<div *ngIf="profilePage; else loading" class="profile-edit-wrapper">
+	<div class="preview-header">
+		<div class="preview-header-left">
+			<ng-container *ngIf="adminBioFromSetting">
+				<img src="./assets/images/logo-black.svg" alt="" height="20px" />
+			</ng-container>
+			<ng-container *ngIf="!adminBioFromSetting">
+				<img
+					src="./assets/images/logo-black.svg"
+					data-cs-id="2f56e72c-90d0-45bb-a17b-30d9461c41c2"
+					data-cs-label="Convosight"
+					data-cs-source="page"
+					(click)="redirectToLandingPage()"
+					alt=""
+					height="20px"
+				/>
+			</ng-container>
+		</div>
+	</div>
+
+	<div class="profile-edit-header">
+		<img alt="" class="banner-background" src="{{ profilePage.coverImageUrl }}" />
+		<div class="container">
+			<div class="banner-wrap">
+				<img alt="" class="banner" src="{{ profilePage.coverImageUrl }}" />
+				<button *ngIf="isEditAvailable" class="update-banner-btn">
+					<input title=" " type="file" />
+					<img alt="" src="./assets/images/sync-icon.svg" /><span>Change Image</span>
+				</button>
+				<div *ngIf="false" class="vote-wrap">
+					<div class="vote-box">
+						<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+							<path
+								clip-rule="evenodd"
+								d="M8.21818 11.0044V15.4803H11.7818V11.0044H14.1912L10 5.44519L5.8088 11.0044H8.21818ZM3 12.4044H6.81818V16.8803H13.1818V12.4044H17L10 3.11963L3 12.4044Z"
+								fill="#3654FF"
+								fill-rule="evenodd"
+							/>
+						</svg>
+						<span>2.3K</span>
+					</div>
+					<a>Why upvote?</a>
+				</div>
+				<div *ngIf="renderedOn === 'Mobile'" class="options-wrap">
+					<a
+						(click)="openSharePopup($event)"
+						data-cs-id="636a1e72-f8cb-420a-80d1-166fbebe6608"
+						data-cs-label="Share Modal"
+						data-cs-source="page"
+						class="option-btn option-btn-share"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15 13.4003C14.3667 13.4003 13.8 13.6503 13.3667 14.042L7.425 10.5837C7.46667 10.392 7.5 10.2003 7.5 10.0003C7.5 9.80033 7.46667 9.60866 7.425 9.41699L13.3 5.99199C13.75 6.40866 14.3417 6.66699 15 6.66699C16.3833 6.66699 17.5 5.55033 17.5 4.16699C17.5 2.78366 16.3833 1.66699 15 1.66699C13.6167 1.66699 12.5 2.78366 12.5 4.16699C12.5 4.36699 12.5333 4.55866 12.575 4.75033L6.7 8.17533C6.25 7.75866 5.65833 7.50033 5 7.50033C3.61667 7.50033 2.5 8.61699 2.5 10.0003C2.5 11.3837 3.61667 12.5003 5 12.5003C5.65833 12.5003 6.25 12.242 6.7 11.8253L12.6333 15.292C12.5917 15.467 12.5667 15.6503 12.5667 15.8337C12.5667 17.1753 13.6583 18.267 15 18.267C16.3417 18.267 17.4333 17.1753 17.4333 15.8337C17.4333 14.492 16.3417 13.4003 15 13.4003Z"
+								fill="#33334F"
+							/>
+						</svg>
+						<span>Share</span>
+					</a>
+					<a
+						href="https://www.facebook.com/groups/{{ profilePage.fbGroupId }}"
+						data-cs-id="a4e274bd-88a7-4c23-b5bb-dcaf6b9efb1c"
+						data-cs-label="Facebook Group"
+						data-cs-source="page"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						target="_blank"
+						class="option-btn header-tab-link"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M14.2969 16.875H4.84375C4.38791 16.875 3.95074 16.6939 3.62841 16.3716C3.30608 16.0493 3.125 15.6121 3.125 15.1562V5.70312C3.125 5.24728 3.30608 4.81011 3.62841 4.48779C3.95074 4.16546 4.38791 3.98438 4.84375 3.98438H8.28125V5.70312H4.84375V15.1562H14.2969V11.7188H16.0156V15.1562C16.0156 15.6121 15.8345 16.0493 15.5122 16.3716C15.1899 16.6939 14.7527 16.875 14.2969 16.875ZM9.74219 11.467L8.53047 10.2518L13.9385 4.84375H10.8594V3.125H16.875V9.14062H15.1562V6.05977L9.74219 11.467V11.467Z"
+								fill="#33334F"
+							/>
+						</svg>
+					</a>
+				</div>
+				<div *ngIf="renderedOn === 'Desktop'" class="right-options">
+					<a
+						(click)="openShareModal = true"
+						(click)="openSharePopup($event)"
+						data-cs-id="636a1e72-f8cb-420a-80d1-166fbebe6608"
+						data-cs-label="Share Modal"
+						data-cs-source="page"
+						class="option-btn option-btn-share"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15 13.4003C14.3667 13.4003 13.8 13.6503 13.3667 14.042L7.425 10.5837C7.46667 10.392 7.5 10.2003 7.5 10.0003C7.5 9.80033 7.46667 9.60866 7.425 9.41699L13.3 5.99199C13.75 6.40866 14.3417 6.66699 15 6.66699C16.3833 6.66699 17.5 5.55033 17.5 4.16699C17.5 2.78366 16.3833 1.66699 15 1.66699C13.6167 1.66699 12.5 2.78366 12.5 4.16699C12.5 4.36699 12.5333 4.55866 12.575 4.75033L6.7 8.17533C6.25 7.75866 5.65833 7.50033 5 7.50033C3.61667 7.50033 2.5 8.61699 2.5 10.0003C2.5 11.3837 3.61667 12.5003 5 12.5003C5.65833 12.5003 6.25 12.242 6.7 11.8253L12.6333 15.292C12.5917 15.467 12.5667 15.6503 12.5667 15.8337C12.5667 17.1753 13.6583 18.267 15 18.267C16.3417 18.267 17.4333 17.1753 17.4333 15.8337C17.4333 14.492 16.3417 13.4003 15 13.4003Z"
+								fill="#33334F"
+							/>
+						</svg>
+						<span>Share</span>
+					</a>
+					<a
+						href="https://www.facebook.com/groups/{{ profilePage.fbGroupId }}"
+						data-cs-id="a4e274bd-88a7-4c23-b5bb-dcaf6b9efb1c"
+						data-cs-label="Facebook Group"
+						data-cs-source="page"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						target="_blank"
+						class="option-btn header-tab-link"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M14.2969 16.875H4.84375C4.38791 16.875 3.95074 16.6939 3.62841 16.3716C3.30608 16.0493 3.125 15.6121 3.125 15.1562V5.70312C3.125 5.24728 3.30608 4.81011 3.62841 4.48779C3.95074 4.16546 4.38791 3.98438 4.84375 3.98438H8.28125V5.70312H4.84375V15.1562H14.2969V11.7188H16.0156V15.1562C16.0156 15.6121 15.8345 16.0493 15.5122 16.3716C15.1899 16.6939 14.7527 16.875 14.2969 16.875ZM9.74219 11.467L8.53047 10.2518L13.9385 4.84375H10.8594V3.125H16.875V9.14062H15.1562V6.05977L9.74219 11.467V11.467Z"
+								fill="#33334F"
+							/>
+						</svg>
+					</a>
+				</div>
+			</div>
+			<div class="group-info-wrap d-flex justify-content-between">
+				<div>
+					<h5>{{ profilePage.groupName }}</h5>
+					<div class="group-info">
+						<span class="group-type">
+							<img src="./assets/images/group-icons/people.svg" alt="" />
+							<span> {{ profilePage?.keyStats?.totalMembers | shortNumber }} members </span>
+							<span class="circle-dot"></span>
+							{{ profilePage?.groupPrivacyType !== 'OPEN' ? 'Private' : 'Public' }} Facebook group
+						</span>
+					</div>
+					<ng-container *ngIf="profilePage.showReviews">
+						<div *ngIf="!profilePage.ratingCount" class="rating-wrapper">
+							<div
+								class="stars-with-bg empty-stars"
+								[style.--rating]="profilePage.averageRating"
+								(click)="handleOpenModal()"
+								data-cs-id="d734d4b8-828a-4746-ada7-05bc08e8942b"
+								data-cs-label="Review Edit Modal"
+								data-cs-source="page"
+							>
+								<!-- <button class="edit-row-btn ml-2" (click)="handleInteractionReviewModal()">
+								<img alt="" src="./assets/images/btn-icon-edit.svg" />
+							</button> -->
+							</div>
+							<div
+								class="review-info-part"
+								data-cs-id="f1e71367-f19a-4581-98f4-127d9413c782"
+								data-cs-label="Review Modal"
+								data-cs-source="page"
+								(click)="handleOpenModal($event)"
+							>
+								<span *ngIf="profilePage.ratingCount === 1 || profilePage.ratingCount === 0"
+									>{{ profilePage.ratingCount }} Review</span
+								>
+								<span *ngIf="profilePage.ratingCount > 1">{{ profilePage.ratingCount }} Reviews</span>
+							</div>
+						</div>
+						<div *ngIf="profilePage.ratingCount" class="rating-wrapper">
+							<div
+								class="stars-with-bg"
+								[style.--rating]="profilePage.averageRating"
+								(click)="handleOpenModal()"
+								data-cs-id="d734d4b8-828a-4746-ada7-05bc08e8942b"
+								data-cs-label="Review Edit Modal"
+								data-cs-source="page"
+							></div>
+							<div
+								class="review-info-part"
+								data-cs-id="cde15eba-13ec-4276-ab2b-c56cd2d679e5"
+								data-cs-label="Review Modal"
+								data-cs-source="page"
+								(click)="handleOpenModal($event)"
+							>
+								<span *ngIf="profilePage.ratingCount === 1 || profilePage.ratingCount === 0"
+									>{{ profilePage.ratingCount }} Review</span
+								>
+								<span *ngIf="profilePage.ratingCount > 1">{{ profilePage.ratingCount }} Reviews</span>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+				<div class="top-right-section">
+					<button
+						class="top-right-section__review-button"
+						*ngIf="!isEditAvailable && !profilePage.isCurrentUserAdmin && profilePage.showReviews"
+						(click)="reviewsModal = false; handleInteractionReviewModal($event)"
+						#tooltip="matTooltip"
+						data-cs-id="ce7310e9-fa1d-4d89-8c90-897c150d852b"
+						data-cs-label="Write a review"
+						data-cs-source="page"
+						(mouseenter)="showTooltip()"
+						(mouseleave)="hideTooltip()"
+						[matTooltip]="'Share your love by giving a review ⭐'"
+					>
+						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M17.9797 6.81174C17.9312 6.66432 17.8076 6.55786 17.6604 6.53736L11.9926 5.75113L9.35044 0.208229C9.21895 -0.0694096 8.78148 -0.0694096 8.64999 0.208229L6.00785 5.75117L0.340058 6.5374C0.192912 6.55786 0.0684737 6.66436 0.0207456 6.81178C-0.0269825 6.95919 0.00900614 7.12216 0.114661 7.23272L4.27119 11.5824L3.13874 17.5094C3.10979 17.6634 3.16614 17.8198 3.28508 17.9156C3.40405 18.0106 3.56525 18.0262 3.69753 17.9566L9.00064 15.1818L14.3037 17.9566C14.3593 17.9853 14.4188 18 14.4783 18C14.562 18 14.6465 17.9713 14.7162 17.9157C14.8343 17.8206 14.8915 17.6634 14.8625 17.5095L13.73 11.5824L17.8866 7.23276C17.9907 7.12297 18.0267 6.96 17.9797 6.81174ZM9.39116 12.8928C9.39116 13.0475 9.3074 13.19 9.17515 13.2588L5.85917 14.9935C5.80359 15.0221 5.74412 15.0369 5.68385 15.0369C5.60009 15.0369 5.51557 15.0082 5.44594 14.9525C5.32777 14.8575 5.27062 14.7003 5.2996 14.5463L5.96875 11.0435L3.46275 8.42025C3.35709 8.30969 3.3211 8.14672 3.36883 7.9993C3.41737 7.85188 3.541 7.74543 3.68814 7.72493L7.03623 7.26056L8.64922 3.87811C8.72982 3.70777 8.91219 3.61932 9.08905 3.66189C9.26672 3.70531 9.39116 3.87074 9.39116 4.06073V12.8928Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Write a review</span>
+					</button>
+					<button
+						class="top-right-section__edit-button top-right-section__edit-button-preview"
+						*ngIf="isEditAvailable"
+						data-cs-id="155e3872-0ae6-42ad-9d59-90eca84ee8a3"
+						data-cs-label="Preview profile"
+						data-cs-source="page"
+						[routerLink]="
+							'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/preview'
+						"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+					>
+						<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M9.4375 11.5H1.875C1.51033 11.5 1.16059 11.3551 0.902728 11.0973C0.644866 10.8394 0.5 10.4897 0.5 10.125V2.5625C0.5 2.19783 0.644866 1.84809 0.902728 1.59023C1.16059 1.33237 1.51033 1.1875 1.875 1.1875H4.625V2.5625H1.875V10.125H9.4375V7.375H10.8125V10.125C10.8125 10.4897 10.6676 10.8394 10.4098 11.0973C10.1519 11.3551 9.80217 11.5 9.4375 11.5ZM5.79375 7.17356L4.82438 6.20144L9.15081 1.875H6.6875V0.5H11.5V5.3125H10.125V2.84781L5.79375 7.17356Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>Preview profile</span>
+					</button>
+
+					<button
+						class="top-right-section__edit-button top-right-section__edit-button-share"
+						*ngIf="isEditAvailable"
+						[disabled]="!profilePage.isPublished"
+						data-cs-id="8e99045b-6d12-45f1-a8ca-55d55417478e"
+						data-cs-label="Share profile"
+						data-cs-source="page"
+						(click)="recordButtonClick($event, null, null, null, profilePage); openShareModal = true"
+					>
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 10.7197C11.4933 10.7197 11.04 10.9197 10.6933 11.233L5.94 8.46634C5.97333 8.31301 6 8.15967 6 7.99967C6 7.83967 5.97333 7.68634 5.94 7.53301L10.64 4.79301C11 5.12634 11.4733 5.33301 12 5.33301C13.1067 5.33301 14 4.43967 14 3.33301C14 2.22634 13.1067 1.33301 12 1.33301C10.8933 1.33301 10 2.22634 10 3.33301C10 3.49301 10.0267 3.64634 10.06 3.79967L5.36 6.53967C5 6.20634 4.52667 5.99967 4 5.99967C2.89333 5.99967 2 6.89301 2 7.99967C2 9.10634 2.89333 9.99967 4 9.99967C4.52667 9.99967 5 9.79301 5.36 9.45967L10.1067 12.233C10.0733 12.373 10.0533 12.5197 10.0533 12.6663C10.0533 13.7397 10.9267 14.613 12 14.613C13.0733 14.613 13.9467 13.7397 13.9467 12.6663C13.9467 11.593 13.0733 10.7197 12 10.7197Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Share profile</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="profile-edit-navigation">
+		<div class="container">
+			<div class="nav-link-wrap">
+				<ul class="list-unstyled">
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="3aeb4321-5765-44b0-92a7-450f652c95ce"
+						data-cs-label="Overview"
+						data-cs-source="page"
+					>
+						<a class="active" (click)="scrollToSection($event)" dataHref="profile-page-overview">Overview</a>
+					</li>
+					<li
+						*ngIf="profilePage.showPopularTopics && (profilePage.popularTopics?.length > 0 || !groupInsightsForAge)"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="c44e6ca2-161f-42e4-b3a6-30744b3f5f6d"
+						data-cs-label="Topics"
+						data-cs-source="page"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-topics">Topics</a>
+					</li>
+					<li
+						*ngIf="profilePage.showFeatureConversation && profilePage.featureConversations?.length > 0"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="c1f6a8e1-bfe3-4000-aabc-26e94d536931"
+						data-cs-label="Conversations"
+						data-cs-source="page"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-conversation">Conversations</a>
+					</li>
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						*ngIf="renderedOn === 'Mobile' && profilePage.showReviews"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-reviews">Reviews</a>
+					</li>
+					<li
+						*ngIf="profilePage.showAudienceInsights && groupInsightsForAge?.length > 0"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="8ae416dc-a25b-4efd-aa96-68fdd5f25843"
+						data-cs-label="Audience"
+						data-cs-source="page"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-audience">Audience</a>
+					</li>
+					<li
+						*ngIf="profilePage.showMostTalkedAboutBrands && profilePage.mostTalkedAboutBrands?.length > 0"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="a3b842ed-6064-4f18-a01b-32336d99a87e"
+						data-cs-label="Brands"
+						data-cs-source="page"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-brands">Brands</a>
+					</li>
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="fea1343c-b704-4f47-9f6e-84d03f9d985f"
+						data-cs-label="Key stats"
+						data-cs-source="page"
+						*ngIf="
+							profilePage.showActivityRate || profilePage.showEngagementRate || profilePage.showMonthlyConversations
+						"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-stats">Key stats</a>
+					</li>
+					<li
+						*ngIf="profilePage.showFiles && profilePage.filesDetails?.length > 0"
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="5fa5f8aa-cd8c-46f0-87c0-91be2a213b7c"
+						data-cs-label="Files"
+						data-cs-source="page"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-files">Files</a>
+					</li>
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="ecb30b80-e28a-44b4-9f6c-21330dd5673b"
+						data-cs-label="Campaigns"
+						data-cs-source="page"
+						*ngIf="false"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-campaigns">Campaigns</a>
+					</li>
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						data-cs-id="dbfcc84d-ce5c-4c15-bf63-64b66ee403f2"
+						data-cs-label="Pricing"
+						data-cs-source="page"
+						*ngIf="false"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-pricing">Pricing</a>
+					</li>
+					<li
+						(click)="recordButtonClick($event, null, null, null, profilePage)"
+						*ngIf="renderedOn === 'Mobile' && profilePage.showReviews"
+					>
+						<a (click)="scrollToSection($event)" dataHref="profile-page-admins">Admins</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="profile-edit-body">
+			<div class="profile-edit-left">
+				<div id="profile-page-overview">
+					<app-group-profile-overview
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-overview>
+				</div>
+
+				<div id="profile-page-topics">
+					<app-group-profile-topics
+						*ngIf="profilePage.showPopularTopics && profilePage.popularTopics?.length > 0"
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-topics>
+				</div>
+
+				<div id="profile-page-conversation">
+					<app-group-profile-feature-conversation
+						*ngIf="profilePage.showFeatureConversation && profilePage.featureConversations?.length > 0"
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					>
+					</app-group-profile-feature-conversation>
+				</div>
+
+				<div *ngIf="renderedOn === 'Mobile'" id="profile-page-reviews">
+					<ng-container *ngIf="profilePage.showReviews">
+						<app-group-profile-reviews
+							[reviews]="profilePage.reviews"
+							[currentUserReview]="profilePage.currentUserReview"
+							[averageRating]="profilePage.averageRating"
+							[ratingCount]="profilePage.reviews.length"
+							[isCurrentUserAdmin]="profilePage.isCurrentUserAdmin"
+							[user]="user"
+							[groupProfilePage]="profilePage"
+							(handleReviewsModal)="reviewsModal = !reviewsModal; reviewsModal ? disableScrolling() : enableScrolling()"
+							(handleWriteReviewModal)="handleInteractionReviewModal($event)"
+						></app-group-profile-reviews>
+					</ng-container>
+				</div>
+
+				<div id="profile-page-audience" *ngIf="profilePage && profilePage.showAudienceInsights">
+					<app-group-profile-audience
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-audience>
+				</div>
+
+				<div id="profile-page-brands">
+					<app-group-profile-brands
+						*ngIf="profilePage.showMostTalkedAboutBrands && profilePage.mostTalkedAboutBrands?.length > 0"
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-brands>
+				</div>
+
+				<div id="profile-page-stats">
+					<app-group-profile-key-stats
+						*ngIf="
+							profilePage.showActivityRate || profilePage.showEngagementRate || profilePage.showMonthlyConversations
+						"
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-key-stats>
+				</div>
+
+				<div id="profile-page-files">
+					<app-group-profile-files
+						*ngIf="profilePage.showFiles && profilePage.filesDetails?.length > 0"
+						[groupProfilePage]="profilePage"
+						[isEditable]="isEditAvailable"
+					></app-group-profile-files>
+				</div>
+
+				<div id="profile-page-campaigns"><app-group-profile-campaigns *ngIf="false"></app-group-profile-campaigns></div>
+
+				<div id="profile-page-pricing"><app-group-profile-pricing *ngIf="false"></app-group-profile-pricing></div>
+			</div>
+			<div class="profile-edit-right">
+				<div *ngIf="renderedOn === 'Desktop'">
+					<ng-container *ngIf="profilePage.showReviews">
+						<app-group-profile-reviews
+							[reviews]="profilePage.reviews"
+							[currentUserReview]="profilePage.currentUserReview"
+							[averageRating]="profilePage.averageRating"
+							[ratingCount]="profilePage.reviews.length"
+							[isCurrentUserAdmin]="profilePage.isCurrentUserAdmin"
+							[user]="user"
+							[groupProfilePage]="profilePage"
+							(handleReviewsModal)="reviewsModal = !reviewsModal; reviewsModal ? disableScrolling() : enableScrolling()"
+							(handleWriteReviewModal)="handleInteractionReviewModal($event)"
+						></app-group-profile-reviews>
+					</ng-container>
+				</div>
+				<app-group-profile-admins
+					id="profile-page-admins"
+					*ngIf="profilePage.showAdmins"
+					[groupProfilePage]="profilePage"
+					[isEditable]="isEditAvailable"
+				></app-group-profile-admins>
+			</div>
+		</div>
+		<div class="profile-edit-footer-wrap">
+			<div class="footer-row">
+				<small
+					>Are you a group admin?
+					<u
+						style="cursor: pointer"
+						data-cs-id="104b495f-f771-4fb6-b331-c8a1b62e4ccb"
+						data-cs-label="Get your group profile"
+						data-cs-source="page"
+						(click)="signIn($event); recordButtonClick($event)"
+						>Get your group profile</u
+					>
+					now
+				</small>
+			</div>
+		</div>
+	</div>
+</div>
+<ng-template #loading>
+	<div class="loading-wrap">
+		<div class="loading-strip first"></div>
+		<div class="loading-strip second"></div>
+	</div>
+</ng-template>
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		[copyUrl]="profilePage?.profileUrl"
+		[profilePage]="profilePage"
+		type="profile"
+		(closePopup)="closePopup($event)"
+	></app-share-widget>
+</ng-container>
+
+<!-- show reviews modal -->
+<div *ngIf="reviewsModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Reviews</h5>
+				<img
+					src="./assets/images/close-icon.svg"
+					alt="close"
+					(click)="reviewsModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="eb000a57-9720-45bc-be03-2e9e8dcc72fd"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				/>
+			</div>
+			<div *ngIf="profilePage.ratingCount" class="modal-body modal-body--background-gray">
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="review-modal__rating-container">
+						<div class="star"></div>
+						<span class="rating-container__rate">{{ profilePage.averageRating }}</span>
+						<span class="rating-container__label">
+							from <b>{{ profilePage.ratingCount }} reviews</b></span
+						>
+					</div>
+					<button
+						*ngIf="!profilePage.isCurrentUserAdmin"
+						class="convo-btn-normal"
+						data-cs-id="913d4e0c-3877-4b2f-a9a0-f0366637f14a"
+						data-cs-label="Write a review"
+						data-cs-source="dialog"
+						(click)="reviewsModal = false; handleInteractionReviewModal($event)"
+					>
+						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M17.9797 6.81174C17.9312 6.66432 17.8076 6.55786 17.6604 6.53736L11.9926 5.75113L9.35044 0.208229C9.21895 -0.0694096 8.78148 -0.0694096 8.64999 0.208229L6.00785 5.75117L0.340058 6.5374C0.192912 6.55786 0.0684737 6.66436 0.0207456 6.81178C-0.0269825 6.95919 0.00900614 7.12216 0.114661 7.23272L4.27119 11.5824L3.13874 17.5094C3.10979 17.6634 3.16614 17.8198 3.28508 17.9156C3.40405 18.0106 3.56525 18.0262 3.69753 17.9566L9.00064 15.1818L14.3037 17.9566C14.3593 17.9853 14.4188 18 14.4783 18C14.562 18 14.6465 17.9713 14.7162 17.9157C14.8343 17.8206 14.8915 17.6634 14.8625 17.5095L13.73 11.5824L17.8866 7.23276C17.9907 7.12297 18.0267 6.96 17.9797 6.81174ZM9.39116 12.8928C9.39116 13.0475 9.3074 13.19 9.17515 13.2588L5.85917 14.9935C5.80359 15.0221 5.74412 15.0369 5.68385 15.0369C5.60009 15.0369 5.51557 15.0082 5.44594 14.9525C5.32777 14.8575 5.27062 14.7003 5.2996 14.5463L5.96875 11.0435L3.46275 8.42025C3.35709 8.30969 3.3211 8.14672 3.36883 7.9993C3.41737 7.85188 3.541 7.74543 3.68814 7.72493L7.03623 7.26056L8.64922 3.87811C8.72982 3.70777 8.91219 3.61932 9.08905 3.66189C9.26672 3.70531 9.39116 3.87074 9.39116 4.06073V12.8928Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Write a review</span>
+					</button>
+				</div>
+
+				<div class="mt-3">
+					<div
+						*ngIf="profilePage.currentUserReview && !profilePage.currentUserReview.isDeleted"
+						class="review-container"
+					>
+						<div class="review-heading">
+							<img
+								src="{{
+									profilePage.currentUserReview.profilePictureUrl
+										? profilePage.currentUserReview.profilePictureUrl
+										: './assets/images/default_user.png'
+								}}"
+								alt=""
+								class="profile-image"
+							/>
+							<div class="d-flex flex-column">
+								<span class="reviewer-name">{{ profilePage.currentUserReview.fullname }}</span>
+								<div class="d-flex align-items-center">
+									<div class="review-stars" [style.--rating]="profilePage.currentUserReview.rating"></div>
+									<span class="review-timestamp">{{ profilePage.currentUserReview.timestamp | timeFromXTime }}</span>
+								</div>
+							</div>
+
+							<button
+								*ngIf="!profilePage.isCurrentUserAdmin"
+								class="edit-review-btn"
+								data-cs-id="a559c4ef-c3bd-4824-970f-25f199104e99"
+								data-cs-label="Write a review"
+								data-cs-source="dialog"
+								(click)="reviewsModal = false; handleInteractionReviewModal($event)"
+							>
+								<img src="./assets/images/edit-content-icon.svg" alt="" />
+							</button>
+						</div>
+						<div
+							class="reviews-wrapper"
+							[ngClass]="{'review-wrapper-hidden': profilePage.currentUserReview.isDisabled}"
+						>
+							<span class="review-text" [ngClass]="{'review-text-hidden': profilePage.currentUserReview.isDisabled}">{{
+								profilePage.currentUserReview.reviewText
+							}}</span>
+							<span class="unavailable-reviews-state" *ngIf="profilePage.currentUserReview.isDisabled">
+								<div class="hidden-state">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Review text is hidden by the admin</span>
+								</div>
+							</span>
+						</div>
+					</div>
+
+					<ng-container *ngFor="let review of profilePage.reviews">
+						<ng-container *ngIf="user">
+							<div *ngIf="review.userId !== user.id || review.isDeleted" class="review-container">
+								<div class="review-heading">
+									<img
+										src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+										alt=""
+										class="profile-image"
+									/>
+									<div class="d-flex flex-column">
+										<span class="reviewer-name">{{ review.fullname }}</span>
+										<div class="d-flex align-items-center">
+											<div class="review-stars" [style.--rating]="review.rating"></div>
+											<span class="review-timestamp">{{ review.timestamp | timeFromXTime }}</span>
+										</div>
+									</div>
+								</div>
+								<span class="review-text">{{ review.reviewText }}</span>
+							</div>
+						</ng-container>
+
+						<ng-container *ngIf="!user">
+							<div *ngIf="!review.isDeleted" class="review-container">
+								<div class="review-heading">
+									<img
+										src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+										alt=""
+										class="profile-image"
+									/>
+									<div class="d-flex flex-column">
+										<span class="reviewer-name">{{ review.fullname }}</span>
+										<div class="d-flex align-items-center">
+											<div class="stars" [style.--rating]="review.rating"></div>
+											<span class="review-timestamp">{{ review.timestamp | timeFromXTime }}</span>
+										</div>
+									</div>
+								</div>
+								<span class="review-text">{{ review.reviewText }}</span>
+							</div>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+
+			<div *ngIf="!profilePage.ratingCount" class="modal-body reviews-wrapper-empty">
+				<ng-lottie
+					containerClass="lottie-animation"
+					height="120px"
+					width="120px"
+					[options]="bigStarAnimationOption"
+				></ng-lottie>
+
+				<span class="title">No reviews yet!</span>
+				<span class="subtitle">Be the first to review this group!</span>
+				<button
+					*ngIf="!profilePage.isCurrentUserAdmin"
+					class="convo-btn-normal mb-3"
+					data-cs-id="41a1c3ff-0bfe-4976-b54a-569a4c28a769"
+					data-cs-label="Write a review"
+					data-cs-source="dialog"
+					(click)="reviewsModal = false; handleInteractionReviewModal($event)"
+				>
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M17.9797 6.81174C17.9312 6.66432 17.8076 6.55786 17.6604 6.53736L11.9926 5.75113L9.35044 0.208229C9.21895 -0.0694096 8.78148 -0.0694096 8.64999 0.208229L6.00785 5.75117L0.340058 6.5374C0.192912 6.55786 0.0684737 6.66436 0.0207456 6.81178C-0.0269825 6.95919 0.00900614 7.12216 0.114661 7.23272L4.27119 11.5824L3.13874 17.5094C3.10979 17.6634 3.16614 17.8198 3.28508 17.9156C3.40405 18.0106 3.56525 18.0262 3.69753 17.9566L9.00064 15.1818L14.3037 17.9566C14.3593 17.9853 14.4188 18 14.4783 18C14.562 18 14.6465 17.9713 14.7162 17.9157C14.8343 17.8206 14.8915 17.6634 14.8625 17.5095L13.73 11.5824L17.8866 7.23276C17.9907 7.12297 18.0267 6.96 17.9797 6.81174ZM9.39116 12.8928C9.39116 13.0475 9.3074 13.19 9.17515 13.2588L5.85917 14.9935C5.80359 15.0221 5.74412 15.0369 5.68385 15.0369C5.60009 15.0369 5.51557 15.0082 5.44594 14.9525C5.32777 14.8575 5.27062 14.7003 5.2996 14.5463L5.96875 11.0435L3.46275 8.42025C3.35709 8.30969 3.3211 8.14672 3.36883 7.9993C3.41737 7.85188 3.541 7.74543 3.68814 7.72493L7.03623 7.26056L8.64922 3.87811C8.72982 3.70777 8.91219 3.61932 9.08905 3.66189C9.26672 3.70531 9.39116 3.87074 9.39116 4.06073V12.8928Z"
+							fill="white"
+						/>
+					</svg>
+					<span>Write a review</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- write a review modal -->
+<div *ngIf="writeReviewModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Write a review</h5>
+				<img
+					(click)="
+						writeReviewModal = false;
+						reviewRate = null;
+						reviewText = '';
+						closePopup();
+						recordButtonClick($event, null, null, null, profilePage)
+					"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+					data-cs-id="867c5967-b17c-4c5c-b1bc-7c60c3b41943"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				/>
+			</div>
+			<div class="modal-body padding-bottom-zero">
+				<div class="review-heading review-heading--bordered" *ngIf="user">
+					<!-- <img src="./assets/images/profile-page-icon.svg" alt="" /> -->
+					<img src="{{ user?.profilePictureUrl }}" alt="" class="profile-image" />
+					<div class="reviewer-info d-flex flex-column">
+						<span class="reviewer-name">{{ user?.fullname }}</span>
+						<span class="reviewer-info-label">Posting publicly</span>
+					</div>
+				</div>
+				<div class="alert alert-warning" *ngIf="showReviewNotFoundMessage">
+					<div class="alert-icon">
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.33331 9.99998H8.66665V11.3333H7.33331V9.99998ZM7.33331 4.66665H8.66665V8.66665H7.33331V4.66665ZM7.99331 1.33331C4.31331 1.33331 1.33331 4.31998 1.33331 7.99998C1.33331 11.68 4.31331 14.6666 7.99331 14.6666C11.68 14.6666 14.6666 11.68 14.6666 7.99998C14.6666 4.31998 11.68 1.33331 7.99331 1.33331ZM7.99998 13.3333C5.05331 13.3333 2.66665 10.9466 2.66665 7.99998C2.66665 5.05331 5.05331 2.66665 7.99998 2.66665C10.9466 2.66665 13.3333 5.05331 13.3333 7.99998C13.3333 10.9466 10.9466 13.3333 7.99998 13.3333Z"
+								fill="#A26700"
+							/>
+						</svg>
+					</div>
+					<div>
+						<strong>We could not find any previous review</strong> given by you for this group. Please write a new
+						reivew
+					</div>
+				</div>
+				<span class="rating-label">Your rating</span>
+				<div class="star-rating-container">
+					<bar-rating
+						[(rate)]="reviewRate"
+						[max]="5"
+						(rateChange)="changeReviewRating($event)"
+						[theme]="'default'"
+					></bar-rating>
+				</div>
+
+				<p class="modal-body-label">Write your review</p>
+				<textarea
+					(input)="changeReviewText($event)"
+					[(ngModel)]="reviewText"
+					cols="30"
+					name="text"
+					placeholder="Tell others what you think about this group. Would you recommend this group and why?"
+					rows="5"
+				></textarea>
+				<div class="edit-review-text" *ngIf="!user">
+					<p>Want to edit your existing review?</p>
+					<a
+						href="javascript:void(0)"
+						data-cs-id="0d2b5d94-b50d-4f5f-b9c5-0f7fabfd1f5a"
+						data-cs-label="Edit review"
+						data-cs-source="dialog"
+						(click)="sendGroupProfileReview(true); recordButtonClick($event, null, null, null, profilePage)"
+					>
+						<svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M2.5 14.5501V17.0835C2.5 17.3168 2.68333 17.5001 2.91667 17.5001H5.45C5.55833 17.5001 5.66667 17.4585 5.74167 17.3751L14.8417 8.28346L11.7167 5.15846L2.625 14.2501C2.54167 14.3335 2.5 14.4335 2.5 14.5501ZM17.2583 5.8668C17.5833 5.5418 17.5833 5.0168 17.2583 4.6918L15.3083 2.7418C14.9833 2.4168 14.4583 2.4168 14.1333 2.7418L12.6083 4.2668L15.7333 7.3918L17.2583 5.8668Z"
+								fill="#707084"
+							/>
+						</svg>
+						Edit review
+					</a>
+				</div>
+			</div>
+			<div class="modal-footer border-0">
+				<!-- <button
+					(click)="writeReviewModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)"
+					class="convo-btn-normal convo-btn-outline"
+					type="button"
+					*ngIf="user"
+					data-cs-id="d58aaa68-c671-45c3-8d71-bbdb986f5126"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+				>
+					Cancel
+				</button> -->
+				<button
+					(click)="sendGroupProfileReview(); recordButtonClick($event, null, null, null, profilePage)"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					[disabled]="!reviewRate || isSendReviewInProgress"
+					data-cs-id="c88efb13-6344-4c8d-8cc9-acdeb18b2952"
+					data-cs-label="Submit"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSendReviewInProgress"></span>
+					{{ isSendReviewInProgress ? '' : 'Submit' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- edit review modal Abhishek Upadate this -->
+<div *ngIf="editReviewModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Write a review</h5>
+				<img
+					(click)="
+						editReviewModal = false;
+						reviewRate = null;
+						reviewText = '';
+						closePopup();
+						recordButtonClick($event, null, null, null, profilePage)
+					"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+					data-cs-id="867c5967-b17c-4c5c-b1bc-7c60c3b41943"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				/>
+			</div>
+			<div class="modal-body">
+				<div class="review-heading review-heading--bordered">
+					<!-- <img src="./assets/images/profile-page-icon.svg" alt="" /> -->
+					<img src="{{ profilePage?.currentUserReview?.profilePictureUrl }}" alt="" class="profile-image" />
+					<div class="reviewer-info d-flex flex-column">
+						<span class="reviewer-name">{{ profilePage?.currentUserReview?.fullname }}</span>
+						<span class="reviewer-info-label">Posting publicly</span>
+					</div>
+				</div>
+
+				<span class="rating-label">Your rating</span>
+				<div class="star-rating-container">
+					<bar-rating
+						[(rate)]="reviewRate"
+						[max]="5"
+						(rateChange)="changeReviewRating($event)"
+						[theme]="'default'"
+					></bar-rating>
+				</div>
+
+				<p class="modal-body-label">Write your review</p>
+				<textarea
+					(input)="changeReviewText($event)"
+					[(ngModel)]="reviewText"
+					cols="30"
+					name="text"
+					placeholder="Tell others what you think about this group. Would you recommend this group and why?"
+					rows="5"
+				></textarea>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="
+						editReviewModal = false;
+						removeReviewModal = true;
+						disableScrolling();
+						recordButtonClick($event, null, null, null, profilePage)
+					"
+					class="convo-btn-normal convo-btn-outline--red"
+					type="button"
+					data-cs-id="dfdddda2-395a-46cb-95d5-db37f56439c3"
+					data-cs-label="Remove review"
+					data-cs-source="dialog"
+				>
+					Remove review
+				</button>
+				<button
+					(click)="sendGroupProfileReview(); recordButtonClick($event, null, null, null, profilePage)"
+					class="convo-btn-normal convo-btn-primary"
+					type="button"
+					[disabled]="!reviewRate || isSendReviewInProgress"
+					data-cs-id="70117da9-3472-4b76-a04e-6a65ac5d1009"
+					data-cs-label="Submit"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSendReviewInProgress"></span>
+					{{ isSendReviewInProgress ? '' : 'Submit' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- write a review success modal -->
+<div *ngIf="writeReviewSuccessModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Write a review</h5>
+				<img
+					(click)="
+						writeReviewSuccessModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)
+					"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+					data-cs-id="867c5967-b17c-4c5c-b1bc-7c60c3b41943"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				/>
+			</div>
+			<div class="modal-body border-0 pb-0">
+				<div class="review-wrap">
+					<div class="review-heading">
+						<button
+							class="edit-btn"
+							(click)="showEditModal(); recordButtonClick($event, null, null, null, profilePage)"
+							data-cs-id="43f3cac3-fbb4-4c0e-a3b8-fc4f9f9ab26f"
+							data-cs-label="Edit"
+							data-cs-source="dialog"
+						>
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M2.5 14.5501V17.0835C2.5 17.3168 2.68333 17.5001 2.91667 17.5001H5.45C5.55833 17.5001 5.66667 17.4585 5.74167 17.3751L14.8417 8.28346L11.7167 5.15846L2.625 14.2501C2.54167 14.3335 2.5 14.4335 2.5 14.5501ZM17.2583 5.8668C17.5833 5.5418 17.5833 5.0168 17.2583 4.6918L15.3083 2.7418C14.9833 2.4168 14.4583 2.4168 14.1333 2.7418L12.6083 4.2668L15.7333 7.3918L17.2583 5.8668Z"
+									fill="#707084"
+								/>
+							</svg>
+						</button>
+						<img src="{{ profilePage?.currentUserReview?.profilePictureUrl }}" alt="" class="profile-image" />
+						<!-- <img src="{{ profilePage?.currentUserReview?.profilePictureUrl }}" alt="" class="profile-image" /> -->
+						<div class="reviewer-info d-flex flex-column">
+							<span class="reviewer-name">{{ profilePage?.currentUserReview?.fullname }}</span>
+							<div class="d-flex align-items-center">
+								<div class="stars" [style.--rating]="profilePage?.currentUserReview?.rating"></div>
+							</div>
+						</div>
+					</div>
+					<div class="review-body">
+						{{ profilePage?.currentUserReview?.reviewText }}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 d-flex flex-column align-items-center justify-content-center">
+				<ng-lottie
+					containerClass="lottie-animation"
+					height="120px"
+					width="120px"
+					[options]="successAnimationOption"
+				></ng-lottie>
+				<span class="title">Thank you!</span>
+				<span class="subtitle text-center">Your review was submitted successfully!</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- write a review alert modal -->
+<div *ngIf="writeReviewAlertModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Write a review</h5>
+				<img
+					(click)="
+						writeReviewAlertModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)
+					"
+					data-cs-id="867c5967-b17c-4c5c-b1bc-7c60c3b41943"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+				/>
+			</div>
+			<div class="modal-footer d-flex flex-column align-items-center justify-content-center border-0">
+				<ng-lottie
+					containerClass="lottie-animation"
+					height="120px"
+					width="120px"
+					[options]="alertAnimationOption"
+				></ng-lottie>
+				<strong>Sorry you cannot review your own group profile!</strong>
+				<span class="subtitle">Get reviews from others by sharing your group profile.</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- remove review modal -->
+<div *ngIf="removeReviewModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Remove Review</h5>
+				<img
+					(click)="removeReviewModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="07a20eac-a4fe-429c-bde0-1b2059d19077"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+				/>
+			</div>
+			<div class="modal-main">
+				<p>Are you sure you want to <b>remove your review</b> for this group?</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="removeReviewModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="7553b1a0-54a7-4c1c-81ea-b15e987a8a52"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+					class="convo-btn-normal convo-btn-outline"
+					type="button"
+				>
+					Cancel
+				</button>
+				<button
+					(click)="removeGroupProfileReview(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="c280c08e-692f-430e-82a9-e2ecf37926da"
+					data-cs-label="Remove"
+					data-cs-source="dialog"
+					class="convo-btn-normal convo-btn-normal--red"
+					type="button"
+				>
+					Remove
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- remove review success modal -->
+<div *ngIf="removeReviewSuccessModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Remove Review</h5>
+				<img
+					(click)="
+						removeReviewSuccessModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)
+					"
+					data-cs-id="07a20eac-a4fe-429c-bde0-1b2059d19077"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+				/>
+			</div>
+			<div class="modal-footer d-flex flex-column align-items-center justify-content-center">
+				<ng-lottie
+					containerClass="lottie-animation"
+					height="120px"
+					width="120px"
+					[options]="successAnimationOption"
+				></ng-lottie>
+				<span class="remove-success-text">Review has been removed successfully!</span>
+				<span class="text-center">You can close this popup.</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- new vs old review modal -->
+<div *ngIf="newOldReviewModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Write a Review</h5>
+				<img
+					(click)="newOldReviewModal = false; closePopup(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="7d416b85-05b1-4717-a2fb-5047a5846d4c"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					alt="close"
+					src="./assets/images/close-icon.svg"
+				/>
+			</div>
+			<div class="modal-body pb-2 border-0">
+				<div class="alert alert-warning align-center">
+					<div class="alert-icon">
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.33331 9.99998H8.66665V11.3333H7.33331V9.99998ZM7.33331 4.66665H8.66665V8.66665H7.33331V4.66665ZM7.99331 1.33331C4.31331 1.33331 1.33331 4.31998 1.33331 7.99998C1.33331 11.68 4.31331 14.6666 7.99331 14.6666C11.68 14.6666 14.6666 11.68 14.6666 7.99998C14.6666 4.31998 11.68 1.33331 7.99331 1.33331ZM7.99998 13.3333C5.05331 13.3333 2.66665 10.9466 2.66665 7.99998C2.66665 5.05331 5.05331 2.66665 7.99998 2.66665C10.9466 2.66665 13.3333 5.05331 13.3333 7.99998C13.3333 10.9466 10.9466 13.3333 7.99998 13.3333Z"
+								fill="#A26700"
+							/>
+						</svg>
+					</div>
+					<div><strong>We found an existing review</strong> by you for this group.</div>
+				</div>
+
+				<div class="review-wrap-row">
+					<h6>Old Review</h6>
+					<div class="review-wrap">
+						<div class="review-heading">
+							<img src="{{ profilePage?.currentUserReview?.profilePictureUrl }}" alt="" class="profile-image" />
+							<div class="reviewer-info d-flex flex-column">
+								<span class="reviewer-name">{{ profilePage?.currentUserReview?.fullname }}</span>
+								<div class="d-flex align-items-center">
+									<div class="stars" [style.--rating]="profilePage?.currentUserReview?.rating"></div>
+								</div>
+							</div>
+						</div>
+						<div class="review-body">
+							{{ profilePage?.currentUserReview?.reviewText }}
+						</div>
+					</div>
+				</div>
+
+				<div class="review-wrap-row">
+					<h6>New Review</h6>
+					<div class="review-wrap">
+						<div class="review-heading">
+							<img src="{{ profilePage?.currentUserReview?.profilePictureUrl }}" alt="" class="profile-image" />
+							<div class="reviewer-info d-flex flex-column">
+								<span class="reviewer-name">{{ profilePage?.currentUserReview?.fullname }}</span>
+								<div class="d-flex align-items-center">
+									<div class="stars" [style.--rating]="customOAuthState?.reviewData?.rating"></div>
+								</div>
+							</div>
+						</div>
+						<div class="review-body">
+							{{ customOAuthState?.reviewData?.reviewText }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer action-row border-0">
+				<button
+					class="convo-btn-normal convo-btn-outline"
+					data-cs-id="a83636c1-6357-4bad-8d23-8a3d217c0a68"
+					data-cs-label="Edit your old review"
+					data-cs-source="dialog"
+					(click)="openOldReviewInEditModal(); recordButtonClick($event, null, null, null, profilePage)"
+				>
+					Edit your old review
+				</button>
+				<button
+					class="convo-btn-normal convo-btn-primary"
+					data-cs-id="06402570-1352-4932-90f6-7dcfae25d8f8"
+					data-cs-label="Replace with a new review"
+					data-cs-source="dialog"
+					(click)="openNewReviewInEditModal(); recordButtonClick($event, null, null, null, profilePage)"
+				>
+					Replace with a new review
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

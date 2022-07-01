@@ -1,0 +1,15 @@
+{
+	"main": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-pkwebclient-develop-114511-authRole",
+			"UnauthRoleArn": "arn:aws:iam::068053939740:role/amplify-pkwebclient-develop-114511-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::068053939740:role/amplify-pkwebclient-develop-114511-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "amplify-pkwebclient-develop-114511-deployment",
+			"UnauthRoleName": "amplify-pkwebclient-develop-114511-unauthRole",
+			"StackName": "amplify-pkwebclient-develop-114511",
+			"StackId": "arn:aws:cloudformation:us-east-1:068053939740:stack/amplify-pkwebclient-develop-114511/2f8ed2f0-e11a-11ea-bd8e-12275bc6e1ef",
+			"AmplifyAppId": "d1gckv3gtlupfy"
+		}
+	}
+}

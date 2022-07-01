@@ -1,0 +1,44 @@
+<div class="bio-card">
+	<h5><img alt="" src="assets/images/contact-us-icon.png" /> Message button</h5>
+	<h6>Show a ‘Message’ button on your bio to let brands message you.</h6>
+
+	<div class="card-row">
+		<div class="card-toggle-section">
+			<span>Show message button on my bio</span>
+			<mat-slide-toggle
+				[checked]="adminBio.allowBrandsToContact"
+				(change)="adminBio.allowBrandsToContact = !adminBio.allowBrandsToContact; updateBioContact()"
+				[disabled]="disabledChecked || submittingDetails"
+			></mat-slide-toggle>
+		</div>
+		<div class="warning-msg" *ngIf="!contactForm?.get('email')?.value">
+			<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M8.32947 9.9987H9.6628V11.332H8.32947V9.9987ZM8.32947 4.66536H9.6628V8.66536H8.32947V4.66536ZM8.98947 1.33203C5.30947 1.33203 2.32947 4.3187 2.32947 7.9987C2.32947 11.6787 5.30947 14.6654 8.98947 14.6654C12.6761 14.6654 15.6628 11.6787 15.6628 7.9987C15.6628 4.3187 12.6761 1.33203 8.98947 1.33203ZM8.99613 13.332C6.04947 13.332 3.6628 10.9454 3.6628 7.9987C3.6628 5.05203 6.04947 2.66536 8.99613 2.66536C11.9428 2.66536 14.3295 5.05203 14.3295 7.9987C14.3295 10.9454 11.9428 13.332 8.99613 13.332Z"
+					fill="#A26700"
+				/>
+			</svg>
+			<span>Enter a valid email below to enable Message button</span>
+		</div>
+	</div>
+
+	<div class="row-divider"></div>
+	<form *ngIf="contactForm" [formGroup]="contactForm">
+		<div class="input-wrap">
+			<label>Email to receive messages <sup>*</sup></label>
+			<input
+				type="text"
+				name="email"
+				formControlName="email"
+				data-test-id="input-email-adminbio-page"
+				class="convo-input"
+				[ngClass]="{'convo-input-message': !contactForm.get('email').value}"
+			/>
+		</div>
+		<ng-container *ngIf="contactForm.invalid && contactForm.get('email').value">
+			<div class="error-message">
+				<img src="assets/images/icon-error.svg" alt="" /> <span>Please enter a valid email to save changes</span>
+			</div>
+		</ng-container>
+	</form>
+</div>

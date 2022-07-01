@@ -1,0 +1,8 @@
+{
+	"data": {
+		"getUserSelfMonetizationCampaigns": {
+			"__typename": "CampaignConnection",
+			"items": []
+		}
+	}
+}

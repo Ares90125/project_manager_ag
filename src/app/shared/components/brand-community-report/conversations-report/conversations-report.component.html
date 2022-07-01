@@ -1,0 +1,236 @@
+<div class="container brand-chart">
+	<div class="card-inner-wrapper">
+		<div class="flex-box">
+			<h3>Brand Share of Voice</h3>
+			<p>
+				The overall share of your brand mentions in comparison to other brand mentions in the community conversations
+			</p>
+		</div>
+		<mat-slide-toggle id="conversation-voice-toggle" checked [(ngModel)]="isBrandChartVisible"></mat-slide-toggle>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<div id="conversation-voice-chart" #brandChart></div>
+		</div>
+		<div class="col-md-4">
+			<div class="legend">
+				<p>Legend:</p>
+				<div *ngFor="let legendValue of brandOptions.chartOptions.series; let i = index">
+					<span style="display: inline-flex; align-items: center"
+						><span
+							[style]="
+								'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+								brandOptions.chartOptions.colors[i]
+							"
+						></span
+						>{{ legendValue.name }}</span
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['brand-conversations']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['brand-conversations'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'brand-conversations')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['brand-conversations']">
+			<p>{{ supportingText['brand-conversations'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</div>
+<br />
+<div class="container brand-chart">
+	<div class="card-inner-wrapper">
+		<div class="flex-box">
+			<h3>Brand Sentiment</h3>
+			<p>Sentiment breakdown of the audience towards your brand for the selected time period</p>
+		</div>
+		<mat-slide-toggle
+			id="conversation-sentiment-toggle"
+			checked
+			[(ngModel)]="isSentimentChartVisible"
+		></mat-slide-toggle>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<div #sentimentChart></div>
+		</div>
+		<div class="col-md-4">
+			<div class="legend">
+				<p>Legend:</p>
+				<div class="brand-sentiment-lagends">
+					<div *ngFor="let legendValue of sentimentOptions.chartOptions.series[0].data; let i = index">
+						<span style="display: inline-flex; align-items: center">
+							<span
+								[style]="
+									'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+									sentimentOptions.chartOptions.colors[i]
+								"
+							></span>
+							{{ legendValue.name }}
+						</span>
+						<span>{{ legendValue.y / totalSentimentData | percent }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['sentiment']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['sentiment'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'sentiment')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['sentiment']">
+			<p>{{ supportingText['sentiment'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</div>
+<div class="container charts">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>Topics</h3>
+					<p>Top topics discussed in the community</p>
+				</div>
+				<mat-slide-toggle id="conversation-topic-toggle" checked [(ngModel)]="isTopicChartVisible"></mat-slide-toggle>
+			</div>
+			<div #topicChart></div>
+			<div class="legend">
+				<p>Legend:</p>
+				<div *ngFor="let legendValue of topicOptions.chartOptions.series[0].data; let i = index">
+					<span style="display: inline-flex; align-items: center"
+						><span
+							[style]="
+								'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+								topicOptions.chartOptions.colors[i]
+							"
+						></span
+						>{{ legendValue[0] }}</span
+					><span>{{ legendValue[1] / totalTopicData | percent }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>Keywords</h3>
+					<p>Top keywords discussed in the community</p>
+				</div>
+				<mat-slide-toggle
+					id="conversation-keywords-toggle"
+					checked
+					[(ngModel)]="isKeywordChartVisible"
+				></mat-slide-toggle>
+			</div>
+			<div #keywordChart></div>
+			<div class="legend">
+				<p>Legend:</p>
+				<div *ngFor="let legendValue of keywordOptions.chartOptions.series[0].data; let i = index">
+					<span style="display: inline-flex; align-items: center"
+						><span
+							[style]="
+								'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+								keywordOptions.chartOptions.colors[i]
+							"
+						></span
+						>{{ legendValue[0] }}</span
+					><span>{{ legendValue[1] / totalKeywordData | percent }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>Products</h3>
+					<p>Top products discussed in the community</p>
+				</div>
+				<mat-slide-toggle
+					id="conversation-products-toggle"
+					checked
+					[(ngModel)]="isProductChartVisible"
+				></mat-slide-toggle>
+			</div>
+			<div #productChart></div>
+			<div class="legend">
+				<p>Legend:</p>
+				<div *ngFor="let legendValue of productOptions.chartOptions.series[0].data; let i = index">
+					<span style="display: inline-flex; align-items: center"
+						><span
+							[style]="
+								'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+								productOptions.chartOptions.colors[i]
+							"
+						></span
+						>{{ legendValue[0] }}</span
+					><span>{{ legendValue[1] / totalProductData | percent }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['categories']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['categories'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'categories')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['categories']">
+			<p>{{ supportingText['categories'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</div>
+<app-reference-conversation
+	[isReportCBR]="true"
+	(resetModalData)="resetModalData()"
+	[data]="referenceConversationData"
+	[showReferenceConversationDialog]="showReferenceConversationDialog"
+></app-reference-conversation>
+<app-reference-conversation *ngIf="showReferenceConversationDialog"></app-reference-conversation>
+<button data-target="#reference-conversation-modal" data-toggle="modal" id="openReferenceConversationButton">
+	Open reference conversation modal
+</button>

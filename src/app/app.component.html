@@ -1,0 +1,7 @@
+<mat-progress-bar
+	*ngIf="isPublicURL ? false : lazyLoadingModule"
+	color="accent"
+	mode="indeterminate"
+></mat-progress-bar>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,45 @@
+:host {
+	::ng-deep {
+		.tooltip-container {
+			color: white;
+			text-align: center;
+			min-width: 250px;
+			z-index: 999;
+
+			* {
+				z-index: 9999;
+			}
+
+			span.arrow {
+				display: inline-block;
+				position: absolute;
+				width: 30px;
+				height: 30px;
+				background: #33334f;
+				top: 0px;
+				left: 50%;
+				z-index: 0;
+				transform: rotate(45deg) translate(-50%);
+			}
+
+			.row {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1%;
+
+				* {
+					margin: 1%;
+				}
+			}
+
+			.color {
+				border-radius: 3px;
+				width: 15px;
+				height: 15px;
+				display: inline-block;
+				z-index: 999;
+			}
+		}
+	}
+}

@@ -1,0 +1,33 @@
+<div class="modal upload-screenshot-modal modal-from-right" data-backdrop="static" id="failed-post">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<form class="modal-content">
+			<div class="modal-header">
+				<h5 class="justify-content-between w-100">
+					<!-- <button id="close-screenshot" data-toggle="modal" data-dismiss="modal">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M15.8337 9.16563H6.52539L10.5921 5.09896C10.9171 4.77396 10.9171 4.24062 10.5921 3.91562C10.2671 3.59063 9.74206 3.59063 9.41706 3.91562L3.92539 9.40729C3.60039 9.73229 3.60039 10.2573 3.92539 10.5823L9.41706 16.074C9.74206 16.399 10.2671 16.399 10.5921 16.074C10.9171 15.749 10.9171 15.224 10.5921 14.899L6.52539 10.8323H15.8337C16.2921 10.8323 16.6671 10.4573 16.6671 9.99896C16.6671 9.54063 16.2921 9.16563 15.8337 9.16563Z"
+                fill="#33334F"
+              />
+            </svg></button
+          > -->
+					<span>Unretrieved Posts</span>
+					<mat-icon class="closePopIcon" data-dismiss="modal" data-toggle="modal" id="close-screenshot"
+						>close
+					</mat-icon>
+				</h5>
+			</div>
+			<div class="modal-body">
+				<ng-container *ngIf="postLists?.length">
+					<div *ngFor="let post of postLists" class="post">
+						<a [href]="post.fbPermLink || post.fbPermlink" class="link" target="_blank">
+							{{ post.fbPermLink || post.fbPermlink }}
+						</a>
+						<span class="material-icons"> launch </span>
+					</div>
+				</ng-container>
+			</div>
+			<div class="modal-footer"></div>
+		</form>
+	</div>
+</div>

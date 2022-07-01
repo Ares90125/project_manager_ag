@@ -1,0 +1,171 @@
+<div class="container" *ngIf="!discoverMoreCommunities">
+	<div class="campaign-communities-wrapper">
+		<div class="campaign-communities-body">
+			<div class="table-wrapper no-text-selection">
+				<table
+					(rangeChanged)="onRangeChanged($event)"
+					*ngIf="selectedCommunitiesFromApi && !discoverMoreCommunities"
+					rangeSelection
+				>
+					<tr>
+						<th [hidden]="campaign?.status === 'Completed'">
+							<mat-checkbox (click)="toggleAllGroupSelection()" #selectAllGroups [indeterminate]="false">
+							</mat-checkbox>
+						</th>
+						<th class="p-0 link-icon-th"></th>
+						<th>
+							<div>Community Name</div>
+						</th>
+						<th>
+							<div>Members</div>
+						</th>
+						<th>
+							<div class="tooltip-wrap">
+								<span>Campaign Engagement</span>
+								<app-tooltip
+									setTooltipText="Average posts engagement on all campaign posts in last 90 days"
+								></app-tooltip>
+							</div>
+						</th>
+						<th>
+							<div class="tooltip-wrap">
+								<span>Post Engagement</span>
+								<app-tooltip
+									setTooltipText="It is the sum of all reactions and comments on all posts in the group in last 90 days"
+								></app-tooltip>
+							</div>
+						</th>
+						<th>
+							<div>Group State</div>
+						</th>
+						<!--						<th>-->
+						<!--							<div>Contactable</div>-->
+						<!--						</th>-->
+						<th>
+							<div>Installed Date</div>
+						</th>
+						<th>
+							<div>Business Category</div>
+						</th>
+						<th *ngFor="let metadataKey of metadata">
+							<div>{{ capitalise(metadataKey) }}</div>
+						</th>
+					</tr>
+					<ng-container *ngFor="let community of selectedCommunitiesFromApi">
+						<tr [class.row-selected]="isGroupSelected.includes(community.groupId)" [id]="community.groupId">
+							<td [hidden]="campaign?.status === 'Completed'" class="community-checkbox">
+								<mat-checkbox [checked]="isGroupSelected.includes(community.groupId)" [indeterminate]="false">
+								</mat-checkbox>
+							</td>
+							<td class="p-0 disable-selection">
+								<div class="link-icon">
+									<a [href]="'https://facebook.com/groups/' + community.fbGroupId" target="_blank">
+										<img src="assets/images/icon-outbond.svg" />
+									</a>
+								</div>
+							</td>
+							<td>
+								<div class="group-name-wrapper">
+									<div title="{{ community.name ? community.name : community.groupName }}">
+										<span>{{ community.name ? community.name : community.groupName }}</span>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div>{{ community.memberCount | shortNumber }}</div>
+							</td>
+							<td>
+								<div>
+									{{
+										community.campaignPostEngagementRateLastNinetyDays
+											? community.campaignPostEngagementRateLastNinetyDays
+											: '-'
+									}}
+								</div>
+							</td>
+							<td>
+								<div>
+									{{ community.postsEngagementRateLastNinetyDays ? community.postsEngagementRateLastNinetyDays : '-' }}
+								</div>
+							</td>
+							<td>
+								<div>{{ community.state }}</div>
+							</td>
+							<td>
+								<div>
+									{{
+										community.groupInstallationStartedAtUTC
+											? (community.groupInstallationStartedAtUTC | date: 'dd MMM yyyy')
+											: '-'
+									}}
+								</div>
+							</td>
+							<td>
+								<div>{{ community.businessCategory ? community.businessCategory : '-' }}</div>
+							</td>
+							<td *ngFor="let metadataKey of metadata">
+								<div>
+									{{
+										getCommunitiesMetadata(community.metadata) &&
+										getCommunitiesMetadata(community.metadata)[metadataKey]
+											? getCommunitiesMetadata(community.metadata)[metadataKey]
+											: '-'
+									}}
+								</div>
+							</td>
+						</tr>
+					</ng-container>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Remove from Campaign-->
+<div *ngIf="openDeleteCommunityPopup" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Remove from Campaign</h5>
+				<button (click)="closeDeleteCommunityPopup.emit(false)" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">
+					Are you sure you want to remove <strong>{{ selectedGroups?.length }} communities</strong> with
+					<strong>{{ selectedCommunitiesMemberCount | number }} members</strong>
+					from the campaign?
+				</p>
+				<div class="action-row">
+					<button
+						(click)="closeDeleteCommunityPopup.emit(false)"
+						class="convo-btn-normal convo-btn-outline w-100"
+						type="button"
+					>
+						Cancel
+					</button>
+					<button
+						(click)="deleteBulkCommunities()"
+						[disabled]="isDeletionInProgress"
+						class="convo-btn-normal convo-btn-danger w-100"
+						type="button"
+					>
+						<span *ngIf="isDeletionInProgress" class="bt-spinner"></span
+						><span *ngIf="!isDeletionInProgress">Remove from Campaign</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-community-marketing-campaign-community-notification
+	*ngIf="isDialogOpen || isNotificationsDialogOpen"
+	[brand]="brand"
+	[campaign]="campaign"
+	[selectedCommunities]="communitiesToSendNotification"
+	(closeDialog)="isDialogOpen = false; closeDialog.emit(false)"
+	[isDialogOpen]="isDialogOpen || isNotificationsDialogOpen"
+></app-community-marketing-campaign-community-notification>

@@ -1,0 +1,167 @@
+<div class="bio-card">
+	<h5><img src="./assets/images/files-icon.png" alt="" /> Files</h5>
+	<h6>You can attach supporting documents for your pitch here <strong>(max. 5 files)</strong>.</h6>
+	<div class="files-wrapper">
+		<div>
+			<div class="card-row" *ngFor="let file of supportingDocs; let i = index; let last = last">
+				<div (click)="openUploadDialogWithFile(i)" *ngIf="!file.fileThumbnailURL" class="card-row-left file-card">
+					<figure *ngIf="fileExtensionTypes[i] === 'type1' && !defaultIconCheck[i]">
+						<img (error)="defaultIconCheck[i] = true" alt="" class="real-image" src="{{ file.url }}" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type1' && defaultIconCheck[i]" class="file-image-icon">
+						<img class="file-icon" src="./assets/images/file-image-icon.svg" alt="" />
+					</figure>
+
+					<video
+						*ngIf="fileExtensionTypes[i] === 'type2' && !defaultIconCheck[i]"
+						class="real-video"
+						src="{{ file.url + '#t=0.001' }}"
+						(error)="defaultIconCheck[i] = true"
+						type="video/mp4"
+					></video>
+					<figure *ngIf="fileExtensionTypes[i] === 'type2' && defaultIconCheck[i]" class="file-video-icon">
+						<img class="file-icon" src="./assets/images/file-video-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type3'" class="file-xls-icon">
+						<img class="file-icon" src="assets/images/file-xls-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type4'" class="file-pdf-icon">
+						<img class="file-icon" src="assets/images/file-pdf-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type5'" class="file-ppt-icon">
+						<img class="file-icon" src="assets/images/file-ppt-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type6'" class="file-zip-icon">
+						<img class="file-icon" src="assets/images/file-zip-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type7'" class="file-music-icon">
+						<img class="file-icon" src="assets/images/file-music-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type8'" class="file-doc-icon">
+						<img class="file-icon" src="assets/images/file-doc-icon.svg" alt="" />
+					</figure>
+					<figure *ngIf="fileExtensionTypes[i] === 'type9'" class="file-random-icon">
+						<img class="file-icon" src="assets/images/file-random-icon.svg" alt="" />
+					</figure>
+					<div class="file-infor-wrap">
+						<p class="m-0">{{ file.title }}</p>
+						<div class="file-info">
+							<span>{{ file.fileExtension | uppercase }}</span> ·
+							<span>{{ file.size | fileSize }}</span>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!file.fileThumbnailURL" class="card-row-right">
+					<button
+						(click)="recordButtonClick($event); removeFile(i)"
+						class="remove-btn"
+						data-cs-id="6aef5be3-259a-84j2-83d7-23294533d0ff"
+						data-cs-label="remove"
+						data-cs-source="page"
+					>
+						<img alt="" src="./assets/images/remove-icon.svg" />
+					</button>
+				</div>
+				<div (click)="redirectToUrl(file?.url)" *ngIf="file.fileThumbnailURL" class="card-row-left file-card">
+					<ng-container *ngIf="file.fileThumbnailURL !== 'no-image'; else defaultMetaImage">
+						<figure>
+							<img (error)="showDefaultFilePreview($event)" [src]="file?.fileThumbnailURL" alt="" class="real-image" />
+						</figure>
+					</ng-container>
+					<ng-template #defaultMetaImage>
+						<figure>
+							<img alt="" class="real-image" src="assets/images/default_meta_image.png" />
+						</figure>
+					</ng-template>
+					<div class="file-infor-wrap">
+						<p class="m-0">{{ shrinkName(file?.fileTitle) }}</p>
+						<div class="file-info">
+							<span class="link" title="{{ file.url }}">{{ file?.url }}</span>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="file.fileThumbnailURL" class="card-row-right">
+					<button
+						class="remove-btn"
+						data-cs-id="6aef5be3-259a-84j2-83d7-23294533d0ff"
+						data-cs-label="remove"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); removeFile(i)"
+					>
+						<img src="./assets/images/remove-icon.svg" alt="" />
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ng-template #initialState>
+		<button
+			class="convo-btn-normal convo-btn-bordered convo-btn-small"
+			(click)="recordButtonClick($event); openUploadDialog = true"
+			data-cs-id="0ba45cc1-ba4a-938f-a35b-2ae707a1911b"
+			data-cs-label="Upload file"
+			data-cs-source="page"
+			*ngIf="supportingDocs?.length === 0"
+		>
+			<img src="./assets/images/icon_add_blue.svg" alt="" /> <span>Add file</span>
+		</button>
+	</ng-template>
+
+	<ng-container *ngIf="supportingDocs?.length > 0 && supportingDocs?.length < 5; else initialState">
+		<button
+			class="convo-btn-normal convo-btn-bordered convo-btn-small"
+			(click)="recordButtonClick($event); openUploadDialog = true"
+			data-cs-id="0ba45cc1-ba4a-938f-a35b-2ae707a1911b"
+			data-cs-label="Upload file"
+			data-cs-source="page"
+			*ngIf="supportingDocs?.length > 0"
+		>
+			<img src="./assets/images/icon_add_blue.svg" alt="" /> <span>Add another file</span>
+		</button>
+	</ng-container>
+</div>
+
+<div class="modal fade" id="videoPlayerModal" tabindex="-1" aria-labelledby="videoPlayerModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">File name</h5>
+				<button
+					type="button"
+					data-cs-id="281fedbd-18ad-82fo-8672-c637e8a330be"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeAddArticle"
+					(click)="recordButtonClick($event)"
+					class="close-btn"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- <video class="video" [src]="previewImage" controls></video> -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-shared-modal
+	(closePopup)="openUploadDialog = false; incomingFile = null"
+	(fileObject)="processTheFile($event)"
+	(updateToFileObject)="updateTheFileName($event)"
+	*ngIf="openUploadDialog"
+	[incomingFile]="incomingFile"
+	[ref]="ref"
+>
+</app-shared-modal>
+
+<!-- Error Modal -->
+<!-- <ng-container *ngIf="false">
+	<app-error-overlay (closeErrorOverlay)="closeErrorOverlay('fileSizeError')">
+		<h5 class="modal-title" title>File size too large</h5>
+		<p class="m-0" body>That file is too large to upload. The maximum file size allowed is <strong>300MB</strong>.</p>
+	</app-error-overlay>
+</ng-container> -->

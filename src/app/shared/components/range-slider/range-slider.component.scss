@@ -1,0 +1,80 @@
+input[type=range] {
+	box-sizing: border-box;
+	appearance: none;
+	width: 240px;
+	margin: 0;
+	padding: 0 2px;
+	/* Add some L/R padding to ensure box shadow of handle is shown */
+	overflow: hidden;
+	border: 0;
+	border-radius: 1px;
+	outline: none;
+	background: linear-gradient(#3654ff, #3654ff) no-repeat center;
+	/* Use a linear gradient to generate only the 2px height background */
+	background-size: 100% 2px;
+	pointer-events: none;
+
+	&:active,
+	&:focus {
+		outline: none;
+	}
+	&:first-child {
+		&::-webkit-slider-thumb {
+			background-color: #b0bcff;
+		}
+
+	}
+	&:nth-child(2) {
+		&::-webkit-slider-thumb {
+			background-color: #3654ff;
+		}
+	}
+	&::-webkit-slider-thumb {
+		height: 16px;
+		width: 16px;
+		border-radius: 16px;
+		position: relative;
+		margin: 5px 0;
+		/* Add some margin to ensure box shadow is shown */
+		cursor: pointer;
+		appearance: none;
+		pointer-events: all;
+		&::before {
+			content: ' ';
+			display: block;
+			position: absolute;
+			top: 13px;
+			left: 100%;
+			width: 2000px;
+			height: 2px;
+		}
+	}
+}
+
+.multi-range {
+	position: relative;
+	height: 50px;
+
+	input[type=range] {
+		position: absolute;
+
+		&:nth-child(1) {
+			&::-webkit-slider-thumb::before {
+				background-color: red;
+			}
+		}
+
+		&:nth-child(2) {
+			background: none;
+
+			&::-webkit-slider-thumb::before {
+				background-color: grey;
+			}
+		}
+	}
+}
+.style {
+	background: #222;
+	height: 4px;
+	position: absolute;
+}

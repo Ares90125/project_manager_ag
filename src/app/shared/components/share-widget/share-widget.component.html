@@ -1,0 +1,119 @@
+<div class="modal modal-component share-modal d-block" tabindex="-1" role="dialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ title }}</h5>
+				<button
+					type="button"
+					data-cs-id="4b413ef0-f858-4d9a-a9cb-48ece412658d"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="closeShareWidget(); recordEvent($event)"
+				>
+					<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M15.8333 5.3633L14.6583 4.18359L10 8.8606L5.34167 4.18359L4.16667 5.3633L8.82501 10.0403L4.16667 14.7173L5.34167 15.897L10 11.22L14.6583 15.897L15.8333 14.7173L11.175 10.0403L15.8333 5.3633Z"
+							fill="#33334F"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Share on social media or via email:</p>
+				<ul class="social-media-icons">
+					<li
+						class="media-icons-item"
+						data-cs-id="ec8caa67-7505-4cae-9e5b-01b73e75111e"
+						data-cs-label="Facebook share"
+						data-cs-source="dialog"
+						(click)="shareUrl('facebook'); recordEvent($event)"
+					>
+						<figure>
+							<img src="assets/images/facebook-social-icon.svg" />
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/whatspp-share-icon.svg"
+								data-cs-id="a8057432-cb26-4bae-b94d-c06627d0e49f"
+								data-cs-label="Whatsapp share"
+								data-cs-source="dialog"
+								(click)="shareUrl('whatsapp'); recordEvent($event)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/linkedin-social-icon.svg"
+								data-cs-id="0d0c0a9a-6925-4e56-aa0b-8e54aee2e645"
+								data-cs-label="LinkedIn share"
+								data-cs-source="dialog"
+								(click)="shareUrl('linkedIn'); recordEvent($event)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/twitter-social-icon.svg"
+								data-cs-id="6aea34d3-f065-47e2-b3cb-da1284f12ecd"
+								data-cs-label="Twitter share"
+								data-cs-source="dialog"
+								(click)="shareUrl('twitter'); recordEvent($event)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/email-share-icon.svg"
+								data-cs-id="035aa165-87ef-499a-a656-2fde9f884b76"
+								data-cs-label="Email share"
+								data-cs-source="dialog"
+								(click)="shareUrl('email'); recordEvent($event)"
+							/>
+						</figure>
+					</li>
+				</ul>
+
+				<p>Got a brand you want to work with? send them this URL:</p>
+				<div class="input-wrap">
+					<input
+						[value]="copyUrl"
+						[(ngModel)]="copyUrl"
+						data-cs-id="2608a935-c0ce-480b-aaf4-d11f80f0f8dd"
+						data-cs-label="Copy Field"
+						data-cs-source="dialog"
+						(delayedClick)="processCopyText($event)"
+						[debounceTime]="500"
+						appDelayClick
+						readonly
+					/>
+					<button
+						data-cs-id="1635a937-1909-4e38-bdde-c334b51cc33c"
+						data-cs-label="Copy"
+						data-cs-source="dialog"
+						(click)="recordEvent($event); copyToClipboard(copyUrl)"
+					>
+						<ng-container *ngIf="!isCopied; else copied"> Copy </ng-container>
+						<ng-template #copied>Copied</ng-template>
+					</button>
+				</div>
+				<button
+					data-cs-id="e1cc886b-6e75-4109-a945-0906aa397a39"
+					data-cs-label="Want to customize this URL?"
+					data-cs-source="dialog"
+					class="btn-customize"
+					*ngIf="type === 'bio'"
+					(click)="recordButtonClick($event); openSlugPopup()"
+				>
+					Want to customize this URL?
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,147 @@
+<div class="modal file-alert skip-step-modal" *ngIf="isOpen">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Are you sure you want to skip?</h5>
+				<button
+					type="button"
+					(click)="closeModalHandle($event)"
+					data-cs-id="f5032867-08f7-40bc-8388-682b37312fd8"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				>
+					<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M9.77816 0.229428C9.48237 -0.0663631 9.00455 -0.0663631 8.70876 0.229428L5 3.9306L1.29124 0.221843C0.99545 -0.0739477 0.517634 -0.0739477 0.221843 0.221843C-0.0739477 0.517634 -0.0739477 0.99545 0.221843 1.29124L3.9306 5L0.221843 8.70876C-0.0739477 9.00455 -0.0739477 9.48237 0.221843 9.77816C0.517634 10.0739 0.99545 10.0739 1.29124 9.77816L5 6.0694L8.70876 9.77816C9.00455 10.0739 9.48237 10.0739 9.77816 9.77816C10.0739 9.48237 10.0739 9.00455 9.77816 8.70876L6.0694 5L9.77816 1.29124C10.0664 1.00303 10.0664 0.517634 9.77816 0.229428Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="skip-step-content">
+				<div class="skip-step-frame">
+					<div class="skip-step-description">
+						<span>
+							{{
+								isConversationStep
+									? 'The Top Earning groups showcase conversations in their profile. See any of the examples below'
+									: 'The Top Earning groups showcase topics in their profile. See any of the examples below.'
+							}}
+						</span>
+					</div>
+					<ul class="skip-step-list list-unstyled">
+						<li
+							class="skip-step-list-item"
+							data-cs-id="c65ea33f-10d2-4ff4-868c-82c73cef44a3"
+							data-cs-label="Kids' learning and Milestones ( 3-10 Year)"
+							data-cs-source="page"
+							(click)="
+								openPitchProfile(
+									$event,
+									'https://cnvo.site/kids-learning-and-milestones-3-10-year-kids-learning-and-milestones-3-10-year'
+								)
+							"
+						>
+							<img
+								src="https://media.convosight.com/public/pics/34117788_10160316225200063_2197533455951069184_n.jpg"
+								alt=""
+							/>
+							<span>Kids' learning and Milestones ( 3-10 Year)</span>
+							<a target="_blank" href="javascript:void(0)">
+								<button class="convo-btn-primary convo-btn-normal">
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+											fill="#3654FF"
+										/>
+									</svg>
+								</button>
+							</a>
+						</li>
+						<li
+							class="skip-step-list-item"
+							data-cs-id="28c173ab-c5b5-4ae0-8b07-b61c8b3acb51"
+							data-cs-label="Growth and Monetisation for Facebook Group Admins"
+							data-cs-source="page"
+							(click)="
+								openPitchProfile(
+									$event,
+									'https://cnvo.site/growth-and-monetisation-for-facebook-group-admins-growth-and-monetisation-for-facebook-group-admins-2'
+								)
+							"
+						>
+							<img
+								src="https://media.convosight.com/public/pics/273891995_5095919610472623_4891296409821579254_n.jpg"
+								alt=""
+							/>
+							<span>Growth and Monetisation for Facebook Group Admins</span>
+							<a target="_blank" href="javascript:void(0)">
+								<button class="convo-btn-primary convo-btn-normal">
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+											fill="#3654FF"
+										/>
+									</svg>
+								</button>
+							</a>
+						</li>
+						<li
+							class="skip-step-list-item"
+							data-cs-id="1af7b8ea-2dc0-418a-aa5b-bd915cdfc4c3"
+							data-cs-label="Girl Gone International Global community"
+							data-cs-source="page"
+							(click)="openPitchProfile($event, 'https://cnvo.site/test-anne-girl-gone-international-global-community')"
+						>
+							<img
+								src="https://media.convosight.com/public/pics/255403149_10159269328470469_8325243041134028378_n.jpg"
+								alt=""
+							/>
+							<span>Girl Gone International Global community</span>
+							<a target="_blank" href="javascript:void(0)">
+								<button class="convo-btn-primary convo-btn-normal">
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+											fill="#3654FF"
+										/>
+									</svg>
+								</button>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-body p-0">
+				<div class="skip-step-navigation">
+					<div class="current-step-btn">
+						<button
+							class="convo-btn-primary convo-btn-normal"
+							(click)="closeModalHandle($event)"
+							data-cs-id="fe152364-c734-4a95-8124-de98ba473f52"
+							[attr.data-cs-label]="
+								isConversationStep ? 'OK, I want to add conversations' : 'OK, I want to add popular topics'
+							"
+							data-cs-source="page"
+						>
+							<span>
+								{{ isConversationStep ? 'OK, I want to add conversations' : 'OK, I want to add popular topics' }}
+							</span>
+						</button>
+					</div>
+					<div class="next-step-btn">
+						<button
+							(click)="skipStepHandle($event)"
+							class="convo-btn-outline convo-btn-normal"
+							data-cs-id="0ef4b638-ef00-462f-ba44-80c1a77d9cb1"
+							data-cs-label="Skip for now"
+							data-cs-source="page"
+						>
+							<span> Skip for now </span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

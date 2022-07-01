@@ -1,0 +1,24 @@
+<div class="chart-wrapper">
+	<highcharts-chart
+		[(update)]="updateFlag"
+		[Highcharts]="Highcharts"
+		[callbackFunction]="onChartCreated"
+		[constructorType]="'chart'"
+		[oneToOne]="oneToOneFlag"
+		[options]="chartOptions"
+		[runOutsideAngular]="runOutsideAngularFlag"
+		style="width: 250px; height: 250px; display: inline-block"
+	></highcharts-chart>
+
+	<div *ngIf="!chartOptions?.series[0].data?.length || isAllZerroValues" class="no-data">No Data Available</div>
+</div>
+
+<div *ngIf="chartOptions?.series[0].data?.length" class="legend-container">
+	<h5 class="heading">Legends:</h5>
+
+	<div *ngFor="let item of chartOptions?.series[0].data" class="item">
+		<span [ngStyle]="{background: item.color}" class="color"></span>
+		<span class="name"> {{ item.name }} </span>
+		<span class="value"> {{ item.y }}% </span>
+	</div>
+</div>

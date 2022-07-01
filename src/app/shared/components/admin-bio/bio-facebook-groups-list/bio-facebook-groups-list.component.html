@@ -1,0 +1,274 @@
+<div class="bio-card">
+	<h5><img src="./assets/images/groups-icon.png" alt="" /> Your groups</h5>
+	<h6>List the groups that you own/admin and other groups that you support.</h6>
+	<div class="bio-row">
+		<div class="input-wrap pb-0">
+			<label>
+				{{
+					selectedAdminGroups
+						? selectedAdminGroups?.length === 0 || selectedAdminGroups?.length === 1
+							? 'Group'
+							: 'Groups'
+						: 'Group'
+				}}
+				you admin
+				<span class="badge">{{ selectedAdminGroups?.length ?? 0 }}</span>
+			</label>
+
+			<div class="group-list-wrap" *ngIf="selectedAdminGroups?.length > 0">
+				<ul class="list-unstyled">
+					<li *ngFor="let adminGrp of selectedAdminGroups | slice: 0:5; let i = index">
+						<figure>
+							<app-fb-group-cover-image
+								[coverImageUrl]="adminGrp?.profilePictureUrl"
+								[fbGroupId]="adminGrp.fbGroupId"
+							></app-fb-group-cover-image>
+						</figure>
+						<div>
+							<h6>{{ adminGrp?.name | ellipsis: 60 }}</h6>
+							<small>{{ adminGrp?.memberCount | shortNumber }} members</small>
+						</div>
+					</li>
+				</ul>
+				<button
+					data-toggle="modal"
+					data-target="#groupsListModal"
+					class="more-groups-btn"
+					(click)="getAdminsGroups(); recordButtonClick($event)"
+					*ngIf="selectedAdminGroups?.length > 5"
+					data-cs-id="9b7531cf-ab74-47d0-bf15-118d1f5f8739"
+					data-cs-label="plus more admin group"
+					data-cs-source="page"
+				>
+					+{{ selectedAdminGroups?.length - 5 }} more
+				</button>
+			</div>
+
+			<div>
+				<button
+					class="convo-btn-normal convo-btn-bordered convo-btn-small"
+					data-toggle="modal"
+					data-target="#groupsListModal"
+					(click)="getAdminsGroups(); recordButtonClick($event)"
+					data-cs-id="290fa4e3-d98e-4a46-96db-985f68a7cd6a"
+					data-cs-label="Select groups"
+					data-cs-source="page"
+				>
+					<img src="./assets/images/icon_add_blue.svg" alt="" /> <span>Select groups</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="bio-row">
+		<div class="input-wrap pb-0">
+			<label
+				>{{
+					selectedSupportedGroups
+						? selectedSupportedGroups?.length === 0 || selectedSupportedGroups?.length === 1
+							? 'Group'
+							: 'Groups'
+						: 'Group'
+				}}
+				you support <span class="badge">{{ selectedSupportedGroups?.length ?? 0 }}</span></label
+			>
+
+			<div class="group-list-wrap" *ngIf="selectedSupportedGroups?.length > 0">
+				<ul class="list-unstyled">
+					<li *ngFor="let supportGrp of selectedSupportedGroups | slice: 0:5; let i = index">
+						<figure>
+							<app-fb-group-cover-image
+								[coverImageUrl]="supportGrp.profilePictureUrl"
+								[fbGroupId]="supportGrp.fbGroupId"
+							></app-fb-group-cover-image>
+						</figure>
+						<div>
+							<h6>{{ supportGrp?.name | ellipsis: 60 }}</h6>
+						</div>
+					</li>
+				</ul>
+				<button
+					data-toggle="modal"
+					data-target="#groupsListModal"
+					class="more-groups-btn"
+					(click)="getMemberGroups(); recordButtonClick($event)"
+					*ngIf="selectedSupportedGroups?.length > 5"
+					data-cs-id="10a8614a-48ed-4701-981a-c31c3cd234f2"
+					data-cs-label="plus more member group"
+					data-cs-source="page"
+				>
+					+{{ selectedSupportedGroups?.length - 5 }} more
+				</button>
+			</div>
+
+			<div>
+				<button
+					class="convo-btn-normal convo-btn-bordered convo-btn-small"
+					data-toggle="modal"
+					data-target="#groupsListModal"
+					(click)="getMemberGroups()"
+					data-cs-id="c57a82c5-7410-4f7d-9588-edca36580c9c"
+					data-cs-label="Select groups"
+					data-cs-source="page"
+				>
+					<img src="./assets/images/icon_add_blue.svg" alt="" /> <span>Select groups</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="row-divider"></div>
+
+	<button
+		class="show-all-groups"
+		(click)="getMoreGroupsFromFacebook($event)"
+		data-cs-id="c453db70-8704-4d88-8006-82f15d0b0df9"
+		data-cs-label="Add Groups"
+		data-cs-source="page"
+	>
+		<ng-container *ngIf="!gettingGroupsFromFacebook; else fetchingState">
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M8.00005 0.0332031C3.58179 0.0332031 0 3.61499 0 8.03325C0 11.9959 2.88417 15.2777 6.6658 15.9131V9.70228H4.73595V7.46724H6.6658V5.81921C6.6658 3.90702 7.83371 2.86498 9.53976 2.86498C10.3569 2.86498 11.0591 2.92587 11.2629 2.95269V4.95144L10.0796 4.95201C9.15202 4.95201 8.97318 5.39272 8.97318 6.03966V7.46609H11.1866L10.8979 9.70113H8.97318V15.9666C12.9314 15.4848 16 12.1195 16 8.03096C16 3.61499 12.4182 0.0332031 8.00005 0.0332031Z"
+					fill="#1877F2"
+				/>
+			</svg>
+			<span>Not seeing all your Facebook groups?</span>
+		</ng-container>
+
+		<ng-template #fetchingState>
+			<div class="fetching-state">
+				<span class="bt-spinner"></span>
+				Fetching groups
+			</div>
+		</ng-template>
+	</button>
+</div>
+
+<div
+	aria-hidden="true"
+	aria-labelledby="groupsListModal"
+	class="modal fade"
+	data-backdrop="static"
+	id="groupsListModal"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Select groups you {{ groupType }}</h5>
+				<button
+					type="button"
+					class="close-btn"
+					data-cs-id="a9c65740-6d86-4c1b-8a44-6c2a31389d62"
+					data-cs-label="remove"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event); closeGroupsOverlay()"
+					data-dismiss="modal"
+					aria-label="Close"
+					#closeBtnForGrpListPopup
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="search-wrap">
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M12.9167 11.6667H12.2583L12.025 11.4417C12.8417 10.4917 13.3333 9.25833 13.3333 7.91667C13.3333 4.925 10.9083 2.5 7.91667 2.5C4.925 2.5 2.5 4.925 2.5 7.91667C2.5 10.9083 4.925 13.3333 7.91667 13.3333C9.25833 13.3333 10.4917 12.8417 11.4417 12.025L11.6667 12.2583V12.9167L15.8333 17.075L17.075 15.8333L12.9167 11.6667ZM7.91667 11.6667C5.84167 11.6667 4.16667 9.99167 4.16667 7.91667C4.16667 5.84167 5.84167 4.16667 7.91667 4.16667C9.99167 4.16667 11.6667 5.84167 11.6667 7.91667C11.6667 9.99167 9.99167 11.6667 7.91667 11.6667Z"
+						fill="#707084"
+					/>
+				</svg>
+				<input
+					(delayedInput)="processSearchTermInput($event)"
+					[(ngModel)]="searchText"
+					appDelayedInput
+					placeholder="Find a group"
+					type="text"
+				/>
+			</div>
+			<div class="modal-body" *ngIf="!showLoader; else dialogLoadState">
+				<ng-container *ngIf="groups?.length === 0" [ngTemplateOutlet]="noGroupsFound"></ng-container>
+				<div *ngIf="groups?.length > 0" class="groups-list-body">
+					<div *ngIf="searchText === ''" class="groups-list-header">
+						<h6>
+							Select all {{ groups?.length }}
+							{{ groups ? (groups?.length === 0 || groups.length === 1 ? 'group' : 'groups') : 'group' }}
+						</h6>
+						<mat-checkbox
+							(change)="toggleCheck($event.checked)"
+							[checked]="allSelected"
+							[disabled]="searchText !== ''"
+						></mat-checkbox>
+					</div>
+					<div class="groups-list-content">
+						<ul *ngIf="groups | appFilter: searchText:'name' as filteredGroups" class="list-unstyled mb-0">
+							<ng-container *ngIf="filteredGroups.length > 0; else noGroupsFound">
+								<li *ngFor="let group of filteredGroups | orderBy: 'isSelected'; let i = index">
+									<div class="group-body">
+										<figure>
+											<app-fb-group-cover-image
+												[coverImageUrl]="group?.profilePictureUrl"
+												[fbGroupId]="group.fbGroupId"
+											></app-fb-group-cover-image>
+										</figure>
+										<h6>{{ group.name | ellipsis: 50 }}</h6>
+									</div>
+									<mat-checkbox
+										(change)="selectionChange(group.id, $event)"
+										[checked]="group.isSelected"
+									></mat-checkbox>
+								</li>
+							</ng-container>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<ng-template #dialogLoadState>
+				<div class="modal-body">
+					<div class="mb-4"><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+					<div class="mb-4"><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+					<div class="mb-4"><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+					<div class="mb-4"><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+					<div><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+				</div>
+			</ng-template>
+			<div class="modal-footer border-0">
+				<button
+					type="button"
+					data-cs-id="db4c9241-67dd-4dde-9896-84e848732ccb"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event); saveGroups(groupType)"
+					[disabled]="groups?.length === 0 || showLoader"
+					data-dismiss="modal"
+					aria-label="Close"
+					class="convo-btn-normal convo-btn-primary w-100 convo-btn-big"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #noGroupsFound>
+	<div class="no-groups">
+		<p class="info m-0">No groups found!</p>
+		<button
+			(click)="getMoreGroupsFromFacebook($event); closeBtnForGrpListPopup.click()"
+			class="show-all-groups"
+			data-cs-id="c453db70-8704-fg65-8006-82f15d0b0df9"
+			data-cs-label="Add Groups"
+			data-cs-source="page"
+		>
+			<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M8.00005 0.0332031C3.58179 0.0332031 0 3.61499 0 8.03325C0 11.9959 2.88417 15.2777 6.6658 15.9131V9.70228H4.73595V7.46724H6.6658V5.81921C6.6658 3.90702 7.83371 2.86498 9.53976 2.86498C10.3569 2.86498 11.0591 2.92587 11.2629 2.95269V4.95144L10.0796 4.95201C9.15202 4.95201 8.97318 5.39272 8.97318 6.03966V7.46609H11.1866L10.8979 9.70113H8.97318V15.9666C12.9314 15.4848 16 12.1195 16 8.03096C16 3.61499 12.4182 0.0332031 8.00005 0.0332031Z"
+					fill="#1877F2"
+				/>
+			</svg>
+			<span>Not seeing all your Facebook groups?</span>
+		</button>
+	</div>
+</ng-template>

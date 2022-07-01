@@ -1,0 +1,64 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+.pricing-wrap {
+	.paid-campaign-wrap {
+		ul {
+			margin: 0;
+
+			li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 32px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				.camp-left {
+					display: flex;
+					align-items: center;
+
+					figure {
+						margin: 0 12px 0 0;
+
+						img {
+							width: 50px;
+							height: 50px;
+						}
+					}
+
+					h6 {
+						@include font-paragraph-s-md;
+						display: flex;
+						align-items: center;
+						margin: 0;
+
+						span {
+							padding-right: 6px;
+						}
+					}
+
+					small {
+						@include font-paragraph-s;
+						color: $black-70;
+					}
+				}
+
+				.camp-right {
+					button {
+						height: 42px;
+						color: $primary-1;
+						background: #f2f4f8;
+						border: none;
+						padding: 4px 32px;
+						outline: none;
+						cursor: pointer;
+						border-radius: 30px;
+						@include font-label-s-md;
+					}
+				}
+			}
+		}
+	}
+}

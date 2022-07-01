@@ -1,0 +1,9 @@
+{
+	"data": {
+		"listGroupKeywordMetricsByGroupId": {
+			"__typename": "GroupKeywordMetricsConnection",
+			"items": [],
+			"nextToken": null
+		}
+	}
+}

@@ -1,0 +1,969 @@
+<app-groups-list-left-pane
+	[listOfGroupsWithProfilePageAccessObj]="listOfGroupsWithProfilePageAccessObj"
+	[currentPageName]="'ProfilePage'"
+></app-groups-list-left-pane>
+
+<div class="campaign-right-content-with-group-sidebar-wrap">
+	<div class="pitch-page-header">
+		<div class="campaign-right-content-with-group-sidebar">
+			<h3>Group profiles</h3>
+			<button
+				class="convo-btn-normal convo-btn-outline"
+				data-target="#introducingGroupProfilePagesVideoModal"
+				data-toggle="modal"
+				(click)="recordButtonClick($event)"
+				data-cs-id="c842a71b-0494-45ca-b5bc-32f97fc586ad"
+				data-cs-label="What are group profiles?"
+				data-cs-source="page"
+				*ngIf="false"
+			>
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M7.19967 10.6002L10.313 8.26683C10.493 8.1335 10.493 7.86683 10.313 7.7335L7.19967 5.40016C6.97967 5.2335 6.66634 5.3935 6.66634 5.66683V10.3335C6.66634 10.6068 6.97967 10.7668 7.19967 10.6002ZM7.99967 1.3335C4.31967 1.3335 1.33301 4.32016 1.33301 8.00016C1.33301 11.6802 4.31967 14.6668 7.99967 14.6668C11.6797 14.6668 14.6663 11.6802 14.6663 8.00016C14.6663 4.32016 11.6797 1.3335 7.99967 1.3335ZM7.99967 13.3335C5.05967 13.3335 2.66634 10.9402 2.66634 8.00016C2.66634 5.06016 5.05967 2.66683 7.99967 2.66683C10.9397 2.66683 13.333 5.06016 13.333 8.00016C13.333 10.9402 10.9397 13.3335 7.99967 13.3335Z"
+						fill="#3654FF"
+					/>
+				</svg>
+				<span>What are group profiles?</span>
+			</button>
+		</div>
+	</div>
+	<div class="campaign-right-content-with-group-sidebar">
+		<div class="banner-card" *ngIf="!isLoading && !group?.isCSFbGroupAppInstalled">
+			<div class="banner-box connect-convosight-card">
+				<div class="banner-icon" *ngIf="renderedOn === 'Desktop'">
+					<img src="./assets/images/key-stats-banner-icon.svg" alt="" />
+				</div>
+				<div class="banner-info">
+					<h6>
+						<img src="./assets/images/key-stats-banner-icon.svg" alt="" *ngIf="renderedOn === 'Mobile'" />
+						<span>Show key stats to brands</span>
+					</h6>
+					<span
+						>Showcase the monthly conversations happening in your group and your group's engagement rate to attract
+						brands more and get campaigns.</span
+					>
+				</div>
+				<div class="banner-action-btn">
+					<button
+						(click)="openInstallationOverlay($event)"
+						data-cs-id="2bde2469-32e8-4978-8df2-6db44fba5737"
+						data-cs-source="page"
+						data-cs-label="Connect to Convosight"
+						class="convo-btn-normal action-btn"
+					>
+						<img src="./assets/images/connect-file-icon.svg" alt="" />
+						<span>Connect to Convosight</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="pitch-list-wrap">
+			<div class="profile-box-wrap">
+				<ng-container *ngIf="!isLoading && commonProfilePage">
+					<div class="profile-box">
+						<div class="profile-box-body">
+							<!-- toDo: uncomment block below when messages flow will be ready -->
+							<!-- <div class="profile-box-info w-100">
+								<div>
+									<h6 class="profile-box-info-header">Messages received</h6>
+									<div class="profile-box-info-data">
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M16.667 3.33301H3.33366C2.41699 3.33301 1.67533 4.08301 1.67533 4.99967L1.66699 14.9997C1.66699 15.9163 2.41699 16.6663 3.33366 16.6663H16.667C17.5837 16.6663 18.3337 15.9163 18.3337 14.9997V4.99967C18.3337 4.08301 17.5837 3.33301 16.667 3.33301ZM16.3337 6.87467L10.442 10.558C10.1753 10.7247 9.82533 10.7247 9.55866 10.558L3.66699 6.87467C3.45866 6.74134 3.33366 6.51634 3.33366 6.27467C3.33366 5.71634 3.94199 5.38301 4.41699 5.67467L10.0003 9.16634L15.5837 5.67467C16.0587 5.38301 16.667 5.71634 16.667 6.27467C16.667 6.51634 16.542 6.74134 16.3337 6.87467Z"
+												fill="#2FA84F"
+											/>
+										</svg>
+										<p></p>
+									</div>
+								</div>
+								<button
+									class="convo-btn-bordered convo-btn-small"
+									data-cs-id="2fccd971-f3cb-4eff-b278-b1fe296ffae9"
+									data-cs-label="Customize"
+									data-cs-source="page"
+								>
+									View messages
+								</button>
+							</div>
+							<div class="profile-box-separator"></div> -->
+							<div class="profile-box-info w-100">
+								<div>
+									<h6 class="profile-box-info-header">Average rating</h6>
+									<div class="profile-box-info-data">
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.0244 8.33366L9.99935 1.66699L7.97435 8.33366H1.66602L6.81602 12.0087L4.85768 18.3337L9.99935 14.4253L15.1494 18.3337L13.191 12.0087L18.3327 8.33366H12.0244Z"
+												fill="#27AE60"
+											/>
+										</svg>
+										<p>
+											{{ averageRating || 0 }}
+											<span *ngIf="ratingCount <= 1">({{ ratingCount || 0 }} review)</span>
+											<span *ngIf="ratingCount > 1">({{ ratingCount }} reviews)</span>
+										</p>
+									</div>
+								</div>
+								<button
+									(click)="processReviewsModal($event)"
+									data-target="#gruopReviewsModal"
+									class="convo-btn-bordered convo-btn-small"
+									data-cs-id="2fccd971-f3cb-4eff-d45b-b1fe296ffae9"
+									data-cs-label="View reviews"
+									data-cs-source="page"
+								>
+									View reviews
+								</button>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+
+		<div class="pitch-list-wrap">
+			<div class="profile-page-header-wrap">
+				<h4>
+					Group Profile
+					<button
+						data-cs-id="a784c381-3a09-4166-8e0e-ff6f4a964ef9"
+						data-cs-label="What's this?"
+						data-cs-source="page"
+						class="convo-btn-bordered what-this-btn"
+						(click)="$event.stopPropagation(); recordButtonClick($event); openProfileHelpVideos('groupProfile')"
+					>
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						What's this?
+					</button>
+				</h4>
+
+				<p class="m-0">
+					This is the group profile of your group, and is visible to, and editable by all the admins of the group.
+				</p>
+			</div>
+
+			<div class="profile-box-wrap">
+				<ng-container *ngIf="!isLoading && commonProfilePage; else loadingProfilePagesList">
+					<div class="profile-box">
+						<div class="profile-box-body">
+							<div class="profile-box-left w-100">
+								<figure>
+									<img [fbEntityId]="group.fbGroupId" alt="" src="{{ commonProfilePage.coverImageUrl }}" />
+								</figure>
+								<div class="w-100 editable" data-target="#profilePageNameUpdateModal" data-toggle="modal">
+									<h6>{{ commonProfilePage.name }}</h6>
+									<small>Created {{ commonProfilePage.createdAtUTC | date: 'MMMM d, y' }}</small>
+								</div>
+							</div>
+							<div class="profile-box-right">
+								<button
+									(click)="
+										navigateToProfilePageInnerPage('edit', commonProfilePage);
+										recordButtonClick($event, group, null, null, commonProfilePage)
+									"
+									class="convo-btn-primary convo-btn-small"
+									data-cs-id="2fccd971-f3cb-4eff-b278-b1fe296ffae9"
+									data-cs-label="Customize"
+									data-cs-source="page"
+								>
+									Customize
+								</button>
+								<span
+									#tooltip="matTooltip"
+									(click)="tooltip.toggle()"
+									[matTooltip]="
+										!commonProfilePage.isPublished ? 'Please publish first to share the URL' : 'Share profile URL'
+									"
+								>
+									<button
+										(click)="processShareModal($event, commonProfilePage)"
+										[disabled]="!commonProfilePage.isPublished"
+										class="convo-btn-bordered convo-btn-small"
+										data-cs-id="76742b3f-ty63-56bg-80b6-4a7564f84e5f"
+										data-cs-label="Share my profile"
+										data-cs-source="page"
+										data-target="#shareModal"
+										data-toggle="modal"
+									>
+										<svg fill="none" height="16" viewBox="0 0 17 16" width="17" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.5 10.72C11.9933 10.72 11.54 10.92 11.1933 11.2333L6.44 8.46665C6.47333 8.31331 6.5 8.15998 6.5 7.99998C6.5 7.83998 6.47333 7.68665 6.44 7.53331L11.14 4.79331C11.5 5.12665 11.9733 5.33331 12.5 5.33331C13.6067 5.33331 14.5 4.43998 14.5 3.33331C14.5 2.22665 13.6067 1.33331 12.5 1.33331C11.3933 1.33331 10.5 2.22665 10.5 3.33331C10.5 3.49331 10.5267 3.64665 10.56 3.79998L5.86 6.53998C5.5 6.20665 5.02667 5.99998 4.5 5.99998C3.39333 5.99998 2.5 6.89331 2.5 7.99998C2.5 9.10665 3.39333 9.99998 4.5 9.99998C5.02667 9.99998 5.5 9.79331 5.86 9.45998L10.6067 12.2333C10.5733 12.3733 10.5533 12.52 10.5533 12.6666C10.5533 13.74 11.4267 14.6133 12.5 14.6133C13.5733 14.6133 14.4467 13.74 14.4467 12.6666C14.4467 11.5933 13.5733 10.72 12.5 10.72Z"
+												fill="#707084"
+											/>
+										</svg>
+										<span>Share</span>
+									</button>
+								</span>
+								<!-- <button
+									(click)="
+										selectedProfilePageForDuplication = commonProfilePage;
+										recordButtonClick($event, group, null, null, commonProfilePage)
+									"
+									class="convo-btn-bordered convo-btn-small copy-btn"
+									data-target="#duplicateProfilePageModal"
+									data-toggle="modal"
+									data-cs-id="703b7608-1f48-45f8-bfdd-e04a55ee2475"
+									data-cs-label="Duplicate"
+									data-cs-source="page"
+								>
+									<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.6663 0.666664H2.66634C1.93301 0.666664 1.33301 1.26666 1.33301 2V11.3333H2.66634V2H10.6663V0.666664ZM12.6663 3.33333H5.33301C4.59967 3.33333 3.99967 3.93333 3.99967 4.66666V14C3.99967 14.7333 4.59967 15.3333 5.33301 15.3333H12.6663C13.3997 15.3333 13.9997 14.7333 13.9997 14V4.66666C13.9997 3.93333 13.3997 3.33333 12.6663 3.33333ZM12.6663 14H5.33301V4.66666H12.6663V14Z"
+											fill="#707084"
+										/>
+									</svg>
+								</button> -->
+							</div>
+						</div>
+						<div class="profile-box-footer">
+							<button
+								(click)="
+									navigateToProfilePageInnerPage('preview', commonProfilePage);
+									recordButtonClick($event, group, null, null, commonProfilePage)
+								"
+								data-cs-id="9f206ea8-07a9-4877-b8ca-5500ec40dab8"
+								data-cs-label="Preview"
+								data-cs-source="page"
+							>
+								<span>Preview</span>
+								<img alt="" src="./assets/images/link-icon.svg" />
+							</button>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+
+		<div class="pitch-list-wrap">
+			<div class="profile-page-header-wrap">
+				<h4>
+					Brand Pitches
+					<span *ngIf="customProfilePages?.length !== 0 && !isLoading">{{ customProfilePages.length }}</span>
+					<button
+						data-cs-id="2ea6044d-0055-4549-84a3-1ceb1f91f1ad"
+						data-cs-label="What's this?"
+						data-cs-source="page"
+						class="convo-btn-bordered what-this-btn"
+						(click)="$event.stopPropagation(); recordButtonClick($event); openProfileHelpVideos('brandPitches')"
+					>
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						What's this?
+					</button>
+				</h4>
+				<p class="m-0">These are brand pitches created by you to pitch to brands for doing campaigns with them.</p>
+			</div>
+
+			<div class="profile-box-wrap">
+				<ng-container *ngIf="!isLoading; else loadingProfilePagesList">
+					<div *ngFor="let profilePage of customProfilePages; let index = index" class="profile-box">
+						<div class="profile-box-body">
+							<div class="profile-box-left w-100">
+								<figure>
+									<img [fbEntityId]="group.fbGroupId" alt="" src="{{ profilePage.coverImageUrl }}" />
+								</figure>
+								<div
+									(click)="selectedProfilePageForNameUpdate = profilePage"
+									data-target="#profilePageNameUpdateModal"
+									data-toggle="modal"
+									class="w-100 editable"
+								>
+									<h6>{{ profilePage.name }}</h6>
+									<small>Created {{ profilePage.createdAtUTC | date: 'MMMM d, y' }}</small>
+								</div>
+							</div>
+							<div class="profile-box-right">
+								<button
+									(click)="
+										navigateToProfilePageInnerPage('edit', profilePage, true);
+										recordButtonClick($event, group, null, null, profilePage)
+									"
+									class="convo-btn-primary convo-btn-small"
+									data-cs-id="2fccd971-f3cb-4eff-b278-b1fe296ffae9"
+									data-cs-label="Customize"
+									data-cs-source="page"
+								>
+									Customize
+								</button>
+								<span
+									#tooltipCustomProfiles="matTooltip"
+									(click)="tooltipCustomProfiles.toggle()"
+									[matTooltip]="
+										!profilePage.isPublished ? 'Please publish first to share the URL' : 'Share profile URL'
+									"
+								>
+									<button
+										(click)="processShareModal($event, profilePage)"
+										[disabled]="!profilePage.isPublished"
+										class="convo-btn-bordered convo-btn-small"
+										data-cs-id="76742b3f-ty63-56bg-80b6-4a7564f84e5f"
+										data-cs-label="Share my profile"
+										data-cs-source="page"
+										data-target="#shareModal"
+										data-toggle="modal"
+									>
+										<svg fill="none" height="16" viewBox="0 0 17 16" width="17" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.5 10.72C11.9933 10.72 11.54 10.92 11.1933 11.2333L6.44 8.46665C6.47333 8.31331 6.5 8.15998 6.5 7.99998C6.5 7.83998 6.47333 7.68665 6.44 7.53331L11.14 4.79331C11.5 5.12665 11.9733 5.33331 12.5 5.33331C13.6067 5.33331 14.5 4.43998 14.5 3.33331C14.5 2.22665 13.6067 1.33331 12.5 1.33331C11.3933 1.33331 10.5 2.22665 10.5 3.33331C10.5 3.49331 10.5267 3.64665 10.56 3.79998L5.86 6.53998C5.5 6.20665 5.02667 5.99998 4.5 5.99998C3.39333 5.99998 2.5 6.89331 2.5 7.99998C2.5 9.10665 3.39333 9.99998 4.5 9.99998C5.02667 9.99998 5.5 9.79331 5.86 9.45998L10.6067 12.2333C10.5733 12.3733 10.5533 12.52 10.5533 12.6666C10.5533 13.74 11.4267 14.6133 12.5 14.6133C13.5733 14.6133 14.4467 13.74 14.4467 12.6666C14.4467 11.5933 13.5733 10.72 12.5 10.72Z"
+												fill="#707084"
+											/>
+										</svg>
+										<span>Share</span>
+									</button>
+								</span>
+								<button
+									(click)="
+										selectedProfilePageForDuplication = profilePage;
+										recordButtonClick($event, group, null, null, profilePage)
+									"
+									class="convo-btn-bordered convo-btn-small copy-btn"
+									data-target="#duplicateProfilePageModal"
+									data-toggle="modal"
+									data-cs-id="703b7608-1f48-45f8-bfdd-e04a55ee2475"
+									data-cs-label="Duplicate"
+									data-cs-source="page"
+								>
+									<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.6663 0.666664H2.66634C1.93301 0.666664 1.33301 1.26666 1.33301 2V11.3333H2.66634V2H10.6663V0.666664ZM12.6663 3.33333H5.33301C4.59967 3.33333 3.99967 3.93333 3.99967 4.66666V14C3.99967 14.7333 4.59967 15.3333 5.33301 15.3333H12.6663C13.3997 15.3333 13.9997 14.7333 13.9997 14V4.66666C13.9997 3.93333 13.3997 3.33333 12.6663 3.33333ZM12.6663 14H5.33301V4.66666H12.6663V14Z"
+											fill="#707084"
+										/>
+									</svg>
+								</button>
+							</div>
+						</div>
+						<div class="profile-box-footer">
+							<button
+								(click)="
+									navigateToProfilePageInnerPage('preview', profilePage);
+									recordButtonClick($event, group, null, null, profilePage)
+								"
+								data-cs-id="9f206ea8-07a9-4877-b8ca-5500ec40dab8"
+								data-cs-label="Preview"
+								data-cs-source="page"
+							>
+								<span>Preview</span>
+								<img alt="" src="./assets/images/link-icon.svg" />
+							</button>
+						</div>
+					</div>
+
+					<div class="create-pitch-frame" [class.empty-pitch-frame]="!customProfilePages.length">
+						<!-- *ngIf="renderedOn === 'Mobile'" -->
+
+						<button
+							*ngIf="renderedOn === 'Desktop' || customProfilePages.length"
+							[disabled]="isUpdateRequestInProgress"
+							data-target="#duplicateProfilePageModal"
+							data-toggle="modal"
+							class="convo-btn-small convo-btn-bordered"
+							[class.create-first-pitch]="!customProfilePages.length"
+							(click)="createPitchHandle($event)"
+							data-cs-id="1ad05b4c-d5ed-4e4c-af17-a88586ecad78"
+							data-cs-label="Create new"
+							data-cs-source="page"
+						>
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM14.168 10.8327H10.8346V14.166H9.16797V10.8327H5.83464V9.16602H9.16797V5.83268H10.8346V9.16602H14.168V10.8327Z"
+									fill="#68C984"
+								/>
+							</svg>
+							<span>Create new brand pitch</span>
+						</button>
+						<div *ngIf="!customProfilePages.length" class="no-pitches-frame">
+							<p>
+								It seems you haven't created any brand pitches yet.
+								<a (click)="createPitchHandle($event)">See 3 reasons</a> why you should.
+							</p>
+							<button
+								*ngIf="renderedOn === 'Mobile'"
+								[disabled]="isUpdateRequestInProgress"
+								data-target="#duplicateProfilePageModal"
+								data-toggle="modal"
+								class="convo-btn-small convo-btn-bordered no-pitch-button"
+								(click)="createPitchHandle($event)"
+								data-cs-id="1ad05b4c-d5ed-4e4c-af17-a88586ecad78"
+								data-cs-label="Create new"
+								data-cs-source="page"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM14.168 10.8327H10.8346V14.166H9.16797V10.8327H5.83464V9.16602H9.16797V5.83268H10.8346V9.16602H14.168V10.8327Z"
+										fill="#68C984"
+									/>
+								</svg>
+								<span>Create new brand pitch</span>
+							</button>
+							<button
+								[disabled]="isUpdateRequestInProgress"
+								data-target="#duplicateProfilePageModal"
+								data-toggle="modal"
+								class="convo-btn-small"
+								(click)="openSamplePitchesModal($event)"
+								data-cs-id="f15bf545-e79b-4c5e-832c-2bc9ef3b04c7"
+								data-cs-label="See sample brand pitches"
+								data-cs-source="page"
+							>
+								<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M8.5013 3C5.16797 3 2.3213 5.07333 1.16797 8C2.3213 10.9267 5.16797 13 8.5013 13C11.8346 13 14.6813 10.9267 15.8346 8C14.6813 5.07333 11.8346 3 8.5013 3ZM8.5013 11.3333C6.6613 11.3333 5.16797 9.84 5.16797 8C5.16797 6.16 6.6613 4.66667 8.5013 4.66667C10.3413 4.66667 11.8346 6.16 11.8346 8C11.8346 9.84 10.3413 11.3333 8.5013 11.3333ZM8.5013 6C7.39464 6 6.5013 6.89333 6.5013 8C6.5013 9.10667 7.39464 10 8.5013 10C9.60797 10 10.5013 9.10667 10.5013 8C10.5013 6.89333 9.60797 6 8.5013 6Z"
+										fill="#33334F"
+									/>
+								</svg>
+								<span>See sample brand pitches</span>
+							</button>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- No Records Start-->
+<div *ngIf="profilePages?.length === 0 && !isLoading" class="no-records-wrap">
+	<figure>
+		<svg fill="none" height="80" viewBox="0 0 81 80" width="81" xmlns="http://www.w3.org/2000/svg">
+			<circle cx="40.5" cy="40" fill="white" r="40" />
+			<path
+				d="M51.167 29.333H29.8337C28.367 29.333 27.1803 30.533 27.1803 31.9997L27.167 47.9997C27.167 49.4663 28.367 50.6663 29.8337 50.6663H51.167C52.6337 50.6663 53.8337 49.4663 53.8337 47.9997V31.9997C53.8337 30.533 52.6337 29.333 51.167 29.333ZM29.8337 35.9997H43.8337V40.6663H29.8337V35.9997ZM29.8337 43.333H43.8337V47.9997H29.8337V43.333ZM51.167 47.9997H46.5003V35.9997H51.167V47.9997Z"
+				fill="#707084"
+			/>
+		</svg>
+	</figure>
+	<h5>There are no custom profile pages for this group yet</h5>
+	<h6>Create a new one now!</h6>
+</div>
+<!-- No Records End-->
+
+<!-- Start : Loading State -->
+<ng-template #loadingProfilePagesList>
+	<div *ngFor="let loader of loaderCount" class="profile-box">
+		<div class="profile-box-body">
+			<div class="profile-box-left">
+				<figure class="loading-strip"></figure>
+				<div>
+					<h6 class="loading-strip"></h6>
+					<small class="loading-strip"></small>
+				</div>
+			</div>
+			<div class="profile-box-right"></div>
+		</div>
+	</div>
+</ng-template>
+<!-- End : Loading State -->
+
+<!-- Start : Duplicate Profile Overlay -->
+<div
+	*ngIf="selectedProfilePageForDuplication"
+	class="modal"
+	id="duplicateProfilePageModal"
+	tabindex="-1"
+	aria-labelledby="duplicateProfilePageModal"
+	aria-hidden="true"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">New brand pitch</h5>
+				<button
+					#duplicateProfilePageModalCloseBtn
+					aria-label="Close"
+					(click)="
+						recordButtonClick($event, group, null, null, selectedProfilePageForDuplication);
+						isPageNameExist = false;
+						isPageLimitExceeded = false
+					"
+					data-cs-id="fc21b569-e617-40a8-972d-d4c6cc7803d7"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="duplicate-page-body">
+					<div class="input-wrap">
+						<label>What do you want to call the new brand pitch? <sup>*</sup></label>
+						<input
+							#duplicateProfilePageNameInput
+							[ngModel]="setProfileDuplicateName(selectedProfilePageForDuplication.name)"
+							class="convo-input"
+							placeholder="E.g. Profile page 2"
+							type="text"
+							id="duplicateProfileName"
+							(input)="validateProfileName('duplicateProfileName')"
+							[class.invalid]="isPageNameExist || isPageLimitExceeded"
+						/>
+						<span class="error-msg" *ngIf="isPageNameExist">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name already exists!
+						</span>
+						<span class="error-msg" *ngIf="isPageLimitExceeded">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name is limited to 75 characters!
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="
+						duplicateProfilePage(duplicateProfilePageNameInput.value, duplicateProfilePageModalCloseBtn);
+						recordEvent($event, selectedProfilePageForDuplication)
+					"
+					[disabled]="isUpdateRequestInProgress || isPageNameExist || isPageLimitExceeded"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="006d3c67-3bc7-4d3c-a2a0-8a03e07212e5"
+					data-cs-label="Create"
+					data-cs-source="page"
+				>
+					<span *ngIf="isUpdateRequestInProgress" class="btn-spinner-white"></span>
+					{{ isUpdateRequestInProgress ? 'Creating...' : 'Create brand pitch' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End : Duplicate Profile Overlay -->
+
+<!-- Start : Profile page name update Overlay -->
+<div
+	*ngIf="selectedProfilePageForNameUpdate"
+	aria-hidden="true"
+	aria-labelledby="profilePageNameUpdateModal"
+	class="modal"
+	id="profilePageNameUpdateModal"
+	tabindex="-1"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Rename profile page</h5>
+				<button
+					#closeButtonForUpdateProfilePageName
+					aria-label="Close"
+					(click)="resetRenamePage($event, group, newProfilePageNameInput)"
+					data-cs-id="33dcf32d-d425-4ce5-af73-abc4fa4110e7"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="duplicate-page-body">
+					<div class="input-wrap">
+						<label>What do you want to call the new profile page? <sup>*</sup></label>
+						<input
+							#newProfilePageNameInput
+							[ngModel]="selectedProfilePageForNameUpdate.name"
+							class="convo-input"
+							type="text"
+							id="changeProfileName"
+							(input)="validateProfileName('changeProfileName')"
+							[class.invalid]="isPageNameExist || isPageLimitExceeded"
+						/>
+						<span class="error-msg" *ngIf="isPageNameExist">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name already exists!
+						</span>
+						<span class="error-msg" *ngIf="isPageLimitExceeded">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name is limited to 75 characters!
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="
+						updateProfilePageName(newProfilePageNameInput.value, closeButtonForUpdateProfilePageName);
+						recordButtonClick($event, group)
+					"
+					[disabled]="
+						isUpdateRequestInProgress ||
+						selectedProfilePageForNameUpdate.name === newProfilePageNameInput.value ||
+						newProfilePageNameInput.value.trim() === '' ||
+						isPageNameExist ||
+						isPageLimitExceeded
+					"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="1771f637-d81a-4e20-a61e-e7986d1ba20c"
+					data-cs-label="Save changes"
+					data-cs-source="dialog"
+				>
+					<span *ngIf="isUpdateRequestInProgress" class="btn-spinner-white"></span>
+					{{ isUpdateRequestInProgress ? 'Saving changes...' : 'Save changes' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End : Profile page name update Overlay -->
+
+<!-- Start : Create new profile page Overlay -->
+<div
+	aria-hidden="true"
+	aria-labelledby="createNewProfilePageModal"
+	class="modal"
+	id="createNewProfilePageModal"
+	tabindex="-1"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">New profile page</h5>
+				<button
+					#closeButtonForCreateProfilePage
+					aria-label="Close"
+					(click)="
+						recordButtonClick($event, group);
+						CreateProfilePageNameInput.value = '';
+						isPageNameExist = false;
+						isPageLimitExceeded = false
+					"
+					data-cs-id="f578e3a9-ef53-4658-ae86-7a634d800579"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="duplicate-page-body">
+					<div class="input-wrap">
+						<label>What do you want to call the new profile page? <sup>*</sup></label>
+						<input
+							#CreateProfilePageNameInput
+							id="createProfileName"
+							(input)="validateProfileName('createProfileName')"
+							[class.invalid]="isPageNameExist || isPageLimitExceeded"
+							class="convo-input"
+							placeholder="E.g. Profile page 2"
+							type="text"
+						/>
+						<span class="error-msg" *ngIf="isPageNameExist">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name already exists!
+						</span>
+						<span class="error-msg" *ngIf="isPageLimitExceeded">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name is limited to 75 characters!
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="createNewProfilePage(CreateProfilePageNameInput.value); recordButtonClick($event, group)"
+					[disabled]="
+						isUpdateRequestInProgress ||
+						CreateProfilePageNameInput.value.trim() === '' ||
+						isPageNameExist ||
+						isPageLimitExceeded
+					"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="26b0a9ee-a67a-4d5d-beba-0ea6506e48c0"
+					data-cs-label="Create"
+					data-cs-source="dialog"
+				>
+					<span *ngIf="isUpdateRequestInProgress" class="btn-spinner-white"></span>
+					{{ isUpdateRequestInProgress ? 'Creating...' : 'Create' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End : Create new profile page Overlay -->
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		[copyUrl]="copyUrl"
+		type="profile"
+		[profilePage]="profilePage"
+		(closePopup)="closeSharePopup($event)"
+	></app-share-widget>
+</ng-container>
+
+<ng-container *ngIf="openReviewsModal">
+	<app-group-reviews-modal
+		[copyUrl]="copyUrl"
+		[groupId]="group.id"
+		[externalReviews]="reviewsResp"
+		type="profile"
+		(closePopup)="closeReviewsPopup($event)"
+	></app-group-reviews-modal>
+</ng-container>
+
+<ng-container *ngIf="openGroupSelectionModal">
+	<app-group-selection-modal
+		(closePopup)="closeSelectionPopup()"
+		[group]="group"
+		[profilePages]="profilePages"
+		[oneGroupMode]="oneGroupSelectMode"
+	></app-group-selection-modal>
+</ng-container>
+
+<ng-container *ngIf="openProfileIntroModal">
+	<app-profile-introduction-modal
+		[isSingleGroup]="listOfGroupsWithProfilePageAccessObj?.length === 1"
+		[fetching]="isUpdateRequestInProgress"
+		(closePopup)="closeProfileIntroPopup()"
+		(openSelectionModal)="openSelectionPopup()"
+		(emitNewDefaultProfile)="createNewProfilePage(group.name, true)"
+	>
+	</app-profile-introduction-modal>
+</ng-container>
+
+<div
+	aria-hidden="true"
+	aria-labelledby="videoPlayerModal"
+	class="modal fade"
+	data-backdrop="static"
+	id="introducingGroupProfilePagesVideoModal"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Introducing group profile pages Video</h5>
+				<button
+					(click)="recordButtonClick($event); closeVideo('introducingGroupProfilePagesVideo')"
+					aria-label="Close"
+					class="close-btn"
+					data-cs-id="d061bd1d-9cb1-4eca-8653-661dd658475b"
+					data-cs-label="Close"
+					data-cs-source="page"
+					data-dismiss="modal"
+					id="closeAddArticle"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<video
+					class="video"
+					controls
+					id="introducingGroupProfilePagesVideo"
+					src="./assets/videos/group-profile-introduction.mp4"
+				></video>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert skip-step-modal" *ngIf="showSamplePitchesModal">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">See, what great brand pitches, of a top Earning group look like</h5>
+				<button
+					type="button"
+					data-cs-id="2fe747d6-5eaa-4ec5-a61b-73bb8f0a340e"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeSamplePitchesModal($event)"
+					data-cs-id="f5032867-08f7-40bc-8388-682b37312fd8"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				>
+					<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M9.77816 0.229428C9.48237 -0.0663631 9.00455 -0.0663631 8.70876 0.229428L5 3.9306L1.29124 0.221843C0.99545 -0.0739477 0.517634 -0.0739477 0.221843 0.221843C-0.0739477 0.517634 -0.0739477 0.99545 0.221843 1.29124L3.9306 5L0.221843 8.70876C-0.0739477 9.00455 -0.0739477 9.48237 0.221843 9.77816C0.517634 10.0739 0.99545 10.0739 1.29124 9.77816L5 6.0694L8.70876 9.77816C9.00455 10.0739 9.48237 10.0739 9.77816 9.77816C10.0739 9.48237 10.0739 9.00455 9.77816 8.70876L6.0694 5L9.77816 1.29124C10.0664 1.00303 10.0664 0.517634 9.77816 0.229428Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="skip-step-content">
+				<div class="skip-step-frame">
+					<div class="skip-step-content">
+						<div class="skip-step-description">
+							<h5>Example group profile</h5>
+							<span>
+								This is the profile of an informative group where members can share their home remedy tips for their
+								little munchkins and others :)
+							</span>
+						</div>
+						<div
+							class="skip-step-list-item"
+							data-cs-id="a43e0a46-129f-4e15-bbc1-10102360a808"
+							data-cs-label="Home Remedies for babies and Moms"
+							data-cs-source="dialog"
+							(click)="
+								openPitchProfile(
+									$event,
+									'https://cnvo.site/home-remedies-for-babies-and-moms-home-remedies-for-babies-and-moms-2'
+								)
+							"
+						>
+							<img src="assets/images/sample_screenshots/example_2.png" alt="" />
+							<span><strong>Home Remedies for babies and Moms</strong></span>
+							<div class="d-flex align-items-center">
+								<a class="view-pitch-link" target="_blank" href="javascript:void(0)">View</a>
+								<a target="_blank" href="javascript:void(0)">
+									<button class="convo-btn-primary convo-btn-normal">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+								</a>
+							</div>
+						</div>
+						<div class="skip-step-description">
+							<h5>💡 Brand Pitches from this Profile</h5>
+							<span>
+								The admin of the above group created these 3 different pitches from their group profile to pitch their
+								group to three different brands belonging to different categories:
+							</span>
+						</div>
+						<ul class="skip-step-list list-unstyled">
+							<li
+								class="skip-step-list-item"
+								data-cs-id="8c430949-3b78-44bd-a34c-0358d26dafc5"
+								data-cs-label="A customized pitch for a Nutrition Brand"
+								data-cs-source="dialog"
+								(click)="
+									openPitchProfile(
+										$event,
+										'https://cnvo.site/home-remedies-for-babies-and-moms-_nutrition-brand-home-remedies-for-babies-and-moms'
+									)
+								"
+							>
+								<div class="profile-top-image">
+									<img class="pitch-example-image" src="assets/images/example_pitch_apple.png" alt="" />
+									<img [fbEntityId]="fbGroupId" src="assets/images/pitch_profile_example.png" alt="" />
+								</div>
+								<span>A customized pitch for a <strong>Nutrition Brand</strong></span>
+								<div class="d-flex align-items-center">
+									<a class="view-pitch-link" target="_blank" href="javascript:void(0)">View</a>
+									<a target="_blank" href="javascript:void(0)">
+										<button class="convo-btn-primary convo-btn-normal">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</button>
+									</a>
+								</div>
+							</li>
+							<li
+								class="skip-step-list-item"
+								data-cs-id="6d0b7ee4-c69c-492f-885c-86dd5fb31a48"
+								data-cs-label="A customized pitch for a Parenting Brand"
+								data-cs-source="dialog"
+								(click)="
+									openPitchProfile(
+										$event,
+										'https://cnvo.site/home-remedies-for-babies-and-moms-_parenting-brands-home-remedies-for-babies-and-moms'
+									)
+								"
+							>
+								<div class="profile-top-image">
+									<img class="pitch-example-image" src="assets/images/example_pitch_child.png" alt="" />
+									<img [fbEntityId]="fbGroupId" src="assets/images/pitch_profile_example.png" alt="" />
+								</div>
+								<span>A customized pitch for a <strong>Parenting Brand</strong></span>
+								<div class="d-flex align-items-center">
+									<a class="view-pitch-link" target="_blank" href="javascript:void(0)">View</a>
+									<a target="_blank" href="javascript:void(0)">
+										<button class="convo-btn-primary convo-btn-normal">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</button>
+									</a>
+								</div>
+							</li>
+							<li
+								class="skip-step-list-item"
+								data-cs-id="482ccb9c-42cd-4021-9d55-5d1668428a88"
+								data-cs-label="A customized pitch for a Healthcare Brand"
+								data-cs-source="dialog"
+								(click)="
+									openPitchProfile(
+										$event,
+										'https://cnvo.site/home-remedies-for-babies-and-moms-_healthcare-brands-home-remedies-for-babies-and-moms'
+									)
+								"
+							>
+								<div class="profile-top-image">
+									<img class="pitch-example-image" src="assets/images/example_pitch_health.png" alt="" />
+									<img [fbEntityId]="fbGroupId" src="assets/images/pitch_profile_example.png" alt="" />
+								</div>
+								<span>A customized pitch for a <strong>Healthcare Brand</strong></span>
+								<div class="d-flex align-items-center">
+									<a class="view-pitch-link" target="_blank" href="javascript:void(0)">View</a>
+									<a target="_blank" href="javascript:void(0)">
+										<button class="convo-btn-primary convo-btn-normal">
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</button>
+									</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Install overlay for desktop starts here -->
+<div class="convosight-overlay" *ngIf="showInstallationStepsPopup">
+	<app-add-app-installation-popup
+		[fbGroupToBeInstalled]="fbGroupToBeInstalled"
+		(closeInstallationPopup)="closeInstallationPopup($event)"
+	></app-add-app-installation-popup>
+</div>
+<!-- Install overlay for desktop ends here -->
+
+<!-- Install overlay for mobile starts here -->
+<ng-container *ngIf="showMobileInstallationOverlay">
+	<app-mobile-installation (closeMobileInstallOverlay)="closeInstallationPopup($event)"></app-mobile-installation>
+</ng-container>
+<!-- Install overlay for mobile ends here -->
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showProfileVideo">
+	<app-what-this-video [title]="title" [videoLink]="helpVideoLink" (closeVideoPlayer)="closeVideoPlayer($event)">
+	</app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

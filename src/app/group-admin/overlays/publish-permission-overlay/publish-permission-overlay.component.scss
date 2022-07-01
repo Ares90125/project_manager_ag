@@ -1,0 +1,17 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.convo-btn-primary {
+	display: flex;
+	align-items: center;
+	.bt-spinner {
+		width: 18px;
+		height: 18px;
+		border: 2px solid rgba(0, 101, 255, 0.15);
+		animation: 1s spin linear infinite;
+		background-color: transparent;
+		border-top-color: $emp-blue-1;
+		@include border-radius(50%);
+		margin-right: 10px;
+	}
+}

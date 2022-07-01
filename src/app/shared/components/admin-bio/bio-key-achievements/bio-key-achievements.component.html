@@ -1,0 +1,114 @@
+<div class="bio-card">
+	<h5><img src="./assets/images/achievements-icon.png" alt="" /> My achievements</h5>
+	<h6>Share your achievements that might interest brands <strong>(max. 5 achievements)</strong>.</h6>
+	<div class="achievements-wrap">
+		<form [formGroup]="keyAchievementForm">
+			<div
+				class="card-row"
+				formArrayName="achievements"
+				*ngFor="let achievement of keyAchievementForm.get('achievements')['controls']; let i = index"
+			>
+				<div class="card-row-left">
+					<div class="input-wrap">
+						<input
+							type="text"
+							maxlength="120"
+							[formControl]="achievement"
+							placeholder="Enter an achievement"
+							class="convo-input"
+							(keydown.enter)="$event.preventDefault(); $event.target.blur()"
+						/>
+					</div>
+					<ng-container *ngIf="achievement.invalid && showError">
+						<div class="error-message">
+							<img src="assets/images/icon-error.svg" alt="" /> <span>This field cannot be blank</span>
+						</div>
+					</ng-container>
+				</div>
+				<div class="card-row-right">
+					<button
+						class="remove-btn"
+						data-cs-id="6aef5be3-259a-49d8-83d7-23294533d0ff"
+						data-cs-label="remove"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); removeAchievement(i)"
+					>
+						<img src="./assets/images/remove-icon.svg" alt="" />
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<button
+		*ngIf="!hideAddAchievementBtn && adminBio?.keyAchievements?.length < 5"
+		class="convo-btn-normal convo-btn-bordered convo-btn-small"
+		data-cs-id="5bd32c9d-a4a2-4496-9be8-792c8dab25ca"
+		data-cs-label="Add achievement"
+		data-cs-source="page"
+		(click)="recordButtonClick($event); addAchievement()"
+	>
+		<img src="./assets/images/icon_add_blue.svg" alt="" />
+		<span>Add achievement</span>
+	</button>
+	<button
+		*ngIf="!hideAddAchievementBtn"
+		class="convo-btn-normal convo-btn-bordered convo-btn-small mt-2 see-sample-key"
+		data-cs-id="124dd1eb-3c25-4182-82bb-17c60d82d2fe"
+		data-cs-label="See samples"
+		data-cs-source="page"
+		(click)="recordButtonClick($event); showSampleKeyAchievementPopup()"
+	>
+		<img src="./assets/images/play_circle_outline.svg" alt="" /> <span>See samples</span>
+	</button>
+</div>
+
+<ng-template #loadedState>Loading</ng-template>
+
+<!-- Sample achievements Modal -->
+<div aria-hidden="true" class="modal modal-component d-block" tabindex="-1" *ngIf="showSampleKeyAchievement">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Sample achievements</h5>
+				<button
+					class="close"
+					type="button"
+					data-cs-id="a3be80ee-78f3-46bc-b9e5-f36b40e686cf"
+					data-cs-label="Cross"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event); hideSampleKeyAchievementPopup()"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="sample-achievements-modal-body">
+					<ul class="list-unstyled">
+						<li>
+							<figure>1</figure>
+							<h6>Received most active mom entrepreneur award by mom's magazine.</h6>
+						</li>
+						<li>
+							<figure>2</figure>
+							<h6>Organized blood donation camp with 250+ donors for slum blood bank.</h6>
+						</li>
+						<li>
+							<figure>3</figure>
+							<h6>Contributed over $2000 through crowdfunding to support girl child education.</h6>
+						</li>
+					</ul>
+					<button
+						class="convo-btn-normal convo-btn-primary w-100"
+						data-cs-id="59f74655-ecee-4949-a7d9-0e9767ba1943"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+						(click)="recordButtonClick($event); hideSampleKeyAchievementPopup()"
+					>
+						Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

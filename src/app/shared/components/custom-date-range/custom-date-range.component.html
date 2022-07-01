@@ -1,0 +1,35 @@
+<button
+	(click)="setCustomPrefixOfReport(customRange, 'auto'); rangeSelected = false"
+	*ngIf="customRange"
+	[ngClass]="{active: monthPrefixOfReport === 'custom' && !rangeSelected}"
+	class="btn-month"
+	type="button"
+>
+	{{ customRange.startDate | date: 'dd MMM yy' }} - {{ customRange.endDate | date: 'dd MMM yy' }}
+</button>
+<a
+	(click)="showDateRangeSelector = true; showCalendar = true"
+	*ngIf="!showDateRangeSelector && !customRange"
+	class="btn-add-range-picker"
+	>+</a
+>
+<a
+	(click)="showDateRangeSelector = true"
+	*ngIf="!showDateRangeSelector && customRange && showCalendar"
+	class="btn-add-range-picker"
+	><img alt="" src="assets/images/calendar-icon-black.svg"
+/></a>
+<mat-form-field [hidden]="!showDateRangeSelector || !showCalendar" appearance="fill" class="range-picker-for-insights">
+	<mat-label>Enter a date range</mat-label>
+	<mat-date-range-input [formGroup]="range" [min]="campaignStartDate" [rangePicker]="picker">
+		<input formControlName="startDate" matStartDate placeholder="Start date" />
+		<input
+			(ngModelChange)="setCustomPrefixOfReport(range.value, 'manual')"
+			formControlName="endDate"
+			matEndDate
+			placeholder="End date"
+		/>
+	</mat-date-range-input>
+	<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+	<mat-date-range-picker #picker></mat-date-range-picker>
+</mat-form-field>

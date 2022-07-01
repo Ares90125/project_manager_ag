@@ -1,0 +1,118 @@
+<ng-container *ngFor="let conversation of conversations; let index = index">
+	<link rel="stylesheet" href="custom-conversation.component.scss" />
+	<section class="container pb-0 mb-3">
+		<div class="members">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<div class="d-flex align-items-center">
+						<h3 class="mb-0">
+							{{ conversation.title }}
+						</h3>
+						<div class="btn-edit d-flex align-items-center">
+							<div (click)="openEdit.emit(index)" style="display: flex">
+								<div>Edit</div>
+								<img src="assets/images/icon-edit-primary.svg" />
+							</div>
+						</div>
+					</div>
+					<p class="description">{{ conversation.description }}</p>
+				</div>
+				<div>
+					<a (click)="isDeleteDialogOpen = true; conversationToBeDeleted = conversation.title" class="delete"
+						>Delete Custom Conversation</a
+					>
+					<mat-slide-toggle
+						[id]="'custom-conversation-toggle-' + index"
+						checked
+						(change)="editVisibility(conversation.title, $event, 'conversation', index)"
+					></mat-slide-toggle>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex">
+			<div
+				class="control-panel d-flex flex-column justify-content-between"
+				[class]="'bucket-count-' + conversation.buckets.length"
+			>
+				<div class="d-flex align-items-center justify-content-end" *ngFor="let bucket of conversation.buckets">
+					<div class="chart-y-text">{{ bucket.name }}</div>
+					<mat-slide-toggle
+						class="mx-2"
+						(change)="editVisibility(bucket.name, $event, 'bucket', index)"
+						checked
+					></mat-slide-toggle>
+				</div>
+			</div>
+			<div class="chart-panel">
+				<div [id]="'custom-conversation-chat-' + index" class="membersOnboardedChart"></div>
+				<div
+					class="label-panel d-flex flex-column justify-content-between"
+					[class]="'bucket-count-' + conversation.buckets.length"
+				>
+					<div class="d-flex align-items-center" *ngFor="let bucket of conversation.buckets; let index = index">
+						<div class="chart-label-text" [style]="{paddingLeft: getLabelTextPos(bucket.mentions)}">
+							{{ bucket.mentions }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width: 100%; padding: 16px 0 16px 0">
+			<a
+				[hidden]="supportingText[conversation.title]"
+				class="supporting-text supporting-text-toggle show"
+				(click)="openSupportingTextArea($event)"
+				>+ Add supporting text</a
+			>
+			<div class="supporting-text-textarea">
+				<textarea maxlength="1000"> {{ supportingText[conversation.title] }} </textarea>
+				<div class="action">
+					<button
+						class="convo-btn-primary"
+						(click)="saveSupportingText($event, conversation.title)"
+						[disabled]="editingSupportingText"
+					>
+						Save</button
+					><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+				</div>
+			</div>
+			<div class="supporting-text-text show" [hidden]="!supportingText[conversation.title]">
+				<p>{{ supportingText[conversation.title] }}</p>
+				<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+			</div>
+		</div>
+	</section>
+</ng-container>
+<ng-container *ngIf="isDeleteDialogOpen">
+	<div class="modal file-alert delete-conversation">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h6 style="margin-bottom: 24px">Are you sure you want to delete the Custom Conversattion?</h6>
+					<p>Deleting the selected Custom Conversation will remove all the data. This action cannot be undone.</p>
+					<div class="flex-box">
+						<button
+							class="cancel convo-btn-primary convo-btn-normal convo-btn-big w-100 mt-2"
+							data-cs-id="b411184e-4bde-4121-be16-02774314c871"
+							data-cs-label="Close"
+							data-cs-source="dialog"
+							(click)="isDeleteDialogOpen = false"
+						>
+							No, cancel
+						</button>
+						<button
+							class="delete-confirm convo-btn-primary convo-btn-normal convo-btn-big w-100 mt-2"
+							data-cs-id="b411184e-4bde-4121-be16-02774314c871"
+							data-cs-label="Close"
+							data-cs-source="dialog"
+							[disabled]="isDeleting"
+							(click)="deleteCustomConversations(conversationToBeDeleted)"
+						>
+							Yes, delete
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

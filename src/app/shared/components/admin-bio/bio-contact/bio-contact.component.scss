@@ -1,0 +1,72 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.bio-card {
+	.card-row {
+		display: flex;
+		flex-direction: column;
+		.card-toggle-section {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		span {
+			@include font-label-s;
+		}
+		.warning-msg {
+			display: flex;
+			align-items: center;
+			background: #ffefd9;
+			border-radius: 4px;
+			padding: 10px;
+			margin-top: 16px;
+			span {
+				padding-left: 6px;
+				@include font-paragraph-xs;
+			}
+			strong {
+				@include font-paragraph-xs-md;
+			}
+		}
+	}
+	.row-divider {
+		margin: 16px 0;
+	}
+	.input-wrap {
+		label {
+			margin-bottom: 8px;
+			@include font-label-xs-md;
+			sup {
+				color: $error-red;
+			}
+		}
+		.convo-input {
+			border-radius: 4px;
+			width: 100%;
+			height: 40px;
+			padding: 4px 12px;
+			border: 1px solid $borders-grey;
+			@include font-label-s;
+			outline: none !important;
+			&:focus {
+				border-color: $emp-blue-1;
+				box-shadow: 0 0 0 1px $emp-blue-1;
+			}
+		}
+	}
+}
+
+.error-message {
+	display: flex;
+	align-items: center;
+	@include font-paragraph-xs;
+	padding-top: 4px;
+	color: $error-red;
+	span {
+		padding-left: 4px;
+	}
+}
+.convo-input-message.ng-dirty.ng-touched.ng-invalid {
+	border-color: black !important;
+	box-shadow: 0 0 0 1px black !important;
+}

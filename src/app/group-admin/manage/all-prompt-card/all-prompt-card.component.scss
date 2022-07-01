@@ -1,0 +1,288 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+// Whatsapp-opt-in
+.show-less-card {
+	.opt-in-conatiner {
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+	}
+}
+
+.admin-bio-modal {
+	.modal-dialog {
+		max-width: 360px;
+	}
+	.modal-content {
+		.modal-body {
+			padding: 12px;
+			p {
+				padding: 0px 12px;
+				margin: 0;
+			}
+		}
+	}
+}
+.opt-in-conatiner {
+	background: #ffffff;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+	border-radius: 4px;
+	padding: 16px;
+	margin-bottom: 8px;
+	position: relative;
+	z-index: 4;
+	@media (max-width: 767px) {
+		background: #ffffff;
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+		padding: 16px 12px 12px;
+		margin-bottom: 32px;
+	}
+	.data-wrapper {
+		@media (min-width: 768px) {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.close-btn {
+			padding: 0;
+			border: none;
+			background: none;
+			position: absolute;
+			right: 8px;
+			top: 8px;
+			outline: none;
+			@media (min-width: 768px) {
+				right: 16px;
+				top: 50%;
+				transform: translateY(-50%);
+				svg {
+				}
+			}
+		}
+		.data-wrapper-head {
+			display: flex;
+			align-items: center;
+			@media (max-width: 767px) {
+				padding-bottom: 16px;
+			}
+			figure {
+				margin: 0;
+				img {
+					@media (min-width: 768px) {
+						width: 48px;
+					}
+				}
+			}
+			.data-wrapper-head-right {
+				padding-left: 12px;
+				@include font-paragraph-xs;
+				width: 303px;
+				@media (max-width: 767px) {
+					width: auto;
+				}
+				h6 {
+					margin-bottom: 4px;
+					@include font-label-s-md;
+					display: flex;
+					align-items: center;
+					span {
+						&:empty {
+							display: none;
+						}
+					}
+					&.new {
+						span {
+							margin-left: 4px;
+							background: #f66933;
+							border-radius: 2px;
+							font-weight: 500;
+							font-size: 8px;
+							color: #fff;
+							text-transform: uppercase;
+							padding: 0px 3px;
+							height: 14px;
+							overflow: hidden;
+							display: inline-block;
+							line-height: 15px;
+						}
+					}
+				}
+				p {
+					margin: 0;
+					color: $black-70;
+				}
+			}
+		}
+		.data-wrapper-foot {
+			@media (min-width: 768px) {
+				margin-right: 30px;
+			}
+			@media (max-width: 767px) {
+				&.double-btn {
+					> div {
+						width: 100%;
+						&:last-child {
+							margin-left: 8px;
+						}
+						button {
+							margin: 0;
+						}
+					}
+				}
+			}
+			button {
+				height: 32px;
+				display: block;
+				width: 100%;
+				font-size: 12px;
+				font-weight: 500;
+				box-shadow: none;
+				@media (min-width: 768px) {
+					width: 113px;
+				}
+			}
+		}
+	}
+}
+
+.single-card-view {
+	margin-bottom: 32px;
+}
+.card-shadow {
+	background: #ffffff;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	width: calc(100% - 16px);
+	height: 80px;
+	margin-top: -82px;
+	margin-left: 8px;
+	position: relative;
+	z-index: 3;
+}
+.card-shadow + .card-shadow {
+	z-index: 2;
+	margin-top: -73px;
+	width: calc(100% - 32px);
+	margin-left: 16px;
+	+ .card-shadow {
+		margin-top: -74px;
+		z-index: 1;
+		width: calc(100% - 48px);
+		margin-left: 24px;
+	}
+}
+.opt-in-card-footer-wrapper {
+	text-align: center;
+	margin-top: 12px;
+	.opt-in-btn {
+		font-size: 12px;
+		background: #e5e6eb;
+		border-radius: 16px;
+		border: none;
+		color: #707084;
+		font-weight: 500;
+		height: 24px;
+		padding: 0 10px;
+		outline: none !important;
+		min-width: 105px;
+		svg {
+			margin-left: 8px;
+		}
+	}
+}
+
+.convosight-whatsapp-opt-in {
+	overflow: hidden;
+	.modal-dialog {
+		@media (max-width: 767px) {
+			height: 100vh;
+			margin: 0;
+			transform: translate(0, 50px);
+		}
+
+		.modal-content {
+			background: #ffffff;
+			border: 1px solid #dee2e6;
+			box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
+			border-radius: 10px;
+			@media (max-width: 767px) {
+				height: 100%;
+				border-radius: 0;
+				box-shadow: none;
+			}
+		}
+	}
+	&.show {
+		.modal-dialog {
+			transform: none;
+		}
+	}
+}
+app-whatsapp-opt-in {
+	height: 100%;
+}
+
+// Opt in card CSS
+.opt-in-card-container {
+	@media (max-width: 767px) {
+		.opt-in-card-wrapper {
+			@include flex();
+			justify-content: space-between;
+			margin: 0px -12px;
+			margin: 0;
+			.opt-in-card {
+				width: 100%;
+				position: relative;
+				text-align: center;
+				margin: 0 12px 0 0;
+				min-width: 300px;
+				min-height: 100%;
+				display: flex;
+				.data-wrapper {
+					height: 100%;
+					display: flex;
+					justify-content: space-between;
+					flex-direction: column;
+				}
+			}
+		}
+	}
+	.data-wrapper {
+		.data-wrapper-head {
+			text-align: start;
+		}
+		.double-btn {
+			display: flex;
+			.convo-btn-secondary {
+				color: #707084;
+				border: 1px solid #d6d6dc;
+			}
+			.convo-btn-primary {
+				margin-left: 8px;
+			}
+		}
+	}
+}
+
+.opt-loader-wrapper {
+	width: 100%;
+	padding: 20px;
+	background-color: $white;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+	border-radius: 6px;
+	margin-bottom: 20px;
+	.loading-strip {
+		&.primary {
+			width: 300px;
+			max-width: 100%;
+			margin-bottom: 14px;
+		}
+
+		&.secondary {
+			width: 180px;
+		}
+
+		&.tertiary {
+			height: 10px;
+		}
+	}
+}

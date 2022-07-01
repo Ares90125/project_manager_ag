@@ -1,0 +1,15 @@
+<div class="groups-listing">
+	<ul class="list-unstyled" *ngFor="let group of installedGroups; let i = index">
+		<li (click)="toggleGroupSelection(group)">
+			<input type="checkbox" [checked]="selectedGroups[group.id]" />
+			<span class="selected-sign" [class.ticked]="selectedGroups[group.id]"></span>
+			<figure>
+				<app-fb-group-cover-image
+					[coverImageUrl]="group.coverImageUrl"
+					[fbGroupId]="group.fbGroupId"
+				></app-fb-group-cover-image>
+			</figure>
+			<h5>{{ group.name }}</h5>
+		</li>
+	</ul>
+</div>

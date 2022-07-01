@@ -1,0 +1,132 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.preview-groups-wrap {
+	position: relative;
+	padding: 12px;
+	background: $hover-grey;
+	border-radius: 12px;
+	ul {
+		margin: 0;
+		li {
+			display: flex;
+			align-items: center;
+			padding-bottom: 12px;
+			&:last-child {
+				padding-bottom: 0;
+			}
+			figure {
+				margin: 0 8px 0 0;
+				height: 44px;
+				width: 44px;
+				min-width: 44px;
+				img {
+					height: 44px;
+					width: 44px;
+					border-radius: 6px;
+					object-fit: cover;
+				}
+			}
+			h6 {
+				@include font-label-s-md;
+				margin: 0;
+				color: $primary-1;
+			}
+			small {
+				@include font-label-xs;
+				color: $black-70;
+			}
+		}
+	}
+	.more-groups-btn {
+		background: $emp-blue-1;
+		color: #fff;
+		border: none;
+		outline: none;
+		@include font-paragraph-xs-md;
+		padding: 4px 16px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 4px;
+		border-radius: 50px;
+		box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.12);
+	}
+}
+.group-modal-preview {
+	z-index: 999999;
+}
+.modal-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	.modal-title {
+		@include font-label-m-md;
+		margin: 0;
+	}
+	.close-btn {
+		height: 20px;
+		width: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0;
+		border: none;
+		outline: none;
+		padding: 0;
+		background: none;
+	}
+}
+.modal-body {
+	padding: 16px !important;
+	.groups-list-body {
+		.groups-list-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 12px;
+			margin-bottom: 8px;
+			border-bottom: 1px solid $divider-grey;
+			h6 {
+				color: $black-70;
+				margin: 0;
+				@include font-label-s-md;
+			}
+		}
+		.groups-list-content {
+			ul {
+				li {
+					display: flex;
+					align-items: center;
+					padding: 8px 0;
+					figure {
+						margin: 0 12px 0 0;
+						display: flex;
+						align-items: center;
+						height: 40px;
+						width: 40px;
+						min-width: 40px;
+						img {
+							object-fit: cover;
+							border-radius: 3px;
+						}
+					}
+					h6 {
+						@include font-paragraph-s-md;
+						margin: 0;
+						color: $primary-1;
+					}
+					small {
+						@include font-label-xs;
+						color: $black-70;
+					}
+				}
+			}
+		}
+	}
+}

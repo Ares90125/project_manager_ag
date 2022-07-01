@@ -1,0 +1,150 @@
+<div class="conversation-container">
+	<!-- Header Always visible -->
+	<div class="head-wrapper">
+		<h3 class="head-text" data-test-id="heading-conversation-container">
+			Conversations on
+			<ng-container *ngIf="heading; else listKeyWords"
+				><span class="bold-text">‘{{ heading }}’</span></ng-container
+			>
+			<ng-template #listKeyWords>
+				<span class="bold-text"
+					>‘
+					<span *ngFor="let keyword of conversationItems; first as isFirst; last as isLast; let i = index">
+						<strong *ngIf="!isLast && !isFirst">, </strong>
+						<strong *ngIf="isLast && i !== 0"> and </strong>
+						<strong>{{ keyword }} </strong>
+					</span>
+					’</span
+				>
+			</ng-template>
+		</h3>
+		<button
+			(click)="closeList($event)"
+			class="btn-close"
+			data-cs-id="8133996d-2d50-40fa-a04c-19bc687876e7"
+			data-cs-label="Close"
+			data-cs-source="dialog"
+			type="button"
+			data-test-id="close-conversation-container"
+		>
+			<img alt="" src="assets/images/close-icon.svg" />
+		</button>
+		<!-- Filters -->
+	</div>
+
+	<!-- Loading state -->
+	<div *ngIf="conversationList.length === 0" class="conversation-wrapper">
+		<div class="conversation-shimmer-wrapper">
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+			<div class="conversation-shimmer mb-3">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+				<div class="border-top my-2"></div>
+				<div class="loading-strip tertiary"></div>
+			</div>
+		</div>
+	</div>
+	<!-- Main Content// remove this div from the dom when we don't have content -->
+	<div class="conversation-list-wrapper" id="ConversationsContainer">
+		<div class="conversation-list" id="conversationList">
+			<div *ngFor="let list of conversationList" class="conversation-wrapper">
+				<div class="card mb-3">
+					<div class="card-body pb-3">
+						<p class="card-text mb-1 post-title" data-test-id="conversation-text">
+							{{ list.rawText }}
+						</p>
+						<p class="m-0" data-test-id="conversation-time">
+							<small class="text-secondary"
+								>{{ list.createdAtUTC | date: 'hh:mm a' }} , {{ list.createdAtUTC | date: 'MMM dd' }}</small
+							>
+						</p>
+					</div>
+					<div *ngIf="ids.length > 1" class="card-footer bg-transparent pt-0 border-0">
+						<div class="border-top pt-2"></div>
+						<span>
+							<span class="text-secondary">Posted in</span>
+							<img alt="" class="img-group-logo" src="assets/images/group-icon.svg" />
+							<span class="posted-in-name">{{ list.groupname }}</span>
+							<div class="tooltip-wrapper">
+								<app-tooltip [setTooltipText]="list.groupname"> </app-tooltip>
+							</div>
+						</span>
+						<span *ngIf="list.groupType === 'WhatsApp'" class="group-icon">
+							<img alt="" class="img-fb-logo" src="assets/images/whatsapp_color.svg" />
+						</span>
+						<span *ngIf="list.groupType !== 'WhatsApp'" class="group-icon">
+							<a href="{{ list.permalink }}" rel="noopener" target="_blank">
+								<img alt="" class="img-fb-logo" src="assets/images/facbook-tab-icon.svg" />
+							</a>
+						</span>
+					</div>
+					<div *ngIf="ids.length === 1" class="card-footer bg-transparent pt-0 border-0">
+						<div class="border-top pt-2"></div>
+						<span *ngIf="list.groupType === 'WhatsApp'">
+							<img alt="" class="img-fb-logo" src="assets/images/whatsapp_color.svg" />
+						</span>
+						<span *ngIf="list.groupType !== 'WhatsApp'">
+							<a
+								(click)="recordButtonClick($event, group)"
+								data-cs-id="7cea6603-fc09-4394-8018-2009efe9e213"
+								data-cs-label="Facebook icon"
+								data-cs-source="dialog"
+								href="{{ list.permalink }}"
+								target="_blank"
+								rel="noopener"
+							>
+								<img alt="" class="img-fb-logo" src="assets/images/facbook-tab-icon.svg" />
+							</a>
+						</span>
+						<span> {{ list.contenType }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="isConversationLoading">
+		<div class="loading-wrapper">
+			<div class="bt-spinner-center"></div>
+		</div>
+	</div>
+
+	<!-- No Result Found -->
+	<div class="no-results-wrapper" style="display: none">
+		<div class="no-results-found">
+			<figure>
+				<img alt="" src="assets/images/empty_state_icon.svg" />
+			</figure>
+			<h5>No conversations found</h5>
+			<div>Check back later</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,24 @@
+:host {
+	::ng-deep {
+		.label.Target {
+			color: #3654ff;
+			font-weight: normal;
+		}
+
+		.label.Pre-Campaign {
+			color: #707084;
+			font-weight: normal;
+		}
+
+		.label.Achieved {
+			color: #33334f;
+		}
+
+		g.highcharts-axis-labels {
+			text {
+				color: #9999a7 !important;
+				fill: #9999a7 !important;
+			}
+		}
+	}
+}

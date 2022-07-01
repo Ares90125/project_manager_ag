@@ -1,0 +1,55 @@
+{
+	"groupAdmin": {
+		"user": "ravi_wxjivxi_kiran@tfbnw.net",
+		"password": "convosight1"
+	},
+	"anotherGroupAdmin": {
+		"user": "ravi_mtlfblv_second@tfbnw.net",
+		"password": "Convosight"
+	},
+
+	"emailVerification": {
+		"user": "donotdelete_bnrtjeg_testuser@tfbnw.net",
+		"password": "convosight"
+	},
+	"moderatorAccount": {
+		"user": "devashish_jbmkpay_testuser@tfbnw.net",
+		"password": "convosight"
+	},
+	"moderatorAccountB": {
+		"user": "ihioffchna_1606287284@tfbnw.net",
+		"password": "convosight"
+	},
+	"userOneGroup": {
+		"user": "advitiya_mknijay_sujeet@tfbnw.net",
+		"password": "convosight"
+	},
+	"csAdmin": {
+		"user": "csadmin@convosight.com",
+		"password": "EXb5Xj%Y6"
+	},
+	"brandAdmin": {
+		"user": "baby_destination@convosight.com",
+		"password": "!?}HI?-3uZ"
+	},
+	"UIbrandAdmin": {
+		"user": "test123_cmc@convosight.com",
+		"password": "RN9s}LUd5o"
+	},
+	"notificationUser": {
+		"user": "automation_idinwuo_user@tfbnw.net",
+		"password": "convosight"
+	},
+	"adminBioEnabledAndNotCompletedUser": {
+		"user": "kkhoqshhmh_1637915229@tfbnw.net",
+		"password": "convosight"
+	},
+	"adminBioEnabledAndCompletedUser": {
+		"user": "ravi_wxjivxi_kiran@tfbnw.net",
+		"password": "convosight1"
+	},
+	"adminBioDisabledUser": {
+		"user": "advitiya_mknijay_sujeet@tfbnw.net",
+		"password": "convosight"
+	}
+}

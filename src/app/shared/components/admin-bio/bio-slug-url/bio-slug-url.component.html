@@ -1,0 +1,240 @@
+<div class="bio-card">
+	<h5><img alt="" src="assets/images/slug-url-icon.png" /> Admin bio URL</h5>
+	<h6>Got a brand you want to work with? Share your admin bio with them using this URL:</h6>
+	<div class="input-wrap">
+		<input
+			[value]="adminBio?.profileUrl"
+			data-cs-id="2608a935-c0ce-480b-aaf4-d11f80f0f8dd"
+			data-cs-label="Copy Field"
+			data-cs-source="dialog"
+			(delayedClick)="processCopyText($event)"
+			[debounceTime]="500"
+			appDelayClick
+			readonly
+		/>
+		<button
+			data-cs-id="1635a937-1909-4e38-bdde-c334b51cc33c"
+			data-cs-label="Copy"
+			data-cs-source="dialog"
+			(click)="recordButtonClick($event); copyToClipboard(adminBio?.profileUrl)"
+		>
+			<ng-container *ngIf="!isCopied; else copied"> Copy </ng-container>
+			<ng-template #copied>Copied</ng-template>
+		</button>
+	</div>
+
+	<button
+		class="convo-btn-normal convo-btn-bordered convo-btn-small"
+		[class.mb24]="adminBio?.profileUrl"
+		data-cs-id="54dcb9f0-0256-439d-99b7-4dc4e3cf3214"
+		data-cs-label="Edit URL"
+		data-cs-source="page"
+		(click)="recordButtonClick($event); openEditModal()"
+	>
+		<img src="assets/images/icon-edit-primary.svg" alt="" /> <span>Edit URL</span>
+	</button>
+
+	<div class="previous-slug-body" *ngIf="adminBio?.oldProfileUrlSlug">
+		<h6>Previous URL that is still linked your bio:</h6>
+
+		<div class="previous-slug">
+			<span>{{ profileBaseUrl }}{{ adminBio?.oldProfileUrlSlug }}</span>
+			<button
+				class="convo-btn-expire"
+				data-cs-id="ba38c06d-0e5e-4543-9e3c-31a6bb61e0dd"
+				data-cs-label="Expiring Dialog"
+				data-cs-source="page"
+				(click)="recordButtonClick($event); openExpiredModal()"
+			>
+				<span *ngIf="!isOldProfileLinkExpired">Expiring {{ adminBio?.oldSlugExpiredDate | timeFromXTime }}</span>
+				<span *ngIf="isOldProfileLinkExpired">Expired</span>
+			</button>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showExpiredPopup" class="modal bio-url-modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Previous admin bio URL</h5>
+				<button
+					class="close"
+					data-cs-id="ae6f99fa-885e-4a96-a5c2-bc71015e810d"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeModal(); recordButtonClick($event)"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<h6 class="mb-12">
+					<ng-container *ngIf="isOldProfileLinkExpired">
+						<span>This URL is expired </span> and it will not work for anyone you might have shared it with in the past.
+					</ng-container>
+					<ng-container *ngIf="!isOldProfileLinkExpired">
+						<span>This URL will expire {{ adminBio?.oldSlugExpiredDate | timeFromXTime }},</span> after which it will
+						not work for anyone you might have shared it with in the past.
+					</ng-container>
+				</h6>
+				<div class="input-wrap">
+					<input [value]="OldSlugUrl" readonly />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showConfirmDialog" class="modal bio-url-modal edit-url file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 *ngIf="adminBio?.oldProfileUrlSlug && !isOldProfileLinkExpired">Too early to edit your URL again</h5>
+				<h5 *ngIf="!adminBio?.oldProfileUrlSlug || isOldProfileLinkExpired">Are you sure?</h5>
+				<button
+					class="close"
+					[attr.data-cs-id]="
+						!adminBio?.oldProfileUrlSlug || isOldProfileLinkExpired
+							? 'f9b2bfbe-8dc0-4fb7-92bb-28d2c07ec180'
+							: '0016ba16-6908-411b-8c6b-98c57e7076e2'
+					"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeModal(); recordButtonClick($event)"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<ng-container *ngIf="!adminBio?.oldProfileUrlSlug || isOldProfileLinkExpired">
+				<div class="modal-body">
+					<h6 class="mb-12">
+						If you change your admin bio URL now <span>your current URL will expire in 7 days,</span> after which it
+						will not work for anyone you might have shared it with in the past.
+					</h6>
+				</div>
+				<div class="footer-btn">
+					<button
+						class="convo-btn-normal convo-btn-bordered mr-3"
+						data-cs-id="cf310143-75d0-4921-992a-e5eae2b4fca9"
+						data-cs-label="Cancel"
+						data-cs-source="dialog"
+						(click)="closeModal(); recordButtonClick($event)"
+						type="button"
+					>
+						Cancel
+					</button>
+					<button
+						class="convo-btn-primary convo-btn-normal px-4"
+						data-cs-id="c6c7ea267-1a14-4ecc-8411-f182229f90ef"
+						data-cs-label="Edit URL anyway"
+						data-cs-source="dialog"
+						(click)="openFormModal(); recordButtonClick($event)"
+						type="button"
+					>
+						Edit URL anyway
+					</button>
+				</div>
+			</ng-container>
+			<ng-container *ngIf="adminBio?.oldProfileUrlSlug && !isOldProfileLinkExpired">
+				<div class="modal-body">
+					<h6>
+						You had edited your URL once in the past 7 days. Please wait till your previous URL expires to edit again.
+					</h6>
+				</div>
+				<div class="footer-btn flex-end pt-0">
+					<button
+						class="convo-btn-primary convo-btn-normal px-4 width-130"
+						data-cs-id="867bbfcc-1e27-4b26-8a51-e5030c3f308a"
+						data-cs-label="OK"
+						data-cs-source="dialog"
+						(click)="closeModal(); recordButtonClick($event)"
+						type="button"
+					>
+						OK
+					</button>
+				</div>
+			</ng-container>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showFormModal" class="modal bio-url-modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Edit Admin Bio URL</h5>
+				<button
+					class="close"
+					data-cs-id="60b01c9e-b3d3-4958-ba21-87594fc644a4"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeModal(); recordButtonClick($event)"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body url-form">
+				<form [formGroup]="bioUrlForm">
+					<div class="form-group">
+						<label>Your admin bio URL <sup>*</sup></label>
+						<div class="input-box" [class.red-border]="showError" [class.on-focus]="isFocused && !showError">
+							<span class="prefix">{{ profileBaseUrl }}</span>
+							<input
+								type="text"
+								(delayedInput)="processSlugInput($event)"
+								appDelayedInput
+								name="url"
+								formControlName="url"
+								(focus)="isFocused = true"
+								(blur)="isFocused = false"
+							/>
+						</div>
+						<div class="info-state">
+							<ng-container *ngIf="showError">
+								<img src="assets/images/error-info-icon.svg" alt="" />
+								<span *ngIf="errorState === 'Unfilled'" class="red">This field cannot be blank</span>
+								<span *ngIf="errorState === 'Pattern'" class="red">URL contains invalid characters</span>
+								<span *ngIf="errorState === 'Unique'" class="red">This URL is taken, please try another.</span>
+								<span *ngIf="errorState === 'Length'" class="red">Please enter between 3-30 characters</span>
+							</ng-container>
+							<ng-container *ngIf="!showError && isLinkUnique">
+								<img src="assets/images/check.svg" alt="" />
+								<span>This URL is available.</span>
+							</ng-container>
+							<ng-container *ngIf="checkingSlugIsUnique">
+								<div class="url-available">
+									<div class="bt-spinner-center"></div>
+									<span>Checking if URL is available...</span>
+								</div>
+							</ng-container>
+						</div>
+					</div>
+					<div class="bio-url-info-card">
+						<h6>What is allowed in the URL:</h6>
+						<ul class="list-unstyled">
+							<li><img src="assets/images/check_circle.svg" alt="" />Letters <span>a-z</span></li>
+							<li><img src="assets/images/check_circle.svg" alt="" />Numbers <span>0-9</span></li>
+							<li>
+								<img src="assets/images/check_circle.svg" alt="" />Special characters <span>-</span> and <span>_</span>
+							</li>
+						</ul>
+					</div>
+					<button
+						class="convo-btn-primary"
+						[disabled]="!isLinkUnique || showError"
+						data-cs-id="c6006c0a-3d8f-482a-a191-eb4efc6b54bf"
+						data-cs-label="Done"
+						data-cs-source="dialog"
+						(click)="submitForm(); recordButtonClick($event)"
+					>
+						Done
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

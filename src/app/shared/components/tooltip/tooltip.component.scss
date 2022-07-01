@@ -1,0 +1,9 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.tooltip-content {
+	svg {
+		color: rgba(51, 51, 79, 0.5);
+		max-width: 100%;
+	}
+}

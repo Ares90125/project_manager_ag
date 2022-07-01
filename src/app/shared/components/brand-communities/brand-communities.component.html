@@ -1,0 +1,141 @@
+<div class="brand-header-top">
+	<div class="container">
+		<div class="brand-header-top-row">
+			<div>
+				<div class="brand-name">
+					{{ brand?.name }}
+				</div>
+			</div>
+			<div>
+				<a class="brand-campaigns" [hidden]="isFromBrand" (click)="navigateToCampaigns()">Campaigns</a>
+				<a class="brand-communities" [hidden]="isFromBrand">Brand Communities</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="header">
+	<div class="container">
+		<div class="flex-box-header">
+			<div>
+				<h2>Your Brand Communities</h2>
+				<p>Click on any Brand Community to view and track the insights</p>
+			</div>
+			<div>
+				<a [hidden]="isFromBrand" (click)="showAddNewReportDialog = true">+ Generate New Report</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="communities-body container">
+	<div class="row">
+		<div class="col-md-4" *ngFor="let community of brandCommunities">
+			<div class="card" (click)="navigateToBrandCommunity(community?.brandId, community?.groupId)">
+				<h3>{{ community?.groupName }}</h3>
+				<p class="date">Data last updated on {{ community?.lastUpdatedOn | date: 'dd MMM, YYYY' }}</p>
+				<p class="members-value">{{ community?.totalMembers | number }}</p>
+				<p class="members">Total Members</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div aria-hidden="true" class="modal modal-component modal-edit" tabindex="-1" *ngIf="showAddNewReportDialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Generate New Report</h5>
+				<button class="close" type="button" (click)="showAddNewReportDialog = false; reset()">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6 brand-community">
+						<div class="custom-dropdown">
+							<label>Brand <sup class="required">*</sup></label>
+							<app-custom-dropdown
+								(selectionChange)="selectBrand($event)"
+								[items]="brands"
+								[toReturnObject]="true"
+								defaultText="Select Brand"
+								[value]="selectedBrand?.name"
+								formControlName="brandSelected"
+							></app-custom-dropdown>
+						</div>
+					</div>
+					<div class="col-md-6 brand-community">
+						<form [formGroup]="communityReportForm">
+							<label>Community <sup class="required">*</sup></label>
+							<input
+								(input)="getGroupsDetailsByName($event)"
+								formControlName="groupName"
+								placeholder="Select Community"
+								type="text"
+								class="text-group-input"
+								[value]="selectedGroup?.name"
+							/>
+						</form>
+						<div *ngIf="!selectedGroup && groupName" class="dropdown-list-wrapper community">
+							<ul *ngIf="groupDetails" class="data-ul">
+								<li (click)="selectGroup(details)" *ngFor="let details of groupDetails">
+									{{ details.name }}
+								</li>
+							</ul>
+							<!-- shimmers -->
+							<ul *ngIf="!groupDetails" class="list-unstyled shimmer-wrapper">
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-12 banner-style">
+						<label>Community Banner Image</label>
+						<div (fileDropped)="fileChange($event)" appDragAndDrop class="content-col custom-upload">
+							<figure><img alt="" src="./assets/images/icon_add_photo.svg" /></figure>
+							<h6>Upload Banner</h6>
+							<p>
+								Drag and drop or <span (click)="uploadFile.click()" class="text-primary">browse</span> an image file to
+								upload
+								<figure><img *ngIf="previewImage" [src]="previewImage" alt="" class="preview-image" /></figure>
+							</p>
+						</div>
+						<input
+							#uploadFile
+							(change)="fileChange($event)"
+							accept=".gif,.jpg,.jpeg,.png"
+							class="input-file"
+							title=""
+							type="file"
+						/>
+					</div>
+					<div class="col-md-12 category-style">
+						<div class="custom-dropdown">
+							<label>Categories <sup class="required">*</sup></label>
+							<app-custom-dropdown
+								(selectionChange)="selectCategory($event)"
+								[items]="categories"
+								[isMultipleSelection]="'true'"
+								defaultText="Select Categories to include"
+								[selectedItems]="selectedItems"
+								[value]="selectedItems[0]"
+								formControlName="categoriesSelected"
+							></app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button
+						(click)="saveCreate()"
+						[disabled]="communityReportForm.invalid"
+						class="convo-btn-normal convo-btn-primary"
+						type="button"
+					>
+						<span *ngIf="isUploading" class="loader"></span>Save & Create
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,235 @@
+<div class="content-manager__page">
+	<div class="content-manager__sidebar">
+		<div class="selector">
+			<div class="selector__heading">
+				<span class="text-small">Select brand</span>
+				<span class="text-small">Total: {{ brands.length }}</span>
+			</div>
+			<app-searchable-campaigns-dropdown
+				(optionSelected)="handleBrandSelect($event)"
+				[mainDropDownOptions]="brands"
+				[selectedValue]="selectedBrand.name"
+				[isMultiStateOption]="true"
+			></app-searchable-campaigns-dropdown>
+		</div>
+
+		<div class="selector">
+			<div class="selector__heading">
+				<span class="text-small">Select campaign</span>
+				<span class="text-small">Total: {{ campaigns.length }}</span>
+			</div>
+			<app-searchable-campaigns-dropdown
+				(optionSelected)="handleCampaignSelect($event)"
+				[mainDropDownOptions]="campaigns"
+				[selectedValue]="selectedCampaign.campaignName"
+				[dropListChanged]="campaigns"
+			></app-searchable-campaigns-dropdown>
+		</div>
+
+		<div class="campaign-kpis-container">
+			<div>
+				<span>Total number of proposals</span>
+				<span>{{ campaignGroupAssetKpis.campaignTotal }}</span>
+			</div>
+			<div>
+				<span>Product purchase required</span>
+				<span>{{ campaignGroupAssetKpis.campaignProductRequired }}</span>
+			</div>
+			<div>
+				<span>Accepted proposals</span>
+				<span>{{ campaignGroupAssetKpis.campaignAccepted }}</span>
+			</div>
+			<div>
+				<span>Rejected proposals</span>
+				<span>{{ campaignGroupAssetKpis.campaignRejected }}</span>
+			</div>
+			<div>
+				<span>Pending proposals</span>
+				<span>{{ campaignGroupAssetKpis.campaignPending }}</span>
+			</div>
+			<div>
+				<span>Task created</span>
+				<span>{{ campaignGroupAssetKpis.campaignTaskCreated }}</span>
+			</div>
+			<div>
+				<span>Campaign Rating Avg.</span>
+				<span>{{ campaignGroupAssetKpis.campaignCMCRatingAvg }}</span>
+			</div>
+		</div>
+
+		<div class="campaign-actions">
+			<button (click)="openCampaignDashboardLink()">Open Campaign dashboard</button>
+			<button (click)="getCampaignAsset(selectedCampaign.campaignId)">Refresh assets</button>
+		</div>
+
+		<button
+			(click)="downloadCampaignGroupAssetsExcel()"
+			[disabled]="!campaignAssets.length"
+			[ngClass]="{disabled: !campaignAssets.length}"
+			class="convo-btn-normal convo-btn-border mt-2"
+		>
+			<img alt="" src="./assets/images/icon-file-download.svg" /><span>Download as ‘.xlsx’</span>
+		</button>
+
+		<div class="sidebar-notifications-wrapper">
+			<div class="selector no-top-margin">
+				<div class="selector__heading">
+					<span class="text-small">Select notifications frequency</span>
+					<div *ngIf="selectedNotificationPeriod.name === 'Manual Refresh'" (click)="getCMCNotifications()">
+						<img src="./assets/images/reload.svg" alt="reload" />
+					</div>
+				</div>
+				<div class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+						<span>{{ selectedNotificationPeriod.name }}</span>
+					</button>
+					<div class="convo-dropdown-wrapper dropdown-menu">
+						<button
+							*ngFor="let period of notificationsPeriod"
+							(click)="handleChangeNotificationPeriod(period)"
+							class="dropdown-item"
+						>
+							{{ period.name }}
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="notifications-actions">
+				<button [ngClass]="{active: notificationTypeFilter === 'asset'}" (click)="setNotificationTypeFilter('asset')">
+					Assets
+				</button>
+				<button
+					[ngClass]="{active: notificationTypeFilter === 'support'}"
+					(click)="setNotificationTypeFilter('support')"
+				>
+					Support
+				</button>
+			</div>
+
+			<div class="notifications-actions mt-2">
+				<button [ngClass]="{active: !notificationCampaignFilter}" (click)="setNotificationCampaignFilter('')">
+					All
+				</button>
+				<button
+					[ngClass]="{active: notificationCampaignFilter}"
+					(click)="setNotificationCampaignFilter(selectedCampaign.campaignId)"
+				>
+					Campaign
+				</button>
+			</div>
+
+			<div
+				*ngFor="let notification of notifications"
+				[className]="notification.id === selectedNotification.id ? 'notification selected' : 'notification'"
+			>
+				<img class="notification-icon" src="./assets/images/circle-check.png" alt="check" />
+				<div class="notification__body">
+					<div class="notification-body__header">
+						<span class="text-small">{{ getNotificationTime(notification.timestamp) }}</span>
+						<img
+							(click)="markNotificationAsRead({notificationId: notification.id})"
+							src="./assets/images/close-icon.svg"
+							alt="read"
+						/>
+					</div>
+					<span (click)="handleNotificationClick({notification: notification})" class="notification-title">{{
+						notification.message
+					}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-manager-body">
+		<div class="filters-wrapper" *ngIf="!selectedNotification.id">
+			<button
+				(click)="filterCampaignAssets('All')"
+				class="filter"
+				[ngClass]="{'filter--active': currentFilter === 'All'}"
+			>
+				<span>All</span>
+				<span>{{
+					campaignGroupAssetKpis.groupAssetsApproved +
+						campaignGroupAssetKpis.groupAssetsRequireReview +
+						campaignGroupAssetKpis.groupAssetsRequireDeclined +
+						campaignGroupAssetKpis.groupAssetsRequireInitial
+				}}</span>
+			</button>
+			<button
+				(click)="filterCampaignAssets('Approved')"
+				class="filter"
+				[ngClass]="{'filter--active': currentFilter === 'Approved'}"
+			>
+				<span>Approved</span>
+				<span>{{ campaignGroupAssetKpis.groupAssetsApproved }}</span>
+			</button>
+			<button
+				(click)="filterCampaignAssets('PendingApproval')"
+				class="filter"
+				[ngClass]="{'filter--active': currentFilter === 'PendingApproval'}"
+			>
+				<span>To be Reviewed</span>
+				<span>{{ campaignGroupAssetKpis.groupAssetsRequireReview }}</span>
+			</button>
+			<button
+				(click)="filterCampaignAssets('Declined')"
+				class="filter"
+				[ngClass]="{'filter--active': currentFilter === 'Declined'}"
+			>
+				<span>Rejected</span>
+				<span>{{ campaignGroupAssetKpis.groupAssetsRequireDeclined }}</span>
+			</button>
+			<button
+				(click)="filterCampaignAssets('NotSubmitted')"
+				[ngClass]="{'filter--active': currentFilter === 'NotSubmitted'}"
+				class="filter"
+			>
+				<span>Not submitted</span>
+				<span>{{ campaignGroupAssetKpis.groupAssetsRequireInitial }}</span>
+			</button>
+
+			<div class="dropdown custom-dropdown mt-0">
+				<button
+					class="dropdown-toggle filter-style"
+					data-toggle="dropdown"
+					[ngClass]="{'filter--active': currentFilter === 'Edit' || currentFilter === 'Not edit'}"
+				>
+					<span>{{
+						currentFilter === 'Edit' || currentFilter === 'Not edit'
+							? currentFilter + ' by copywriter/designer'
+							: 'Edit by copywriter/designer'
+					}}</span>
+				</button>
+				<div class="convo-dropdown-wrapper dropdown-menu">
+					<button
+						*ngFor="let editedByContentTeamFilter of editedByContentTeamFilters"
+						(click)="filterCampaignAssets(editedByContentTeamFilter.name)"
+						class="dropdown-item"
+					>
+						{{ editedByContentTeamFilter.name }}
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="campaigns-wrapper">
+			<!-- <div *ngFor="let campaignAsset of campaignAssets"> -->
+			<div *ngFor="let campaignAsset of filteredCampaignAssets">
+				<app-campaign-group
+					[campaignAsset]="campaignAsset"
+					[selectedNotification]="selectedNotification"
+					[selectedCampaign]="selectedCampaign"
+					[designers]="designers"
+					[copywriters]="copywriters"
+					[selectedFilter]="currentFilter"
+					(wipeSelectedNotification)="wipeSelectedNotification()"
+					(handleGetCampaignAssets)="handleGetCampaignAssets($event)"
+					(handleUpdateCampaignAsset)="updateCampaignAssets($event)"
+				>
+				</app-campaign-group>
+			</div>
+		</div>
+	</div>
+</div>
+

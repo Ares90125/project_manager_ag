@@ -1,0 +1,936 @@
+<div class="community-marketing-detail-component">
+	<div class="container">
+		<div class="row">
+			<div *ngIf="isCMCEdition" class="tasks-tab-header">
+				<div class="tab-header-actions">
+					<div>
+						<h6>
+							All tasks <span *ngIf="campaignTaskViewDetails" class="badge">{{ campaignTasks?.length }}</span>
+						</h6>
+					</div>
+					<div *ngIf="!isFromBrand">
+						<button
+							*ngIf="campaign?.status !== 'Completed' || !campaign"
+							(click)="showAddTask = true; createEditTaskRowDetailsForm({}, campaignTaskViewDetails.length)"
+							class="convo-btn-tertiary convo-btn-normal"
+							data-target="#add-new-task-modal"
+							data-toggle="modal"
+							data-test-id="button-add-task"
+						>
+							<img alt="" src="../../../../../../assets/images/add_icon.svg" />
+							<span>Add task</span>
+						</button>
+						<button class="convo-btn-secondary convo-btn-normal" hidden>
+							<input (change)="uploadCampaignData($event)" accept=".xlsx" id="taskFile" type="file" />
+							<span>Import tasks</span>
+						</button>
+						<button (click)="downloadSheet()" class="convo-btn-secondary convo-btn-normal">
+							<img alt="" src="../../../../../../assets/images/download_icon.svg" />
+							<span>Export to .xlsx</span>
+						</button>
+					</div>
+				</div>
+				<div class="tab-header-filters">
+					<div>
+						<span>Filters:</span>
+						<app-convosight-filters
+							(filterChanged)="applyFilters($event)"
+							[filters]="typeFilters"
+							[headerText]="''"
+							[fromCsAdmin]="'true'"
+						></app-convosight-filters>
+						<app-convosight-filters
+							(filterChanged)="applyFilters($event)"
+							[filters]="statusFilters"
+							[headerText]="''"
+							[fromCsAdmin]="'true'"
+						></app-convosight-filters>
+					</div>
+					<div><a (click)="showAllFilters()">Show all</a></div>
+				</div>
+			</div>
+			<div *ngIf="campaignTaskViewDetails" class="tasks-tab-body">
+				<div class="tasks-wrapper">
+					<table aria-describedby="">
+						<thead>
+							<tr>
+								<th scope="col">TASK</th>
+								<th scope="col">TITLE</th>
+								<th scope="col">ASSIGNED TO</th>
+								<th scope="col">TYPE</th>
+								<th scope="col">PERIOD</th>
+								<th scope="col" class="date-time-col">DATE / TIME</th>
+								<th scope="col" *ngIf="!isFromBrand && isCMCEdition">
+									<div>STATE</div>
+								</th>
+								<th scope="col" *ngIf="isCsAdmin" class="last-small-col"></th>
+							</tr>
+						</thead>
+						<tbody *ngFor="let task of campaignTaskViewDetails | slice: startOfTask:endOfTask; let i = index">
+							<tr (click)="toggleMoreInfo($event, task)">
+								<td>
+									<div class="about-task">
+										<div *ngIf="task['TEXT']">
+											{{ task['TEXT'].substring(0, 100) + (task['TEXT'].length > 100 ? '...' : '') }}
+										</div>
+										<div
+											*ngIf="!task['TEXT'] && task['POST TYPE'] === 'Text' && isCsAdmin && !isCMCEdition"
+											matTooltip="Edit"
+											matTooltipPosition="above"
+											(click)="tooltip.toggle()"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="Edit"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+										>
+											<span class="missing-field">Task brief is missing!</span>
+										</div>
+										<div>
+											<ul class="list-unstyled group-desc">
+												<li>
+													<img alt="" src="../../../../../../assets/images/icon-group.svg" />
+													<span>{{ task['GROUP NAME'] }}</span>
+												</li>
+												<li *ngIf="task['previewImage'] && task['previewImage'].length > 0">
+													<img alt="" src="../../../../../../assets/images/icon-link.svg" />
+													<span>{{ task['previewImage'].length }}</span>
+												</li>
+											</ul>
+											<ul
+												*ngIf="!task['GROUP NAME'] && isCsAdmin && !isCMCEdition"
+												matTooltip="Edit"
+												matTooltipPosition="above"
+												(click)="tooltip.toggle()"
+												#tooltip="matTooltip"
+												data-cs-parent-label="Tooltip"
+												data-cs-label="Edit"
+												data-cs-source="page"
+												(mouseenter)="tooltipHovered($event)"
+											>
+												<span class="missing-field">Group name is missing!</span>
+											</ul>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="task-title">
+										<div>{{ task['TITLE'] }}</div>
+										<div
+											*ngIf="!task['TITLE'] && isCsAdmin && !isCMCEdition"
+											matTooltip="Edit"
+											matTooltipPosition="above"
+											(click)="tooltip.toggle()"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="Edit"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+										>
+											<span class="missing-field">Missing!</span>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div>{{ task['GROUP ADMIN/MODERATOR'] }}</div>
+									<div
+										*ngIf="!task['GROUP ADMIN/MODERATOR'] && isCsAdmin && !isCMCEdition"
+										matTooltip="Edit"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Edit"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span class="missing-field">Missing!</span>
+									</div>
+								</td>
+								<td>
+									<div>
+										<div class="badge">
+											<svg
+												*ngIf="task['POST TYPE'] === 'Text'"
+												fill="none"
+												height="12"
+												viewBox="0 0 12 12"
+												width="12"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M0 0.367035V3.55817H1.87671V2.72543C1.87671 2.421 2.12437 2.17334 2.42883 2.17334H4.85866V9.05309C4.85866 9.48732 4.50541 9.84059 4.07116 9.84059H3.29791V11.6325H8.71861V9.84059H7.94536C7.51116 9.84059 7.15786 9.48732 7.15786 9.05309V2.17332H9.57117C9.8756 2.17332 10.1233 2.42098 10.1233 2.72541V3.55814H12V0.367035H0Z"
+													fill="black"
+												/>
+											</svg>
+											<svg
+												*ngIf="task['POST TYPE'] === 'Image'"
+												fill="none"
+												height="12"
+												viewBox="0 0 12 12"
+												width="12"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M10.5 0H1.50001C0.671272 0 0 0.671237 0 1.50001V10.5C0 11.3287 0.671237 12 1.50001 12H10.5C11.3287 12 12 11.3288 12 10.5V1.50001C12 0.671237 11.3287 0 10.5 0ZM1.50001 10.5L3.75 7.50001L5.27251 9.53249L7.50001 6.74999L10.5 10.5H1.50001Z"
+													fill="#656565"
+												/>
+											</svg>
+											<svg
+												*ngIf="task['POST TYPE'] === 'Video'"
+												fill="none"
+												height="12"
+												viewBox="0 0 12 12"
+												width="12"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M10.7272 5.47681L0.913867 0.0768229C0.723733 -0.0275769 0.491893 -0.0251769 0.304213 0.0816229C0.115307 0.189623 0 0.386422 0 0.600022V11.4C0 11.6136 0.115307 11.8104 0.304213 11.9184C0.399893 11.9724 0.506613 12 0.613333 12C0.716373 12 0.82064 11.9748 0.913867 11.9232L10.7272 6.52321C10.9198 6.41641 11.04 6.21721 11.04 6.00001C11.04 5.78281 10.9198 5.58361 10.7272 5.47681Z"
+													fill="#666666"
+												/>
+											</svg>
+
+											<!-- Live Video Icon -->
+											<svg
+												*ngIf="task['POST TYPE'] === 'LiveVideo'"
+												width="17"
+												height="10"
+												viewBox="0 0 17 10"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M0 1C0 0.447715 0.447715 0 1 0H11.5C12.0523 0 12.5 0.447715 12.5 1V9C12.5 9.55228 12.0523 10 11.5 10H1C0.447715 10 0 9.55229 0 9V1Z"
+													fill="#626263"
+												/>
+												<path
+													d="M3.38486 5.94203H2.41932V3.35969C2.41932 3.16102 2.25831 3 2.05964 3C1.86097 3 1.69995 3.16102 1.69995 3.35969V6.30172C1.69995 6.50039 1.86097 6.66141 2.05964 6.66141H3.38486C3.58344 6.66141 3.74455 6.50039 3.74455 6.30172C3.74455 6.10314 3.58344 5.94203 3.38486 5.94203Z"
+													fill="white"
+												/>
+												<path
+													d="M4.49982 3C4.30115 3 4.14014 3.16102 4.14014 3.35969V6.30172C4.14014 6.50039 4.30115 6.66141 4.49982 6.66141C4.6984 6.66141 4.85951 6.50039 4.85951 6.30172V3.35969C4.85951 3.16102 4.6984 3 4.49982 3Z"
+													fill="white"
+												/>
+												<path
+													d="M7.64495 3.01546C7.4549 2.95804 7.25407 3.06566 7.19666 3.25581L6.65282 5.05733L6.10888 3.25581C6.05146 3.06557 5.85073 2.95804 5.66059 3.01546C5.47044 3.07287 5.36281 3.27361 5.42023 3.46375L6.30849 6.40578C6.30858 6.40606 6.30868 6.40634 6.30877 6.40663C6.40666 6.71985 6.88886 6.73887 6.99686 6.40663C6.99695 6.40634 6.99705 6.40616 6.99714 6.40578L7.8854 3.46375C7.94282 3.27351 7.8351 3.07287 7.64495 3.01546Z"
+													fill="white"
+												/>
+												<path
+													d="M10.3402 3.71937C10.5389 3.71937 10.6999 3.55836 10.6999 3.35969C10.6999 3.16102 10.5389 3 10.3402 3H8.7176C8.51893 3 8.35791 3.16102 8.35791 3.35969V6.30172C8.35791 6.50039 8.51893 6.66141 8.7176 6.66141H10.2918C10.4905 6.66141 10.6515 6.50039 10.6515 6.30172C10.6515 6.10314 10.4905 5.94203 10.2918 5.94203H9.07728V5.00516H10.098C10.2967 5.00516 10.4577 4.84414 10.4577 4.64547C10.4577 4.4468 10.2967 4.28579 10.098 4.28579H9.07728V3.71937H10.3402Z"
+													fill="white"
+												/>
+												<path
+													d="M12.4731 3.50254L15.3561 2.49164C15.6812 2.37763 16.0215 2.61893 16.0215 2.96347V7.35958C16.0215 7.70413 15.6812 7.94542 15.3561 7.83141L12.4731 6.82051V3.50254Z"
+													fill="#626263"
+												/>
+											</svg>
+
+											<!-- Multi Video Icon -->
+											<svg
+												*ngIf="task['POST TYPE'] === 'MultiVideo'"
+												width="16"
+												height="12"
+												viewBox="0 0 16 12"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													fill-rule="evenodd"
+													clip-rule="evenodd"
+													d="M9.56974 5.98325C9.86316 6.14597 10.0591 6.45824 10.0591 6.81226C10.0591 7.16628 9.86316 7.47855 9.56974 7.64127L9.56744 7.64254L7.16603 8.96396C7.16563 8.96418 7.16524 8.96439 7.16485 8.96461C7.0179 9.04567 6.85831 9.08301 6.70432 9.08301C6.54028 9.08301 6.37845 9.04066 6.23471 8.95954L6.23278 8.95845L6.23085 8.95735C5.9401 8.79112 5.75269 8.48036 5.75269 8.13464V5.48988C5.75269 5.14416 5.9401 4.8334 6.23085 4.66717L6.23225 4.66638C6.51917 4.5031 6.87204 4.49913 7.16366 4.65925L9.56974 5.98325ZM6.55413 8.13464C6.55413 8.18694 6.58236 8.23514 6.62862 8.26158C6.65206 8.27481 6.67819 8.28157 6.70432 8.28157C6.72956 8.28157 6.75509 8.2754 6.77792 8.26276L9.18106 6.94038C9.22822 6.91423 9.25766 6.86545 9.25766 6.81226C9.25766 6.75907 9.22822 6.71029 9.18106 6.68414L6.77792 5.36176C6.73136 5.33619 6.67458 5.33678 6.62862 5.36294C6.58236 5.38938 6.55413 5.43758 6.55413 5.48988V8.13464Z"
+													fill="#F1F1F6"
+												/>
+												<path
+													d="M8.80633 5.39217C9.04107 5.52235 9.19782 5.77216 9.19782 6.05537C9.19782 6.33859 9.04107 6.5884 8.80633 6.71858L8.80449 6.7196L6.88336 7.77673L6.88242 7.77725C6.76486 7.8421 6.63718 7.87197 6.514 7.87197C6.38276 7.87197 6.25329 7.83809 6.13831 7.7732L6.13676 7.77232L6.13522 7.77144C5.90262 7.63846 5.75269 7.38985 5.75269 7.11327V4.99747C5.75269 4.7209 5.90262 4.47228 6.13522 4.33931L6.13633 4.33867C6.36587 4.20805 6.64817 4.20487 6.88146 4.33297L8.80633 5.39217Z"
+													fill="white"
+												/>
+												<path
+													d="M11.0523 3.02783H1.48101C0.664335 3.02783 0 3.69217 0 4.50884V10.5193C0 11.3359 0.664335 12.0002 1.48101 12.0002H11.0523C11.869 12.0002 12.5333 11.3359 12.5333 10.5193V4.50884C12.5333 3.69217 11.869 3.02783 11.0523 3.02783Z"
+													fill="#626263"
+												/>
+												<path
+													fill-rule="evenodd"
+													clip-rule="evenodd"
+													d="M12.7941 10.4653C12.8079 10.3844 12.8151 10.3012 12.8151 10.2163L12.8151 4.20585C12.8151 3.38929 12.1507 2.72496 11.334 2.72496L1.76275 2.72496C1.67791 2.72496 1.59471 2.73213 1.51373 2.74589C1.63243 2.04741 2.24195 1.51389 2.97382 1.51389L12.5451 1.51389C13.3618 1.51389 14.0261 2.17822 14.0261 2.99478L14.0261 9.00526C14.0261 9.73709 13.4926 10.3466 12.7941 10.4653Z"
+													fill="#626263"
+												/>
+												<path
+													fill-rule="evenodd"
+													clip-rule="evenodd"
+													d="M14.308 8.95166C14.3218 8.87068 14.329 8.78749 14.329 8.70265L14.329 2.69218C14.329 1.87562 13.6646 1.21128 12.848 1.21128L3.27667 1.21128C3.19182 1.21128 3.10862 1.21845 3.02764 1.23222C3.14634 0.533739 3.75587 0.000216408 4.48773 0.000216472L14.059 0.000217308C14.8757 0.00021738 15.54 0.664553 15.54 1.48111L15.54 7.49158C15.54 8.22342 15.0066 8.83292 14.308 8.95166Z"
+													fill="#626263"
+												/>
+												<path
+													d="M7.89788 6.90633C8.13262 7.03651 8.28937 7.28632 8.28937 7.56953C8.28937 7.85275 8.13262 8.10256 7.89788 8.23274L7.89604 8.23376L5.97491 9.29089L5.97397 9.29141C5.85641 9.35626 5.72874 9.38613 5.60555 9.38613C5.47431 9.38613 5.34485 9.35225 5.22986 9.28736L5.22831 9.28648L5.22677 9.2856C4.99417 9.15262 4.84424 8.90401 4.84424 8.62743V6.51163C4.84424 6.23506 4.99417 5.98644 5.22677 5.85347L5.22789 5.85283C5.45742 5.72221 5.73972 5.71903 5.97302 5.84713L7.89788 6.90633Z"
+													fill="white"
+												/>
+											</svg>
+
+											<!-- Video + Image Icon -->
+											<svg
+												*ngIf="task['POST TYPE'] === 'VideoImage'"
+												width="16"
+												height="13"
+												viewBox="0 0 16 13"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M8.66249 4H1.23751C0.5538 4 0 4.55377 0 5.23751V11.7625C0 12.4462 0.55377 13 1.23751 13H8.66249C9.3462 13 9.9 12.4462 9.9 11.7625V5.23751C9.9 4.55377 9.3462 4 8.66249 4ZM1.23751 11.7625L3.09375 9.28751L4.34982 10.9643L6.18751 8.66874L8.66249 11.7625H1.23751Z"
+													fill="#626263"
+												/>
+												<path
+													d="M13.8194 0H5.08055C4.34684 0 3.75 0.658264 3.75 1.46748V7.53264C3.75 8.34174 4.34684 9 5.08055 9H13.8194C14.5532 9 15.15 8.34174 15.15 7.53264V1.46748C15.15 0.658264 14.5532 0 13.8194 0Z"
+													fill="#A5A5A6"
+												/>
+												<path
+													d="M10.9007 3.76786C11.1333 3.89685 11.2886 4.14438 11.2886 4.425C11.2886 4.70563 11.1333 4.95316 10.9007 5.08215L10.8989 5.08316L8.99534 6.13063L8.99441 6.13115C8.87792 6.1954 8.75142 6.225 8.62935 6.225C8.49932 6.225 8.37103 6.19143 8.2571 6.12713L8.25556 6.12626L8.25404 6.12539C8.02356 5.99363 7.875 5.74729 7.875 5.47324V3.37677C7.875 3.10272 8.02356 2.85638 8.25404 2.72462L8.25514 2.72398C8.48258 2.59456 8.7623 2.59141 8.99346 2.71834L10.9007 3.76786Z"
+													fill="white"
+												/>
+											</svg>
+
+											<span>{{
+												task['POST TYPE'] === 'VideoImage'
+													? 'Video + Images'
+													: task['POST TYPE'] === 'LiveVideo'
+													? 'Live video'
+													: task['POST TYPE'] === 'MultiVideo'
+													? 'Multiple videos'
+													: task['POST TYPE']
+											}}</span>
+										</div>
+									</div>
+									<div
+										*ngIf="!task['POST TYPE'] && isCsAdmin && !isCMCEdition"
+										matTooltip="Edit"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Edit"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span class="missing-field">Missing!</span>
+									</div>
+								</td>
+								<td>
+									<div>{{ task['PERIOD'] }}</div>
+									<div
+										*ngIf="!task['PERIOD'] && isCsAdmin && !isCMCEdition"
+										matTooltip="Edit"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Edit"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span class="missing-field">Missing!</span>
+									</div>
+								</td>
+								<td>
+									<div
+										[ngClass]="{
+											'missing-field': (task['errorDate'] || task['invalidDate']) && isCsAdmin && !isCMCEdition
+										}"
+									>
+										{{ task['invalidDate'] ? task['DATE'] : (task['DATE'] | date: 'dd MMM yyyy') }}
+									</div>
+									<div
+										*ngIf="!task['DATE'] && isCsAdmin && !isCMCEdition"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										matTooltip="Edit"
+										matTooltipPosition="above"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Edit"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span class="missing-field">Missing!</span>
+									</div>
+									<div
+										[ngClass]="{
+											'missing-field': (task['errorTime'] || task['invalidTime']) && isCsAdmin && !isCMCEdition
+										}"
+									>
+										{{ task['TIME'] }}
+									</div>
+									<div
+										*ngIf="!task['TIME'] && isCsAdmin && !isCMCEdition"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										matTooltip="Edit"
+										matTooltipPosition="above"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Edit"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span class="missing-field">Missing!</span>
+									</div>
+								</td>
+								<td *ngIf="!isFromBrand && isCMCEdition">
+									<div>
+										{{ task['STATUS'] ? task['STATUS'] : 'Unassigned' }}
+										<div class="failed-reason">
+											{{ task['errorFromSource'] ? task['errorFromSource'] : task['REASON FOR FAILURE'] }}
+										</div>
+										<a
+											*ngIf="task['STATUS'] === 'Completed'"
+											class="view-post-link"
+											data-cs-id="8fbc4426-58e3-4cc3-b6b0-fc3c48c90f51"
+											data-cs-label="View Post"
+											data-cs-source="page"
+											href="{{ task['fbPermlink'] }}"
+											target="_blank"
+											rel="noopener"
+										>
+											<div>View Post</div>
+										</a>
+										<a
+											class="mark-complete-link"
+											*ngIf="
+												(task['POST TYPE'] === 'LiveVideo' ||
+													task['POST TYPE'] === 'VideoImage' ||
+													task['POST TYPE'] === 'MultiVideo') &&
+												task['STATUS'] !== 'Completed'
+											"
+											(click)="selectedRowNumber = i + startOfTask"
+											data-target=".mark-complete-modal"
+											data-toggle="modal"
+										>
+											Mark as complete
+										</a>
+									</div>
+								</td>
+								<td *ngIf="campaign?.status !== 'Completed' || !campaign">
+									<div
+										*ngIf="
+											(task['STATUS'] !== 'Completed' &&
+												task['STATUS'] !== 'Failed' &&
+												task['STATUS'] !== 'Missed' &&
+												isCsAdmin &&
+												isCMCEdition &&
+												!isFromBrand) ||
+											(isCsAdmin && !isCMCEdition && !isFromBrand)
+										"
+									>
+										<a aria-expanded="false" aria-haspopup="true" class="dropdown-dots-wrapper" data-toggle="dropdown">
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<a
+												(click)="createEditTaskRowDetailsForm(task, i + startOfTask)"
+												*ngIf="
+													(task['STATUS'] !== 'Completed' &&
+														task['STATUS'] !== 'Suspended' &&
+														task['STATUS'] !== 'Failed' &&
+														isCsAdmin &&
+														isCMCEdition) ||
+													(isCsAdmin && !isCMCEdition)
+												"
+												class="dropdown-item"
+												data-target="#add-new-task-modal"
+												data-toggle="modal"
+												>Edit task</a
+											>
+											<a (click)="removeSelectedRow(task, i + startOfTask)" *ngIf="!isCMCEdition" class="dropdown-item"
+												>Delete task</a
+											>
+											<a
+												(click)="deleteCampaignTask(campaignId, task, i + startOfTask)"
+												*ngIf="isCMCEdition"
+												class="dropdown-item"
+												>Delete task</a
+											>
+											<a
+												(click)="createEditTaskRowDetailsForm(task, i + startOfTask, true)"
+												*ngIf="isCMCEdition"
+												class="dropdown-item"
+												data-target="#add-new-task-modal"
+												data-toggle="modal"
+												>Duplicate task</a
+											>
+										</div>
+									</div>
+									<div *ngIf="task['STATUS'] === 'Completed' && isCsAdmin && isCMCEdition && !isFromBrand">
+										<a aria-expanded="false" aria-haspopup="true" class="dropdown-dots-wrapper" data-toggle="dropdown">
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+											<span class="dropdown-dot"></span>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<a
+												(click)="createEditTaskRowDetailsForm(task, i + startOfTask, true)"
+												*ngIf="isCMCEdition"
+												class="dropdown-item"
+												data-target="#add-new-task-modal"
+												data-toggle="modal"
+												>Duplicate task</a
+											>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<tr [ngClass]="moreInfoRow ? 'show' : ''" class="info-row">
+								<td colspan="7">
+									<div class="more-info">
+										<p>{{ task['TEXT'] }}</p>
+										<ol *ngIf="task['previewImage']">
+											<li *ngFor="let img of task['previewImage']; let i = index">
+												<div *ngIf="img?.type === 'image'" class="thumbnail image">
+													<img alt="" (click)="openImageGallery(i, task['previewImage'])" alt="" src="{{ img?.src }}" />
+												</div>
+												<div *ngIf="img?.type === 'video'" class="thumbnail video">
+													<div (click)="openVideoGallery(img)" class="video-wrap">
+														<video src="{{ img?.src }}"></video>
+													</div>
+												</div>
+											</li>
+										</ol>
+										<div
+											*ngIf="
+												task['POST TYPE'] === 'Image' || task['POST TYPE'] === 'Video' || task['POST TYPE'] === 'Link'
+											"
+										>
+											<div
+												*ngIf="!task['previewImage'] && isCsAdmin && !isCMCEdition"
+												matTooltip="Edit"
+												matTooltipPosition="above"
+												(click)="tooltip.toggle()"
+												#tooltip="matTooltip"
+												data-cs-parent-label="Tooltip"
+												data-cs-label="Edit"
+												data-cs-source="page"
+												(mouseenter)="tooltipHovered($event)"
+											>
+												<span class="missing-field">Url is Missing!</span>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="global-pagination">
+						<div class="paginator-page-size">
+							<span>Tasks per page:</span>
+							<div class="custom-dropdown dropdown">
+								<div class="dropdown-toggle" data-toggle="dropdown">
+									<span>{{ numberOfTasksPerPage }}</span>
+									<svg fill="none" height="6" viewBox="0 0 10 6" width="10" xmlns="http://www.w3.org/2000/svg">
+										<path
+											clip-rule="evenodd"
+											d="M0 0.603998L0.603998 0L5 4.396L9.396 0L10 0.603998L5 5.604L0 0.603998Z"
+											fill="black"
+											fill-rule="evenodd"
+										/>
+									</svg>
+								</div>
+								<div class="dropdown-menu-wrapper dropdown-menu">
+									<div (click)="onTasksPerPageChange(task)" *ngFor="let task of tasksPerPage" class="dropdown-item">
+										{{ task }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="paginator-range-action">
+							<span class="paginator-range-label"
+								>{{ startOfTask + 1 }}-{{
+									endOfTask > campaignTaskViewDetails.length || endOfTask === campaignTaskViewDetails.length
+										? campaignTaskViewDetails.length
+										: endOfTask
+								}}
+								of {{ campaignTaskViewDetails.length }} tasks</span
+							>
+							<div class="paginator-range-buttons">
+								<button
+									(click)="loadPreviousTasks(); tooltip.toggle()"
+									[disabled]="startOfTask === 0"
+									class="navigate-previous"
+									matTooltip="Previous page"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="Previous page"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+									</svg>
+									<span>Previous</span>
+								</button>
+								<button
+									(click)="loadNextTasks(); tooltip.toggle()"
+									[disabled]="endOfTask - campaignTaskViewDetails.length >= 0"
+									class="navigate-next"
+									matTooltip="Next page"
+									matTooltipPosition="above"
+									#tooltip="matTooltip"
+									data-cs-parent-label="Tooltip"
+									data-cs-label="Next page"
+									data-cs-source="page"
+									(mouseenter)="tooltipHovered($event)"
+								>
+									<span>Next</span>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button data-target="#add-new-task-modal" data-toggle="modal" hidden id="openAddTaskModal"></button>
+			<button data-target="#show-file-type-error-message" data-toggle="modal" hidden id="showFileTypeMessage"></button>
+			<button data-target="#show-file-task-error" data-toggle="modal" hidden id="showFileTaskError"></button>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-type-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Incorrect file format</h6>
+				<p class="m-0">Only files with .xlsx or .xls extension are allowed</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade unable-upload-modal" id="show-file-task-error" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Unable to upload the file</h6>
+				<div *ngFor="let task of uploadCampaignTasks; let i = index">
+					<div *ngFor="let column of campaignTaskColumnNames; let j = index">
+						<p *ngIf="!task[column] && column !== 'No.' && column !== 'URL'">
+							RowNumber <strong>{{ i + 1 }}</strong
+							>: <strong>'{{ column }}'</strong> column value is missing
+						</p>
+						<p
+							*ngIf="
+								!task[column] && column === 'URL' && (task['POST TYPE'] === 'Image' || task['POST TYPE'] === 'Video')
+							"
+						>
+							RowNumber <strong>{{ i + 1 }}</strong
+							>: <strong>'{{ column }}'</strong> column value is missing
+						</p>
+					</div>
+					<p *ngIf="task['invalidDate']">
+						RowNumber <strong>{{ i + 1 }}</strong
+						>: Invalid date format
+					</p>
+					<p *ngIf="task['invalidTime']">
+						RowNumber <strong>{{ i + 1 }}</strong
+						>: Invalid time format
+					</p>
+					<p *ngIf="task['errorDate']">
+						RowNumber <strong>{{ i + 1 }}</strong
+						>: Please provide future date
+					</p>
+					<p *ngIf="task['errorTime']">
+						RowNumber <strong>{{ i + 1 }}</strong
+						>: Please provide future time
+					</p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Add/Edit Task Modal -->
+<div class="modal fade add-new-task-modal" data-backdrop="static" id="add-new-task-modal" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div *ngIf="taskEditForm" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ showAddTask ? 'Add new ' : 'Edit ' }} task</h5>
+				<button (click)="closeAddNewTaskPopup()" aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<button aria-label="Close" data-dismiss="modal" hidden id="closeEditDetailsId"></button>
+			</div>
+			<div [formGroup]="taskEditForm" class="modal-body">
+				<div class="flex-box">
+					<div class="form-group">
+						<label>Group <strong>Name</strong><sup>*</sup></label>
+						<input
+							(input)="getGroupsDetailsByName()"
+							[readonly]="selectedEditableRow['STATUS'] && !isDuplicateTask"
+							formControlName="groupName"
+							placeholder="Enter group name"
+							type="text"
+						/>
+						<div *ngIf="!selectedGroup && taskEditForm.get('groupName').value" class="dropdown-list-wrapper">
+							<ul *ngIf="groupDetails" class="data-ul">
+								<li (click)="selectGroup(details)" *ngFor="let details of groupDetails">
+									{{ details.name }}
+								</li>
+							</ul>
+							<!-- shimmers -->
+							<ul *ngIf="!groupDetails" class="list-unstyled shimmer-wrapper">
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+								<li class="loading-strip secondary"></li>
+								<li class="loading-strip primary"></li>
+							</ul>
+						</div>
+						<div *ngIf="isGroupNotInstalled" class="error-message pt-1">Not Installed.</div>
+					</div>
+				</div>
+				<div class="flex-box">
+					<div class="form-group">
+						<label>Title<sup>*</sup></label>
+						<input formControlName="title" placeholder="Enter title" type="text" />
+					</div>
+				</div>
+				<div class="flex-box">
+					<div class="form-group">
+						<label><strong>Assign task</strong> to group admin/moderator<sup>*</sup></label>
+						<div class="custom-dropdown dropdown admin-dropdown">
+							<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+								<span *ngIf="!taskEditForm.get('groupAdmin').value" class="placeholder">Admin/moderator name</span>
+								<span *ngIf="taskEditForm.get('groupAdmin').value" class="placeholder"
+									>{{ taskEditForm.get('groupAdmin').value }}
+									<span *ngIf="taskEditForm.get('role').value">({{ taskEditForm.get('role').value }} )</span></span
+								>
+							</div>
+
+							<div class="dropdown-menu-wrapper dropdown-menu">
+								<div
+									*ngIf="groupModerators.length > 0 && (!selectedEditableRow['STATUS'] || isDuplicateTask)"
+									class="dropdown-container"
+									data-test-id="dropdown-container-admin-list"
+								>
+									<div class="form-check" *ngFor="let moderator of groupModerators">
+										<div (click)="selectModerator(moderator)" class="form-check-label" data-test-id="list-group-admin">
+											{{ moderator.fullname }} ({{ moderator.role }})
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label>Date & Time <sup>*</sup></label>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="">
+									<div class="datepicker-wrap">
+										<input
+											(click)="picker.open()"
+											[matDatepicker]="picker"
+											[min]="minDate"
+											formControlName="startDate"
+											placeholder="Date"
+											readonly
+											required
+											type="text"
+											(dateChange)="validatePublishTime(publishTime)"
+										/>
+										<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+										<mat-datepicker #picker></mat-datepicker>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="custom-dropdown dropdown pills-dropdown timepicker-wrap">
+									<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+										<span class="placeholder">{{ publishTime }}</span>
+									</div>
+									<div class="dropdown-menu-wrapper dropdown-menu">
+										<div class="dropdown-container">
+											<div
+												(click)="publishTime = time; validatePublishTime(time)"
+												*ngFor="let time of timeOptions"
+												class="form-check"
+											>
+												<div class="form-check-label">
+													{{ time }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="!isDateValid" class="error-message">
+								Please enter date between start date and end date of campaign
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label>TimeZone <sup>*</sup></label>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="custom-dropdown dropdown pills-dropdown timepicker-wrap" *ngIf="timeZoneList?.length > 0">
+									<app-searchable-dropdown
+										(optionSelected)="optionSelected($event)"
+										[mainDropDownOptions]="timeZoneList"
+										[placeholder]="timeZonePlaceholder"
+										[selectedValue]="timeZone"
+									></app-searchable-dropdown>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label>Campaign <strong>period</strong><sup>*</sup></label>
+						<input formControlName="period" placeholder="E.g. Prelaunch, Phase 1" type="text" />
+					</div>
+				</div>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label>Task <strong>post type</strong><sup>*</sup></label>
+						<mat-radio-group (change)="onPostTypeChange()" formControlName="postType">
+							<mat-radio-button value="Basic" class="mb-2">Basic </mat-radio-button>
+							<mat-radio-button value="LiveVideo" class="mb-2">Live Video </mat-radio-button>
+							<mat-radio-button value="MultiVideo" class="mb-2">Multi Video </mat-radio-button>
+							<mat-radio-button value="VideoImage" class="mb-2">Video + Images </mat-radio-button>
+						</mat-radio-group>
+					</div>
+				</div>
+
+				<div class="note-section" *ngIf="taskEditForm.get('postType').value !== 'Basic'">
+					<p class="m-0">
+						<strong>Note:</strong>
+						<span *ngIf="taskEditForm.get('postType').value === 'LiveVideo'">Live Video posts</span>
+						<span
+							*ngIf="
+								taskEditForm.get('postType').value === 'MultiVideo' ||
+								taskEditForm.get('postType').value === 'VideoImage'
+							"
+							>This type of posts</span
+						>
+						are not supported by Convosight. You can still create a placeholder task for tracking. The group admin will
+						not see this task. You can come later and associate the facebook permalink of the actual post with this task
+						for tracking in the report
+					</p>
+				</div>
+
+				<div class="brief-section" *ngIf="taskEditForm.get('postType').value === 'Basic'">
+					<app-custom-post-text-area
+						(postUpdate)="postUpdate($event)"
+						[(postMessage)]="taskEditForm.get('taskText').value"
+						[imageFiles]="imageFiles"
+						[previewImage]="previewImage"
+						[videoFiles]="videoFiles"
+					></app-custom-post-text-area>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="closeAddNewTaskPopup()" class="cancel-btn mr-3" data-dismiss="modal" type="button">
+					Cancel
+				</button>
+				<button
+					(click)="editTaskRowDetails()"
+					[disabled]="!taskEditForm.valid || isSubmitting || !isDateValid || isGroupNotInstalled || !isTaskTypeValid"
+					class="convo-btn-primary convo-btn-normal px-4"
+					type="button"
+					data-test-id="button-save-task-modal"
+				>
+					{{ isSubmitting ? 'Saving...' : 'Save' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showGallery" class="showGallery">
+	<div (click)="closeVideoGallery()" class="gallery-overlay"></div>
+	<button (click)="closeVideoGallery()" class="close-gallery">
+		<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+			<path d="M15 1.00049L1 15.0001" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+			<path d="M15 14.9995L1 0.999875" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+		</svg>
+	</button>
+	<video *ngIf="selectedPreview" [src]="selectedPreview.src" controls></video>
+</div>
+
+<div class="modal fade mark-complete-modal" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Mark as Complete</h5>
+				<button
+					aria-label="Close"
+					(click)="fbPermlink = null; selectedRowNumber = null; isFbPermLinkValid = true"
+					class="close"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="flex-box p-2">
+					<div class="form-group">
+						<label>Facebook <strong>URL</strong><sup>*</sup></label>
+						<input
+							type="text"
+							placeholder="Ex: https://www.facebook.com/groups/{groupid}/permalink/{postid}"
+							[(ngModel)]="fbPermlink"
+						/>
+						<p class="error-message" *ngIf="!isFbPermLinkValid">Incorrect url format</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="cancel-btn mr-3"
+					id="cancel"
+					(click)="selectedRowNumber = null; fbPermlink = null; isFbPermLinkValid = true"
+					data-dismiss="modal"
+					type="button"
+				>
+					Cancel
+				</button>
+				<button
+					class="convo-btn-primary convo-btn-normal px-4"
+					type="button"
+					[disabled]="!fbPermlink || isSubmitting"
+					(click)="onFbPermLinkUpdate()"
+				>
+					{{ isSubmitting ? 'Processing...' : 'Complete' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

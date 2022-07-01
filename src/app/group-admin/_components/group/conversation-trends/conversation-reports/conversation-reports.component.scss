@@ -1,0 +1,299 @@
+div#pdfContainer {
+	background-color: #f4f6f8;
+}
+
+.conversation-section {
+	width: 100%;
+	display: inline-block;
+	position: relative;
+	padding: 0 30px;
+
+	.card {
+		box-shadow: none;
+		margin: 0 !important;
+
+		.card-body {
+			padding: 40px 20px !important;
+			background-color: #f4f6f8;
+
+			.row {
+				align-items: center;
+			}
+
+			.content {
+				width: 100%;
+				display: inline-block;
+				position: relative;
+
+				h2 {
+					font-size: 36px;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 48px;
+					letter-spacing: 0em;
+					text-align: left;
+					color: #33334f;
+				}
+
+				h4 {
+					font-size: 20px;
+					font-style: normal;
+					font-weight: 500;
+					line-height: 28px;
+					letter-spacing: 0em;
+					text-align: left;
+					color: #33334f;
+				}
+
+				.group-name {
+					width: 100%;
+					display: inline-block;
+					position: relative;
+					margin: 20px 0;
+					padding: 20px 0 0;
+
+					h4 {
+						font-size: 16px;
+						font-style: normal;
+						font-weight: 500;
+						line-height: 22px;
+						letter-spacing: 0em;
+						text-align: left;
+						color: #33334f;
+					}
+
+					p {
+						font-size: 12px;
+						font-style: normal;
+						font-weight: 400;
+						line-height: 18px;
+						letter-spacing: 0em;
+						text-align: left;
+						color: #707084;
+					}
+				}
+
+				.group-name:after {
+					position: absolute;
+					content: '';
+					top: 0;
+					left: 0;
+					height: 2px;
+					width: 40px;
+					background-color: #3654ff;
+				}
+
+				p {
+					font-size: 12px;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 18px;
+					letter-spacing: 0em;
+					text-align: left;
+					color: #707084;
+				}
+			}
+		}
+	}
+}
+
+.headers-full {
+	width: 100% !important;
+	margin-bottom: 10px;
+}
+
+.topics-section,
+.keywords-section {
+	width: 100%;
+	display: inline-block;
+	position: relative;
+	background-color: #f4f6f8;
+	padding: 0 30px;
+
+	.headers-right {
+		width: auto;
+		float: right;
+		margin-right: -45px;
+		margin-top: -20px;
+
+		.growth-health {
+			font-size: 9px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 12px;
+			letter-spacing: 0em;
+			text-align: right;
+			margin: 0;
+			color: #adadb9;
+		}
+
+		.date {
+			font-size: 9px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 12px;
+			letter-spacing: 0em;
+			text-align: right;
+			margin: 0;
+			color: #9999a7;
+		}
+	}
+
+	.page-headers {
+		display: inline-block;
+		padding-bottom: 0px;
+
+		.page-headers h1 {
+			font-size: 18px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 24px;
+			letter-spacing: 0em;
+			text-align: left;
+			color: #33334f;
+		}
+
+		.page-headers h6 {
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 20px;
+			letter-spacing: 0em;
+			text-align: left;
+			color: #707084;
+		}
+	}
+
+	.card {
+		background-color: #f4f6f8;
+		box-shadow: none;
+		margin: 0 !important;
+
+		.card-header {
+			border: 0;
+			padding: 0 !important;
+		}
+
+		.card-body {
+			padding: 0 !important;
+		}
+	}
+}
+
+.page-footer {
+	width: 100%;
+	text-align: right;
+	margin-top: 15px;
+	display: flex;
+	justify-content: flex-end;
+
+	.left {
+		display: inline-block;
+		padding-right: 20px;
+		margin-right: 20px;
+		border-right: 1px solid #e0e0e5;
+
+		p {
+			font-size: 12px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 18px;
+			letter-spacing: 0em;
+			text-align: left;
+			color: #9999a7;
+			margin: 0;
+		}
+
+		a {
+			font-size: 9px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 12px;
+			letter-spacing: 0em;
+			text-align: right;
+		}
+	}
+
+	.right {
+		position: relative;
+		display: inline-block;
+
+		p {
+			margin: 0;
+			font-size: 12px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 18px;
+			letter-spacing: 0em;
+			text-align: center;
+			color: #9999a7;
+		}
+
+		img.logo {
+			filter: grayscale(1);
+		}
+	}
+}
+
+.container .keywords-section {
+	margin: 20px 0;
+}
+
+.container .keywords-section .card {
+	margin: 5px 0 20px !important;
+}
+
+.container .keywords-section .card h4 {
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 500 !important;
+	line-height: 22px;
+	letter-spacing: 0em;
+	text-align: left;
+	color: #33334f;
+}
+
+.container .keywords-section .card .mentions-list li {
+	border: 0;
+
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: 0em;
+	text-align: left;
+	color: #9999a7 !important;
+	padding: 8px 0px;
+}
+
+.container .keywords-section .card .mentions-list li:hover {
+	background: transparent !important;
+}
+
+.container .keywords-section .card .mentions-list li strong {
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: 0em;
+	text-align: left;
+	color: #33334f;
+	opacity: 1;
+}
+
+.container .topics-section .custom-tags-container .custom-tag {
+	width: 22%;
+	box-shadow: none !important;
+}
+
+.topics-section .row {
+	width: 100%;
+}
+
+@media (max-width: 767px) {
+	.container .topics-section .custom-tags-container .custom-tag {
+		width: 100%;
+		margin-bottom: 16px !important;
+		margin-right: 0;
+	}
+}

@@ -1,0 +1,46 @@
+<div *ngIf="renderedOn === 'Mobile'" class="visit-desktop-modal" id="visit-desktop-modal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<h6 class="modal-title"></h6>
+				<button
+					(click)="closeOverlay($event)"
+					class="close"
+					data-cs-id="43916b59-e2d4-45ae-ab99-6ca01da5f9cf"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					&times;
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="visit-desktop-wrapper">
+					<figure>
+						<img alt="" src="assets/images/desktop-icon.svg" />
+					</figure>
+					<h5>Visit Convosight on Desktop</h5>
+					<p>
+						Please visit
+						<a class="font-weight-medium" href="http://www.convosight.com/" rel="noopener" target="_blank"
+							>convosight.com</a
+						>
+						from a desktop/laptop browser for app installation.
+					</p>
+					<button
+						(click)="closeOverlay()"
+						class="btn convo-btn-primary px-4 py-2"
+						data-cs-id="786499c3-fd1f-4054-a62d-f423efebd4f3"
+						data-cs-label="Ok"
+						data-cs-source="dialog"
+						data-dismiss="modal"
+						type="button"
+					>
+						OK
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

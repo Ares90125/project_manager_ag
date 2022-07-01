@@ -1,0 +1,9 @@
+{
+	"data": {
+		"getGroupModeratorsByGroupId": {
+			"__typename": "GroupMembersConnection",
+			"items": [],
+			"nextToken": null
+		}
+	}
+}

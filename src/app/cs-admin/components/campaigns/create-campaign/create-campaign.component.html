@@ -1,0 +1,128 @@
+<div *ngIf="!loadCreateCampaignInfo && !loadCreateListeningCampaign" class="select-campaign-type-wrapper">
+	<div [hidden]="step !== 'Step1'" class="add-new-campaign-wrapper">
+		<div class="add-new-campaign">
+			<a (click)="goBack()" class="back-btn">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<path
+						clip-rule="evenodd"
+						d="M6.45089 1.49192C6.71779 1.22502 6.71779 0.792278 6.45089 0.525374C6.18398 0.258469 5.75124 0.258469 5.48434 0.525374L0.700178 5.30954C0.433274 5.57644 0.433274 6.00918 0.700178 6.27608L5.48434 11.0602C5.75124 11.3271 6.18398 11.3271 6.45089 11.0602C6.71779 10.7933 6.71779 10.3606 6.45089 10.0937L2.83353 6.47634H10.7518C11.1292 6.47634 11.4352 6.17035 11.4352 5.79289C11.4352 5.41543 11.1292 5.10943 10.7518 5.10943H2.83337L6.45089 1.49192Z"
+						fill="black"
+						fill-rule="evenodd"
+						opacity="0.43"
+					/>
+				</svg>
+				<span>BACK</span>
+			</a>
+			<h1>Name new campaign</h1>
+			<h6>The campaign name is shown in your reports.</h6>
+			<div class="input-group">
+				<input [(ngModel)]="name" class="form-control" placeholder="Campaign name" type="text" />
+			</div>
+			<button
+				(click)="moveToNext()"
+				[disabled]="!name"
+				[ngClass]="{active: name}"
+				data-test-id="create-campaign-btn-next"
+				class="btn btn-secondary"
+			>
+				Next
+			</button>
+		</div>
+	</div>
+	<!-- Add New Campaign Wrapper End -->
+
+	<div [hidden]="step !== 'Step2'" class="select-solution-wrapper">
+		<div class="select-solution">
+			<a (click)="step = 'Step1'" class="back-btn">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<path
+						clip-rule="evenodd"
+						d="M6.45089 1.49192C6.71779 1.22502 6.71779 0.792278 6.45089 0.525374C6.18398 0.258469 5.75124 0.258469 5.48434 0.525374L0.700178 5.30954C0.433274 5.57644 0.433274 6.00918 0.700178 6.27608L5.48434 11.0602C5.75124 11.3271 6.18398 11.3271 6.45089 11.0602C6.71779 10.7933 6.71779 10.3606 6.45089 10.0937L2.83353 6.47634H10.7518C11.1292 6.47634 11.4352 6.17035 11.4352 5.79289C11.4352 5.41543 11.1292 5.10943 10.7518 5.10943H2.83337L6.45089 1.49192Z"
+						fill="black"
+						fill-rule="evenodd"
+						opacity="0.43"
+					/>
+				</svg>
+				<span>BACK</span>
+			</a>
+			<h1>Select a solution</h1>
+			<h6>Which solution do you want to add to this campaign?</h6>
+
+			<ul class="solution-types">
+				<li
+					(click)="selectedType = 'Listening'; recordButtonClick($event)"
+					[ngClass]="{selected: selectedType === 'Listening'}"
+					data-cs-id="760b2cdd-6fbe-473d-9ff9-827b61167da3"
+					data-cs-label="Listening"
+					data-cs-source="page"
+				>
+					<div>
+						<div class="selected-tag">
+							<svg fill="none" height="71" viewBox="0 0 71 71" width="71" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M21.5508 32.2895C21.5509 26.7668 26.0279 22.2898 31.5506 22.2897L70.1295 22.2889L21.5501 69.3909L21.5508 32.2895Z"
+									fill="#3654FF"
+								/>
+								<path
+									clip-rule="evenodd"
+									d="M40.7622 36.3231L32.6063 44.479L28.2227 40.0959L29.5437 38.7746L32.6063 41.8368L39.4411 35.002L40.7622 36.3231Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+							</svg>
+						</div>
+						<figure><img alt="" alt="" src="assets/images/listening-icon.svg" /></figure>
+						<h5>Listening</h5>
+					</div>
+				</li>
+				<li
+					(click)="selectedType = 'CommunityMarketing'; recordButtonClick($event)"
+					[ngClass]="{selected: selectedType === 'CommunityMarketing'}"
+					data-cs-id="037e0107-fee8-4d91-bba1-c2be9db4b2f9"
+					data-cs-label="Community Marketing"
+					data-cs-source="page"
+				>
+					<div>
+						<div class="selected-tag">
+							<svg fill="none" height="71" viewBox="0 0 71 71" width="71" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M21.5508 32.2895C21.5509 26.7668 26.0279 22.2898 31.5506 22.2897L70.1295 22.2889L21.5501 69.3909L21.5508 32.2895Z"
+									fill="#3654FF"
+								/>
+								<path
+									clip-rule="evenodd"
+									d="M40.7622 36.3231L32.6063 44.479L28.2227 40.0959L29.5437 38.7746L32.6063 41.8368L39.4411 35.002L40.7622 36.3231Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+							</svg>
+						</div>
+						<figure><img alt="" src="assets/images/community-icon.svg" /></figure>
+						<h5>Community Marketing</h5>
+					</div>
+				</li>
+			</ul>
+			<button
+				(click)="moveToNext()"
+				[disabled]="!selectedType"
+				[ngClass]="{active: selectedType}"
+				class="btn btn-secondary"
+				data-test-id="create-campaign-btn-continue"
+			>
+				Continue
+			</button>
+		</div>
+	</div>
+	<!-- select-solution-wrapper -->
+</div>
+
+<div *ngIf="loadCreateCampaignInfo && version === 'old'">
+	<app-create-community-marketing-campaign-old></app-create-community-marketing-campaign-old>
+</div>
+<div *ngIf="loadCreateCampaignInfo && version !== 'old'">
+	<app-create-brand-community-marketing-campaign></app-create-brand-community-marketing-campaign>
+</div>
+
+<div *ngIf="loadCreateListeningCampaign">
+	<app-create-community-listening-campaign></app-create-community-listening-campaign>
+</div>

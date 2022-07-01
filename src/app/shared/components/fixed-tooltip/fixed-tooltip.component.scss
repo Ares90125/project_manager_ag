@@ -1,0 +1,72 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.info-tooltip {
+	-webkit-transform: translateY(-100%);
+	transform: translateY(-100%);
+	top: -10px;
+	right: -8px;
+	width: 257px;
+	z-index: 100;
+	margin: 0;
+	padding: 16px 12px 12px 12px;
+	background-color: #33334f;
+	color: white;
+	@include border-radius(3px);
+	@media (max-width: 767px) {
+		right: -4px;
+		max-width: 90vw;
+	}
+	.title {
+		font-size: 14px;
+		font-weight: bold;
+		margin-bottom: 8px;
+	}
+	.content {
+		font-size: 12px;
+		margin-bottom: 12px;
+	}
+	.convo-btn-normal {
+		width: 100px;
+		height: 32px;
+		padding: 2px 16px;
+		border-radius: 3px;
+		color: #33334f;
+	}
+	&::before {
+		bottom: -7px;
+		right: 16px;
+		width: 14px;
+		height: 14px;
+		content: '';
+		position: absolute;
+		background-color: #33334f;
+		@include transform(rotate(45deg));
+		@media (max-width: 767px) {
+			right: 12px;
+		}
+	}
+	&.exception-tooltip {
+		text-align: left;
+		-webkit-transform: translateY(0%);
+		transform: translateY(0%);
+		top: 40px;
+		right: 0px;
+		@media (max-width: 767px) {
+			-webkit-transform: translateY(-100%);
+			transform: translateY(-100%);
+			top: -6px;
+			right: 16px;
+			max-width: 90vw;
+		}
+		&::before {
+			top: -7px;
+			right: 57px;
+			@media (max-width: 767px) {
+				top: unset;
+				bottom: -7px;
+				right: 80px;
+			}
+		}
+	}
+}

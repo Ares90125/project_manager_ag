@@ -1,0 +1,125 @@
+@import '../../../../../../assets/scss/custom/variables';
+@import '../../../../../../assets/scss/custom/mixins';
+
+.campaign-details-wrapper {
+	margin-top: 50px;
+
+	.daily-report-header {
+		background: #fff;
+
+		.head-wrapper {
+			padding: 23px 0 30px;
+			@include flex();
+			width: 100%;
+			margin: 0 auto;
+			align-items: center;
+			justify-content: space-between;
+
+			.left-section {
+				.breadcrumb-nav {
+					display: flex;
+					align-items: center;
+
+					li {
+						font-size: 14px;
+						color: #33334f;
+						position: relative;
+
+						&:after {
+							position: relative;
+							content: '>';
+							color: rgba(51, 51, 79, 0.5);
+							margin: 0 8px;
+						}
+
+						&:last-child {
+							&:after {
+								display: none;
+							}
+						}
+
+						a {
+							cursor: pointer;
+							color: rgba(51, 51, 79, 0.5);
+							text-decoration: none;
+						}
+					}
+				}
+			}
+		}
+
+		.tabs-wrapper {
+			background-color: $white;
+
+			&.fixed-tabs {
+				top: 50px;
+				width: 100%;
+				z-index: 5;
+				position: fixed;
+
+				.group-info-tabs {
+					.nav-item {
+						.nav-link {
+							padding: 17px 16px;
+						}
+					}
+				}
+			}
+
+			.group-info-tabs {
+				width: 100%;
+				border: none;
+				margin: 0 auto;
+
+				.nav-item {
+					&:not(:last-of-type) {
+						margin-right: 20px;
+					}
+
+					.nav-link {
+						color: rgba(51, 51, 79, 0.6);
+						border: none;
+						padding: 0 5px 13px;
+						font-size: 15px;
+						line-height: 18px;
+
+						&.active {
+							color: $primary-1;
+							border-bottom: 4px solid $emp-blue-1;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.review-proposal-message {
+	background: #fff4e7;
+	border: 1px solid #ff9c28;
+	border-radius: 3px;
+	padding: 16px 24px 16px 16px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 30px;
+	align-items: center;
+	line-height: 1.2;
+	color: #33334f;
+
+	.proposal-message-left {
+		display: flex;
+		align-items: center;
+
+		svg {
+			margin-right: 14px;
+		}
+
+		h6 {
+			margin: 0;
+		}
+	}
+
+	small {
+		opacity: 0.6;
+	}
+}

@@ -1,0 +1,289 @@
+<div class="profile-page-setting-wrap" *ngIf="isProfileLoaded; else LoadedState">
+	<div *ngIf="false" class="profile-setting-header">
+		<ul class="list-unstyled">
+			<li>
+				<a
+					(click)="currentTab = 'General'; recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="984cd8d4-1f2c-4f06-894e-15beb1ace911"
+					data-cs-label="General"
+					data-cs-source="page"
+					[class.active]="currentTab === 'General'"
+					href="javascript:"
+					>General</a
+				>
+			</li>
+			<li *ngIf="false">
+				<a
+					(click)="currentTab = 'Admin Bio'; recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="2bc5365d-50c2-4b27-a71c-721fd410b10a"
+					data-cs-label="Admin Bio"
+					data-cs-source="page"
+					[class.active]="currentTab === 'Admin Bio'"
+					href="javascript:"
+					>Admin Bio</a
+				>
+			</li>
+		</ul>
+	</div>
+	<div class="profile-setting-body">
+		<div class="container container-small">
+			<!-- General Profile Tab-->
+			<div *ngIf="currentTab === 'General'" class="general-profile-wrap">
+				<div class="bio-card">
+					<h5>✍🏻 About this group <sup>*</sup></h5>
+					<h6>Write a brief description about this group.</h6>
+					<quill-editor
+						#meQuill
+						[(ngModel)]="profileDescription"
+						[debounceTime]="1000"
+						[modules]="quillConfig"
+						[placeholder]="'Write description here...'"
+						(ngModelChange)="updateDetails()"
+						(onEditorCreated)="getMeEditorInstance($event)"
+					>
+					</quill-editor>
+					<div class="input-wrap mt-3">
+						<label>Location <sup>*</sup></label>
+						<div class="custom-dropdown dropdown" ngxDropdown>
+							<button
+								class="btn-block dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+								type="button"
+								dropdown-toggle
+							>
+								<span class="country-row">
+									<span class="iti-flag {{ selectedCountry | lowercase }}"></span>
+									<span>{{ getCountryName(selectedCountry) }}</span>
+								</span>
+							</button>
+							<div
+								class="dropdown-menu-wrapper dropdown-menu"
+								aria-labelledby="dropdownMenu"
+								aria-labelledby="dropdownMenuLink"
+								ngxDropdownMenu
+							>
+								<div class="dropdown-item" *ngFor="let country of countryList" (click)="selectedLocation(country)">
+									<span class="country-row">
+										<span class="iti-flag {{ country.isoCode | lowercase }}"></span>
+										<span>{{ country.name }}</span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bio-card">
+					<h5><img alt="" src="./assets/images/url-icon.png" width="16px" /> <span>Group profile URL</span></h5>
+					<h6>Share this URL with brands and your group members.</h6>
+					<div class="copy-link-wrap">
+						<input [value]="profilePage?.profileUrl" readonly type="text" />
+						<span
+							class="copy-link-btn-wrap"
+							#tooltip="matTooltip"
+							(mouseenter)="tooltip.toggle()"
+							(mouseleave)="tooltip.toggle()"
+							(click)="tooltip.toggle()"
+							[matTooltip]="!profilePage.isPublished ? 'Please publish first to share the URL' : 'Share profile URL'"
+						>
+							<button
+								(click)="
+									recordButtonClick($event, null, null, null, profilePage); copyToClipboard(profilePage?.profileUrl)
+								"
+								[disabled]="isCopied || !profilePage.isPublished"
+								data-cs-id="1635a937-1909-fj75-bdde-c334b51cc33c"
+								data-cs-label="Copy"
+								data-cs-source="settings"
+							>
+								{{ isCopied ? 'Copied' : 'Copy' }}
+							</button>
+						</span>
+					</div>
+				</div>
+				<div [hidden]="true" class="bio-card">
+					<h5><img src="./assets/images/settings-icon.png" width="16px" alt="" /> Misc. settings</h5>
+					<ul class="misc-settings list-unstyled">
+						<li>
+							<div class="misc-setting-left">
+								<span>Allow search engines to index this page</span>
+								<app-tooltip setTooltipText="Allow search engines to index this page"></app-tooltip>
+							</div>
+							<div class="misc-setting-right">
+								<mat-slide-toggle></mat-slide-toggle>
+							</div>
+						</li>
+						<li>
+							<div class="misc-setting-left">
+								<span>Hide member reviews</span>
+								<app-tooltip setTooltipText="Hide member reviews"></app-tooltip>
+							</div>
+							<div class="misc-setting-right">
+								<mat-slide-toggle></mat-slide-toggle>
+							</div>
+						</li>
+						<li>
+							<div class="misc-setting-left">
+								<span>Hide upvotes</span>
+								<app-tooltip setTooltipText="Hide upvotes"></app-tooltip>
+							</div>
+							<div class="misc-setting-right">
+								<mat-slide-toggle></mat-slide-toggle>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div *ngIf="false">
+				<app-admin-bio></app-admin-bio>
+			</div>
+
+			<div class="influencer-team-profile-wrap" *ngIf="false">
+				<div class="team-header">
+					<div class="team-header-left">
+						<h6>🙌 Influencer team</h6>
+						<small>Who can join your team?</small>
+					</div>
+					<div class="team-header-right">
+						<button class="convo-btn-small convo-btn-bordered">
+							<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12.6668 8.66634H8.66683V12.6663H7.3335V8.66634H3.3335V7.33301H7.3335V3.33301H8.66683V7.33301H12.6668V8.66634Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							<span>Add/Invite members</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="pending-requests">
+					<h5>Pending join requests (4)</h5>
+					<div class="cards-wrap">
+						<div *ngFor="let userCard of userCards" class="user-card">
+							<div class="user-card-left">
+								<figure>
+									<img alt="" src="../../../../../../assets/images/default_user.png" />
+								</figure>
+								<div class="user-details">
+									<h6>
+										<span>Shruti Sharma</span>
+										<a href=""><img alt="" src="../../../../../../assets/images/link-icon.svg" /></a>
+									</h6>
+									<small>Member · Yesterday at 11:53</small>
+								</div>
+							</div>
+							<div class="user-card-right">
+								<button class="convo-btn-small convo-btn-primary">Accept</button>
+								<button class="convo-btn-small convo-btn-bordered text-secondary">Reject</button>
+							</div>
+						</div>
+
+						<div class="load-more-card">
+							<button (click)="seeMoreRequests($event)">
+								<span>See all</span>
+								<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M4.47319 6.19305C4.73319 5.93305 5.15319 5.93305 5.41319 6.19305L7.99985 8.77971L10.5865 6.19305C10.8465 5.93305 11.2665 5.93305 11.5265 6.19305C11.7865 6.45305 11.7865 6.87305 11.5265 7.13305L8.46652 10.193C8.20652 10.453 7.78652 10.453 7.52652 10.193L4.46652 7.13305C4.21319 6.87971 4.21319 6.45305 4.47319 6.19305Z"
+										fill="#707084"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="team-rows-wrap">
+					<div class="team-rows-header">
+						<div class="user-row">
+							<div class="user-row-left">
+								<h5>Name</h5>
+							</div>
+							<div class="user-row-right">
+								<h5>Permissions</h5>
+							</div>
+						</div>
+					</div>
+
+					<div class="team-rows-body">
+						<div *ngFor="let userCard of userCards" class="user-row">
+							<div class="user-row-left">
+								<figure>
+									<img alt="" src="../../../../../../assets/images/default_user.png" />
+								</figure>
+								<div class="user-details">
+									<h6>Neha Malik</h6>
+									<small>Moderator</small>
+								</div>
+							</div>
+							<div class="user-row-right">
+								<div class="permission-actions">
+									<button class="icon-btn" matTooltip="Can access this group’s campaigns" matTooltipPosition="above">
+										<img alt="" src="../../../../../../assets/images/campaign-icon.svg" />
+									</button>
+									<button class="icon-btn" matTooltip="Can access this group’s insights" matTooltipPosition="above">
+										<img alt="" src="../../../../../../assets/images/assessment-icon.svg" />
+									</button>
+									<button
+										class="icon-btn disabled"
+										matTooltip="Cannot publish posts to this group"
+										matTooltipPosition="above"
+									>
+										<img alt="" src="../../../../../../assets/images/post-add-icon.svg" />
+									</button>
+								</div>
+								<div class="row-action">
+									<button class="icon-btn">
+										<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M2.5 14.5501V17.0835C2.5 17.3168 2.68333 17.5001 2.91667 17.5001H5.45C5.55833 17.5001 5.66667 17.4585 5.74167 17.3751L14.8417 8.28346L11.7167 5.15846L2.625 14.2501C2.54167 14.3335 2.5 14.4335 2.5 14.5501ZM17.2583 5.8668C17.5833 5.5418 17.5833 5.0168 17.2583 4.6918L15.3083 2.7418C14.9833 2.4168 14.4583 2.4168 14.1333 2.7418L12.6083 4.2668L15.7333 7.3918L17.2583 5.8668Z"
+												fill="#ADADB9"
+											/>
+										</svg>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Auto save sticky bottom bar : Start -->
+			<app-auto-save-bottom-bar
+				(publishProfile)="publishProfilePage()"
+				*ngIf="profilePage.publishedStatus === 'Draft'"
+				[draftButtonStatus]="profilePage.publishedStatus"
+				[isSaveInProgress]="isSaveInProgress"
+				[profilePage]="profilePage"
+			></app-auto-save-bottom-bar>
+			<!-- Auto save sticky bottom bar : End -->
+		</div>
+	</div>
+</div>
+
+<ng-template #LoadedState>
+	<div class="profile-page-setting-wrap">
+		<div class="profile-setting-body">
+			<div class="container container-small">
+				<!-- General Profile Tab-->
+				<div *ngIf="currentTab === 'General'" class="general-profile-wrap">
+					<div class="bio-card">
+						<h5>✍🏻 About this group <sup>*</sup></h5>
+						<h6>Write a brief description about this group.</h6>
+						<app-loading-shimmer [type]="2"></app-loading-shimmer>
+						<div class="input-wrap mt-3">
+							<label>Location <sup>*</sup></label>
+							<app-loading-shimmer [type]="2"></app-loading-shimmer>
+						</div>
+					</div>
+					<div class="bio-card">
+						<h5><img alt="" src="./assets/images/url-icon.png" width="16px" /> <span>Group profile URL</span></h5>
+						<h6>Share this URL with brands and your group members.</h6>
+						<app-loading-shimmer [type]="2"></app-loading-shimmer>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>

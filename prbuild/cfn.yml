@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates a Twingate Protected Testing URL for PR
+Parameters:
+  BucketName:
+    Type: String
+    Description: The name for the bucket hosting the website
+    AllowedPattern: '.+'
+  PullRequestNumber:
+    Type: String
+    AllowedPattern: '^([0-9])+$'
+  WebACLIdParam:
+    Type: String
+    Description: This is the Twingate ACL WAF ID
+    Default: b41cf40b-c286-4bc3-8274-6575cc1e10ff
+  S3TwingateAccessIdentity:
+    Type: String
+    Default: EZ9FVUJVYP72A
+  AcmCertificateArnParam:
+    Type: String
+    Default: arn:aws:acm:us-east-1:068053939740:certificate/77bc3b2a-a01a-47ff-8735-52eb6fe66139
+  PRRoute53HostedZoneId:
+    Type: String
+    Default: Z03666122B44K947L7U34
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Website Configuration
+        Parameters:
+          - BucketName
+Resources:
+  WebsiteBucket:
+    Properties:
+      BucketName:
+        Ref: BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - '*'
+            Id: OpenCors
+            MaxAge: '3600'
+    Type: AWS::S3::Bucket
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource:
+              Fn::Sub: arn:aws:s3:::${WebsiteBucket}/*
+  WebsiteCloudFront:
+    Type: AWS::CloudFront::Distribution
+    DependsOn:
+      - WebsiteBucket
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - Fn::Sub: '${PullRequestNumber}.pullrequests.cnvo.site'
+        Origins:
+          - DomainName:
+              Fn::GetAtt:
+                - WebsiteBucket
+                - RegionalDomainName
+            Id:
+              Ref: WebsiteBucket
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        Enabled: 'true'
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId:
+            Ref: WebsiteBucket
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - POST
+            - PATCH
+            - DELETE
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: none
+            Headers:
+              - Access-Control-Request-Headers
+              - Access-Control-Request-Method
+              - Origin
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn:
+            Ref: AcmCertificateArnParam
+          MinimumProtocolVersion: 'TLSv1.2_2019'
+          SslSupportMethod: sni-only
+        WebACLId:
+          Fn::Sub: arn:aws:wafv2:${AWS::Region}:${AWS::AccountId}:global/webacl/TwingateACL/${WebACLIdParam}
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: '/app/index.html'
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: '/app/index.html'
+  WebsiteCloudFrontDNSEntry:
+    Type: 'AWS::Route53::RecordSet'
+    DependsOn: WebsiteCloudFront
+    Properties:
+      AliasTarget:
+        DNSName:
+          Fn::GetAtt: WebsiteCloudFront.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+      HostedZoneId:
+        Ref: PRRoute53HostedZoneId
+      Name:
+        Fn::Sub: '${PullRequestNumber}.pullrequests.cnvo.site'
+      Type: 'A'
+Outputs:
+  S3WebsiteURL:
+    Value:
+      Fn::GetAtt:
+        - WebsiteBucket
+        - WebsiteURL
+  CloudFrontDomain:
+    Value:
+      Fn::GetAtt:
+        - WebsiteCloudFront
+        - DomainName
+  CloudFrontId:
+    Value:
+      Fn::GetAtt:
+        - WebsiteCloudFront
+        - Id
+    Export:
+      Name:
+        Fn::Sub: '${PullRequestNumber}-CF-ID'
+  TestDomain:
+    Value:
+      Fn::Sub: '${PullRequestNumber}.pullrequests.cnvo.site'

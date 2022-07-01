@@ -1,0 +1,153 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.convosight-overlay {
+	z-index: 12000;
+	.uninstall-wrapper {
+		.button-wrapper {
+			.btn-cancel {
+				color: rgba(51, 51, 79, 0.89);
+				background: #dee2e6;
+				border-radius: 3px;
+				border: none;
+				font-size: 14px;
+				font-weight: 500;
+				margin-right: 12px;
+				height: 36px;
+				padding: 8px 12px;
+			}
+		}
+	}
+}
+
+.convosight-overlay {
+	.installing-step-wrapper {
+		width: 100%;
+		margin: 80px auto;
+		max-width: 670px;
+		background-color: $white;
+		@include border-radius(10px);
+
+		.head-wrapper {
+			padding: 20px 16px;
+			align-items: center;
+			border-bottom: 1px solid rgba(217, 216, 232, 0.5);
+			justify-content: space-between;
+			@include flex();
+
+			.head-text {
+				color: $primary-1;
+				margin: 0;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 19px;
+			}
+
+			.btn-close {
+				border: none;
+				padding: 0;
+				background-color: transparent;
+
+				.img-close {
+					max-width: 10px;
+				}
+			}
+		}
+
+		.content-wrapper {
+			padding: 30px 30px 0;
+			display: flex;
+			flex-direction: column;
+
+			.img-install-step {
+				max-width: 100%;
+			}
+
+			.column-wrap {
+				&:nth-child(2) {
+					background: #f4f6f8;
+					padding: 30px 30px 26px;
+					border-radius: 5px;
+					margin-top: 20px;
+				}
+
+				.column {
+					font-size: 15px;
+					color: #33334f;
+					text-align: center;
+
+					strong {
+						font-weight: 500;
+					}
+
+					.info-text {
+						font-weight: 700;
+						color: #e74e4e;
+						font-size: 20px;
+					}
+				}
+			}
+
+			.link-authorize {
+				color: $white;
+				margin: 0 auto;
+				padding: 14px 15px;
+				font-size: 15px;
+				align-items: center;
+				font-weight: 500;
+				line-height: 18px;
+				justify-content: center;
+				background-color: #475993;
+				display: inline-block;
+				@include box-shadow(0px 2px 6px rgba(54, 84, 255, 0.1));
+				@include border-radius(3px);
+
+				span {
+					display: inline-block;
+					vertical-align: middle;
+				}
+
+				&:hover {
+					text-decoration: none;
+					animation: none;
+				}
+
+				svg {
+					width: 24px;
+					height: 24px;
+					margin-right: 13px;
+				}
+			}
+		}
+
+		.foot-wrapper {
+			padding: 20px 30px 30px;
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.convosight-overlay {
+		padding: 10px;
+		display: flex;
+		align-items: flex-end;
+		.installing-step-wrapper {
+			margin: 20px auto 0;
+			overflow: auto;
+			max-height: 95%;
+		}
+		.uninstall-wrapper {
+			max-width: 300px;
+
+			.content-wrapper {
+				padding: 20px;
+			}
+
+			.button-wrapper {
+				padding: 16px;
+			}
+		}
+	}
+}

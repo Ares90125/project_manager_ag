@@ -1,0 +1,300 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Word Cloud
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditWordCloud"
+			data-toggle="modal"
+		>
+			<span>Edit</span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-target="#camapaignStatsModal"
+			data-toggle="modal"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle
+				[checked]="visibleToBrand"
+				[formControl]="form?.controls?.visibleToBrand"
+				labelPosition="before"
+			>
+				<span> {{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }} </span>
+			</mat-slide-toggle>
+		</button>
+	</h5>
+	<small>Top keywords that were trending before and during the campaign</small>
+</div>
+
+<form class="chart-container d-flex align-content-center w-100 justify-content-around position-relative">
+	<div *ngIf="!isBrandLoggedIn || preCamapingVisibleToBrand" class="chart-section">
+		<div class="heading">
+			<h5 class="d-flex align-items-center justify-content-between w-100">
+				Pre-Campaign
+				<mat-slide-toggle
+					*ngIf="!isBrandLoggedIn"
+					[checked]="preCamapingVisibleToBrand"
+					[formControl]="form?.controls?.preCamapingVisibleToBrand"
+					labelPosition="before"
+				></mat-slide-toggle>
+			</h5>
+		</div>
+		<app-wordcloud-chart *ngIf="preCampaignWordList" [content]="preCampaignWordList"></app-wordcloud-chart>
+	</div>
+
+	<div *ngIf="!isBrandLoggedIn || duringCamapingVisibleToBrand" class="chart-section">
+		<div class="heading">
+			<h5 class="d-flex align-items-center justify-content-between w-100">
+				During Campaign
+				<mat-slide-toggle
+					*ngIf="!isBrandLoggedIn"
+					[checked]="duringCamapingVisibleToBrand"
+					[formControl]="form?.controls?.duringCamapingVisibleToBrand"
+					labelPosition="before"
+				></mat-slide-toggle>
+			</h5>
+		</div>
+
+		<app-wordcloud-chart *ngIf="duringCampaignWordList" [content]="duringCampaignWordList"></app-wordcloud-chart>
+	</div>
+</form>
+
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div *ngIf="!editingSupportingText && form?.value?.supportingText" class="supprt-text pb-3 pt-1">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" *ngIf="form" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button
+					(click)="cancelEditingSupportingText()"
+					class="mt-1 cancel"
+					color="primary"
+					mat-stroked-button
+					type="button"
+				>
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="EditWordCloud"
+	role="dialog"
+>
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Word Cloud</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="kpi-popup-content">
+				<mat-tab-group>
+					<mat-tab label="Pre-Campaign">
+						<form *ngIf="form" [formGroup]="form" class="row section m-0 mt-4">
+							<div #precampaignContainer class="form-section">
+								<table class="ml-2 mt-1 pre-campaign-table" formGroupName="content">
+									<thead>
+										<th scope="col"></th>
+										<th scope="col"><span>Word</span></th>
+										<th scope="col"><span>Count</span></th>
+										<!-- <th scope="col"><span>Color</span></th> -->
+									</thead>
+									<tbody formArrayName="preCampaign">
+										<ng-container *ngFor="let itemGroup of preCampaignFormList.controls; let i = index">
+											<tr [formGroup]="itemGroup">
+												<td>
+													<div class="remove-brand">
+														<span (click)="preCampaignFormList.removeAt(i)" class="material-icons custom-delete">
+															remove_circle_outline
+														</span>
+													</div>
+												</td>
+												<td>
+													<span>
+														<mat-form-field appearance="outline" class="col-11 pl-0">
+															<input formControlName="name" matInput type="text" /></mat-form-field
+													></span>
+													<span *ngIf="itemGroup?.get('name')?.hasError('alreadyExist')" class="warning">
+														Word already exist
+													</span>
+													<span *ngIf="itemGroup?.get('name')?.hasError('moreThan100')" class="warning">
+														Max 100 characters are allowed
+													</span>
+												</td>
+												<td>
+													<span>
+														<mat-form-field appearance="outline" class="col-11 pl-0">
+															<input
+																formControlName="weight"
+																matInput
+																onkeydown="return event.keyCode !== 190"
+																type="number"
+														/></mat-form-field>
+														<div *ngIf="itemGroup?.controls['weight'].errors as error" class="error-msg">
+															<div *ngIf="error.min" class="">Value must be min 0.</div>
+														</div>
+													</span>
+												</td>
+												<!-- <td>
+                        <span class="color" [ngStyle]="{'background': preCampaignFormList.controls[i].value.color}" >  </span>
+                      </td> -->
+											</tr>
+										</ng-container>
+										<ng-container *ngIf="!preCampaignFormList?.controls?.length">
+											<tr>
+												<td class="text-center" colspan="3">No Word added</td>
+											</tr>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+							<div
+								(click)="addNewPreCampaignFormArray(precampaignContainer)"
+								class="d-flex align-items-center add-new-item"
+							>
+								<span class="material-icons"> add_circle_outline </span>
+								<span class="text">Add another word</span>
+							</div>
+						</form>
+					</mat-tab>
+					<mat-tab label="During Campaign">
+						<form *ngIf="form" [formGroup]="form" class="row section m-0 mt-4">
+							<div #postcampaignContainer class="form-section">
+								<table class="ml-2 mt-1" formGroupName="content">
+									<thead>
+										<th scope="col"></th>
+										<th scope="col"><span>Word</span></th>
+										<th scope="col"><span>Count</span></th>
+										<th scope="col"><span>Color</span></th>
+									</thead>
+									<tbody formArrayName="preCampaign">
+										<ng-container *ngFor="let itemGroup of duringCampaignFormList.controls; let i = index">
+											<tr *ngIf="itemGroup" [formGroup]="itemGroup">
+												<td>
+													<div class="remove-brand">
+														<span (click)="duringCampaignFormList.removeAt(i)" class="material-icons custom-delete">
+															remove_circle_outline
+														</span>
+													</div>
+												</td>
+												<td>
+													<span>
+														<mat-form-field appearance="outline" class="col-11 pl-0">
+															<input formControlName="name" matInput type="text"
+														/></mat-form-field>
+													</span>
+													<span *ngIf="itemGroup?.get('name')?.hasError('alreadyExist')" class="warning">
+														Word already exist
+													</span>
+													<span *ngIf="itemGroup?.get('name')?.hasError('moreThan100')" class="warning">
+														Word length cannot be more than 100 characters.
+													</span>
+												</td>
+												<td>
+													<span>
+														<mat-form-field appearance="outline" class="col-11 pl-0">
+															<input formControlName="weight" matInput type="number"
+														/></mat-form-field>
+														<div *ngIf="itemGroup?.controls['weight'].errors as error" class="error-msg">
+															<div *ngIf="error.min" class="">Value must be min 0.</div>
+														</div>
+													</span>
+												</td>
+												<td>
+													<span [ngStyle]="{background: duringCampaignFormList.controls[i].value.color}" class="color">
+													</span>
+												</td>
+											</tr>
+										</ng-container>
+										<ng-container *ngIf="!duringCampaignFormList?.controls?.length">
+											<tr>
+												<td class="text-center" colspan="3">No Word added</td>
+											</tr>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+							<div
+								(click)="addNewDuringCampaignFormArray(postcampaignContainer)"
+								class="d-flex align-items-center add-new-item"
+							>
+								<span class="material-icons"> add_circle_outline </span>
+								<span class="text">Add another word</span>
+							</div>
+						</form>
+					</mat-tab>
+				</mat-tab-group>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="form?.invalid"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

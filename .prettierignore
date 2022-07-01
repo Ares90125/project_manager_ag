@@ -1,0 +1,5 @@
+.prettierignore
+package-lock.json
+./**/**.svg
+.nyc_output
+coverage

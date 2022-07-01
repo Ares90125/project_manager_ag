@@ -1,0 +1,77 @@
+<div class="marketing-campaign-row {{ isReportEdit ? 'marketing-campaign-modal' : '' }}">
+	<div class="campaign-row-header">
+		<div class="campaign-row-header-description">
+			<p>
+				<strong>Edit {{ isReportEdit ? 'campaign details' : 'solution details' }}</strong>
+			</p>
+		</div>
+		<div *ngIf="!isReportEdit" class="campaign-row-header-actions">
+			<div class="box-actions">
+				<button (click)="redirectToKPIReport()" class="convo-btn-primary btn-outline-primary mr-2 convo-btn-normal">Generate KPI Report</button>
+				<button (click)="discardChanges()" class="btn-cancel">Discard Changes</button>
+				<button
+					(click)="sendCampaignDetails(); recordButtonClick($event)"
+					[disabled]="submittingCampaignDetails"
+					class="convo-btn-primary convo-btn-normal ml-2"
+					data-cs-id="98044691-9e6d-4f41-bbbd-9c8abd3dbd75"
+					data-cs-label="Save Changes"
+					data-cs-source="page"
+				>
+					{{ submittingCampaignDetails ? 'Saving...' : 'Save Changes' }}
+				</button>
+			</div>
+		</div>
+		<div *ngIf="isReportEdit" class="campaign-row-header-actions">
+			<div class="box-actions">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="campaign-row-body">
+		<div class="campaign-details-wrapper">
+			<app-create-campaign-details
+				[campaignDetails]="campaign"
+				(formValue)="formSubmitValue($event)"
+				[campaignCreatedOn]="'csadmin'"
+				(isFormValid)="updateFormValidStatus($event)"
+				[groupsSelectedForCampaignCreation]="groupsSelectedForCampaignCreation"
+				[isFirstTimeSubmitted]="isFirstTimeSubmitted"
+				[resetCampaignDetails]="resetCampaignDetails.asObservable()"
+			></app-create-campaign-details>
+		</div>
+	</div>
+	<div *ngIf="isReportEdit" class="campaign-row-footer">
+		<button (click)="createCampaignDetails(campaign)" class="cancel-btn" data-dismiss="modal" id="cancel" type="button">
+			Cancel
+		</button>
+		<button
+			(click)="sendCampaignDetails()"
+			[disabled]="
+				!campaignDetails ||
+				submittingCampaignDetails ||
+				!isDateValid ||
+				invalidDefaultPublishDate ||
+				invalidTaskPublishDate
+			"
+			class="convo-btn-primary convo-btn-normal ml-4 px-4"
+		>
+			{{ submittingCampaignDetails ? 'Saving...' : 'Save' }}
+		</button>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-type-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Incorrect file format</h6>
+				<p class="m-0">Only files with .csv, .xls or .xlsx extension are allowed</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>

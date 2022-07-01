@@ -1,0 +1,171 @@
+<div class="modal modal-component share-modal d-block" tabindex="-1" role="dialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Reviews received for this group</h5>
+				<button
+					type="button"
+					data-cs-id="5ddf72a3-c00f-4857-87b7-364f9d64505b"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="closeReviewsModal(); recordButtonClick($event)"
+				>
+					<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M15.8333 5.3633L14.6583 4.18359L10 8.8606L5.34167 4.18359L4.16667 5.3633L8.82501 10.0403L4.16667 14.7173L5.34167 15.897L10 11.22L14.6583 15.897L15.8333 14.7173L11.175 10.0403L15.8333 5.3633Z"
+							fill="#33334F"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div *ngIf="!noReviews; else noReviewsContent" class="modal-body">
+				<div class="review-notification">
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M6 4.66634H7.33333V3.33301H6V4.66634ZM6 9.99967H7.33333V5.99967H6V9.99967ZM6.66 13.333C2.98 13.333 0 10.3463 0 6.66634C0 2.98634 2.98 -0.000325918 6.66 -0.000325918C10.3467 -0.000325918 13.3333 2.98634 13.3333 6.66634C13.3333 10.3463 10.3467 13.333 6.66 13.333ZM6.66667 1.33301C3.72 1.33301 1.33333 3.71967 1.33333 6.66634C1.33333 9.61301 3.72 11.9997 6.66667 11.9997C9.61333 11.9997 12 9.61301 12 6.66634C12 3.71967 9.61333 1.33301 6.66667 1.33301Z"
+							fill="#3654FF"
+						/>
+					</svg>
+					<p>Reviews are synced across all group profiles for this group</p>
+				</div>
+				<div class="container container-small mt-3">
+					<div
+						*ngIf="isPageLoading || reviews.length"
+						class="d-flex align-items-baseline justify-content-between reviews-header"
+					>
+						<div class="reviews-rating-container">
+							<div class="star"></div>
+							<span class="rating-container__rate" *ngIf="!isPageLoading"
+								>{{ averageRating }} <span>from</span> {{ reviews.length }} reviews</span
+							>
+							<h6 *ngIf="isPageLoading" class="loading-strip"></h6>
+						</div>
+
+						<div class="d-flex align-center filters-wrap">
+							<div class="filters">
+								<div class="d-inline-block custom-dropdown">
+									<button
+										class="convo-dropdown convo-small-dropdown dropdown-toggle"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										<span class="filter-label">Sort by : </span> {{ selectedSortBy }}
+									</button>
+									<div class="convo-dropdown-wrapper dropdown-menu">
+										<mat-radio-group
+											class="sort-options-wrapper"
+											(change)="sortReviews($event.value)"
+											[(ngModel)]="selectedSortBy"
+										>
+											<mat-radio-button class="sort-option" value="Recently reviewed"
+												>Recently reviewed</mat-radio-button
+											>
+											<mat-radio-button class="sort-option" value="Highest rated">Highest rated</mat-radio-button>
+											<mat-radio-button class="sort-option" value="Lowest rated">Lowest rated</mat-radio-button>
+											<mat-radio-button class="sort-option" value="Visible reviews first"
+												>Visible reviews first</mat-radio-button
+											>
+											<mat-radio-button class="sort-option" value="Hidden reviews first"
+												>Hidden reviews first</mat-radio-button
+											>
+										</mat-radio-group>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="!isPageLoading; else loadingGroupProfilesList">
+						<ng-container *ngIf="reviews.length">
+							<div *ngFor="let review of reviews" class="review-container">
+								<div class="reviewer-info">
+									<img
+										src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+										alt=""
+										class="profile-image"
+									/>
+									<div class="d-flex flex-column">
+										<span class="reviewer-name">{{ review.fullname }}</span>
+										<div class="d-flex align-items-center">
+											<div class="stars" [style.--rating]="review.rating"></div>
+											<span class="review-timestamp">{{ review.timestamp | timeFromXTime }}</span>
+										</div>
+									</div>
+								</div>
+								<div class="review-hide-text" *ngIf="review.reviewText">
+									<span class="review-hide-text__label">Hide text:</span>
+									<div class="slide-toggle-wrapper">
+										<mat-slide-toggle
+											data-cs-id="c85e904e-127a-44f6-a186-793e375f4d59"
+											data-cs-label="Review toggle"
+											data-cs-source="page"
+											[attr.data-cs-toggle-status]="!review.isDisabled"
+											(click)="recordToggleClicked($event, null, null, profilePage)"
+											(toggleChange)="handleIsVisible(review)"
+											[checked]="review.isDisabled"
+										></mat-slide-toggle>
+									</div>
+								</div>
+								<div class="reviews-wrapper">
+									<span class="review-text no-text-selection" *ngIf="review.reviewText">
+										<!-- <span [class.no-text-selection]="!review.isDisabled" class="review-text"> -->
+										{{ review.reviewText }}
+									</span>
+									<span class="unavailable-reviews-state" *ngIf="review.isDisabled">
+										<div class="hidden-state">
+											<img alt="" src="./assets/images/visibility_off.svg" />
+											<span>You have hidden this text</span>
+										</div>
+									</span>
+								</div>
+							</div>
+						</ng-container>
+
+						<div *ngIf="!reviews.length" class="review-body-wrap--empty">
+							<div class="no-review-wrap">
+								<figure><img alt="" src="./assets/images/reviews-icon.svg" /></figure>
+								<h5>There are no reviews yet</h5>
+								<h6>When this page receives a review it will appear here.</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Start : Loading State -->
+<ng-template #loadingGroupProfilesList>
+	<div *ngFor="let loader of loaderCount" class="review-container">
+		<div class="review-box-header">
+			<div class="heading">
+				<figure class="loading-strip"></figure>
+				<div>
+					<h6 class="loading-strip"></h6>
+					<small class="loading-strip"></small>
+				</div>
+			</div>
+		</div>
+		<div class="review-box-body">
+			<h6 class="loading-strip"></h6>
+			<h6 class="loading-strip part"></h6>
+		</div>
+	</div>
+</ng-template>
+<!-- End : Loading State -->
+
+<!-- Start : No content window -->
+<ng-template #noReviewsContent>
+	<div class="no-reviews-frame">
+		<figure class="icon">
+			<ng-lottie [options]="noContentAnimationOption" containerClass="lottie-animation" height="120px"></ng-lottie>
+		</figure>
+		<h3 class="no-reviews-header">No reviews yet!</h3>
+		<p class="no-reviews-subtitle">Share your group profile(s) with your group members to collect more reviews.</p>
+	</div>
+</ng-template>
+<!-- Finish : No content window -->

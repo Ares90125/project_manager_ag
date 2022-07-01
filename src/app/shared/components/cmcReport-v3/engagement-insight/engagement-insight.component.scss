@@ -1,0 +1,168 @@
+:host {
+	::ng-deep {
+		.editButton {
+			display: inline-flex;
+			height: fit-content;
+			font-size: 0.9em;
+			margin-left: 0px;
+			padding: 0px;
+			border: 0px;
+			background: transparent;
+			align-items: flex-end;
+			margin-left: 1%;
+			align-items: center;
+
+			span.material-icons {
+				font-size: 1em;
+			}
+		}
+
+		.supportingText {
+			hr {
+				width: 102%;
+				display: block;
+			}
+		}
+
+		.add-text,
+		.editButton {
+			color: #3654ff;
+		}
+
+		.add-text {
+			font-weight: 600;
+			cursor: pointer;
+
+			.plus {
+				font-size: 1.5em;
+				font-weight: normal;
+			}
+		}
+
+		.header small {
+			color: #808091;
+			display: block;
+			line-height: 1.3;
+			margin-top: 1%;
+		}
+
+		app-engagement-insight-chart {
+			width: 100%;
+			display: inline-flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+
+		.tooltip-container {
+			color: white;
+			text-align: center;
+			min-width: 250px;
+			z-index: 999;
+
+			* {
+				z-index: 9999;
+			}
+
+			span.arrow {
+				display: inline-block;
+				position: absolute;
+				width: 30px;
+				height: 30px;
+				background: #33334f;
+				top: 0px;
+				left: 50%;
+				z-index: 0;
+				transform: rotate(45deg) translate(-50%);
+			}
+
+			.row {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1%;
+
+				* {
+					margin: 1%;
+				}
+			}
+
+			.color {
+				border-radius: 3px;
+				width: 15px;
+				height: 15px;
+				display: inline-block;
+				z-index: 999;
+			}
+		}
+	}
+
+	app-intent,
+	app-emotions,
+	app-benefits {
+		display: inline-block;
+		width: 33%;
+		flex-grow: 1;
+		padding: 1% 1%;
+
+		.error-msg {
+			position: absolute;
+			bottom: -15px;
+			color: #eb5757;
+		}
+	}
+
+	app-intent {
+		padding-left: 0px;
+	}
+
+	app-intent,
+	app-emotions {
+		border-right: 1px solid #ebebed;
+	}
+
+	.supportingText {
+		hr {
+			width: 102%;
+			display: block;
+		}
+	}
+
+	form {
+		textarea {
+			width: 100%;
+			resize: none;
+		}
+
+		::ng-deep {
+			.mat-form-field-appearance-outline {
+				.mat-form-field-infix {
+					padding-top: 0px;
+				}
+
+				.mat-form-field-wrapper {
+					margin: 0px;
+				}
+			}
+		}
+
+		.btn-wrapper {
+			height: 100%;
+
+			button {
+				width: 100%;
+			}
+
+			button.save::enabled {
+				background: #3654ff;
+			}
+
+			button.cancel {
+				color: #3654ff;
+			}
+		}
+
+		.convo-btn-primary {
+			width: 100%;
+		}
+	}
+}

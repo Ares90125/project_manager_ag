@@ -1,0 +1,97 @@
+@import '../../../assets/scss/custom/variables';
+@import '../../../assets/scss/custom/mixins';
+
+.group-admin-wrap {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px;
+	background: #fff;
+	text-align: center;
+	.group-admin-header {
+		height: 56px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		figure {
+			margin: 0;
+		}
+	}
+	.group-admin-body {
+		width: 100%;
+		figure {
+			margin: 0 0 40px;
+			img {
+				max-width: 100%;
+			}
+		}
+		h5 {
+			font-weight: 500;
+			font-size: 24px;
+			line-height: 32px;
+			margin: 0 0 8px;
+		}
+		h6 {
+			font-size: 16px;
+			line-height: 22px;
+			font-weight: 400;
+			color: $black-70;
+			margin: 0;
+		}
+	}
+	.group-admin-footer {
+		padding: 16px 0;
+		width: 100%;
+		p {
+			font-size: 14px;
+			line-height: 16px;
+			margin: 0 0 12px;
+		}
+		button {
+			background: #1877f2;
+			border-radius: 6px;
+			color: #fff;
+			font-size: 18px;
+			cursor: pointer;
+			padding: 4px 15px;
+			height: 48px;
+			outline: 0;
+			border: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 500;
+			font-size: 14px;
+			line-height: 24px;
+			width: 100%;
+			position: relative;
+			span {
+				padding-left: 8px;
+			}
+			.bt-spinner-center {
+				padding: 0;
+				width: 20px;
+				height: 20px;
+				border: 2px solid #f6f4f8;
+				animation: 1s spin linear infinite;
+				background-color: transparent;
+				border-top-color: $emp-blue-1;
+				-webkit-animation: 1s spin linear infinite;
+				@include border-radius(50%);
+			}
+		}
+	}
+
+	.loading-strip {
+		width: 100%;
+		&.loading-strip-primary {
+			height: 40px;
+		}
+		&.loading-strip-secondary {
+			height: 60px;
+		}
+	}
+}

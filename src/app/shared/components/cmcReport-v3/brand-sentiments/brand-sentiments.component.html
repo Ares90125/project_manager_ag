@@ -1,0 +1,507 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Brand Sentiment
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditBrandSentiment"
+			data-toggle="modal"
+		>
+			<span>Edit</span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-target="#camapaignStatsModal"
+			data-toggle="modal"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle
+				[checked]="visibleToBrand"
+				[formControl]="form?.controls?.visibleToBrand"
+				labelPosition="before"
+			>
+				<span> {{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }} </span>
+			</mat-slide-toggle>
+		</button>
+	</h5>
+	<small>Sentiment breakdown of the audience towards your brand during different stages of the campaign</small>
+</div>
+
+<div class="chart-container d-flex align-content-center w-100 justify-content-center position-relative">
+	<div *ngIf="!isBrandLoggedIn || content?.beforeSentimentMapVisibleToBrand" class="chart-section">
+		<div class="center-content">
+			<form *ngIf="form" [formGroup]="form">
+				<mat-slide-toggle
+					(click)="onChangingCategoryVisiblity()"
+					*ngIf="!isBrandLoggedIn"
+					[checked]="content?.beforeSentimentMapVisibleToBrand"
+					[formControl]="form?.controls?.content['controls'].beforeSentimentMapVisibleToBrand"
+					labelPosition="before"
+				>
+					<span class="label">PRE-CAMPAIGN</span>
+				</mat-slide-toggle>
+			</form>
+			<span *ngIf="isBrandLoggedIn" class="label">PRE-CAMPAIGN</span>
+		</div>
+		<div
+			*ngIf="
+				!content?.beforeSentimentMap?.dislikePercentage &&
+				!content?.beforeSentimentMap?.likePercentage &&
+				!content?.beforeSentimentMap?.neutralPercentage
+			"
+			class="no-data-chart"
+		>
+			<span class="label">PRE-CAMPAIGN</span>
+			No Data Available
+		</div>
+
+		<app-donut-chart
+			(arcClicked)="onClickingBeforeCampaing($event)"
+			*ngIf="beforeCampaingChartData"
+			[brandName]="brandName"
+			[content]="beforeCampaingChartData"
+			[isBrandLoggedIn]="isBrandLoggedIn"
+			[period]="'PRE-Campaign'"
+		></app-donut-chart>
+	</div>
+	<div *ngIf="!isBrandLoggedIn || content?.duringSentimentMapVisibleToBrand" class="chart-section">
+		<div class="center-content">
+			<mat-slide-toggle
+				(click)="onChangingCategoryVisiblity()"
+				*ngIf="!isBrandLoggedIn"
+				[checked]="content?.duringSentimentMapVisibleToBrand"
+				[formControl]="form?.controls?.content['controls'].duringSentimentMapVisibleToBrand"
+				labelPosition="before"
+			>
+				<span class="label">DURING CAMPAIGN</span>
+			</mat-slide-toggle>
+			<span *ngIf="isBrandLoggedIn" class="label">DURING CAMPAIGN</span>
+		</div>
+		<div
+			*ngIf="
+				!content?.duringSentimentMap?.dislikePercentage &&
+				!content?.duringSentimentMap?.likePercentage &&
+				!content?.duringSentimentMap?.neutralPercentage
+			"
+			class="no-data-chart"
+		>
+			<span class="label">DURING CAMPAIGN </span>
+			No Data Available
+		</div>
+		<app-donut-chart
+			(arcClicked)="onClickingDuringCampaing($event)"
+			*ngIf="duringCampaignChartData"
+			[brandName]="brandName"
+			[content]="duringCampaignChartData"
+			[isBrandLoggedIn]="isBrandLoggedIn"
+			[period]="'DURING Campaign'"
+		></app-donut-chart>
+	</div>
+	<div *ngIf="!isBrandLoggedIn || content?.afterSentimentMapVisibleToBrand" class="chart-section">
+		<div class="center-content">
+			<mat-slide-toggle
+				(click)="onChangingCategoryVisiblity()"
+				*ngIf="!isBrandLoggedIn"
+				[checked]="content?.afterSentimentMapVisibleToBrand"
+				[formControl]="form?.controls?.content['controls'].afterSentimentMapVisibleToBrand"
+				labelPosition="before"
+			>
+				<span class="label">POST-CAMPAIGN</span>
+			</mat-slide-toggle>
+			<span *ngIf="isBrandLoggedIn" class="label">POST-CAMPAIGN</span>
+		</div>
+		<div
+			*ngIf="
+				!content?.afterSentimentMap?.dislikePercentage &&
+				!content?.afterSentimentMap?.likePercentage &&
+				!content?.afterSentimentMap?.neutralPercentage
+			"
+			class="no-data-chart"
+		>
+			<span class="label">POST-CAMPAIGN</span>
+			No Data Available
+		</div>
+		<app-donut-chart
+			(arcClicked)="onClickingAfterCampaing($event)"
+			*ngIf="afterCampaingChartData"
+			[brandName]="brandName"
+			[content]="afterCampaingChartData"
+			[isBrandLoggedIn]="isBrandLoggedIn"
+			[period]="'POST-Campaign'"
+		></app-donut-chart>
+	</div>
+</div>
+
+<div class="legend-container">
+	<span class="header">Legend:</span>
+	<span class="list">
+		<span class="data">
+			<span [ngStyle]="{background: COLORS.POSITIVE}" class="color"></span>
+			<span class="text"> Positive</span>
+		</span>
+		<span class="data">
+			<span [ngStyle]="{background: COLORS.NEUTRAL}" class="color"></span>
+			<span class="text"> Neutral</span>
+		</span>
+		<span class="data">
+			<span [ngStyle]="{background: COLORS.NEGATIVE}" class="color"></span>
+			<span class="text"> Negative</span>
+		</span>
+	</span>
+</div>
+
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div *ngIf="!editingSupportingText && form?.value?.supportingText" class="supprt-text pb-3 pt-1">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button
+					(click)="cancelEditingSupportingText()"
+					class="mt-1 cancel"
+					color="primary"
+					mat-stroked-button
+					type="button"
+				>
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="EditBrandSentiment"
+	role="dialog"
+>
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Brand Sentiment</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="kpi-popup-content">
+				<form *ngIf="form" [formGroup]="form" class="row section m-0">
+					<div class="form-section">
+						<table class="ml-2 mt-1" formGroupName="content">
+							<thead>
+								<th scope="col"><span>TimeLine Title</span></th>
+								<th scope="col"><span>Positive</span></th>
+								<th scope="col"><span>Neutral</span></th>
+								<th scope="col"><span>Negative</span></th>
+								<th class="text-center" scope="col">
+									<span>Visibility to Brand</span>
+								</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span>PRE-CAMPAIGN</span></td>
+									<td formGroupName="beforeSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="likePercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['beforeSentimentMap']?.controls['likePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="beforeSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="neutralPercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['beforeSentimentMap']?.controls['neutralPercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="beforeSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="dislikePercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['beforeSentimentMap']?.controls['dislikePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center">
+											<mat-slide-toggle
+												[checked]="form?.controls?.content?.value?.beforeSentimentMapVisibleToBrand"
+												formControlName="beforeSentimentMapVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle
+										></span>
+									</td>
+								</tr>
+								<tr>
+									<td><span>DURING CAMPAIGN</span></td>
+									<td formGroupName="duringSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="likePercentage" matInput type="number" />
+											</mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['duringSentimentMap']?.controls['likePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="duringSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="neutralPercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['duringSentimentMap']?.controls['neutralPercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="duringSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="dislikePercentage" matInput type="number"
+											/></mat-form-field>
+
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['duringSentimentMap']?.controls['dislikePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center">
+											<mat-slide-toggle
+												[checked]="form?.controls?.content?.value?.duringSentimentMapVisibleToBrand"
+												formControlName="duringSentimentMapVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle
+										></span>
+									</td>
+								</tr>
+								<tr>
+									<td><span>POST CAMPAIGN</span></td>
+									<td formGroupName="afterSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="likePercentage" matInput type="number"
+											/></mat-form-field>
+
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['afterSentimentMap']?.controls['likePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="afterSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="neutralPercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['afterSentimentMap']?.controls['neutralPercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td formGroupName="afterSentimentMap">
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="dislikePercentage" matInput type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="
+													form?.controls?.content?.controls['afterSentimentMap']?.controls['dislikePercentage']
+														?.errors as error
+												"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center">
+											<mat-slide-toggle
+												[checked]="form?.controls?.content?.value?.afterSentimentMapVisibleToBrand"
+												formControlName="afterSentimentMapVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle
+										></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+
+				<div class="warnings-container mb-1">
+					<p
+						*ngIf="
+							form?.get('content.beforeSentimentMap').hasError('moreThan100') ||
+							form?.get('content.beforeSentimentMap').hasError('lessThan100')
+						"
+						class="warnings"
+					>
+						Total Percentage in PRE-CAMPAIGN is
+						{{ form?.get('content.beforeSentimentMap').hasError('moreThan100') ? 'more' : 'less' }}
+						than 100%.
+					</p>
+					<p
+						*ngIf="
+							form?.get('content.duringSentimentMap').hasError('moreThan100') ||
+							form?.get('content.duringSentimentMap').hasError('lessThan100')
+						"
+						class="warnings"
+					>
+						Total Percentage in DURING CAMPAIGN is
+						{{ form?.get('content.duringSentimentMap').hasError('moreThan100') ? 'more' : 'less' }}
+						than 100%.
+					</p>
+					<p
+						*ngIf="
+							form?.get('content.afterSentimentMap').hasError('moreThan100') ||
+							form?.get('content.afterSentimentMap').hasError('lessThan100')
+						"
+						class="warnings"
+					>
+						Total Percentage in POST CAMPAIGN is
+						{{ form?.get('content.afterSentimentMap').hasError('moreThan100') ? 'more' : 'less' }}
+						than 100%.
+					</p>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="form?.invalid"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

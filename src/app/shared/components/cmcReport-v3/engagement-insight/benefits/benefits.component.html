@@ -1,0 +1,171 @@
+<div class="insight-section header flex-grow-1">
+	<div class="header mb-4">
+		<h5 class="mb-0">
+			Benefits
+			<button
+				(click)="editingpopupContent = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-backdrop="static"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Phase Idea"
+				data-cs-source="page"
+				data-keyboard="false"
+				data-target="#EditBenefits"
+				data-toggle="modal"
+			>
+				<span>Edit</span>&nbsp;
+				<span class="material-icons"> edit </span>
+			</button>
+
+			<button
+				*ngIf="!isBrandLoggedIn && form?.controls?.visibleToBrand"
+				class="convo-btn-normal outline editButton hide-from-brand"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+			>
+				<mat-slide-toggle
+					(change)="saveUpdatedDetails()"
+					[formControl]="form?.controls?.visibleToBrand"
+					labelPosition="before"
+				></mat-slide-toggle>
+			</button>
+		</h5>
+		<small>Benefits of your brand/product reflected in conversations during the campaign</small>
+	</div>
+</div>
+
+<app-engagement-insight-chart
+	(arcClicked)="onChartClick($event, 'benefits')"
+	*ngIf="chartList"
+	[content]="chartList"
+></app-engagement-insight-chart>
+<div *ngIf="!chartList" class="no-data">No Data Available</div>
+
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="EditBenefits"
+	role="dialog"
+>
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Benefits</span></h6>
+				<mat-icon (click)="cancelContentEdit(data)" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="kpi-popup-content">
+				<form *ngIf="form" [formGroup]="form" class="row section m-0 mt-4">
+					<div #postcampaignContainer class="form-section">
+						<table class="ml-2 mt-1" formGroupName="content">
+							<thead>
+								<th scope="col"></th>
+								<th scope="col"><span>Bucket</span></th>
+								<th scope="col"><span>Share</span></th>
+								<th scope="col"><span>Keywords to track</span></th>
+								<th scope="col"><span>Color</span></th>
+								<th scope="col"><span>Visiblity to Brand</span></th>
+							</thead>
+							<tbody>
+								<ng-container *ngFor="let itemGroup of formControls.controls; let i = index">
+									<tr [formGroup]="itemGroup">
+										<td>
+											<div class="remove-brand">
+												<span (click)="removeControlAtIndex(i)" class="material-icons custom-delete">
+													remove_circle_outline
+												</span>
+											</div>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input formControlName="name" matInput type="text"
+												/></mat-form-field>
+											</span>
+											<span *ngIf="itemGroup?.get('name')?.hasError('duplicateName')" class="warning">
+												Bucket name already exist
+											</span>
+											<span *ngIf="itemGroup?.get('name')?.hasError('moreThan100')" class="warning">
+												Max 100 characters are allowed
+											</span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input
+														(delayedInput)="onChangingShareVaue()"
+														appDelayedInput
+														formControlName="y"
+														matInput
+														type="number"
+												/></mat-form-field>
+												<div *ngIf="formControls?.at(i).controls['y'].errors as error" class="error-msg">
+													<div *ngIf="error.min" class="">Value must be min 0.</div>
+													<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+													<div *ngIf="error.pattern && !error.min" class="">
+														Only 2 digit decimal values are allowed
+													</div>
+												</div>
+											</span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input formControlName="keywords" matInput type="text"
+												/></mat-form-field>
+											</span>
+										</td>
+										<td>
+											<span [ngStyle]="{background: formControls.controls[i].value.color}" class="color"> </span>
+										</td>
+										<td>
+											<span>
+												<mat-slide-toggle
+													[checked]="itemGroup?.value?.visibleToBrand"
+													[formControl]="itemGroup?.get('visibleToBrand')"
+													labelPosition="before"
+												></mat-slide-toggle>
+											</span>
+										</td>
+									</tr>
+								</ng-container>
+								<ng-container *ngIf="!formControls.controls?.length">
+									<tr>
+										<td class="text-center" colspan="6">No Data Available</td>
+									</tr>
+								</ng-container>
+							</tbody>
+						</table>
+					</div>
+					<div
+						(click)="addNewRow(postcampaignContainer)"
+						*ngIf="formControls?.controls?.length < 10"
+						class="d-flex align-items-center add-new-item"
+					>
+						<span class="material-icons"> add_circle_outline </span>
+						<span class="text">Add another bucket</span>
+					</div>
+				</form>
+
+				<div class="warning-container">
+					<span *ngIf="form?.hasError('lessThan100')" class="warning"> Total Share is less than 100%. </span>
+					<span *ngIf="form?.hasError('moreThan100')" class="warning"> Total Share is more than 100%. </span>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="form?.invalid"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

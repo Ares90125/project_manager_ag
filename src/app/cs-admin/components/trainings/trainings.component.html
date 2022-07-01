@@ -1,0 +1,17 @@
+<div>
+	<h1>Trainings</h1>
+	<p>Example for csv file. It should be with three columns</p>
+	<p>|UserId|CMCTrained (yes/no)|PerformanceTrained (yes/no)</p>
+	<!-- <form (ngSubmit)="uploadFile($event)">
+		<input type="file" accept=".csv" />
+		<button type="submit">Upload csv</button>
+	</form> -->
+	<form (ngSubmit)="uploadFile($event)">
+		<input type="file" accept=".csv" />
+		<button type="submit">Upload CSV</button>
+	</form>
+	<div>
+		<button (click)="onSubmit()" *ngIf="canBeSubmitted">Update</button>
+	</div>
+</div>
+

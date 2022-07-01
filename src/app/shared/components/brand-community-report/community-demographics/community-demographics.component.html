@@ -1,0 +1,166 @@
+<section class="container">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="members section-border">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Gender Distribution</h3>
+						<p>User distribution by gender for the community</p>
+					</div>
+					<mat-slide-toggle
+						id="community-gender-toggle"
+						checked
+						[(ngModel)]="isGenderDistributionChartVisible"
+					></mat-slide-toggle>
+				</div>
+				<div class="row">
+					<div class="col-md-6 px-0">
+						<div id="genderDistribution" class="membersOnboardedChart"></div>
+					</div>
+					<div class="col-md-6 px-0">
+						<div class="labels gender-labels">
+							<p>Legend:</p>
+							<ul>
+								<li>
+									<span> <span class="legend-icon legend-icon-women"></span>Women </span
+									><span>{{ totalWomen / (totalWomen + totalMen) | percent }}</span>
+								</li>
+								<li>
+									<span><span class="legend-icon legend-icon-men"></span>Men </span
+									><span>{{ totalMen / (totalWomen + totalMen) | percent }}</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="members">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Age-wise Gender Distribution</h3>
+						<p>Age-wise user distribution by gender for the community</p>
+					</div>
+					<mat-slide-toggle
+						id="community-age-toggle"
+						checked
+						[(ngModel)]="isAgeWiseDistributionChartVisible"
+					></mat-slide-toggle>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div id="ageWiseGenderDistribution" class="membersOnboardedChart"></div>
+					</div>
+					<div class="col-md-4">
+						<div class="labels gender-labels">
+							<p>Legend:</p>
+							<ul>
+								<li>
+									<span> <span class="legend-icon legend-icon-women"></span>Women </span>
+								</li>
+								<li>
+									<span><span class="legend-icon legend-icon-men"></span>Men </span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['member-distribution']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['member-distribution'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'member-distribution')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['member-distribution']">
+			<p>{{ supportingText['member-distribution'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</section>
+<br />
+<br />
+<section class="container">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="members section-border">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Country-wise Users</h3>
+						<p>User distribution in top 5 countries for the community</p>
+					</div>
+					<mat-slide-toggle
+						id="community-country-toggle"
+						checked
+						[(ngModel)]="isCountryWiseUsersChartVisible"
+					></mat-slide-toggle>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="userDistributionIn5Countries" class="membersOnboardedChart"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="members">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>City-wise Users</h3>
+						<p>User distribution in top 10 cities for the community</p>
+					</div>
+					<mat-slide-toggle
+						id="community-city-toggle"
+						checked
+						[(ngModel)]="isCityWiseUsersChartVisible"
+					></mat-slide-toggle>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="userDistributionIn10Cities" class="membersOnboardedChart"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['location-based-distribution']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['location-based-distribution'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'location-based-distribution')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['location-based-distribution']">
+			<p>{{ supportingText['location-based-distribution'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</section>

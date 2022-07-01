@@ -1,0 +1,93 @@
+@import '../../../assets/scss/custom/variables';
+@import '../../../assets/scss/custom/mixins';
+
+.campaign-brief-page {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+
+	h5 {
+		font-weight: 400;
+	}
+}
+
+:host::ng-deep {
+	.editor-wrapper {
+		.ql-container {
+			&.ql-snow {
+				position: relative;
+				background: #f5f6f6;
+				margin: 8px 0;
+				border: none;
+				border: 1px solid #f5f6f6 !important;
+				box-shadow: none;
+			}
+
+			.ql-editor {
+				width: 100%;
+				border: none;
+				box-shadow: none;
+				color: #33334f;
+				font-style: normal;
+				font-size: 14px;
+				padding: 0;
+				height: 100%;
+			}
+		}
+	}
+
+	.ql-container {
+		&.ql-snow {
+			position: relative;
+			background: rgb(242, 245, 247);
+			border: 1px solid #f2f5f7 !important;
+			border: none;
+			box-shadow: none;
+		}
+
+		&.focus {
+			border-color: #3654ff !important;
+			box-shadow: inset 0 0 0 1px #3654ff !important;
+		}
+
+		.ql-editor {
+			width: 100%;
+			border: none;
+			box-shadow: none;
+			color: #33334f;
+			font-style: normal;
+			font-size: 14px;
+			height: 100%;
+		}
+
+		.ql-blank {
+			&:before {
+				@include font-label-s;
+				color: $black-40;
+				font-style: normal;
+			}
+		}
+	}
+
+	quill-editor {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.ql-toolbar.ql-snow {
+		border: 1px solid white;
+		padding: 12px;
+		margin-bottom: 8px;
+
+		.ql-tooltip {
+			@media (max-width: 767px) {
+				left: 0px !important;
+			}
+		}
+	}
+
+	.ql-snow.ql-toolbar button,
+	.ql-snow .ql-toolbar button {
+		width: 37px;
+	}
+}

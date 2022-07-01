@@ -1,0 +1,855 @@
+<div style="display: none">
+	<div class="group-insight-container custom-group-admin">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Summary metrics for Dec 28, 2010 - Jan 27, 2021</h1>
+					<h6>Insights on engagement and growth of your group</h6>
+				</div>
+				<div class="summary-row">
+					<div class="metrics-wrapper-main">
+						<div class="metrics-wrapper">
+							<ng-container
+								*ngIf="
+									selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+									else loadingTotalEngagementRate
+								"
+							>
+								<h6 class="metric-name">Engagement Rate</h6>
+								<p class="metric-value">
+									{{
+										selectedSummaryMetrics?.totalEngagementRate === 0
+											? 'N.A.'
+											: (selectedSummaryMetrics?.totalEngagementRate | number: '1.0-0') + '%'
+									}}
+								</p>
+							</ng-container>
+							<ng-template #loadingTotalEngagementRate>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<p class="info">Average Engagement per 100 members</p>
+					</div>
+					<div class="metrics-wrapper-main">
+						<div class="metrics-wrapper">
+							<ng-container
+								*ngIf="
+									selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+									else loadingTotalActivityRate
+								"
+							>
+								<h6 class="metric-name">Activity Rate</h6>
+								<p class="metric-value">{{ selectedSummaryMetrics?.totalActivityRate }}</p>
+							</ng-container>
+							<ng-template #loadingTotalActivityRate>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<p class="info">Average engagement per post</p>
+					</div>
+					<div class="metrics-wrapper-main">
+						<div class="metrics-wrapper">
+							<div></div>
+							<ng-container
+								*ngIf="
+									selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+									else loadingTotalPosts
+								"
+							>
+								<h6 class="metric-name">Posts</h6>
+								<p class="metric-value">{{ selectedSummaryMetrics?.totalPosts }}</p>
+							</ng-container>
+							<ng-template #loadingTotalPosts>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<p class="info">These are the total amount of posts in your community in the above time period.</p>
+					</div>
+					<div class="metrics-wrapper-main">
+						<div class="metrics-wrapper">
+							<ng-container
+								*ngIf="
+									selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+									else loadingTotalConversations
+								"
+							>
+								<h6 class="metric-name">Conversations</h6>
+								<p class="metric-value">{{ selectedSummaryMetrics?.totalConversations }}</p>
+							</ng-container>
+							<ng-template #loadingTotalConversations>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<p class="info">
+							These are total number of Conversations in your community in the above time period. (posts + comments)
+						</p>
+					</div>
+				</div>
+
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Engagement Metrics</h1>
+					<h6>This chart will show you total comments, posts and reactions in the above time period</h6>
+				</div>
+				<div class="graph-wrapper">
+					<div class="chart-dataLabels full-graph-container">
+						<div *ngIf="reportType === 'last30Days'">
+							<app-chart [setChartObject]="group?.engagementReportForLast30Days | async"></app-chart>
+						</div>
+						<div *ngIf="reportType === 'lastMonth'">
+							<app-chart [setChartObject]="group?.engagementReportForLastMonth | async"></app-chart>
+						</div>
+						<div *ngIf="reportType === 'lastTwoMonths'">
+							<app-chart [setChartObject]="group?.engagementReportForLastTwoMonths | async"></app-chart>
+						</div>
+						<div *ngIf="reportType === 'lastThreeMonths'">
+							<app-chart [setChartObject]="group?.engagementReportForLastThreeMonths | async"></app-chart>
+						</div>
+					</div>
+				</div>
+
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'last30Days'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Post type distribution</h1>
+							<h6>This chart will show you total comments, posts and reactions in the above time period.</h6>
+						</div>
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.postTypeDistributionReportForLast30Days | async; else loadingPostTypeDistributionReport"
+							>
+								<div
+									class="graph-container"
+									*ngIf="
+										!(group?.postTypeDistributionReportForLast30Days | async).isEmpty;
+										else emptyPostTypeDistributionReport
+									"
+								>
+									<div class="align-items-center">
+										<app-chart [setChartObject]="group?.postTypeDistributionReportForLast30Days | async"></app-chart>
+									</div>
+								</div>
+								<ng-template #emptyPostTypeDistributionReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingPostTypeDistributionReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Engagement per post type</h1>
+							<h6>This chart will show you, what was the engagement on each post type.</h6>
+						</div>
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="
+									group?.engagementPerPostTypeDistributionForLast30Days | async;
+									else loadingEngagementPerPostTypeReport
+								"
+							>
+								<div
+									class="graph-container"
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLast30Days | async).isEmpty;
+										else emptyEngagementPerPostTypeReport
+									"
+								>
+									<div class="align-items-center">
+										<app-chart
+											[setChartObject]="group?.engagementPerPostTypeDistributionForLast30Days | async"
+										></app-chart>
+									</div>
+								</div>
+								<ng-template #emptyEngagementPerPostTypeReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementPerPostTypeReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'lastMonth'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Post type distribution</h1>
+							<h6>This chart will show you total comments, posts and reactions in the above time period.</h6>
+						</div>
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingPostTypeDistributionReport"
+							>
+								<div
+									class="graph-container"
+									*ngIf="
+										!(group?.postTypeDistributionReportForLastMonth | async).isEmpty;
+										else emptyPostTypeDistributionReport
+									"
+								>
+									<div class="align-items-center">
+										<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+									</div>
+								</div>
+								<ng-template #emptyPostTypeDistributionReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingPostTypeDistributionReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Engagement per post type</h1>
+							<h6>This chart will show you, what was the engagement on each post type.</h6>
+						</div>
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="
+									group?.engagementPerPostTypeDistributionForLastMonth | async;
+									else loadingEngagementPerPostTypeReport
+								"
+							>
+								<div
+									class="graph-container"
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+										else emptyEngagementPerPostTypeReport
+									"
+								>
+									<div class="lign-items-center">
+										<app-chart
+											[setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async"
+										></app-chart>
+									</div>
+								</div>
+								<ng-template #emptyEngagementPerPostTypeReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementPerPostTypeReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'lastTwoMonths'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Post type distribution</h1>
+					<h6>This chart will show you total comments, posts and reactions in the above time period.</h6>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.postTypeDistributionReportForLastTwoMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.postTypeDistributionReportForLastTwoMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.postTypeDistributionReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(2) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<ng-container *ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingEngagementReport">
+								<div
+									*ngIf="!(group?.postTypeDistributionReportForLastMonth | async).isEmpty; else emptyEngagementReport"
+								>
+									<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(1) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'lastThreeMonths'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Post type distribution</h1>
+					<h6>This chart will show you total comments, posts and reactions in the above time period.</h6>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.postTypeDistributionReportForLastThreeMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.postTypeDistributionReportForLastThreeMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.postTypeDistributionReportForLastThreeMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(3) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.postTypeDistributionReportForLastTwoMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.postTypeDistributionReportForLastTwoMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.postTypeDistributionReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(2) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container *ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingEngagementReport">
+								<div
+									*ngIf="!(group?.postTypeDistributionReportForLastMonth | async).isEmpty; else emptyEngagementReport"
+								>
+									<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(1) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'lastTwoMonths'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Engagement per post type</h1>
+					<h6>This chart will show you, what was the engagement on each post type.</h6>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.engagementPerPostTypeDistributionForLastTwoMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastTwoMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.engagementPerPostTypeDistributionForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(2) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.engagementPerPostTypeDistributionForLastMonth | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(1) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin" *ngIf="reportType === 'lastThreeMonths'">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="page-headers">
+					<h1>Engagement per post type</h1>
+					<h6>This chart will show you, what was the engagement on each post type.</h6>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.engagementPerPostTypeDistributionForLastThreeMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastThreeMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.engagementPerPostTypeDistributionForLastThreeMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(3) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.engagementPerPostTypeDistributionForLastTwoMonths | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastTwoMonths | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.engagementPerPostTypeDistributionForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(2) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+					<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+						<div class="graph-wrapper">
+							<ng-container
+								*ngIf="group?.engagementPerPostTypeDistributionForLastMonth | async; else loadingEngagementReport"
+							>
+								<div
+									*ngIf="
+										!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+										else emptyEngagementReport
+									"
+								>
+									<app-chart
+										[setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async"
+									></app-chart>
+									<div class="month-name">{{ getMonthDisplayNameForChart(1) }}</div>
+								</div>
+								<ng-template #emptyEngagementReport>
+									<div class="no-data-wrapper">
+										<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+										<p class="primary-text">No data for selected time period</p>
+										<p class="secondary-text">Select another time period</p>
+									</div>
+								</ng-template>
+							</ng-container>
+							<ng-template #loadingEngagementReport>
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="group-insight-container custom-group-admin">
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="headers-right headers-full">
+					<p class="growth-health">Growth Health Insights for Indore Travellers</p>
+					<p class="date">Dec 28, 2010 - Jan 27, 2021</p>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Comments per post</h1>
+							<h6>
+								This graph shows the average number of comments per post in your community in the above time period.
+							</h6>
+						</div>
+						<div class="graph-wrapper">
+							<div *ngIf="reportType === 'last30Days'">
+								<app-chart
+									[setChartObject]="group?.commentsPerPostReportForLast30Days | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastMonth'">
+								<app-chart
+									[setChartObject]="group?.commentsPerPostReportForLastMonth | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastTwoMonths'">
+								<app-chart
+									[setChartObject]="group?.commentsPerPostReportForLastTwoMonths | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastThreeMonths'">
+								<app-chart
+									[setChartObject]="group?.commentsPerPostReportForLastThreeMonths | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="page-headers">
+							<h1>Member Growth</h1>
+							<h6>This chart shows how are the members growing in your community.</h6>
+						</div>
+						<div class="graph-wrapper">
+							<div *ngIf="reportType === 'last30Days'">
+								<app-chart
+									[setChartObject]="group?.memberGrowthReportForLast30Days | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastMonth'">
+								<app-chart
+									[setChartObject]="group?.memberGrowthReportForLastMonth | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastTwoMonths'">
+								<app-chart
+									[setChartObject]="group?.memberGrowthReportForLastTwoMonths | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastThreeMonths'">
+								<app-chart
+									[setChartObject]="group?.memberGrowthReportForLastThreeMonths | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="page-footer">
+					<div class="left">
+						<p>Reasons why Convosight insights might be lower than Facebook</p>
+						<a href="javascript:void(0)">Click here to Learn more</a>
+					</div>
+					<div class="right">
+						<p>powered by</p>
+						<img alt="convosight logo" src="assets/images/convosight_logo.svg" class="logo" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

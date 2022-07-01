@@ -1,0 +1,105 @@
+<div class="create-brand-wrapper">
+	<div class="add-new-brand-wrapper">
+		<div class="add-new-brand">
+			<a
+				(click)="goBack(); recordButtonClick($event)"
+				class="back-btn"
+				data-cs-id="dc36e46f-1c2e-4f2b-9c4a-eb75906ec037"
+				data-cs-label="BACK"
+				data-cs-source="page"
+			>
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<path
+						clip-rule="evenodd"
+						d="M6.45089 1.49192C6.71779 1.22502 6.71779 0.792278 6.45089 0.525374C6.18398 0.258469 5.75124 0.258469 5.48434 0.525374L0.700178 5.30954C0.433274 5.57644 0.433274 6.00918 0.700178 6.27608L5.48434 11.0602C5.75124 11.3271 6.18398 11.3271 6.45089 11.0602C6.71779 10.7933 6.71779 10.3606 6.45089 10.0937L2.83353 6.47634H10.7518C11.1292 6.47634 11.4352 6.17035 11.4352 5.79289C11.4352 5.41543 11.1292 5.10943 10.7518 5.10943H2.83337L6.45089 1.49192Z"
+						fill="black"
+						fill-rule="evenodd"
+						opacity="0.43"
+					/>
+				</svg>
+				<span>BACK</span>
+			</a>
+			<h1>Add new Brand</h1>
+			<h5>Brand name will be used to list this out on ‘Brands’ page</h5>
+			<h6 class="highlight">
+				Brand username will be taken from brand name, after removing all the special character and replacing spaces with
+				'_'.
+			</h6>
+			<form [formGroup]="createBrandForm">
+				<div class="input-group">
+					<input formControlName="name" name="name" placeholder="Brand name" class="form-control" type="text" />
+					<span class="input-error" *ngIf="showError && createBrandForm.get('name').errors"
+						>Please enter brand name.</span
+					>
+
+					<input
+						formControlName="communicationEmailForCredentials"
+						name="communicationEmailForCredentials"
+						placeholder="Please enter Email to get Brand credentials"
+						class="form-control"
+						type="email"
+					/>
+					<span class="input-error" *ngIf="showError && createBrandForm.get('communicationEmailForCredentials').errors"
+						>Please enter valid email address to recieve the brand credentials.</span
+					>
+
+					<div class="custom-brand-upload" *ngIf="!previewImage">
+						<input
+							(change)="fileUpload($event)"
+							title=" "
+							type="file"
+							id="logo"
+							name="logo"
+							accept=".gif,.jpg,.jpeg,.png"
+						/>
+						<div class="upload-content">
+							<div class="upload-content-left">
+								<figure>
+									<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M26.4 14.1401L20.5 22.0001L25 28.0001C25.66 28.8801 25.48 30.1401 24.6 30.8001C23.72 31.4601 22.46 31.3001 21.8 30.4001C19.7 27.6001 17.18 24.2601 15.6 22.1201C14.8 21.0601 13.2 21.0601 12.4 22.1201L4.39998 32.7801C3.41998 34.1201 4.35998 36.0001 5.99998 36.0001H42C43.64 36.0001 44.58 34.1201 43.6 32.8001L29.6 14.1401C28.8 13.0601 27.2 13.0601 26.4 14.1401Z"
+											fill="#D6D6DC"
+										/>
+									</svg>
+								</figure>
+								<div class="figcaption">
+									<h6>
+										<div>Add a logo for the brand<br /><span class="text-primary">Browse Image</span></div>
+									</h6>
+								</div>
+							</div>
+							<div><small>(optional)</small></div>
+						</div>
+					</div>
+
+					<div class="uploaded-brand" *ngIf="previewImage">
+						<figure>
+							<div class="image-wrap"><img [src]="previewImage" /></div>
+							<span>Uploaded successfully!</span>
+						</figure>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM15.88 8.29L10 14.17L8.12 12.29C7.73 11.9 7.1 11.9 6.71 12.29C6.32 12.68 6.32 13.31 6.71 13.7L9.3 16.29C9.69 16.68 10.32 16.68 10.71 16.29L17.3 9.7C17.69 9.31 17.69 8.68 17.3 8.29C16.91 7.9 16.27 7.9 15.88 8.29Z"
+								fill="#27AE60"
+							/>
+						</svg>
+					</div>
+				</div>
+				<button
+					*ngIf="!creationInProgress"
+					(click)="createBrand(); recordButtonClick($event, null, null, {brandName: name})"
+					[ngClass]="{active: name}"
+					class="btn btn-secondary"
+					data-cs-id="81304fc9-5da4-48e5-8250-682a36f3ea39"
+					data-cs-label="Proceed"
+					data-cs-source="page"
+				>
+					Proceed
+				</button>
+				<button *ngIf="creationInProgress" class="btn btn-secondary">
+					<span class="bt-spinner btn-spinner-white"></span>
+				</button>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,243 @@
+<div *ngIf="insightViews" class="campaign-details-container">
+	<div class="listen-campaign-wrapper">
+		<div class="container">
+			<div class="head-wrapper">
+				<h2 class="head-text">
+					Listening insights from
+					<a
+						(click)="showCommunitiesList(); tooltip.toggle()"
+						*ngIf="campaign.campaignGroupIds"
+						class="head-link"
+						matTooltip="View the list of communities in this campaign"
+						#tooltip="matTooltip"
+						data-cs-parent-label="Tooltip"
+						data-cs-label="View the list of communities in this campaign"
+						data-cs-source="page"
+						(mouseenter)="tooltipHovered($event)"
+					>
+						{{ campaign.campaignGroupIds.length }} communities
+					</a>
+					<button
+						class="convo-btn-secondary convo-btn-normal"
+						[disabled]="!isInsightsLoaded"
+						(click)="downloadInsights(); recordButtonClick($event)"
+						*ngIf="user?.userType === 'CSAdmin'"
+						data-cs-id="8695aa6d-cc47-4dce-8453-6d1d9584e87e"
+						data-cs-label="Export to .xlsx"
+						data-cs-source="page"
+					>
+						<img alt="" src="assets/images/download_icon.svg" /> <span> Export to .xlsx</span>
+					</button>
+				</h2>
+			</div>
+		</div>
+		<div class="tabs-wrapper">
+			<div class="container">
+				<ul class="nav nav-tabs group-info-tabs" id="myTab" role="tablist">
+					<li *ngFor="let categoryInsightView of categoryInsightViews; let i = index" class="nav-item">
+						<a
+							(click)="activateTab(i, categoryInsightView)"
+							aria-controls="category"
+							aria-selected="false"
+							class="nav-link active"
+							data-toggle="tab"
+							href="#category{{ i + 1 }}"
+							id="category{{ i + 1 }}-tab"
+							role="tab"
+						>
+							Category: <span class="tab-value">{{ categoryInsightView.viewName }}</span>
+						</a>
+					</li>
+					<li *ngFor="let subCategoryInsights of subCategoryInsightViews; let i = index" class="nav-item">
+						<a
+							(click)="activateTab(i, subCategoryInsights)"
+							[ngPlural]="subCategoryInsightViews.length > 1"
+							aria-selected="true"
+							attr.aria-controls="subCategory{{ i + 1 }}"
+							class="nav-link"
+							[ngClass]="{active: campaignId === '62ee35be-56ba-4b03-a8e7-05a5450b7142'}"
+							data-toggle="tab"
+							href="#subCategory{{ i + 1 }}"
+							id="subCategory{{ i + 1 }}-tab'"
+							role="tab"
+						>
+							<ng-template ngPluralCase="=false">
+								{{ subCategoryInsights.id === '88c48bfd-8939-42f1-8b1e-96fcc7764a94' ? 'Category' : 'Sub category' }} :
+								<span class="tab-value">{{ subCategoryInsights.viewName }}</span>
+							</ng-template>
+							<ng-template ngPluralCase="=true">
+								Sub category {{ i + 1 }} : <span class="tab-value">{{ subCategoryInsights.viewName }}</span>
+							</ng-template>
+						</a>
+					</li>
+					<ng-container *ngIf="brandInsightViews.length === 1; else brandsDropDown">
+						<li *ngFor="let brandInsights of brandInsightViews" class="nav-item">
+							<a
+								(click)="activateTab(1, brandInsights)"
+								aria-selected="false"
+								attr.aria-controls="brand1"
+								class="nav-link"
+								data-toggle="tab"
+								href="#brand1"
+								id="brand-tab1-tab"
+								role="tab"
+							>
+								Brand: <span class="tab-value">{{ brandInsights.viewName }}</span>
+							</a>
+						</li>
+					</ng-container>
+					<ng-template #brandsDropDown>
+						<li class="nav-item custom-dropdown dropdown" *ngIf="brandInsightViews.length > 1">
+							<a
+								aria-expanded="false"
+								aria-haspopup="true"
+								class="nav-link dropdown-toggle"
+								data-toggle="dropdown"
+								href="#"
+								role="button"
+							>
+								Brand:
+								<span class="tab-value">{{ selectedBrand ? selectedBrand : brandInsightViews[0]?.viewName }}</span>
+							</a>
+							<div class="dropdown-menu convo-dropdown-wrapper">
+								<ng-container *ngFor="let brandInsights of brandInsightViews; let i = index">
+									<a
+										(click)="selectedBrand = brandInsights.viewName; activateTab(1, brandInsights); tooltip.toggle()"
+										aria-selected="false"
+										attr.aria-controls="brand{{ i + 1 }}"
+										class="nav-link dropdown-option-btn dropdown-item"
+										data-toggle="tab"
+										href="#brand{{ i + 1 }}"
+										id="brand-tab{{ i + 1 }}-tab"
+										role="tab"
+										matTooltip="View insights for {{ brandInsights.viewName }} in all sub-categories"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="View insights for {{ brandInsights.viewName }} in all sub-categories"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span>{{ brandInsights.viewName }}</span>
+									</a>
+								</ng-container>
+							</div>
+						</li>
+					</ng-template>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="listen-campaign-content-wrapper">
+		<div class="tab-content" id="myTabContent">
+			<!-- Category tab starts here -->
+			<div
+				*ngFor="let categoryInsightView of categoryInsightViews; let i = index"
+				attr.aria-labelledby="category{{ i + 1 }}-tab"
+				class="tab-pane fade show active"
+				id="category{{ i + 1 }}"
+				role="tabpanel"
+			>
+				<ng-container *ngIf="categoryInsightView">
+					<app-listening-insights
+						[campaignId]="campaignId"
+						[insightViewInput]="categoryInsightView"
+						[campaignName]="campaign.campaignName"
+						[campaignStartDate]="campaign.startDateAtUTC"
+					></app-listening-insights>
+				</ng-container>
+			</div>
+			<!-- Category tab ends here -->
+			<!-- Sub category tab starts here -->
+			<div
+				*ngFor="let subCategoryInsights of subCategoryInsightViews; let i = index"
+				attr.aria-labelledby="subCategory{{ i + 1 }}-tab"
+				class="tab-pane fade"
+				[ngClass]="{
+					show: campaignId === '62ee35be-56ba-4b03-a8e7-05a5450b7142',
+					active: campaignId === '62ee35be-56ba-4b03-a8e7-05a5450b7142'
+				}"
+				id="subCategory{{ i + 1 }}"
+				role="tabpanel"
+			>
+				<ng-container *ngIf="subCategoryInsights">
+					<app-listening-insights
+						[campaignId]="campaignId"
+						[insightViewInput]="subCategoryInsights"
+						[subcategoryId]="i"
+						[campaignName]="campaign.campaignName"
+						[campaignStartDate]="campaign.startDateAtUTC"
+					></app-listening-insights>
+				</ng-container>
+			</div>
+			<!-- Sub category tab ends here -->
+			<!-- Brand tab starts here -->
+			<div
+				*ngFor="let brandInsightView of brandInsightViews; let i = index"
+				attr.aria-labelledby="brand{{ i + 1 }}-tab"
+				class="tab-pane fade"
+				id="brand{{ i + 1 }}"
+				role="tabpanel"
+			>
+				<ng-container *ngIf="brandInsightView">
+					<app-listening-insights
+						[campaignId]="campaignId"
+						[insightViewInput]="brandInsightView"
+						[associationInsightViewInput]="associationInsightViews"
+						[campaignName]="campaign.campaignName"
+						[campaignStartDate]="campaign.startDateAtUTC"
+						[subCategoryInsightViews]="subCategoryInsightViews"
+					></app-listening-insights>
+				</ng-container>
+			</div>
+			<!-- Brand tab ends here -->
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showUpgradeModal" class="upgrade-modal-wrapper">
+	<div class="upgrade-modal-content">
+		<div class="upgrade-modal-header">
+			<button (click)="showUpgradeModal = false" class="close-btn"></button>
+		</div>
+		<div class="upgrade-modal-body">
+			<figure><img alt="" src="assets/images/diamond-icon.svg" /></figure>
+			<h3>Upgrade your subscription</h3>
+			<p>Competition conversation tracking is a premium feature that is not included in your subscription</p>
+		</div>
+		<div class="upgrade-modal-footer">
+			Please contact your Account Manager at <a href="mailto:hello@convosight.com">hello@convosight.com</a> to get more
+			details.
+		</div>
+	</div>
+</div>
+
+<div
+	class="convosight-overlay"
+	*ngIf="showCommunityList || showConversationList || showInsightsSidebar"
+	(click)="closeConversationList(false); closeCommunityList(false)"
+></div>
+
+<div *ngIf="showCommunityList">
+	<app-brand-community-list
+		(closeCommunityList)="closeCommunityList($event)"
+		[campaign]="campaign"
+		[headerText]="'Communities part of this campaign'"
+	>
+	</app-brand-community-list>
+</div>
+
+<div *ngIf="showConversationList">
+	<app-conversation-list
+		(closeConversationList)="closeConversationList($event)"
+		[keywords]="conversationListItem"
+		[sentiment]="sentimentListItem"
+		[groupIds]="campaign.campaignGroupIds"
+		[heading]="conversationListHeading"
+	>
+	</app-conversation-list>
+</div>
+
+<div *ngIf="showInsightsSidebar">
+	<app-brand-insights-sidebar></app-brand-insights-sidebar>
+</div>

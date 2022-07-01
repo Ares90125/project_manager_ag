@@ -1,0 +1,74 @@
+<div class="onboarding-step-wrap">
+	<div class="onboarding-step-header">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+				fill="#9999A7"
+			/>
+		</svg>
+		<span class="onboarding-step-title">{{ title || 'Overview' }}</span>
+		<button
+			class="convo-btn-small convo-btn-outline"
+			data-target="#introducingGroupProfileOverviewVideoModal"
+			data-toggle="modal"
+			data-cs-id="c842a71b-0494-45ca-b5bc-32f97fc586ad"
+			data-cs-label="What’s this?"
+			data-cs-source="page"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.19967 10.6002L10.313 8.26683C10.493 8.1335 10.493 7.86683 10.313 7.7335L7.19967 5.40016C6.97967 5.2335 6.66634 5.3935 6.66634 5.66683V10.3335C6.66634 10.6068 6.97967 10.7668 7.19967 10.6002ZM7.99967 1.3335C4.31967 1.3335 1.33301 4.32016 1.33301 8.00016C1.33301 11.6802 4.31967 14.6668 7.99967 14.6668C11.6797 14.6668 14.6663 11.6802 14.6663 8.00016C14.6663 4.32016 11.6797 1.3335 7.99967 1.3335ZM7.99967 13.3335C5.05967 13.3335 2.66634 10.9402 2.66634 8.00016C2.66634 5.06016 5.05967 2.66683 7.99967 2.66683C10.9397 2.66683 13.333 5.06016 13.333 8.00016C13.333 10.9402 10.9397 13.3335 7.99967 13.3335Z"
+					fill="#3654FF"
+				/>
+			</svg>
+			<span>What’s this?</span>
+		</button>
+	</div>
+	<div class="onboarding-step-subtitle-wrap">
+		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M9 0C4.032 0 0 4.032 0 9C0 13.968 4.032 18 9 18C13.968 18 18 13.968 18 9C18 4.032 13.968 0 9 0ZM9 13.5C8.505 13.5 8.1 13.095 8.1 12.6V9C8.1 8.505 8.505 8.1 9 8.1C9.495 8.1 9.9 8.505 9.9 9V12.6C9.9 13.095 9.495 13.5 9 13.5ZM9.9 6.3H8.1V4.5H9.9V6.3Z"
+				fill="#9999A7"
+			/>
+		</svg>
+		<p>{{ subtitle || 'asdsd daf sbf sdbfj dbjfd dfjjkjd kj jdjf' }}</p>
+	</div>
+</div>
+
+<div
+	aria-hidden="true"
+	aria-labelledby="videoPlayerModal"
+	class="modal fade"
+	data-backdrop="static"
+	id="introducingGroupProfileOverviewVideoModal"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Introducing group profile onboarding Video</h5>
+				<button
+					(click)="recordButtonClick($event); closeVideo('introducingGroupProfileOverviewVideoModal')"
+					aria-label="Close"
+					class="close-btn"
+					data-cs-id="d061bd1d-9cb1-4eca-8653-661dd658475b"
+					data-cs-label="Close"
+					data-cs-source="page"
+					data-dismiss="modal"
+					id="closeAddArticle"
+					type="button"
+				>
+					<img alt="" src="{{ videoSrc }}" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<video
+					class="video"
+					controls
+					id="introducingGroupProfilePagesVideo"
+					src="./assets/videos/group-profile-introduction.mp4"
+				></video>
+			</div>
+		</div>
+	</div>
+</div>

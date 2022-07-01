@@ -1,0 +1,32 @@
+{
+	"data": {
+		"getZeroCommentPostsByGroupId": [
+			{
+				"__typename": "ZeroCommentPosts",
+				"id": "839666556492043_1244988895959805",
+				"rawText": "I am able to add video",
+				"reactions": 0,
+				"activityRate": 0,
+				"commentCount": 0,
+				"postCreatedAtUTC": "2021-06-01T00:05:20.000+00:00",
+				"fbGroupId": "839666556492043",
+				"photourl": null,
+				"videothumbnailurl": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/s130x130/188348533_315103930110133_5598375760275185798_n.jpg?_nc_cat=111&ccb=1-3&_nc_sid=1055be&_nc_ohc=U-fefWi2mZkAX9Ekimk&_nc_ht=scontent-iad3-2.xx&tp=7&oh=c06147cc4b8e6e9bf4443f917e642a39&oe=60BA4AC7",
+				"postType": "Video"
+			},
+			{
+				"__typename": "ZeroCommentPosts",
+				"id": "839666556492043_1241379449654083",
+				"rawText": "Please post this",
+				"reactions": 0,
+				"activityRate": 0,
+				"commentCount": 0,
+				"postCreatedAtUTC": "2021-05-26T12:30:28.000+00:00",
+				"fbGroupId": "839666556492043",
+				"photourl": null,
+				"videothumbnailurl": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/s130x130/187937195_10225117344784757_5948835876192037828_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=1055be&_nc_ohc=6G5iaP7OKsMAX8BjmXW&_nc_ht=scontent-iad3-1.xx&tp=7&oh=b741af87cc758b5478b7d4fe3a571a0a&oe=60B3C017",
+				"postType": "Video"
+			}
+		]
+	}
+}

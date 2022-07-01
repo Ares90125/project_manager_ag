@@ -1,0 +1,1921 @@
+<div class="tasks-dashboard-wrapper">
+	<div class="container">
+		<div>
+			<h5>Selected Groups: {{ selectedGroups.length }} {{ returnOne() }}</h5>
+		</div>
+		<div
+			#tooltip="matTooltip"
+			(click)="tooltip.toggle()"
+			(mouseenter)="tooltipHovered($event)"
+			*ngIf="
+				(!campaign?.startDateAtUTC ||
+					!campaign?.campaignId ||
+					selectedCommunitiesFromApi?.length === 0 ||
+					!isCampaignreadyForSendProposal) &&
+				campaign?.status === 'Draft'
+			"
+			[matTooltip]="
+				!campaign?.startDateAtUTC
+					? 'Campaign Details not saved'
+					: 'One or more selected groups do not have a task created'
+			"
+			class="brand-proposal-status proposal-not-ready"
+			matTooltipPostion="above"
+		>
+			<span class="ring"></span> <span>Not Ready to send for brand proposal</span>
+		</div>
+		<div
+			*ngIf="campaign && isCampaignreadyForSendProposal && campaign?.status === 'Draft'"
+			class="brand-proposal-status proposal-ready"
+		>
+			<span class="ring"></span> <span *ngIf="campaign?.campaignId && campaign?.status === 'Draft'"
+				>Ready to send Brand Proposal
+				<a
+					(click)="openSendProposal(); recordButtonClick($event)"
+					class="link-primary"
+					data-cs-id="2ad97d4f-fcbc-47ad-9a7c-50238b480d8e"
+					data-cs-label="Send proposal"
+					data-cs-source="page"
+					>Send</a
+				></span
+			>
+		</div>
+		<div
+			*ngIf="
+				campaign?.status &&
+				campaign?.status !== 'Draft' &&
+				campaign?.status === 'PendingApproval' &&
+				isCampaignreadyForSendProposal
+			"
+			class="brand-proposal-status proposal-sent"
+		>
+			<span class="ring"></span> <span>Brand Proposal Sent </span>
+		</div>
+		<div
+			*ngIf="
+				campaign &&
+				campaign?.status &&
+				campaign?.status !== 'PendingApproval' &&
+				campaign?.status !== 'Draft' &&
+				isCampaignreadyForSendProposal
+			"
+			class="brand-proposal-status proposal-approved"
+		>
+			<span class="ring"></span> <span>Brand Proposal Approved </span>
+		</div>
+		<div class="filters-wrap">
+			<div class="filters-left">
+				<button
+					(click)="showContentManager = true"
+					*ngIf="selectedGroups?.length === 0 && selectedSection === 'execution'"
+					class="convo-btn-normal convo-btn-primary"
+					hidden
+				>
+					<img alt="" src="./assets/images/icon-amp-stories.svg" /><span>Content Manager</span>
+				</button>
+
+				<button
+					(click)="isCreateTaskClicked = true"
+					*ngIf="selectedGroups?.length > 0 && selectedSection === 'execution'"
+					[disabled]="!isCreateTaskEnabled"
+					class="convo-btn-normal convo-btn-primary create-task-btn"
+					hidden
+				>
+					<img alt="" src="./assets/images/icon-add.svg" />
+					<img alt="" class="lock-icon" src="./assets/images/icon-lock-outline.svg" /><span>Create Task</span>
+				</button>
+				<button
+					(click)="isNotificationsDialogOpen = true; recordButtonClick($event)"
+					*ngIf="selectedGroups?.length > 0 && selectedSection === 'execution'"
+					class="convo-btn-normal convo-btn-border"
+					data-cs-id="b2837d4c-3803-481f-a269-e37930c9b0d3"
+					data-cs-label="Send Notification"
+					data-cs-source="page"
+				>
+					<img alt="" src="./assets/images/icon-notification.svg" /><span>Send Notification</span>
+				</button>
+
+				<button
+					class="convo-btn-normal convo-btn-blue"
+					*ngIf="selectedGroups?.length > 0 && selectedSection === 'execution'"
+					(click)="handleClickSendProposalToCommunityAdmin({selectedGroups})"
+					data-cs-id="b2837d4c-3803-481f-a269-e37930c9b0d3"
+					data-cs-label="Send Proposal"
+					data-cs-source="page"
+				>
+					<img alt="" src="./assets/images/send-proposal.svg" /><span>Send Proposal</span>
+				</button>
+
+				<button
+					(click)="handleRequireAssetModal()"
+					*ngIf="selectedGroups?.length > 0 && selectedSection === 'execution'"
+					class="convo-btn-normal convo-btn-border"
+					data-cs-label="Require Asset"
+				>
+					<span>Require Asset</span>
+				</button>
+
+				<div *ngIf="selectedGroups?.length > 0" class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+						<span>Edit</span>
+					</button>
+					<div *ngIf="selectedSection === 'execution'" class="convo-dropdown-wrapper dropdown-menu">
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'channel'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="!isPrimaryChannelEnabled || isBulkEditActionsDisabled"
+							data-cs-id="3eb8b2ab-0e9c-4abe-b83b-9b94508e37a2"
+							data-cs-label="Edit Primary Channel"
+							data-cs-source="page"
+						>
+							Primary Channel
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'manager'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="26835c3f-5319-46e2-a33d-1e06c7ab4941"
+							data-cs-label="Edit Community Manager"
+							data-cs-source="page"
+						>
+							Community Manager
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'cohort'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="33c32c58-c33a-42fd-979e-c0939df16523"
+							data-cs-label="Edit Cohort"
+							data-cs-source="page"
+						>
+							Cohort
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'pricing'; pricing = ''; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="453fce8b-da32-43cd-ade1-34919203030c"
+							data-cs-label="Edit Pricing"
+							data-cs-source="page"
+						>
+							Pricing
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="
+								detailTobeEdited = 'defaultTaskTime';
+								openDateTimePicker = true;
+								isBulkEdit = true;
+								recordButtonClick($event)
+							"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="ad7490e3-ccbb-4b62-a755-ed9295348138"
+							data-cs-label="Edit Posting Time"
+							data-cs-source="page"
+						>
+							Posting Time
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'timeZone'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="058a2ec4-f172-4b52-b726-8da8b7c4ce06"
+							data-cs-label="Edit Posting Timezone"
+							data-cs-source="page"
+						>
+							Posting Timezone
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'paymentStatus'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="41f46fa0-7bf0-4db3-aae3-cc0386d00bb3"
+							data-cs-label="Edit Payment Status"
+							data-cs-source="page"
+						>
+							Payment Status
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'paymentRemarks'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="89a43d32-9608-4959-9513-a3d0604d39d2"
+							data-cs-label="Edit Payment remarks"
+							data-cs-source="page"
+						>
+							Payment Remarks
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="detailTobeEdited = 'paymentAmountPaid'; isBulkEdit = true; recordButtonClick($event)"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-id="1db759f5-c699-4798-8ad5-fee729a7d1ba"
+							data-cs-label="Edit Payment Amount Paid"
+							data-cs-source="page"
+						>
+							Payment Amount Paid
+						</button>
+						<button
+							class="dropdown-item"
+							(click)="
+								detailTobeEdited = 'paymentDate';
+								openPaymentDateTimePicker = true;
+								isBulkEdit = true;
+								recordButtonClick($event)
+							"
+							[disabled]="isBulkEditActionsDisabled"
+							data-cs-label="Edit Payment Date"
+							data-cs-source="page"
+						>
+							Payment Date
+						</button>
+					</div>
+				</div>
+
+				<button
+					(click)="showDiscoverCommunitiesDialog = true; recordButtonClick($event)"
+					[hidden]="selectedGroups?.length"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="1ac8c0c8-e12b-4269-847e-b85e6c375424"
+					data-cs-label="Find more communities"
+					data-cs-source="page"
+				>
+					<svg fill="none" height="12" viewBox="0 0 24 12" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M12 6.75C13.63 6.75 15.07 7.14 16.24 7.65C17.32 8.13 18 9.21 18 10.38V11C18 11.55 17.55 12 17 12H7C6.45 12 6 11.55 6 11V10.39C6 9.21 6.68 8.13 7.76 7.66C8.93 7.14 10.37 6.75 12 6.75ZM4 7C5.1 7 6 6.1 6 5C6 3.9 5.1 3 4 3C2.9 3 2 3.9 2 5C2 6.1 2.9 7 4 7ZM5.13 8.1C4.76 8.04 4.39 8 4 8C3.01 8 2.07 8.21 1.22 8.58C0.48 8.9 0 9.62 0 10.43V11C0 11.55 0.45 12 1 12H4.5V10.39C4.5 9.56 4.73 8.78 5.13 8.1ZM20 7C21.1 7 22 6.1 22 5C22 3.9 21.1 3 20 3C18.9 3 18 3.9 18 5C18 6.1 18.9 7 20 7ZM24 10.43C24 9.62 23.52 8.9 22.78 8.58C21.93 8.21 20.99 8 20 8C19.61 8 19.24 8.04 18.87 8.1C19.27 8.78 19.5 9.56 19.5 10.39V12H23C23.55 12 24 11.55 24 11V10.43ZM12 0C13.66 0 15 1.34 15 3C15 4.66 13.66 6 12 6C10.34 6 9 4.66 9 3C9 1.34 10.34 0 12 0Z"
+							fill="white"
+						/>
+					</svg>
+					<span>Find more communities</span>
+				</button>
+
+				<button
+					class="convo-btn-normal convo-btn-border"
+					(click)="downloadCommunities(); recordButtonClick($event)"
+					*ngIf="selectedGroups?.length === 0"
+					data-cs-id="92b1c001-4ed1-4e26-b8ec-562457a70fe2"
+					data-cs-label="Download as .xlsx"
+					data-cs-source="page"
+				>
+					<img alt="" src="./assets/images/icon-file-download.svg" /><span>Download as ‘.xlsx’</span>
+				</button>
+
+				<button
+					(click)="downloadCampaignGroupAssetsExcel()"
+					[hidden]="selectedGroups?.length"
+					class="convo-btn-normal convo-btn-border"
+				>
+					<img alt="" src="./assets/images/icon-file-download.svg" /><span>Download campaign assets as ‘.xlsx’</span>
+				</button>
+
+				<button
+					(click)="openDeleteCommunityPopup = true; recordButtonClick($event)"
+					*ngIf="selectedGroups?.length > 0 && selectedSection === 'execution'"
+					class="convo-btn-normal convo-btn-border"
+					data-cs-id="3af54967-68a7-45c8-b05d-ce25ab9b4798"
+					data-cs-label="Remove from campaign"
+					data-cs-source="page"
+				>
+					<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M3.9987 12.6667C3.9987 13.4 4.5987 14 5.33203 14H10.6654C11.3987 14 11.9987 13.4 11.9987 12.6667V4.66667H3.9987V12.6667ZM5.33203 6H10.6654V12.6667H5.33203V6ZM10.332 2.66667L9.66536 2H6.33203L5.66536 2.66667H3.33203V4H12.6654V2.66667H10.332Z"
+							fill="#EB5757"
+						/>
+					</svg>
+					<span class="text-danger">Remove from campaign</span>
+				</button>
+			</div>
+			<div class="filters-right">
+				<div class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+						<span class="sort-icon"><img alt="" src="./assets/images/icon-sort-by-alpha.svg" /></span>
+						<span>{{ sortBy }}</span>
+					</button>
+					<div class="convo-dropdown-wrapper dropdown-menu">
+						<button (click)="sortBy = 'Community Name'; sortCommunities('name')" class="dropdown-item">
+							Community Name
+						</button>
+						<button
+							(click)="sortBy = 'Community Manager'; sortCommunities('communityManagerName')"
+							class="dropdown-item"
+						>
+							Community Manager
+						</button>
+						<button (click)="sortBy = 'Task Status'; sortCommunities('groupTaskStatus')" class="dropdown-item">
+							Task Status
+						</button>
+						<button (click)="sortBy = 'Payment Status'; sortCommunities('paymentStatus')" class="dropdown-item">
+							Payment Status
+						</button>
+					</div>
+				</div>
+
+				<div class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle no-after" data-toggle="dropdown">
+						<span class="sort-icon"><img alt="" src="./assets/images/icon-filter-list.svg" /></span>
+						<span>Filter</span>
+						<span *ngIf="numberOfSelectedFilters > 0" class="badge">{{ numberOfSelectedFilters }}</span>
+					</button>
+					<div (click)="$event.stopPropagation()" class="convo-dropdown-wrapper dropdown-menu dropdown-menu-wrap">
+						<div class="dropdown-menu-left">
+							<ul class="list-unstyled">
+								<li (click)="selectedFilter = 'status'" [ngClass]="{active: selectedFilter === 'status'}">
+									Task Status
+								</li>
+								<li
+									(click)="selectedFilter = 'communityManager'"
+									[ngClass]="{active: selectedFilter === 'communityManager'}"
+								>
+									Community Manager
+								</li>
+								<li
+									(click)="selectedFilter = 'primaryChannel'"
+									[ngClass]="{active: selectedFilter === 'primaryChannel'}"
+								>
+									Primary Channel
+								</li>
+								<li (click)="selectedFilter = 'paymentStatus'" [ngClass]="{active: selectedFilter === 'paymentStatus'}">
+									Payment Status
+								</li>
+								<li
+									(click)="selectedFilter = 'assetsProgress'"
+									[ngClass]="{active: selectedFilter === 'assetsProgress'}"
+								>
+									Assets Progress
+								</li>
+								<li
+									(click)="selectedFilter = 'campaignAssetsStatus'"
+									[ngClass]="{active: selectedFilter === 'campaignAssetsStatus'}"
+								>
+									Campaign Assets Status
+								</li>
+								<li (click)="selectedFilter = 'owner'" [ngClass]="{active: selectedFilter === 'owner'}">Owner</li>
+								<li (click)="selectedFilter = 'postType'" [ngClass]="{active: selectedFilter === 'postType'}">
+									Post Type
+								</li>
+							</ul>
+						</div>
+						<div class="dropdown-menu-right">
+							<ul *ngIf="selectedFilter === 'status'" class="list-unstyled">
+								<li *ngFor="let status of statusFilters">
+									<mat-checkbox (change)="applyFilters(status)" [checked]="status.isSelected" [indeterminate]="false">{{
+										status.displayName
+									}}</mat-checkbox>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'primaryChannel'" class="list-unstyled">
+								<li *ngFor="let primaryChannel of primaryChannelFilters">
+									<mat-checkbox
+										(change)="applyFilters(primaryChannel)"
+										[checked]="primaryChannel.isSelected"
+										[indeterminate]="false"
+										>{{ primaryChannel.name }}</mat-checkbox
+									>
+									<span class="sub-text">{{ primaryChannel.subName }}</span>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'communityManager'" class="list-unstyled">
+								<li *ngFor="let communityManager of communityManagers">
+									<mat-checkbox
+										(change)="applyFilters(communityManager)"
+										[checked]="communityManager.isSelected"
+										[indeterminate]="false"
+										>{{ communityManager.fullname }}</mat-checkbox
+									>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'paymentStatus'" class="list-unstyled">
+								<li *ngFor="let paymentStatus of paymentsStatusFilters">
+									<mat-checkbox
+										(change)="applyFilters(paymentStatus)"
+										[checked]="paymentStatus['isSelected']"
+										[indeterminate]="false"
+										>{{ paymentStatus.displayName }}</mat-checkbox
+									>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'assetsProgress'" class="list-unstyled">
+								<li *ngFor="let assetProgress of assetsProgressFilters">
+									<mat-checkbox
+										(change)="applyFilters(assetProgress)"
+										[checked]="assetProgress.isSelected"
+										[indeterminate]="false"
+										>{{ assetProgress.displayName }}</mat-checkbox
+									>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'campaignAssetsStatus'" class="list-unstyled">
+								<li *ngFor="let campaignAssetStatus of campaignAssetsStatusFilters">
+									<mat-checkbox
+										(change)="applyFilters(campaignAssetStatus)"
+										[checked]="campaignAssetStatus.isSelected"
+										[indeterminate]="false"
+										>{{ campaignAssetStatus.displayName }}</mat-checkbox
+									>
+								</li>
+							</ul>
+
+							<ul *ngIf="selectedFilter === 'owner'" class="list-unstyled">
+								<li *ngFor="let ownerFilter of ownerFilters">
+									<mat-checkbox
+										(change)="applyFilters(ownerFilter)"
+										[checked]="ownerFilter.isSelected"
+										[indeterminate]="false"
+										>{{ ownerFilter.displayName }}</mat-checkbox
+									>
+								</li>
+							</ul>
+							<ul *ngIf="selectedFilter === 'postType'" class="list-unstyled">
+								<li *ngFor="let postTypeFilter of postTypeFilters">
+									<mat-checkbox
+										(change)="applyFilters(postTypeFilter)"
+										[checked]="postTypeFilter.isSelected"
+										[indeterminate]="false"
+										>{{ postTypeFilter.displayName }}</mat-checkbox
+									>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="task-dashboard-body-wrap">
+			<div class="table-wrapper no-text-selection">
+				<table (rangeChanged)="onRangeChanged($event)" rangeSelection>
+					<thead>
+						<tr>
+							<th class="community-checkbox">
+								<mat-checkbox #selectAllGroups (click)="toggleAllGroupSelection()" [indeterminate]="false">
+								</mat-checkbox>
+							</th>
+							<th class="p-0 link-icon-th"></th>
+							<th class="">
+								<div>Community Name</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'">
+								<div>Members</div>
+							</th>
+							<th class="admin-col">
+								<div>Community Admin</div>
+							</th>
+							<th class="poc-col">
+								<div>Community Manager</div>
+							</th>
+							<th class="price-col">
+								<div>Pricing</div>
+							</th>
+							<th>
+								<div>Task Status</div>
+							</th>
+							<th>
+								<div>Proposal Sent</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'">
+								<div>Posting Time</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'">
+								<div>Posting Timezone</div>
+							</th>
+							<th>
+								<div>Cohort</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'" class="payment-status-col">
+								<div>Payment Status</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'" class="remarks-col">
+								<div>Payment Remarks</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'" class="remarks-col">
+								<div>Payment Amount Paid</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'" class="remarks-col">
+								<div>Payment Balance Amount</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'" class="remarks-col">
+								<div>Payment Date</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'">
+								<div style="min-width: 50px">Owner</div>
+							</th>
+							<th *ngIf="selectedSection === 'execution'">
+								<div>Post Type</div>
+							</th>
+							<th *ngIf="selectedSection === 'payments'"></th>
+							<th>
+								<div>Campaign assets status</div>
+							</th>
+							<th>
+								<div>Number of approved</div>
+							</th>
+							<th>
+								<div>Number of declined</div>
+							</th>
+							<th>
+								<div>Number of pending assets</div>
+							</th>
+							<th>
+								<div>All assets approved</div>
+							</th>
+							<th>
+								<div>Has declined assets</div>
+							</th>
+							<th>
+								<div>Has pending assets</div>
+							</th>
+							<th>
+								<div>Assets not submitted</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							*ngFor="let community of communities; let i = index"
+							[class.row-selected]="isGroupSelected.includes(community.groupId)"
+							[id]="community.groupId"
+						>
+							<td>
+								<mat-checkbox [checked]="isGroupSelected.includes(community.groupId)" [indeterminate]="false">
+								</mat-checkbox>
+							</td>
+							<td class="disable-selection p-0">
+								<div>
+									<a [href]="'https://facebook.com/groups/' + community.fbGroupId" class="link-icon" target="_blank"
+										><img alt="" src="assets/images/icon-outbond.svg"
+									/></a>
+								</div>
+							</td>
+							<td class="group-name-wrap">
+								<div title="{{ community.name }}">
+									<span class="group-name">{{ community.name }}</span>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'">
+								<div>{{ community.memberCount | shortNumber }}</div>
+							</td>
+							<td class="disable-selection py-0">
+								<div class="not-selected-wrap admin-col">
+									<ng-template #notAddedEmailTooltip>
+										<div>Contact on Email</div>
+										<strong><a>add email</a></strong>
+									</ng-template>
+									<ng-template #verifiedEmailTooltip>
+										<div>Contact on Email</div>
+										<strong>{{ community.email }}</strong>
+									</ng-template>
+									<ng-template #verificationPendingEmailTooltip>
+										<div>Contact on Email</div>
+										<strong>{{ community.email }}</strong>
+										<div class="divider"></div>
+										<strong class="text-danger">Pending Verification</strong>
+									</ng-template>
+
+									<ng-template #verifiedWhatsappTooltip>
+										<div>Contact on WhatsApp</div>
+										<strong>{{ community.mobileNumber }}</strong>
+									</ng-template>
+									<ng-template #notAddedWhatsappTooltip>
+										<div>Contact on WhatsApp</div>
+										<strong><a>add number</a></strong>
+									</ng-template>
+									<ng-template #verificationPendingWhatsappTooltip>
+										<div>Contact on WhatsApp</div>
+										<strong> {{ community.mobileNumber }} </strong>
+										<div class="divider"></div>
+										<strong class="text-danger">Pending Verification</strong>
+									</ng-template>
+
+									<span
+										*ngIf="
+											community.modeOfCommunication === 'Email' ||
+											(!community.modeOfCommunication && campaign?.communicationChannel === 'Email')
+										"
+									>
+										<img
+											(click)="openWhatsappOrEmailChatWindow(community.email, 'email')"
+											*ngIf="community.modeOfCommunicationVerificationStatus === 'Verified'; else emailNotVerified"
+											[outsideClick]="true"
+											[popover]="verifiedEmailTooltip"
+											alt=""
+											placement="left"
+											src="./assets/images/email-verified-icon.svg"
+											triggers="hover"
+										/>
+										<ng-template #emailNotVerified>
+											<img
+												(click)="
+													selectedRow = {
+														community: community,
+														admin: community['communityAdminId'],
+														communityManager: community['communityManager']
+															? getPocNameFromId(community['communityManager'])
+															: getPocNameFromId(community.communityManagerId)
+													};
+													verificationDialogToBeOpened = 'email';
+													modeOfCommunication.setValue(community.email)
+												"
+												*ngIf="
+													community.modeOfCommunicationVerificationStatus !== 'VerificationSent' &&
+													community.modeOfCommunicationVerificationStatus !== 'NotVerified'
+												"
+												[outsideClick]="true"
+												[popover]="notAddedEmailTooltip"
+												alt=""
+												placement="left"
+												src="./assets/images/email-notverified-icon.svg"
+												triggers="hover"
+											/>
+											<img
+												*ngIf="community.modeOfCommunicationVerificationStatus === 'NotVerified'"
+												[outsideClick]="true"
+												[popover]="verificationPendingEmailTooltip"
+												alt=""
+												placement="left"
+												src="./assets/images/email-notverified-icon.svg"
+												triggers="hover"
+											/>
+											<img
+												*ngIf="community.modeOfCommunicationVerificationStatus === 'VerificationSent'"
+												[outsideClick]="true"
+												[popover]="verificationPendingEmailTooltip"
+												alt=""
+												placement="left"
+												src="./assets/images/email-notverified-icon.svg"
+												triggers="hover"
+											/>
+										</ng-template>
+									</span>
+									<span
+										*ngIf="
+											community.modeOfCommunication === 'WhatsApp' ||
+											(!community.modeOfCommunication && campaign.communicationChannel === 'WhatsApp') ||
+											(!community.modeOfCommunication && !campaign?.communicationChannel)
+										"
+									>
+										<img
+											(click)="
+												openWhatsappOrEmailChatWindow(community.mobileNumber.toString().replace(' ', ''), 'whatsapp')
+											"
+											*ngIf="community.modeOfCommunicationVerificationStatus === 'Verified'; else whatsappNotVerified"
+											[outsideClick]="true"
+											[popover]="verifiedWhatsappTooltip"
+											alt=""
+											placement="left"
+											src="./assets/images/icon-logo-whatsapp.svg"
+											triggers="hover"
+										/>
+
+										<ng-template #whatsappNotVerified>
+											<img
+												(click)="
+													selectedRow = {
+														community: community,
+														admin: community['communityAdminId'],
+														communityManager: community['communityManager']
+															? getPocNameFromId(community['communityManager'])
+															: getPocNameFromId(community.communityManagerId)
+													};
+													verificationDialogToBeOpened = 'whatsapp';
+													modeOfCommunication.setValue(community.mobileNumber)
+												"
+												*ngIf="
+													(community['communityAdminId']?.fullname || community['communityAdminName']) &&
+													community.modeOfCommunicationVerificationStatus !== 'VerificationSent' &&
+													community.modeOfCommunicationVerificationStatus !== 'NotVerified'
+												"
+												[outsideClick]="true"
+												[popover]="notAddedWhatsappTooltip"
+												alt=""
+												placement="left"
+												src="./assets/images/icon-logo-whatsapp-notverified.svg"
+												triggers="hover"
+											/>
+											<img
+												*ngIf="
+													(community['communityAdminId']?.fullname || community['communityAdminName']) &&
+													(community.modeOfCommunicationVerificationStatus === 'VerificationSent' ||
+														community.modeOfCommunicationVerificationStatus === 'NotVerified')
+												"
+												[outsideClick]="true"
+												[popover]="verificationPendingWhatsappTooltip"
+												alt=""
+												placement="left"
+												src="./assets/images/icon-logo-whatsapp-notverified.svg"
+												triggers="hover"
+											/>
+										</ng-template>
+									</span>
+
+									<span
+										(click)="getCommunityAdmins(community.groupId, 'admin')"
+										*ngIf="!community['admins']"
+										[ngClass]="{'disable-edit-event': !community.isFieldsEditable}"
+									>
+										<span
+											[class.admin-selected]="community['communityAdminName']"
+											[class.not-selected-label]="!community['communityAdminName']"
+											title="{{ community['communityAdminName'] ? community['communityAdminName'] : '' }}"
+											>{{ community['communityAdminName'] ? community['communityAdminName'] : 'pick a value' }}</span
+										>
+									</span>
+									<div
+										[ngClass]="{'disable-edit-event': !community.isFieldsEditable}"
+										class="custom-dropdown-wrapper"
+										*ngIf="community['admins']"
+										class="custom-dropdown-wrapper"
+										title="{{
+											community['communityAdminId']?.fullname
+												? community['communityAdminId']?.fullname
+												: community['communityAdminName']
+										}}"
+									>
+										<app-searchable-dropdown
+											(optionSelected)="
+												selectSoloEdit(
+													community.groupId,
+													$event,
+													'admin',
+													community['communityAdminId']?.fullname
+														? community['communityAdminId']?.fullname
+														: community['communityAdminName']
+												)
+											"
+											*ngIf="!community['hideDropdown']"
+											[class]="'admin-dropdown-' + i"
+											[isEditable]="community.isFieldsEditable"
+											[isFromSoloEditAdmin]="true"
+											[isOptionSelected]="true"
+											[mainDropDownOptions]="community['admins']"
+											[placeholder]="'pick a value'"
+											[selectedValue]="
+												community['communityAdminId']?.fullname && community['communityAdminId']?.id
+													? community['communityAdminId']?.fullname
+													: community['communityAdminName']
+											"
+										></app-searchable-dropdown>
+									</div>
+									<span [class]="'admin-spinner-' + i" class="bt-spinner bt-spinner-admin"></span>
+								</div>
+							</td>
+							<td class="disable-selection py-0">
+								<div [ngClass]="{'disable-edit-event': !community.isFieldsEditable}" class="not-selected-wrap">
+									<span
+										(click)="getCommunityAdmins(community.groupId, 'poc')"
+										*ngIf="!communityManagers"
+										class="not-selected-label"
+										>pick a value</span
+									><span *ngIf="!communityManagers" [class]="'poc-spinner-' + i" class="bt-spinner"></span>
+									<div
+										*ngIf="communityManagers"
+										class="custom-dropdown-wrapper"
+										title="{{
+											community['communityManager']
+												? getPocNameFromId(community['communityManager'])
+												: getPocNameFromId(community.communityManagerId)
+										}}"
+									>
+										<app-searchable-dropdown
+											(optionSelected)="selectSoloEdit(community.groupId, $event, 'POC', null)"
+											[class]="'poc-dropdown-' + i"
+											[isEditable]="community.isFieldsEditable"
+											[isOptionSelected]="true"
+											[mainDropDownOptions]="communityManagers"
+											[placeholder]="'pick a value'"
+											[selectedValue]="
+												community['communityManager']
+													? getPocNameFromId(community['communityManager'])
+													: getPocNameFromId(community.communityManagerId)
+											"
+										></app-searchable-dropdown>
+									</div>
+								</div>
+							</td>
+							<td class="disable-selection py-0">
+								<div [ngClass]="{'disable-edit-event': !community.isFieldsEditable}" class="not-selected-wrap">
+									<div class="custom-dropdown-wrapper currency-dropdown-wrap">
+										<app-custom-dropdown
+											(selectionChange)="selectSoloEdit(community.groupId, $event, 'currency', null)"
+											[class]="'poc-dropdown-' + i"
+											[isCurrency]="community['currency'] || campaign?.currency ? true : false"
+											[isEditable]="community.isFieldsEditable"
+											[isOptionSelected]="true"
+											[items]="['INR', 'USD', 'SGD']"
+											[type]="'soloEdit'"
+											[value]="
+												community['currency']
+													? currencyToShow(community['currency'])
+													: campaign?.currency
+													? currencyToShow(campaign?.currency)
+													: '₹'
+											"
+										></app-custom-dropdown>
+									</div>
+									<div class="pricing-wrapper">
+										<span
+											(click)="inputPricing(i)"
+											*ngIf="!community['pricing']"
+											[class]="'pricing-value-' + i"
+											class="not-selected-label"
+											>add amount</span
+										>
+										<span
+											(click)="inputPricing(i)"
+											*ngIf="community['pricing']"
+											[class]="'pricing-value-' + i"
+											[ngClass]="{'selected-error-completed': community['pricing'] < 0}"
+											class="selcted-complete"
+											><span>{{ community['pricing'] | number }}</span></span
+										>
+										<div [class]="'pricing-input-' + i" class="custom-dropdown-wrapper pricing-input">
+											<input
+												(change)="selectSoloEdit(community.groupId, $event, 'pricing', null)"
+												(focusout)="onBlurPricingInput(i)"
+												(input)="isNegativeValue = $event.target.value < 0"
+												[min]="minPrice"
+												[ngClass]="{'input-error': isNegativeValue}"
+												[value]="community['pricing'] ? community['pricing'] : ''"
+												class="input"
+												type="number"
+											/>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="status {{ community['groupTaskStatus'] | campaignGroupStatus }}">
+									{{ community['groupTaskStatus'] | campaignGroupStatus }}
+								</div>
+							</td>
+							<td>
+								<div>
+									{{ community.campaignAssetProposalSent ? 'Yes' : 'No' }}
+								</div>
+							</td>
+							<td
+								*ngIf="selectedSection === 'execution'"
+								[ngClass]="{'disable-edit-event': !community.isFieldsEditable}"
+								class="disable-selection"
+							>
+								<div (click)="openDateTimePicker = true; selectedGroup = community.groupId" class="selcted-complete">
+									<div class="scheduled-pending">
+										<div
+											*ngIf="!community['defaultTaskDate'] && !campaign?.defaultTaskDate"
+											[ngClass]="{'disable-edit-event': !community.isFieldsEditable}"
+											class="not-selected-wrap"
+										>
+											<i class="not-selected-label">yet to be scheduled</i>
+										</div>
+										<span
+											*ngIf="
+												community['toBePerformedByUTC'] || community['defaultTaskDate'] || campaign?.defaultTaskDate
+											"
+										>
+											<!-- {{
+												community['toBePerformedByUTC']
+													? (displayDateBasedOnTimezone(community['toBePerformedByUTC'], community.timezoneName)
+													  | date: 'dd MMM yyyy hh:mm a')
+													: community['defaultTaskDate']
+													? (community['defaultTaskDate'] | date: 'dd MMM yyyy hh:mm a')
+													: (displayDateBasedOnTimezone(campaign?.defaultTaskDate, campaign.timezoneName)
+													  | date: 'dd MMM yyyy hh:mm a')
+											}} -->
+											{{
+												community['defaultTaskDate']
+													? (community['defaultTaskDate'] | date: 'dd MMM yyyy hh:mm a')
+													: (displayDateBasedOnTimezone(campaign?.defaultTaskDate, campaign.timezoneName)
+													  | date: 'dd MMM yyyy hh:mm a')
+											}}
+										</span>
+										<img
+											#tooltip="matTooltip"
+											(click)="tooltip.toggle()"
+											(mouseenter)="tooltipHovered($event)"
+											*ngIf="
+												!community.isPostingTimeValid && (community['defaultTaskDate'] || campaign?.defaultTaskDate)
+											"
+											(click)="tooltip.toggle()"
+											(mouseenter)="tooltipHovered($event)"
+											[matTooltip]="
+												!community.isPostingTimeValid && community.isPostingTimePast
+													? 'Posting Time is in past'
+													: 'Posting Time is outside the selected Campaign Dates range'
+											"
+											matTooltipPostion="right"
+											src="assets/images/circle-not.svg"
+										/>
+									</div>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection">
+								<div
+									(click)="selectedGroup = community.groupId; detailTobeEdited = 'timeZone'"
+									[ngClass]="{'disable-edit-event': !community.isFieldsEditable}"
+									class="selcted-complete"
+								>
+									<span class="timezone">{{ community.timezone ? community.timezone : campaign?.timezoneName }}</span>
+								</div>
+							</td>
+							<td class="disable-selection py-0" style="min-width: 95px">
+								<div [ngClass]="{'disable-edit-event': !community.isFieldsEditable}" class="not-selected-wrap">
+									<div class="custom-dropdown-wrapper currency-dropdown-wrap">
+										<app-custom-dropdown
+											(selectionChange)="selectSoloEdit(community.groupId, $event, 'cohort', null)"
+											[class]="'poc-dropdown-' + i"
+											[isCurrency]="community['cohort'] ? true : false"
+											[isEditable]="community.isFieldsEditable"
+											[isOptionSelected]="true"
+											[items]="cohortValues"
+											[type]="'soloEdit'"
+											[value]="community['cohort'] ? community['cohort'] : 'Pick a value'"
+										></app-custom-dropdown>
+									</div>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection py-0">
+								<div class="not-selected-wrap">
+									<div class="custom-dropdown-wrapper payment-remarks-dropdown-wrap">
+										<app-custom-dropdown
+											(selectionChange)="
+												selectSoloEdit(community.groupId, $event, 'paymentStatus', community['paymentStatus'])
+											"
+											[isCurrency]="true"
+											[isEditable]="community.isPaymentsFieldsEditable"
+											[isOptionSelected]="true"
+											[items]="paymentStatusDropdownItems"
+											[type]="'soloEditPayments'"
+											[value]="
+												community['paymentStatus'] ? paymentStatusToShow(community['paymentStatus']) : 'Not Paid'
+											"
+											[preventChange]="true"
+										></app-custom-dropdown>
+									</div>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection py-0">
+								<div class="not-selected-wrap">
+									<div>
+										<span
+											(click)="inputRemarks(i)"
+											*ngIf="!community['paymentRemarks']"
+											[class]="'remarks-value-' + i"
+											class="not-selected-label"
+											>add remarks</span
+										>
+										<span
+											(click)="inputRemarks(i)"
+											*ngIf="community['paymentRemarks']"
+											[class]="'remarks-value-' + i"
+											[ngClass]="{'selected-error-completed': community['pricing'] < 0}"
+											class="selcted-complete"
+										>
+											<span>{{ community['paymentRemarks'] }}</span>
+										</span>
+										<div [class]="'remarks-input-' + i" class="custom-dropdown-wrapper pricing-input">
+											<input
+												(change)="selectSoloEdit(community.groupId, $event, 'paymentRemarks', null)"
+												(focusout)="onBlurPaymentRemarkInput(i)"
+												[value]="community['paymentRemarks'] ? community['paymentRemarks'] : ' '"
+												class="input"
+												type="text"
+											/>
+										</div>
+									</div>
+								</div>
+							</td>
+
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection py-0">
+								<div class="not-selected-wrap">
+									<div>
+										<!-- <span>{{ community['paymentAmountPaid'] }}</span> -->
+
+										<span
+											(click)="inputPaymentAmountPaid(i)"
+											*ngIf="!community['paymentAmountPaid']"
+											[class]="'paymentAmountPaid-value-' + i"
+											class="not-selected-label"
+											>add amount</span
+										>
+										<span
+											(click)="inputPaymentAmountPaid(i)"
+											*ngIf="community['paymentAmountPaid']"
+											[class]="'paymentAmountPaid-value-' + i"
+											[ngClass]="{'selected-error-completed': community['paymentAmountPaid'] < 0}"
+											class="selcted-complete"
+											><span>{{ community['paymentAmountPaid'] | number }}</span></span
+										>
+										<div [class]="'paymentAmountPaid-input-' + i" class="custom-dropdown-wrapper pricing-input">
+											<input
+												(change)="selectSoloEdit(community.groupId, $event, 'paymentAmountPaid', null)"
+												(focusout)="onBlurPaymentAmountPaidInput(i)"
+												(input)="isNegativeValue = $event.target.value < 0"
+												[min]="minPrice"
+												[ngClass]="{'input-error': isNegativeValue}"
+												[value]="community['paymentAmountPaid'] ? community['paymentAmountPaid'] : ''"
+												class="input"
+												type="number"
+											/>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection py-0">
+								<div class="not-selected-wrap">
+									<div>
+										<span>{{ community['pricing'] - community['paymentAmountPaid'] }}</span>
+									</div>
+								</div>
+							</td>
+							<td *ngIf="selectedSection === 'execution'" class="disable-selection">
+								<div
+									(click)="openPaymentDateTimePicker = true; selectedGroup = community.groupId"
+									class="selcted-complete"
+								>
+									<div class="scheduled-pending">
+										<div *ngIf="!community['paymentDate'] && !campaign?.paymentDate" class="not-selected-wrap">
+											<i class="not-selected-label">yet to be scheduled</i>
+										</div>
+										<span *ngIf="community['paymentDate'] || campaign?.paymentDate"
+											>{{
+												community['paymentDate']
+													? (community['paymentDate'] | date: 'dd MMM yyyy hh:mm a')
+													: (campaign?.paymentDate | date: 'dd MMM yyyy hh:mm a')
+											}}
+										</span>
+										<!-- <img
+											#tooltip="matTooltip"
+											(click)="tooltip.toggle()"
+											(mouseenter)="tooltipHovered($event)"
+											*ngIf="
+												!community.isPostingTimeValid && (community['paymentDate'] || campaign?.paymentDate)
+											"
+											(click)="tooltip.toggle()"
+											(mouseenter)="tooltipHovered($event)"
+											matTooltipPostion="right"
+											src="assets/images/circle-not.svg"
+										/> -->
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.owner }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.postType }}</div>
+							</td>
+							<!-- <td *ngIf="selectedSection === 'payments'">
+								<div>
+									<ng-template #paymentDetailsTooltipAvailable>
+										<div class="text-secondary">Payment Details</div>
+										<strong>Available</strong>
+									</ng-template>
+									<ng-template #paymentDetailsTooltipNotAvailable>
+										<div class="text-secondary">Payment Details</div>
+										<strong>Unavailable</strong>
+									</ng-template>
+									<img
+										*ngIf="community.isPaymentInfoAvailable"
+										[popover]="paymentDetailsTooltipAvailable"
+										alt=""
+										placement="left"
+										src="./assets/images/dollar-green-icon.svg"
+										triggers="hover"
+									/>
+
+									<img
+										*ngIf="!community.isPaymentInfoAvailable"
+										[popover]="paymentDetailsTooltipNotAvailable"
+										alt=""
+										placement="left"
+										src="./assets/images/dollar-gray-icon.svg"
+										triggers="hover"
+									/>
+								</div>
+							</td> -->
+							<td>
+								<div class="text-center">{{ parseCampaignAssetStatus(community.assetsKpis.campaignAssetsStatus) }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsApproved }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis?.campaignAssetsApproved }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsPending }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsApprovedAll ? 'Yes' : 'No' }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsHasDeclined ? 'Yes' : 'No' }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsHasPending ? 'Yes' : 'No' }}</div>
+							</td>
+							<td>
+								<div class="text-center">{{ community.assetsKpis.campaignAssetsInitial ? 'Yes' : 'No' }}</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-community-discovery
+	(groupsSelectedForCampaignCreation)="getGroupsSelectedForCampaignCreation($event)"
+	(hideCommunityListPopup)="hideCommunityListPopup($event)"
+	(hideCommunityOverlay)="closeCommunitySelectionOverlay()"
+	(saveCommunities)="saveCommunities($event)"
+	(updateDeletedCommunities)="updateDeletedCommunities($event)"
+	*ngIf="showDiscoverCommunitiesDialog"
+	[(showCommunityListPopup)]="showCommunityListPopup"
+	[brand]="brand"
+	[campaign]="campaign"
+	[metadata]="metadata"
+	[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+	[selectedCommunities]="selectedCommunities"
+></app-community-discovery>
+
+<div aria-hidden="true" class="modal modal-component" hidden tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set POC</h5>
+				<button class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<h6>Pick a POC</h6>
+					<app-custom-dropdown dafaultText="Select POC"></app-custom-dropdown>
+				</div>
+
+				<div class="action-row">
+					<button class="convo-btn-normal convo-btn-primary w-100" disabled type="button">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'pricing'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Pricing</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-4 col">
+						<div class="form-group">
+							<h6>Currency</h6>
+							<app-searchable-dropdown
+								(optionSelected)="selectedCurrency = $event"
+								[mainDropDownOptions]="pricingOptions"
+								[placeholder]="'Select Currency'"
+								[selectedValue]="selectedCurrency"
+							></app-searchable-dropdown>
+						</div>
+					</div>
+					<div class="col-8 col">
+						<div class="form-group">
+							<h6>Price</h6>
+							<input
+								[(ngModel)]="pricing"
+								class="form-control price-control"
+								placeholder="Enter price..."
+								type="number"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button
+						(click)="bulkEdit(pricing, 'pricing', campaignTasks)"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !pricing"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'timeZone'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Posting Timezone</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group">
+							<h6>Pick Posting Timezone</h6>
+							<app-searchable-dropdown
+								(optionSelected)="updateTimeZone($event)"
+								[mainDropDownOptions]="timeZoneList"
+								[placeholder]="'Select Posting Timezone'"
+								[selectedValue]=""
+							></app-searchable-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="updateTimeZoneInfo()"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'manager'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Community Manager</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group">
+							<h6>Pick a Community Manager</h6>
+							<app-searchable-dropdown
+								(optionSelected)="selectedCommunityManager = $event"
+								[mainDropDownOptions]="communityManagersWithNames"
+								[placeholder]="'Select Community Manager'"
+							></app-searchable-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectCommunityBulkEdit(selectedCommunityManager, 'POC')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !selectedCommunityManager"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'paymentStatus'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Payment Status</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group m-0">
+							<app-searchable-dropdown
+								(optionSelected)="paymentStatus = $event"
+								[mainDropDownOptions]="paymentStatusDropdownItems"
+								[placeholder]="'Select Payment Status'"
+							></app-searchable-dropdown>
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectPaymentStatusBulkEdit(paymentStatus, 'paymentStatus')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !paymentStatus"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'paymentRemarks'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Payment Remarks</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group mb-0">
+							<h6>Payment Remarks</h6>
+							<input [(ngModel)]="paymentRemarks" [placeholder]="'add remark'" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectPaymentRemarksBulkEdit(paymentRemarks, 'paymentRemarks')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !paymentRemarks"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'paymentAmountPaid'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Payment Amount Paid</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group mb-0">
+							<h6>Payment Amount Paid</h6>
+							<input [(ngModel)]="paymentAmountPaid" [placeholder]="'add amount'" class="form-control" type="number" />
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectPaymentAmountPaidBulkEdit(paymentAmountPaid, 'paymentAmountPaid')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !paymentAmountPaid"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'channel'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Primary Channel</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group">
+							<h6>Pick the preferred primary channel for selected groups</h6>
+							<div class="mt-3">
+								<mat-radio-group (change)="selectedPrimaryChannel = $event">
+									<mat-radio-button class="w-100" value="WhatsApp">WhatsApp </mat-radio-button>
+									<mat-radio-button class="w-100" value="Email">Email </mat-radio-button>
+								</mat-radio-group>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectPrimaryChannelBulkEdit(selectedPrimaryChannel, 'primaryChannel')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating || !selectedPrimaryChannel"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="detailTobeEdited === 'cohort'" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Cohort</h5>
+				<button (click)="closeUpdateModel()" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 col">
+						<div class="form-group">
+							<h6>Pick the preferred cohort for selected groups</h6>
+							<div class="mt-3">
+								<mat-radio-group (change)="selectedCohort = $event">
+									<mat-radio-button class="w-100" value="Cohort 1">Cohort 1 </mat-radio-button>
+									<mat-radio-button class="w-100" value="Cohort 2">Cohort 2 </mat-radio-button>
+									<mat-radio-button class="w-100" value="Cohort 3">Cohort 3 </mat-radio-button>
+									<mat-radio-button class="w-100" value="Cohort 4">Cohort 4 </mat-radio-button>
+									<mat-radio-button class="w-100" value="Cohort 5">Cohort 5 </mat-radio-button>
+									<mat-radio-button class="w-100" value="Cohort 6">Cohort 6 </mat-radio-button>
+								</mat-radio-group>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="selectPrimaryChannelBulkEdit(selectedCohort, 'cohort')"
+						*ngIf="!isUpdating"
+						[disabled]="isUpdating"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Update
+					</button>
+					<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Remove from Campaign-->
+<div *ngIf="openDeleteCommunityPopup" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Remove from Campaign</h5>
+				<button (click)="openDeleteCommunityPopup = false" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">
+					Are you sure you want to remove <strong>{{ selectedGroups?.length }} communities</strong> with
+					<strong>{{ selectedCommunitiesMemberCount | number }} members</strong>
+					from the campaign ?
+				</p>
+
+				<div class="action-row">
+					<button
+						(click)="openDeleteCommunityPopup = false"
+						class="convo-btn-normal convo-btn-outline w-100"
+						type="button"
+					>
+						Cancel
+					</button>
+					<button
+						(click)="deleteBulkCommunities(); openDeleteCommunityPopup = false"
+						class="convo-btn-normal convo-btn-danger w-100"
+						type="button"
+					>
+						<span class="bt-spinner" hidden></span><span>Remove from Campaign</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- update admin confirmatiom -->
+<div *ngIf="openEditAdminConfirmation" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Change Active Admin</h5>
+				<button
+					(click)="
+						selectSoloEdit(
+							selectedGroupAndAdmin.selectedGroupId,
+							selectedGroupAndAdmin.selectedValue,
+							selectedGroupAndAdmin.type,
+							null
+						);
+						openEditAdminConfirmation = false
+					"
+					class="close"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">
+					The task is already assigned to an admin. If you change the admin now,
+					<strong>the task assigned to the previous admin will be deleted.</strong> You will have to send the campaign
+					brief again to the new admin assigned.
+				</p>
+
+				<div class="action-row">
+					<button
+						(click)="
+							openEditAdminConfirmation = false;
+							switchToPrevious(selectedGroupAndAdmin.selectedGroupId, selectedGroupAndAdmin.previousValue)
+						"
+						class="convo-btn-normal convo-btn-outline w-100"
+						type="button"
+					>
+						Cancel
+					</button>
+					<button
+						(click)="
+							selectSoloEdit(
+								selectedGroupAndAdmin.selectedGroupId,
+								selectedGroupAndAdmin.selectedValue,
+								selectedGroupAndAdmin.type,
+								null
+							);
+							openEditAdminConfirmation = false
+						"
+						class="convo-btn-normal convo-btn-danger w-100"
+						type="button"
+					>
+						<span class="bt-spinner" hidden></span><span>Assign new Admin</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="sendProposalModalConfirmation" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Send Proposal Warning</h5>
+				<button (click)="sendProposalModalConfirmation = false" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Sure you want to send proposals to Communities that already received proposals?</p>
+				<div class="action-column">
+					<button
+						(click)="handleSendProposalToCommunityAdmin({sendToAll: false}); sendProposalModalConfirmation = false"
+						class="convo-btn-normal convo-btn-primary w-100 mb-2"
+						type="button"
+					>
+						<span class="bt-spinner" hidden></span><span>Send to communities without proposals yet</span>
+					</button>
+					<button
+						(click)="handleSendProposalToCommunityAdmin({sendToAll: true}); sendProposalModalConfirmation = false"
+						class="convo-btn-normal convo-btn-danger w-100 mb-2"
+						type="button"
+					>
+						<span class="bt-spinner" hidden></span><span>Send to all selected communities</span>
+					</button>
+					<button
+						(click)="sendProposalModalConfirmation = false"
+						class="convo-btn-normal convo-btn-outline w-100"
+						type="button"
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Create Task-->
+<div *ngIf="isCreateTaskClicked" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Create Task</h5>
+				<button (click)="isCreateTaskClicked = false" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">
+					This will create tasks for the {{ selectedGroups?.length }} selected communities. <br />Are you sure?
+				</p>
+
+				<div class="action-row">
+					<button (click)="isCreateTaskClicked = false" class="convo-btn-normal convo-btn-outline w-100" type="button">
+						Cancel
+					</button>
+					<button
+						(click)="createTasks()"
+						[disabled]="isUpdating"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						<span *ngIf="!isUpdating">Yes, Create Task</span>
+						<span *ngIf="isUpdating" class="bt-spinner"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Send Proposal to Brand Task-->
+<div *ngIf="openProposalModal" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Send Proposal to Brand</h5>
+				<button (click)="openProposalModal = false" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Send the proposal to brand to get it accepted by the brand</p>
+
+				<div class="send-proposal-wrapper">
+					<h5 class="body-title">Proposal URL</h5>
+					<div class="url-box">
+						<span
+							>{{ proposalUrl }}
+							<input [value]="proposalUrl" id="copyProposalUrl" readonly />
+						</span>
+						<button (click)="copyProposalUrl()" class="copy-btn">Copy</button>
+					</div>
+
+					<h5 class="body-title mb-0">Enter email addresses <sup>*</sup></h5>
+					<p class="text-secondary m-0"><small>You can enter multiple</small></p>
+					<div class="email-adderss-wrapper">
+						<div *ngFor="let key of getEmailAddressKeys()">
+							<div class="email-adderss-row">
+								<input
+									[(ngModel)]="brandEmailAddresses[key]"
+									[ngClass]="{'email-error': !validateEmailAddress(brandEmailAddresses[key])}"
+									type="text"
+								/>
+								<button (click)="removeEmailAddress(key)" class="close-btn">
+									<img alt="" src="assets/images/close-icon.svg" />
+								</button>
+							</div>
+						</div>
+						<button (click)="addEmailAddresses()" class="add-email">
+							<img alt="" src="assets/images/plus-icon.svg" />
+							<span>Add {{ getEmailAddressKeys().length > 0 ? 'another ' : '' }} email</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button
+						*ngIf="sendingProposalInProgress"
+						[disabled]="!isEmailsAreValid || sendingProposalInProgress"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						<span class="bt-spinner"></span>
+					</button>
+					<button
+						(click)="saveEmailAddresses(); sendProposal(); recordButtonClick($event)"
+						*ngIf="!sendingProposalInProgress"
+						[disabled]="!isEmailsAreValid || sendingProposalInProgress"
+						class="convo-btn-primary convo-btn-normal"
+						data-cs-id="bdf53078-1f2e-4e6f-925e-d5c49781c8d5"
+						data-test-id="button-cmc-save-add-brand-email"
+						data-cs-label="Send Proposal"
+						data-cs-source="dialog"
+						data-test-id="button-cmc-save-add-brand-email"
+					>
+						Send Proposal
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-custom-datetime-picker
+	(closeDateTimePicker)="openDateTimePicker = false"
+	(dateTimeSelection)="updateDateTime($event)"
+	*ngIf="openDateTimePicker"
+	[maxDate]="campaign?.endDateAtUTC"
+	[minDate]="campaign?.startDateAtUTC"
+	[selectedGroup]="selectedGroup"
+></app-custom-datetime-picker>
+
+<app-custom-datetime-picker
+	(closeDateTimePicker)="openPaymentDateTimePicker = false"
+	(dateTimeSelection)="updatePaymentDate($event)"
+	*ngIf="openPaymentDateTimePicker"
+	[selectedGroup]="selectedGroup"
+></app-custom-datetime-picker>
+
+<app-community-marketing-campaign-content-manager
+	(closeContentManager)="closeContentManager()"
+	(updateContentManager)="onUpdateContentManager($event)"
+	*ngIf="showContentManager"
+	[campaign]="campaign"
+	[communityManagers]="communityManagers"
+	[selectedCampaignTasks]="campaignTasks"
+	[selectedCommunities]="communities"
+></app-community-marketing-campaign-content-manager>
+<app-community-marketing-campaign-community-notification
+	(closeDialog)="onNotificationDialogClosed()"
+	*ngIf="isNotificationsDialogOpen"
+	[brand]="brand"
+	[campaign]="campaign"
+	[communities]="communities"
+	[isCampaignBriefAlreadySent]="isCampaignBriefAlreadySent"
+	[isCampaignBriefEnabled]="isCampaignBriefEnabled"
+	[isCampaignBriefReminderEnabled]="isCampaignBriefReminderEnabled"
+	[isDialogOpen]="isNotificationsDialogOpen"
+	[isNotificationEnabled]="isNotificationEnabled"
+	[isTaskReminderEnabled]="isTaskReminderEnabled"
+	[selectedCommunities]="communitiesToSendNotification"
+></app-community-marketing-campaign-community-notification>
+
+<div *ngIf="verificationDialogToBeOpened" aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div *ngIf="verificationDialogToBeOpened === 'whatsapp'" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add WhatsApp Number</h5>
+				<button (click)="verificationDialogToBeOpened = null" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<form
+					(ngSubmit)="submitModeOfCommunication(modeOfCommunication, 'whatsapp')"
+					[class.phoneError]="
+						modeOfCommunication.get('whatsapp').errors !== null && modeOfCommunication.get('whatsapp').value
+					"
+					[formGroup]="modeOfCommunication"
+				>
+					<div class="mobile-number-wrapper">
+						<ngx-intl-tel-input
+							[enablePlaceholder]="false"
+							[maxLength]="15"
+							[phoneValidation]="true"
+							[preferredCountries]="preferredCountries"
+							[searchCountryFlag]="true"
+							[selectFirstCountry]="false"
+							[selectedCountryISO]="CountryISO.India"
+							[separateDialCode]="true"
+							class="w-100"
+							formControlName="whatsapp"
+							name="phoneNumber"
+						>
+						</ngx-intl-tel-input>
+					</div>
+					<div class="action-row">
+						<button
+							[disabled]="isUpdating || modeOfCommunication.invalid"
+							class="convo-btn-normal convo-btn-primary w-100"
+							type="submit"
+						>
+							<span *ngIf="!isUpdating">Update</span>
+							<span *ngIf="isUpdating" class="bt-spinner"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div *ngIf="verificationDialogToBeOpened === 'email'" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add Email Address</h5>
+				<button (click)="verificationDialogToBeOpened = null" class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="email-wrapper">
+					<label>Contact Email</label>
+					<input
+						#email
+						[(ngModel)]="emailToBeVerified"
+						[email]="true"
+						[pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'"
+						matInput
+						placeholder="Enter email address"
+						type="email"
+					/>
+				</div>
+				<div class="action-row">
+					<button
+						(click)="submitModeOfCommunication(null, 'email')"
+						[disabled]="
+							isUpdating ||
+							emailToBeVerified === '' ||
+							emailToBeVerified === null ||
+							email.classList.contains('ng-invalid')
+						"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="submit"
+					>
+						<span *ngIf="!isUpdating">Update</span>
+						<span *ngIf="isUpdating" class="bt-spinner"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- require asset modal -->
+<div *ngIf="showRequireAssetModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Require asset</h5>
+				<img (click)="handleRequireAssetModal()" alt="close" src="./assets/images/close-icon.svg" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please enter a comment of asset requirement.</p>
+				<textarea
+					(input)="changeRequireAssetMessage($event)"
+					[(ngModel)]="requireAssetMessage"
+					cols="30"
+					name="text"
+					placeholder="Enter your comment..."
+					rows="10"
+				></textarea>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="requireAssetReminder({selectedGroups})"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					Require asset
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

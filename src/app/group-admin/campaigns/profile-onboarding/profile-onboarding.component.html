@@ -1,0 +1,143 @@
+<div class="profile-onboarding-component-wrap">
+	<div class="onboarding-content-wrap">
+		<div class="onboarding-main-settings">
+			<div class="onboarding-profile-progress-wrap" *ngIf="renderedOn !== 'Mobile'">
+				<app-vertical-progress-bar
+					[progressOptions]="isPitch ? pitchOnboardingOptions : profileProgressOptions"
+					[currentStep]="profileOnboardingStep"
+				>
+				</app-vertical-progress-bar>
+			</div>
+			<div class="onboarding-profile-mainframe">
+				<div *ngIf="profileOnboardingStep !== 3" class="head-profile-frame-wrap">
+					<div class="preview-image-wrap">
+						<!-- <img src="{{ previewImageSrc }}" alt="" /> -->
+						<div *ngIf="renderedOn === 'Mobile'" class="open-top-profile-wrap">
+							<button
+								(click)="openTopProfileModal($event)"
+								class="convo-btn-outline open-top-list-btn"
+								data-cs-id="a623b5c1-5cd7-4908-a8f7-e1e4c0388c0f"
+								data-cs-label="See Top Group profiles"
+								data-cs-source="dialog"
+								type="button"
+							>
+								<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="10.5" cy="10" r="10" fill="url(#paint0_linear_12526_6363)" />
+									<g clip-path="url(#clip0_12526_6363)">
+										<path
+											d="M9.87752 13.3516C10.1953 13.1598 10.5932 13.1598 10.911 13.3516L11.676 13.8133C12.4333 14.2704 13.3675 13.5914 13.1666 12.73L12.9635 11.8597C12.8792 11.4982 13.002 11.1197 13.2826 10.8767L13.96 10.2898C14.6286 9.71063 14.2712 8.61237 13.3898 8.53759L12.5005 8.46214C12.1309 8.43078 11.809 8.19745 11.6643 7.85595L11.315 7.03174C10.9704 6.21872 9.81812 6.21872 9.47354 7.03174L9.12421 7.85595C8.97947 8.19745 8.65761 8.43078 8.28803 8.46214L7.39874 8.53759C6.51731 8.61237 6.15991 9.71063 6.8285 10.2898L7.50591 10.8767C7.78647 11.1197 7.90932 11.4982 7.82498 11.8597L7.62195 12.73C7.42099 13.5914 8.35522 14.2704 9.11254 13.8133L9.87752 13.3516Z"
+											fill="white"
+										/>
+									</g>
+									<defs>
+										<linearGradient
+											id="paint0_linear_12526_6363"
+											x1="20.5"
+											y1="10"
+											x2="3.61113"
+											y2="17.2487"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#FF566B" />
+											<stop offset="1" stop-color="#FF9D7E" />
+										</linearGradient>
+										<clipPath id="clip0_12526_6363">
+											<rect width="14.2857" height="14.2857" fill="white" transform="translate(3.35938 2.85938)" />
+										</clipPath>
+									</defs>
+								</svg>
+								<span>See Top Group profiles</span>
+								<div class="circle-chevron">
+									<svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.02681 0.195C7.76681 -0.065 7.34681 -0.065 7.08681 0.195L4.50015 2.78167L1.91348 0.195C1.65348 -0.0650003 1.23348 -0.0650003 0.973481 0.195C0.713481 0.455 0.713481 0.875 0.973481 1.135L4.03348 4.195C4.29348 4.455 4.71348 4.455 4.97348 4.195L8.03348 1.135C8.28681 0.881667 8.28681 0.455 8.02681 0.195Z"
+											fill="#323232"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+						<img
+							#coverBackgroundImageForGroupProfile
+							[fbEntityId]="profilePage?.fbGroupId"
+							alt=""
+							class="banner-background"
+							src="{{ profilePage?.coverImageUrl }}"
+						/>
+						<!-- <div style.background-image="url({{ profilePage?.coverImageUrl }})"></div> -->
+					</div>
+				</div>
+
+				<div
+					*ngIf="profilePage"
+					class="onboarding-profile-main-content"
+					[class.with-preview-image]="profileOnboardingStep !== 3"
+				>
+					<div class="onboarding-step-counter">
+						<span> STEP {{ profileOnboardingStep + 1 }}/4 </span>
+					</div>
+					<ng-container *ngIf="profilePage">
+						<app-overview-step
+							*ngIf="profileOnboardingStep === 0"
+							[isPitch]="isPitch"
+							[resetHook]="resetEditChanges"
+							[groupProfilePage]="profilePage"
+							[isEditable]="isEditAvailable"
+							[isSaveInProgress]="isSaveInProgress"
+							(saveOverviewSection)="saveProfilePage($event)"
+							(nextStep)="nextStepHandler()"
+							(prevStep)="backStepHandler()"
+						></app-overview-step>
+						<app-popular-topics-step
+							*ngIf="profileOnboardingStep === 1"
+							[isPitch]="isPitch"
+							[resetHook]="resetEditChanges"
+							[groupProfilePage]="profilePage"
+							(savePopularTopicsSection)="saveProfilePage($event)"
+							(nextStep)="nextStepHandler()"
+							(prevStep)="backStepHandler()"
+						></app-popular-topics-step>
+						<app-top-conversation-step
+							*ngIf="profileOnboardingStep === 2"
+							[isPitch]="isPitch"
+							[resetHook]="resetEditChanges"
+							[groupProfilePage]="profilePage"
+							[groupState]="group.state"
+							[isEditable]="isEditAvailable"
+							(letOpenSkipModal)="letOpenSkipModal()"
+							(showPublishedButton)="showPublishedButton($event)"
+							(nextStep)="nextStepHandler()"
+							(prevStep)="backStepHandler()"
+						></app-top-conversation-step>
+						<app-preview-publish-step
+							*ngIf="profileOnboardingStep === 3"
+							[isPitch]="isPitch"
+							[groupProfilePage]="profilePage"
+							[isSaveInProgress]="isSaveInProgress"
+							(nextStep)="nextStepHandler()"
+							(prevStep)="backStepHandler()"
+							(publishEmit)="publishProfilePage()"
+						></app-preview-publish-step>
+					</ng-container>
+				</div>
+			</div>
+			<div class="onboarding-profile-top" *ngIf="renderedOn !== 'Mobile'">
+				<ng-container *ngIf="profileOnboardingStep !== 3 && profilePage">
+					<app-top-profiles-list
+						[isPitch]="isPitch"
+						[fbGroupId]="group?.fbGroupId"
+						[profileOnboardingStep]="profileOnboardingStep"
+					></app-top-profiles-list>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-top-profiles-list-modal
+	*ngIf="renderedOn === 'Mobile'"
+	[isOpen]="showTopProfileModal"
+	[isPitch]="isPitch"
+	[profileOnboardingStep]="profileOnboardingStep"
+	(closeModal)="closeTopProfileModal()"
+></app-top-profiles-list-modal>

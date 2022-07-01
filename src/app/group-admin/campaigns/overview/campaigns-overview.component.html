@@ -1,0 +1,128 @@
+<div
+	(click)="updateCEPOnboardingSate(CEPOnboardingStateEnum.Accepted); recordButtonClick($event)"
+	*ngIf="currentCEPOnboardingState === CEPOnboardingStateEnum.Rejected"
+	data-cs-id="e3e7087a-a953-4609-bf2b-9ec5e4623e10"
+	data-cs-label="CEPOnboarding on banner"
+	data-cs-source="page"
+>
+	<h6>Get started with paid brand campaigns</h6>
+	<h4>Claim your first group profile page today!</h4>
+</div>
+<app-campaigns [isCEPOnboardingInProgress]="isCEPOnboardingInProgress()"></app-campaigns>
+
+<!-- Introduction to profile page Modal -->
+<div
+	*ngIf="currentCEPOnboardingState === CEPOnboardingStateEnum.Eligible"
+	class="modal modal-component d-block"
+	tabindex="-1"
+>
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="intro-profile-page-modal-body success-modal-body">
+					<div class="video-wrap">
+						<video controls muted playsinline controls preload="none" poster="assets/images/video-poster-admin-bio.jpg">
+							<source src="./assets/videos/group-profile-introduction.mp4" type="video/mp4" />
+						</video>
+					</div>
+					<h5>Introducing group profile pages</h5>
+					<h6>Get paid campaigns from top brands and agencies faster with a profile page for your groups.</h6>
+					<div class="action-row">
+						<button
+							(click)="updateCEPOnboardingSate(CEPOnboardingStateEnum.Accepted); recordButtonClick($event)"
+							class="convo-btn-normal convo-btn-primary w-100"
+							data-cs-id="e3e7087a-a953-4609-bf2b-9ec5e4623e10"
+							data-cs-label="Create Group Profile Page"
+							data-cs-source="dialog"
+							type="button"
+						>
+							<span>Create Group Profile Page</span>
+							<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									opacity="0.95"
+									d="M9.98376 5.41127C9.699 5.12651 9.699 4.66483 9.98376 4.38007C10.2685 4.09531 10.7302 4.09531 11.015 4.38007L16.1191 9.48424C16.4039 9.769 16.4039 10.2307 16.1191 10.5154L11.015 15.6196C10.7302 15.9044 10.2685 15.9044 9.98376 15.6196C9.699 15.3348 9.699 14.8732 9.98376 14.5884L13.8432 10.729H5.39518C4.99247 10.729 4.66602 10.4025 4.66602 9.99983C4.66602 9.59713 4.99247 9.27067 5.39518 9.27067H13.8432L9.98376 5.41127Z"
+									fill="white"
+								/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Generating your first profile page Modal -->
+<div
+	*ngIf="currentCEPOnboardingState === CEPOnboardingStateEnum.Accepted"
+	aria-hidden="true"
+	class="modal modal-component d-block"
+	tabindex="-1"
+>
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="generate-modal-body">
+					<div class="generate-body-top">
+						<h5><img alt="" src="./assets/images/wait-icon.png" /><span>Generating your first profile page</span></h5>
+						<h6>Hold tight...</h6>
+					</div>
+					<div class="generate-body-middle">
+						<ul class="qualify-group list-unstyled">
+							<li>
+								<figure>
+									<app-fb-group-cover-image
+										[coverImageUrl]="groupForCEPOnboarding.coverImageUrl"
+										[fbGroupId]="groupForCEPOnboarding.fbGroupId"
+									></app-fb-group-cover-image>
+								</figure>
+								<div class="d-flex">
+									<h6>{{ groupForCEPOnboarding.name }}</h6>
+									<small>{{ groupForCEPOnboarding.memberCount | shortNumber }} members</small>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="generate-body-bottom">
+						<ul class="list-unstyled">
+							<li>
+								<div class="d-flex">
+									<span
+										*ngIf="profileCreationProgress ? profileCreationProgress === 'ProfileCreationInitiated' : true"
+										class="bt-spinner"
+									></span>
+									<img
+										*ngIf="
+											profileCreationProgress
+												? profileCreationProgress === 'ProfileCreationComplete' ||
+												  profileCreationProgress === 'ProfileRedirectionInitiated'
+												: false
+										"
+										src="./assets/images/done-icon.svg"
+									/>
+								</div>
+								<h6>Preparing group information</h6>
+							</li>
+							<li>
+								<div class="d-flex">
+									<span
+										*ngIf="profileCreationProgress ? profileCreationProgress === 'ProfileCreationInitiated' : true"
+										class="bt-spinner-circle"
+									></span>
+									<span *ngIf="profileCreationProgress === 'ProfileCreationComplete'" class="bt-spinner"></span>
+									<img
+										*ngIf="profileCreationProgress === 'ProfileRedirectionInitiated'"
+										src="./assets/images/done-icon.svg"
+									/>
+								</div>
+								<h6>Creating your group’s profile page</h6>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,94 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.brand-chart {
+	padding: 32px 24px 0 24px;
+	background: #fff;
+}
+.card-inner-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+
+	h3 {
+		@include font-label-l-md;
+		color: #33334f;
+	}
+
+	p {
+		@include font-label-xs;
+		color: $black-70;
+		margin-bottom: 32px;
+	}
+}
+.charts {
+	background: #fff;
+	margin-top: 24px;
+	padding: 32px 24px 0 24px;
+}
+.brand-sentiment-lagends {
+	display: flex;
+	flex-direction: column-reverse;
+}
+.legend {
+	background: #f4f6f8;
+	border: 1px solid #d6d6dc;
+	box-sizing: border-box;
+	border-radius: 4px;
+	padding: 16px 24px;
+	font-size: 14px;
+	line-height: 24px;
+	color: #33334f;
+	height: 200px;
+	overflow: auto;
+	margin-bottom: 32px;
+	span:nth-child(2) {
+		float: right;
+		color: $black-70;
+		font-weight: 500;
+	}
+	p {
+		color: $black-50;
+		@include font-label-s;
+	}
+}
+.charts {
+	.col-md-4 {
+		&:nth-child(1),
+		&:nth-child(2) {
+			border-right: 1px solid #ebebed;
+		}
+	}
+}
+.supporting-text {
+	font-weight: 500;
+	font-size: 16px;
+	color: #3654ff;
+	line-height: 64px;
+	cursor: pointer;
+	padding: 0 24px;
+	margin: 0 -24px;
+	display: block;
+	border-top: 1px solid #ebebed;
+	margin-top: 32px;
+	text-align: left;
+}
+
+#openReferenceConversationButton {
+	visibility: hidden;
+}
+mat-slide-toggle {
+	display: none;
+}
+.supporting-text-input-text {
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: left;
+	color: #33334f;
+	padding: 16px 0;
+}
+.background-box {
+	background-color: #f9fafb;
+}

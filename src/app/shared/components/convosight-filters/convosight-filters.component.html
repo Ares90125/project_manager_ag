@@ -1,0 +1,66 @@
+<div class="row">
+	<div class="col-12">
+		<div class="all-filters-wrapper">
+			<div *ngFor="let filter of filters" class="dropdown">
+				<button
+					class="btn btn-primary dropdown-toggle"
+					data-toggle="dropdown"
+					type="button"
+					data-test-id="dropdown-button"
+				>
+					{{ filter.displayName }} <span class="caret"></span>
+				</button>
+				<ul *ngIf="filter.isMultipleSelection" class="dropdown-menu">
+					<div *ngFor="let listItem of filter.list">
+						<li
+							*ngIf="!listItem.isHide"
+							data-cs-parent-label="Take Action"
+							data-cs-source="Urgent Alert"
+							(click)="recordClickEvent($event, listItem.displayName)"
+						>
+							<label class="custom-checkbox" data-test-id="action-filter-checkbox">
+								<input
+									type="checkbox"
+									[checked]="listItem.isSelected"
+									[value]="listItem.name"
+									(click)="addOrRemoveItemFromListItemsOfMultipleSelection(listItem, filter.name)"
+									data-test-id="checkbox-action-type"
+								/><span data-test-id="action-filter-name">{{ listItem.displayName }}</span>
+							</label>
+						</li>
+					</div>
+				</ul>
+				<ul *ngIf="!filter.isMultipleSelection" class="dropdown-menu">
+					<div *ngFor="let listItem of filter.list">
+						<li
+							data-cs-parent-label="Take Action"
+							data-cs-source="Urgent Alert"
+							(click)="
+								addOrRemoveItemFromListItemsOfSingleSelection(listItem, filter);
+								recordClickEvent($event, listItem.displayName)
+							"
+							*ngIf="!listItem.isHide"
+						>
+							{{ listItem.displayName }}
+						</li>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<div class="all-filters-tags-wrapper" *ngIf="!fromCsAdmin">
+			<h6 *ngIf="headerText && selectedItems.length > 0 && !fromCsAdmin">{{ headerText }} :</h6>
+			<ul class="list-unstyled">
+				<div *ngFor="let item of selectedItems">
+					<li *ngIf="!item.isHide" data-test-id="applied-filter-name">
+						<strong>{{ item.filterName }}:</strong> {{ item.displayName }}
+						<button
+							(click)="removeItemFromSelectedList(item)"
+							class="close-btn"
+							data-test-id="close-filter-tag"
+						></button>
+					</li>
+				</div>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,58 @@
+<div [class.option-selected]="isOptionSelected" class="custom-search-wrapper" data-test-id="timezone-search-wrapper">
+	<div class="value-wrap" data-toggle="dropdown">
+		<div *ngIf="headerText" class="placeholderAfterSelection">{{ headerText }} <sup *ngIf="isMandatory">*</sup></div>
+		<div *ngIf="placeholder && (!selectedValue || selectedValue === '----')" class="placeholder-text">
+			<span>{{ placeholder }}</span>
+		</div>
+		<div
+			*ngIf="selectedValue !== '----' && selectedValue"
+			[ngClass]="!isEditable ? 'edit-wrapper' : ''"
+			class="selectedValue"
+		>
+			{{ selectedValue }}
+		</div>
+		<div class="arrow-icon">
+			<svg fill="none" height="5" viewBox="0 0 9 5" width="9" xmlns="http://www.w3.org/2000/svg">
+				<path d="M4.5 5L0 -4.76837e-07H9L4.5 5Z" fill="#000" opacity="0.8" />
+			</svg>
+		</div>
+	</div>
+	<div class="options-wrap dropdown-menu">
+		<div class="input-wrap">
+			<input
+				[hidden]="(!dropdownLists || dropdownLists?.length === 0) && !searchKeyValue"
+				(keyup)="searchList($event.target.value)"
+				data-test-id="search-timezone-text"
+				placeholder="Search"
+				type="text"
+			/>
+		</div>
+		<ul class="list-unstyled">
+			<li (click)="selectedOption(list)" *ngFor="let list of dropdownLists" data-test-id="searched-timezone-value">
+				<span *ngIf="isMultiStateOption && !isOptionSelected">{{ list.name }}</span>
+				<span *ngIf="!isOptionSelected">{{ list.campaignName }}</span>
+			</li>
+
+			<li *ngIf="dropdownLists?.length === 0 && (!isFromSoloEditAdmin || searchKeyValue)">
+				No results for <strong>'{{ searchKeyValue }}'</strong>
+			</li>
+			<li *ngIf="dropdownLists?.length === 0 && isFromSoloEditAdmin && !searchKeyValue">
+				<div class="no-admins-wrap">
+					<figure>
+						<svg fill="none" height="35" viewBox="0 0 34 35" width="34" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M28 20.091V18.128C29 17.098 30.914 15.238 31.391 12.855C31.533 12.934 31.446 12.985 31.604 12.985C32.362 12.985 32.86 12.002 32.86 10.788C32.86 9.594 32.204 8.627 31.461 8.597C31.604 8.081 31.673 7.391 31.673 6.505C31.673 3.549 29.124 0 23.42 0C18.352 0 15.176 3.549 15.176 6.505C15.176 7.363 15.227 8.067 15.318 8.612C14.621 8.717 14.071 9.645 14.071 10.787C14.071 12.001 14.685 12.984 15.444 12.984C15.601 12.984 15.375 12.933 15.516 12.854C15.993 15.238 18 17.097 19 18.128V19.975C15 20.467 12 22.603 12 24.74V25.55C12 26.362 12.823 26.362 13.634 26.362H32.364C33.177 26.362 34 26.362 34 25.55V24.74C34 22.739 31 20.743 28 20.091Z"
+								fill="#D6D6DC"
+							/>
+							<path
+								d="M16 28.091V26.128C17 25.098 18.914 23.238 19.391 20.855C19.533 20.934 19.446 20.985 19.604 20.985C20.362 20.985 20.86 20.002 20.86 18.788C20.86 17.594 20.204 16.627 19.461 16.597C19.604 16.081 19.673 15.391 19.673 14.505C19.673 11.549 17.124 8 11.42 8C6.351 8 3.176 11.549 3.176 14.505C3.176 15.363 3.227 16.067 3.318 16.612C2.621 16.717 2.071 17.645 2.071 18.787C2.071 20.001 2.685 20.984 3.444 20.984C3.601 20.984 3.375 20.933 3.516 20.854C3.993 23.238 6 25.097 7 26.128V27.975C3 28.467 0 30.603 0 32.74V33.551C0 34.362 0.823 34.362 1.634 34.362H20.364C21.177 34.362 22 34.362 22 33.55V32.739C22 30.739 19 28.743 16 28.091Z"
+								fill="#ADADB9"
+							/>
+						</svg>
+					</figure>
+					<h6>No admins found</h6>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

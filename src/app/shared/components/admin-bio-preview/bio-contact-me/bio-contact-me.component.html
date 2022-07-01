@@ -1,0 +1,223 @@
+<div class="modal file-alert contact-me-modal">
+	<!-- <div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content" *ngIf="false">
+			<div class="modal-header">
+				<h5>Who are you?</h5>
+				<button class="close-modal">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2998 5.70973C17.9098 5.31973 17.2798 5.31973 16.8898 5.70973L11.9998 10.5897L7.10979 5.69973C6.71979 5.30973 6.08979 5.30973 5.69979 5.69973C5.30979 6.08973 5.30979 6.71973 5.69979 7.10973L10.5898 11.9997L5.69979 16.8897C5.30979 17.2797 5.30979 17.9097 5.69979 18.2997C6.08979 18.6897 6.71979 18.6897 7.10979 18.2997L11.9998 13.4097L16.8898 18.2997C17.2798 18.6897 17.9098 18.6897 18.2998 18.2997C18.6898 17.9097 18.6898 17.2797 18.2998 16.8897L13.4098 11.9997L18.2998 7.10973C18.6798 6.72973 18.6798 6.08973 18.2998 5.70973Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="type-box-body">
+					<h6>Select an option that represents you the best:</h6>
+					<div class="type-box">
+						<div class="type-box-inner">
+							<figure><img src="./assets/images/agency.png" width="24px" alt="" /></figure>
+							<div class="type-box-content">
+								<h5>I am a brand/agency</h5>
+								<h6>Get in touch with Anne Scott to run a campaign on her groups.</h6>
+							</div>
+						</div>
+						<button class="convo-btn-primary convo-btn-normal convo-btn-big w-100">Get in touch</button>
+					</div>
+					<div class="type-box">
+						<div class="type-box-inner">
+							<figure><img src="./assets/images/moderator.png" width="24px" alt="" /></figure>
+							<div class="type-box-content">
+								<h5>I am a group admin/moderator/member</h5>
+								<h6>Earn money by participating in paid campaigns with Anne Scott.</h6>
+							</div>
+						</div>
+						<button class="convo-btn-primary convo-btn-normal convo-btn-big w-100">Join the team</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+		<form class="modal-content" [formGroup]="contactMeForm" (ngSubmit)="submitForm(contactMeForm)">
+			<div class="modal-header">
+				<h5 *ngIf="isFromAudienceInsights">Request audience insights</h5>
+				<h5 *ngIf="!isFromAudienceInsights">Message {{ kudosData?.firstName ?? 'me' }}</h5>
+				<button
+					class="close-modal"
+					data-cs-id="37c592e9-2848-4fa7-b627-15c5b76a549b"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeContactPopup(); recordContactEvent($event)"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2998 5.70973C17.9098 5.31973 17.2798 5.31973 16.8898 5.70973L11.9998 10.5897L7.10979 5.69973C6.71979 5.30973 6.08979 5.30973 5.69979 5.69973C5.30979 6.08973 5.30979 6.71973 5.69979 7.10973L10.5898 11.9997L5.69979 16.8897C5.30979 17.2797 5.30979 17.9097 5.69979 18.2997C6.08979 18.6897 6.71979 18.6897 7.10979 18.2997L11.9998 13.4097L16.8898 18.2997C17.2798 18.6897 17.9098 18.6897 18.2998 18.2997C18.6898 17.9097 18.6898 17.2797 18.2998 16.8897L13.4098 11.9997L18.2998 7.10973C18.6798 6.72973 18.6798 6.08973 18.2998 5.70973Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<ng-container *ngIf="!secondStep; else secondStepForm">
+				<div class="modal-body">
+					<div class="message-wrapper" *ngIf="isFromAudienceInsights">
+						<div class="files-row-0">
+							<p class="settings-field m-0">
+								<img alt="" class="info-icon" src="assets/images/info-icon-outline.svg" />
+								Please let us know more about you and how you want to receive the past Audience Insights, if the Group
+								Admin choses to share it with you.
+							</p>
+						</div>
+					</div>
+					<div class="input-wrap">
+						<label>Full Name <sup>*</sup></label>
+						<input
+							type="text"
+							name="fullName"
+							formControlName="fullName"
+							class="convo-input"
+							placeholder="Enter name..."
+						/>
+					</div>
+					<div class="input-wrap" *ngIf="!isFromAudienceInsights">
+						<label>Official Email Address <sup>*</sup></label>
+						<input
+							type="text"
+							name="emailAddress"
+							formControlName="emailAddress"
+							class="convo-input"
+							placeholder="sample@example.com"
+							[ngClass]="{'ng-invalid': isAlreadyContacted}"
+						/>
+						<span class="error-message" *ngIf="isAlreadyContacted"
+							><img alt="" src="assets/images/icon-error.svg" />You have already contacted today with this email. Try
+							again tomorrow.</span
+						>
+					</div>
+					<div class="input-wrap">
+						<label>Company Name <sup *ngIf="isFromAudienceInsights">*</sup></label>
+						<input
+							type="text"
+							name="companyName"
+							formControlName="companyName"
+							class="convo-input"
+							placeholder="Your current organisation..."
+						/>
+					</div>
+					<div class="input-wrap convo-number-input">
+						<label>Phone No. <sup *ngIf="isFromAudienceInsights">*</sup></label>
+						<input
+							type="tel"
+							name="phoneNumber"
+							formControlName="phoneNumber"
+							pattern="[-+]?[0-9]*[-+]?[0-9]*"
+							class="convo-input"
+							placeholder="Enter phone number..."
+						/>
+					</div>
+					<div class="input-wrap" *ngIf="isFromAudienceInsights">
+						<label>Official Email Address</label>
+						<input
+							type="text"
+							name="emailAddress"
+							formControlName="emailAddress"
+							class="convo-input"
+							placeholder="sample@example.com"
+							[ngClass]="{'ng-invalid': isAlreadyContacted}"
+						/>
+						<span class="error-message" *ngIf="isAlreadyContacted"
+							><img alt="" src="assets/images/icon-error.svg" />You have already contacted today with this email. Try
+							again tomorrow.</span
+						>
+					</div>
+					<div class="input-wrap pb-0" *ngIf="!isFromAudienceInsights">
+						<label>Message</label>
+						<textarea
+							class="convo-input"
+							name="message"
+							formControlName="message"
+							placeholder="Say something..."
+							maxlength="1000"
+						></textarea>
+					</div>
+				</div>
+				<div class="modal-footer border-0 pt-0">
+					<button
+						*ngIf="!isFromAudienceInsights"
+						class="convo-btn-normal convo-btn-primary convo-btn-big w-100"
+						type="submit"
+						data-cs-id="ad2e438f-3761-4b98-9b8a-e6906ef19636"
+						data-cs-label="Next"
+						data-cs-source="dialog"
+						(click)="recordButtonClick($event)"
+						[disabled]="contactMeForm.invalid || isEmailDetailsFetching || isAlreadyContacted"
+					>
+						Next
+					</button>
+					<button
+						*ngIf="isFromAudienceInsights"
+						class="convo-btn-normal convo-btn-primary convo-btn-big w-100"
+						type="submit"
+						(click)="onSubmissionOfContactInfo()"
+						[disabled]="contactMeForm.invalid || isEmailDetailsFetching || isAlreadyContacted"
+					>
+						Submit
+					</button>
+				</div>
+			</ng-container>
+			<ng-template #secondStepForm>
+				<div class="modal-body">
+					<div class="input-wrap">
+						<h6>What are you trying to achieve with Community Marketing? <sup>*</sup></h6>
+					</div>
+					<ul class="tags-list-wrap">
+						<li
+							(click)="processKeyAchievements(achievement); recordButtonClick($event, null, achievement)"
+							[class.active]="keyAchievementList.includes(achievement)"
+							*ngFor="let achievement of keyAchievements"
+							data-cs-parent-label="Contact Me Form KPI"
+							data-cs-source="page"
+						>
+							<span *ngIf="achievement !== 'Other'">{{ achievement }}</span>
+							<span *ngIf="achievement === 'Other' && !isOtherInputFieldEnabled">{{
+								isOtherKeyEnabled ? achievement : contactMeForm.get('otherFieldValue').value
+							}}</span>
+							<span *ngIf="achievement === 'Other' && isOtherInputFieldEnabled"
+								><input
+									id="other-input"
+									class="other-input"
+									type="text"
+									placeholder="enter details"
+									formControlName="otherFieldValue"
+									(blur)="onOtherFieldUpdate()"
+									(change)="onOtherFieldUpdate()"
+									autofocus
+							/></span>
+						</li>
+					</ul>
+					<div class="note-wrap">
+						<mat-checkbox formControlName="connectionWithAdminsInterest"
+							><span class="label-text"
+								>I would like to connect with more such admins and communities</span
+							></mat-checkbox
+						>
+					</div>
+				</div>
+				<div class="modal-footer border-0">
+					<button
+						class="convo-btn-normal convo-btn-primary convo-btn-big w-100"
+						[disabled]="keyAchievementList?.length === 0"
+						data-cs-id="a1b46b5f-fe18-4451-9b18-882a118bcd16"
+						data-cs-label="Next"
+						data-cs-source="dialog"
+						(click)="onSubmissionOfContactInfo(); recordButtonClick($event)"
+					>
+						Submit
+					</button>
+				</div>
+			</ng-template>
+		</form>
+	</div>
+</div>

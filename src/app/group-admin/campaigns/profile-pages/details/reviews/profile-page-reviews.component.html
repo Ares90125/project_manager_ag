@@ -1,0 +1,137 @@
+<div *ngIf="profilePage" class="profile-reviews-wrapper">
+	<div class="container container-small mt-3">
+		<div class="d-flex flex-row align-items-center">
+			<img src="./assets/images/star.icon.svg" alt="" class="mr-2" />
+			<span class="container-title">Reviews</span>
+		</div>
+		<p class="container-subtitle mt-2">You can choose to show or hide existing reviews on the page.</p>
+		<div
+			*ngIf="!isProfileLoaded || reviews.length"
+			class="d-flex align-items-baseline justify-content-between reviews-header"
+		>
+			<div class="reviews-rating-container">
+				<div class="star"></div>
+				<span class="rating-container__rate" *ngIf="isProfileLoaded">{{ averageRating }}</span>
+				<span class="rating-container__label" *ngIf="isProfileLoaded">Average rating</span>
+				<h6 *ngIf="!isProfileLoaded" class="loading-strip"></h6>
+			</div>
+
+			<div class="d-flex align-center filters-wrap">
+				<div class="filters">
+					<div *ngIf="renderedOn === 'Desktop'" class="d-inline-block custom-dropdown">
+						<button
+							class="convo-dropdown convo-small-dropdown dropdown-toggle"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="false"
+						>
+							<span class="filter-label">Sort by : </span> {{ selectedSortBy }}
+						</button>
+						<div class="convo-dropdown-wrapper dropdown-menu">
+							<mat-radio-group
+								class="sort-options-wrapper"
+								(change)="sortReviews($event.value)"
+								[(ngModel)]="selectedSortBy"
+							>
+								<mat-radio-button class="sort-option" value="Recently reviewed">Recently reviewed</mat-radio-button>
+								<mat-radio-button class="sort-option" value="Highest rated">Highest rated</mat-radio-button>
+								<mat-radio-button class="sort-option" value="Lowest rated">Lowest rated</mat-radio-button>
+								<mat-radio-button class="sort-option" value="Visible reviews first"
+									>Visible reviews first</mat-radio-button
+								>
+								<mat-radio-button class="sort-option" value="Hidden reviews first"
+									>Hidden reviews first</mat-radio-button
+								>
+							</mat-radio-group>
+						</div>
+					</div>
+					<div *ngIf="renderedOn === 'Mobile'" class="d-inline-block custom-dropdown">
+						<button class="convo-dropdown convo-small-dropdown dropdown-toggle" (click)="handleSortByModal()">
+							<span class="filter-label">Sort by : </span> {{ selectedSortBy }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="isProfileLoaded; else loadingGroupProfilesList">
+			<ng-container *ngIf="reviews.length">
+				<div *ngFor="let review of reviews" class="review-container">
+					<div class="review-heading">
+						<img
+							src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+							alt=""
+							class="profile-image"
+						/>
+						<div class="d-flex flex-column">
+							<span class="reviewer-name">{{ review.fullname }}</span>
+							<div class="d-flex align-items-center">
+								<div class="stars" [style.--rating]="review.rating"></div>
+								<span class="review-timestamp">{{ review.timestamp | timeFromXTime }}</span>
+							</div>
+						</div>
+					</div>
+					<span class="review-text">{{ review.reviewText }}</span>
+					<div class="review-footer">
+						<span class="review-footer__label">Show on page:</span>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								data-cs-id="c85e904e-127a-44f6-a186-793e375f4d59"
+								data-cs-label="Review toggle"
+								data-cs-source="page"
+								[attr.data-cs-toggle-status]="!review.isDisabled"
+								(click)="recordToggleClicked($event, null, null, profilePage)"
+								(toggleChange)="handleIsVisible(review)"
+								[checked]="!review.isDisabled"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+
+			<div *ngIf="!reviews.length" class="review-body-wrap--empty">
+				<div class="no-review-wrap">
+					<figure><img alt="" src="./assets/images/reviews-icon.svg" /></figure>
+					<h5>There are no reviews yet</h5>
+					<h6>When this page receives a review it will appear here.</h6>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Start : Loading State -->
+<ng-template #loadingGroupProfilesList>
+	<div *ngFor="let loader of loaderCount" class="review-container">
+		<div class="review-box-header">
+			<div class="heading">
+				<figure class="loading-strip"></figure>
+				<div>
+					<h6 class="loading-strip"></h6>
+					<small class="loading-strip"></small>
+				</div>
+			</div>
+		</div>
+		<div class="review-box-body">
+			<h6 class="loading-strip"></h6>
+			<h6 class="loading-strip part"></h6>
+		</div>
+	</div>
+</ng-template>
+<!-- End : Loading State -->
+
+<div *ngIf="sortByModal" class="modal file-alert review-setting-modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<mat-radio-group class="sort-options-wrapper" (change)="sortReviews($event.value)" [(ngModel)]="selectedSortBy">
+					<mat-radio-button class="sort-option" value="Recently reviewed">Recently reviewed</mat-radio-button>
+					<mat-radio-button class="sort-option" value="Highest rated">Highest rated</mat-radio-button>
+					<mat-radio-button class="sort-option" value="Lowest rated">Lowest rated</mat-radio-button>
+					<mat-radio-button class="sort-option" value="Visible reviews first">Visible reviews first</mat-radio-button>
+					<mat-radio-button class="sort-option" value="Hidden reviews first">Hidden reviews first</mat-radio-button>
+				</mat-radio-group>
+			</div>
+		</div>
+	</div>
+</div>

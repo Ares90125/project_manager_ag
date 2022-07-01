@@ -1,0 +1,190 @@
+<div class="onboarding-head">
+	<button
+		class="back-button"
+		data-cs-id="6af524d6-5064-4523-bc90-30200e24443f"
+		(click)="
+			recordButtonClick($event, null, null, {
+				current_step: 1,
+				onboarding_type: this.isPitch ? 'pitch' : 'profile'
+			})
+		"
+		data-cs-label="Prev page"
+		data-cs-source="page"
+		type="button"
+		[routerLink]="'/group-admin/campaigns/' + groupProfilePage?.groupId + '/profile-pages/'"
+	>
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M19.0005 11.0007H7.83047L12.7105 6.1207C13.1005 5.7307 13.1005 5.0907 12.7105 4.7007C12.3205 4.3107 11.6905 4.3107 11.3005 4.7007L4.71047 11.2907C4.32047 11.6807 4.32047 12.3107 4.71047 12.7007L11.3005 19.2907C11.6905 19.6807 12.3205 19.6807 12.7105 19.2907C13.1005 18.9007 13.1005 18.2707 12.7105 17.8807L7.83047 13.0007H19.0005C19.5505 13.0007 20.0005 12.5507 20.0005 12.0007C20.0005 11.4507 19.5505 11.0007 19.0005 11.0007Z"
+				fill="#707084"
+			/>
+		</svg>
+	</button>
+	<div *ngIf="groupProfilePage" class="head-profile-data">
+		<div class="head-profile-image">
+			<img
+				[fbEntityId]="groupProfilePage?.fbGroupId"
+				alt=""
+				class="banner-background"
+				src="{{ groupProfilePage?.coverImageUrl }}"
+			/>
+		</div>
+		<div class="head-profile-description">
+			<h5 class="head-name-profile">
+				{{ groupProfilePage?.name }}
+			</h5>
+			<span> {{ groupProfilePage?.keyStats.totalMembers | shortNumber }} members </span>
+		</div>
+	</div>
+	<app-loading-shimmer *ngIf="!groupProfilePage" [type]="4"></app-loading-shimmer>
+</div>
+
+<div class="overview-wrap">
+	<div class="overview-header-wrap">
+		<h1>
+			{{
+				isPitch ? 'Customize your group description for the target brand' : 'Let’s get started with your group profile!'
+			}}
+		</h1>
+		<svg width="78" height="4" viewBox="0 0 78 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M76.8643 3C74.5916 3 74.5916 1 72.4096 1C70.137 1 70.137 3 67.955 3C65.6824 3 65.6824 1 63.5004 0.999999C61.2278 0.999999 61.2278 3 59.0458 3C56.7732 3 56.7732 0.999999 54.5912 0.999999C52.4092 0.999999 52.4092 3 50.1366 3C47.8639 3 47.8639 0.999999 45.6819 0.999999C43.5 0.999999 43.5 3 41.2273 3C38.9547 3 38.9547 0.999998 36.7727 0.999998C34.5001 0.999998 34.5001 3 32.3181 3C30.0455 3 30.0455 0.999998 27.8635 0.999998C25.5909 0.999998 25.5909 3 23.4089 3C21.1362 3 21.1362 0.999998 18.9543 0.999997C16.6816 0.999997 16.6816 3 14.4996 3C12.227 3 12.227 0.999997 10.045 0.999997C7.77239 0.999997 7.77239 3 5.5904 3C3.40841 3 3.31778 0.999997 1.13579 0.999997"
+				stroke="#ADADB9"
+				stroke-miterlimit="10"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</svg>
+	</div>
+
+	<div *ngIf="isPitch" class="pitch-card-warning">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+				fill="#E08E15"
+			/>
+		</svg>
+		<p>
+			Customise your group description below to <strong>make it more relevant for the brand</strong> you are pitching
+			to.
+		</p>
+	</div>
+
+	<h5>
+		{{ isPitch ? 'Write a custom description about this group' : 'Write a brief description about this group' }}
+		<sup>*</sup>
+	</h5>
+	<quill-editor
+		#meQuill
+		class="quill-editor-overview"
+		[class.editor-error]="isQuillInvalid"
+		[(ngModel)]="profileDescription"
+		[debounceTime]="1000"
+		[modules]="quillConfig"
+		[placeholder]="'Write description here...'"
+		(ngModelChange)="checkValidations()"
+		(onEditorCreated)="getMeEditorInstance($event)"
+	>
+	</quill-editor>
+	<span class="error-msg" *ngIf="isQuillInvalid">
+		<img alt="" src="assets/images/error-info-icon.svg" />
+		Group description cannot be empty!
+	</span>
+	<div *ngIf="!isPitch" class="overview-select-wrap">
+		<div class="form-group">
+			<label>Group Category <sup>*</sup></label>
+			<div class="custom-dropdown dropdown pills-dropdown">
+				<div class="fake-input dropdown-toggle" [class.error]="isCategoryInvalid" data-toggle="dropdown">
+					<div class="dropdown-toggle-item">
+						<img src="{{ 'assets/images/groupCategoryIcons/' + groupProfilePage?.category + '.png' }}" alt="" />
+						<span *ngIf="currentCategory || groupProfilePage?.category; else noCategory">
+							{{ currentCategory || groupProfilePage?.category }}
+						</span>
+					</div>
+					<ng-template #noCategory>
+						<span class="placeholder">Select category</span>
+					</ng-template>
+				</div>
+				<span class="error-msg" *ngIf="isCategoryInvalid">
+					<img alt="" src="assets/images/error-info-icon.svg" />
+					Group category cannot be empty!
+				</span>
+				<div class="dropdown-menu-wrapper dropdown-menu">
+					<div class="dropdown-container">
+						<div
+							*ngFor="let categoryName of businessCategory"
+							class="form-check category-item"
+							(click)="changeBusinessCategory(categoryName, $event)"
+							data-cs-id="1f1e1397-5875-48a5-8aee-4ceea02629f9"
+							data-cs-label="Select category"
+							data-cs-source="page"
+							type="button"
+						>
+							<div class="dropdown-item">
+								<span class="country-row">
+									<img src="{{ 'assets/images/groupCategoryIcons/' + categoryName + '.png' }}" alt="" />
+									<span>{{ categoryName }}</span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="input-wrap">
+			<label>Group Location <sup>*</sup></label>
+			<div class="custom-dropdown dropdown" ngxDropdown>
+				<button
+					class="btn-block dropdown-toggle"
+					[class.error]="isLocationInvalid"
+					data-toggle="dropdown"
+					aria-haspopup="true"
+					aria-expanded="false"
+					type="button"
+					dropdown-toggle
+				>
+					<span class="country-row">
+						<span *ngIf="selectedCountry" class="iti-flag {{ selectedCountry | lowercase }}"></span>
+						<span *ngIf="selectedCountry; else noCountry">{{ getCountryName(selectedCountry) }}</span>
+					</span>
+					<ng-template #noCountry>
+						<span class="placeholder">Select country</span>
+					</ng-template>
+				</button>
+				<span class="error-msg" *ngIf="isLocationInvalid">
+					<img alt="" src="assets/images/error-info-icon.svg" />
+					Group location cannot be empty!
+				</span>
+				<div
+					class="dropdown-menu-wrapper dropdown-menu"
+					aria-labelledby="dropdownMenu"
+					aria-labelledby="dropdownMenuLink"
+					ngxDropdownMenu
+				>
+					<div
+						*ngFor="let country of countryList"
+						class="dropdown-item"
+						data-cs-id="01e167c5-9c48-4523-aa02-b729b74441fb"
+						data-cs-label="Select country"
+						data-cs-source="page"
+						type="button"
+						(click)="selectedLocation(country, $event)"
+					>
+						<span class="country-row">
+							<span class="iti-flag {{ country.isoCode | lowercase }}"></span>
+							<span class="country-name">{{ country.name }}</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<app-onboarding-step-nav
+		[currentStep]="0"
+		[isPitch]="isPitch"
+		[extraRecordEventData]="extraRecordEventData"
+		[fetching]="isSaveInProgress || stageFetching"
+		(nextStep)="nextStepHandler()"
+		(prevStep)="prevStepHandler()"
+	></app-onboarding-step-nav>
+</div>

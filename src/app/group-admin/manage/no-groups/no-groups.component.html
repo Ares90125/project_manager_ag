@@ -1,0 +1,266 @@
+<div class="groups-permission-missing-wrapper">
+	<ng-container *ngIf="!isLoading; else loading">
+		<div class="permission-missing-left">
+			<ul class="list-unstyled">
+				<li>
+					<figure><img src="assets/images/single-person-icon.svg" alt="" /></figure>
+					<h6>Growth to 7000+ Active Facebook Groups</h6>
+				</li>
+				<li>
+					<figure><img src="assets/images/multi-persons-icon.svg" alt="" /></figure>
+					<h6>Trusted by 5000+ Happy Group Admins</h6>
+				</li>
+				<li>
+					<figure><img src="assets/images/privacy-icon.svg" alt="" /></figure>
+					<h6>All Safe with You Insights, Data & Privacy</h6>
+				</li>
+			</ul>
+		</div>
+
+		<div class="mobile-infomation">
+			<owl-carousel-o [options]="noGroupSliderOption">
+				<ng-container>
+					<ng-template class="slide" carouselSlide id="mobileInfoSlide-1">
+						<div class="mobile-info-row">
+							<figure><img src="assets/images/single-person-icon.svg" alt="" /></figure>
+							<h6>Growth to 7000+ <br />Active Facebook Groups</h6>
+						</div>
+					</ng-template>
+					<ng-template class="slide" carouselSlide id="mobileInfoSlide-2">
+						<div class="mobile-info-row">
+							<figure><img src="assets/images/multi-persons-icon.svg" alt="" /></figure>
+							<h6>Trusted by 5000+ <br />Happy Group Admins</h6>
+						</div>
+					</ng-template>
+					<ng-template class="slide" carouselSlide id="mobileInfoSlide-3">
+						<div class="mobile-info-row">
+							<figure><img src="assets/images/privacy-icon.svg" alt="" /></figure>
+							<h6>All Safe with You <br />Insights, Data & Privacy</h6>
+						</div>
+					</ng-template>
+				</ng-container>
+			</owl-carousel-o>
+		</div>
+
+		<div class="permission-missing-right">
+			<div class="add-group-process">
+				<div *ngIf="!isAddMoreButtonClicked">
+					<h2 class="primary-text">Welcome {{ user.givenname }}!</h2>
+					<h6 class="secondary-text">You are just 2 steps away to get insights</h6>
+					<div class="tabs-button-wrapper">
+						<button
+							(click)="isGroupAdminBtnClick(true, $event)"
+							[class.active]="isGroupAdmin"
+							data-cs-id="0fe0cc8d-4c63-4add-a9df-ba148003dc2f"
+							data-cs-label="I am a group admin"
+							data-cs-source="page"
+						>
+							I am a group admin
+						</button>
+						<button
+							(click)="isGroupAdminBtnClick(false, $event)"
+							[class.active]="!isGroupAdmin"
+							data-cs-id="48d787f9-d9b1-4901-89b0-b2a3c0bacda7"
+							data-cs-label="I am not a group admin"
+							data-cs-source="page"
+						>
+							I am not a group admin
+						</button>
+					</div>
+				</div>
+
+				<div *ngIf="isAddMoreButtonClicked">
+					<h2 class="primary-text">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<circle cx="12" cy="12" r="12" fill="#FF9C28" />
+							<path
+								d="M12.0149 15.9313C11.2069 15.9313 10.5297 16.5738 10.5297 17.3404C10.5297 18.107 11.2069 18.7495 12.0149 18.7495C12.7931 18.7495 13.5 18.107 13.4644 17.3742C13.5 16.5682 12.8287 15.9313 12.0149 15.9313Z"
+								fill="white"
+							/>
+							<path
+								d="M11.6465 6.03929C10.9396 6.23093 10.5 6.83967 10.5 7.57805C10.5356 8.02333 10.5653 8.47424 10.601 8.91952C10.702 10.6161 10.803 12.2789 10.904 13.9754C10.9396 14.5503 11.4089 14.9674 12.0149 14.9674C12.6208 14.9674 13.096 14.5222 13.1257 13.9416C13.1257 13.5922 13.1257 13.2709 13.1614 12.9158C13.2267 11.8279 13.298 10.7401 13.3634 9.65226C13.399 8.94771 13.4644 8.24315 13.5 7.53859C13.5 7.28495 13.4644 7.05949 13.3634 6.83403C13.0604 6.20275 12.3535 5.88147 11.6465 6.03929Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Oops! No groups found</span>
+					</h2>
+
+					<div class="group-admin-ques-row">
+						<h6>Are you a facebook group admin?</h6>
+						<div>
+							<button
+								(click)="isFBGroupAdminBtnClick(true, $event)"
+								[class.active]="isFBGroupAdmin === true"
+								data-cs-id="6fe1882e-fcb1-4d87-a67e-1469457d3150"
+								data-cs-label="Yes"
+								data-cs-source="page"
+							>
+								Yes
+							</button>
+							<button
+								(click)="isFBGroupAdminBtnClick(false, $event)"
+								[class.active]="isFBGroupAdmin === false"
+								data-cs-id="c73c0e97-8414-4689-869b-285358813868"
+								data-cs-label="No"
+								data-cs-source="page"
+							>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="only-for-admin-wrapper" *ngIf="!isGroupAdmin">
+					<h5>
+						<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<circle cx="12.4004" cy="12" r="12" fill="#2F86EB" />
+							<rect x="8.65039" y="4.875" width="6.75" height="13.5" fill="white" />
+							<path
+								d="M19.869 7.67057C19.0977 6.3492 18.0514 5.303 16.73 4.53174C15.4084 3.76053 13.9656 3.375 12.4007 3.375C10.8358 3.375 9.39266 3.76053 8.07125 4.53174C6.74977 5.30288 5.70355 6.34909 4.93226 7.67057C4.16092 8.99212 3.77539 10.4353 3.77539 12C3.77539 13.5648 4.16104 15.0077 4.93214 16.3294C5.70339 17.6507 6.74961 18.6969 8.07109 19.4683C9.39266 20.2394 10.8357 20.625 12.4005 20.625C13.9653 20.625 15.4085 20.2394 16.73 19.4683C18.0514 18.6972 19.0976 17.6507 19.8688 16.3294C20.6399 15.0078 21.0254 13.5647 21.0254 12C21.0254 10.4352 20.6399 8.99193 19.869 7.67057ZM10.9631 5.5311C10.9631 5.42623 10.9967 5.34021 11.0642 5.27286C11.1315 5.20556 11.2177 5.17177 11.3225 5.17177H13.4789C13.5836 5.17177 13.6698 5.20556 13.737 5.27286C13.8043 5.34021 13.8382 5.42623 13.8382 5.5311V7.32803C13.8382 7.43282 13.8043 7.51897 13.737 7.58623C13.6698 7.65357 13.5837 7.68724 13.4789 7.68724H11.3225C11.2177 7.68724 11.1316 7.65357 11.0642 7.58623C10.9967 7.51901 10.9631 7.43282 10.9631 7.32803V5.5311ZM15.2756 17.3906C15.2756 17.4953 15.2416 17.5815 15.1745 17.6487C15.1074 17.7161 15.0213 17.7498 14.9163 17.7498H9.88491C9.78 17.7498 9.69397 17.7161 9.62659 17.6487C9.55925 17.5815 9.52557 17.4954 9.52557 17.3905V15.5936C9.52557 15.4886 9.55925 15.4027 9.62659 15.3353C9.69397 15.2681 9.78012 15.2342 9.88491 15.2342H10.9631V11.6406H9.88491C9.78 11.6406 9.69401 11.6069 9.62659 11.5395C9.55925 11.4722 9.52557 11.3861 9.52557 11.2812V9.48441C9.52557 9.37954 9.55925 9.29351 9.62659 9.22609C9.69405 9.15871 9.78019 9.12508 9.88491 9.12508H13.4789C13.5836 9.12508 13.6698 9.15871 13.737 9.22609C13.8043 9.29351 13.8382 9.37954 13.8382 9.48441V15.2344H14.916C15.021 15.2344 15.1072 15.2681 15.1745 15.3354C15.2415 15.4027 15.2754 15.4888 15.2754 15.5937V17.3907H15.2756V17.3906Z"
+								fill="#2F86EB"
+							/>
+						</svg>
+						<span data-test-id="admin-wrapper-text">Convosight works for facebook group admins only</span>
+					</h5>
+
+					<div class="btn-wrap">
+						<a
+							class="create-btn"
+							(click)="convosightBlogClick($event)"
+							target="_blank"
+							rel="noopener"
+							data-cs-id="6aa33af3-44c6-4574-9ba1-699f461adc76"
+							data-cs-label="Convosight blog"
+							data-cs-source="page"
+							href="https://www.convosight.com/blogs/how-to-create-a-facebook-group-in-5-minutes/?utm_source=App_Group_Manage_0Group"
+							>How to create a facebook group</a
+						>
+
+						<a
+							href="https://www.facebook.com/sharer/sharer.php?u=https://www.convosight.com/?utm_source=App_Group_Manage_0Group&utm_medium=FBShareIconInNoGroupPage"
+							onclick="window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+							target="_blank"
+							rel="noopener"
+							title="Share on Facebook"
+							(click)="FBShareBtnClick($event)"
+							class="share-btn"
+							data-cs-id="a737b984-9fef-4fd2-9db0-e29d14a9b444"
+							data-cs-label="Facebook share"
+							data-cs-source="page"
+							><svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12.5714 6.85715C11.4373 6.85715 10.4378 6.29729 9.81339 5.44636L6.69315 7.00685C6.78976 7.32334 6.85715 7.65237 6.85715 8.00002C6.85715 8.34766 6.78976 8.67676 6.69315 8.99318L9.81339 10.5537C10.4378 9.70274 11.4373 9.14289 12.5714 9.14289C14.462 9.14289 16 10.6808 16 12.5715C16 14.4621 14.4621 16 12.5714 16C10.6808 16 9.14285 14.462 9.14285 12.5714C9.14285 12.2238 9.2103 11.8947 9.30692 11.5783L6.18658 10.0178C5.56212 10.8687 4.56268 11.4286 3.42854 11.4286C1.53793 11.4286 0 9.89063 0 7.99998C0 6.10934 1.53793 4.57141 3.42857 4.57141C4.56272 4.57141 5.56215 5.13126 6.18661 5.9822L9.30685 4.42164C9.21024 4.10525 9.14285 3.77622 9.14285 3.42854C9.14285 1.53793 10.6808 -3.24249e-05 12.5714 -3.24249e-05C14.4621 -3.24249e-05 16 1.53793 16 3.42854C16 5.31915 14.462 6.85715 12.5714 6.85715ZM12.5714 14.8571C13.832 14.8571 14.8571 13.8314 14.8571 12.5714C14.8571 11.3114 13.832 10.2857 12.5714 10.2857C11.3108 10.2857 10.2857 11.3114 10.2857 12.5714C10.2857 13.8314 11.3108 14.8571 12.5714 14.8571ZM3.42857 5.71428C2.16795 5.71428 1.14287 6.73996 1.14287 7.99998C1.14287 9.26004 2.16799 10.2857 3.42857 10.2857C4.68919 10.2857 5.71428 9.26001 5.71428 7.99998C5.71428 6.73996 4.68919 5.71428 3.42857 5.71428ZM12.5714 1.14287C11.3108 1.14287 10.2857 2.16855 10.2857 3.42857C10.2857 4.6886 11.3108 5.71428 12.5714 5.71428C13.832 5.71428 14.8571 4.6886 14.8571 3.42857C14.8571 2.16852 13.832 1.14287 12.5714 1.14287Z"
+									fill="white"
+								/>
+							</svg>
+							<span>Share Convosight with Friends</span>
+						</a>
+					</div>
+				</div>
+
+				<div *ngIf="isGroupAdmin">
+					<h4 *ngIf="isAddMoreButtonClicked && isFBGroupAdmin === true" class="mb-5">
+						<strong>Lets try one more time</strong>
+					</h4>
+					<ul class="list-unstyled">
+						<li>
+							<div class="group-process-box">
+								<figure>
+									<svg fill="none" height="20" viewBox="0 0 28 20" width="28" xmlns="http://www.w3.org/2000/svg">
+										<path
+											clip-rule="evenodd"
+											fill="white"
+											d="M27.0588 2.78813L9.45942 20L0 10.75L2.85074 7.96168L9.45925 14.4239L24.2079 0L27.0588 2.78813Z"
+											fill-rule="evenodd"
+										/>
+									</svg>
+								</figure>
+								<p>Sign up</p>
+							</div>
+						</li>
+						<li>
+							<div class="group-process-box">
+								<figure>
+									<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill="#33334F"
+											d="M18.1684 8.16842H11.8316V1.83158C11.8316 0.821053 11.0105 0 10 0C8.98947 0 8.16842 0.821053 8.16842 1.83158V8.16842H1.83158C0.821053 8.16842 0 8.98947 0 10C0 10.5053 0.210526 10.9684 0.526316 11.3053C0.863158 11.6421 1.32632 11.8316 1.83158 11.8316H8.16842V18.1684C8.16842 18.6737 8.37895 19.1368 8.69474 19.4737C9.03158 19.8105 9.49474 20 10 20C11.0105 20 11.8316 19.1789 11.8316 18.1684V11.8316H18.1684C19.1789 11.8316 20 11.0105 20 10C20 8.98947 19.1789 8.16842 18.1684 8.16842Z"
+											opacity="0.7"
+										/>
+									</svg>
+								</figure>
+								<p>Add groups</p>
+							</div>
+						</li>
+						<li>
+							<div class="group-process-box">
+								<figure>
+									<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill="#33334F"
+											d="M18.1684 8.16842H11.8316V1.83158C11.8316 0.821053 11.0105 0 10 0C8.98947 0 8.16842 0.821053 8.16842 1.83158V8.16842H1.83158C0.821053 8.16842 0 8.98947 0 10C0 10.5053 0.210526 10.9684 0.526316 11.3053C0.863158 11.6421 1.32632 11.8316 1.83158 11.8316H8.16842V18.1684C8.16842 18.6737 8.37895 19.1368 8.69474 19.4737C9.03158 19.8105 9.49474 20 10 20C11.0105 20 11.8316 19.1789 11.8316 18.1684V11.8316H18.1684C19.1789 11.8316 20 11.0105 20 10C20 8.98947 19.1789 8.16842 18.1684 8.16842Z"
+											opacity="0.7"
+										/>
+									</svg>
+								</figure>
+								<p>Add app to Groups</p>
+							</div>
+						</li>
+						<li>
+							<div class="group-process-box">
+								<figure>
+									<svg fill="none" height="20" viewBox="0 0 27 20" width="27" xmlns="http://www.w3.org/2000/svg">
+										<path
+											fill="#33334F"
+											d="M23.3333 0C21.4925 0 20 1.4925 20 3.33333C20 4.09417 20.265 4.7875 20.6942 5.34833L15.595 13.3933C15.4008 13.3583 15.2033 13.3333 15 13.3333C14.7942 13.3333 14.595 13.3583 14.3992 13.3933L11.8767 9.42917C12.2658 8.88417 12.5 8.22083 12.5 7.5C12.5 5.65917 11.0075 4.16667 9.16667 4.16667C7.32583 4.16667 5.83333 5.65917 5.83333 7.5C5.83333 8.22083 6.0675 8.88417 6.45667 9.42917L3.93417 13.3933C3.73833 13.3583 3.53917 13.3333 3.33333 13.3333C1.4925 13.3333 0 14.8258 0 16.6667C0 18.5075 1.4925 20 3.33333 20C5.17417 20 6.66667 18.5075 6.66667 16.6667C6.66667 15.9458 6.4325 15.2825 6.04333 14.7375L8.56583 10.7733C8.76167 10.8083 8.96083 10.8333 9.16667 10.8333C9.3725 10.8333 9.57167 10.8083 9.7675 10.7733L12.29 14.7375C11.9008 15.2825 11.6667 15.9458 11.6667 16.6667C11.6667 18.5075 13.1592 20 15 20C16.8408 20 18.3333 18.5075 18.3333 16.6667C18.3333 15.9442 18.0975 15.2792 17.7058 14.7333L22.85 6.61833C23.0092 6.64167 23.1683 6.66667 23.3333 6.66667C25.1742 6.66667 26.6667 5.17417 26.6667 3.33333C26.6667 1.4925 25.1742 0 23.3333 0Z"
+											opacity="0.7"
+										/>
+									</svg>
+								</figure>
+								<p>Get Insights</p>
+							</div>
+						</li>
+					</ul>
+					<div class="extra-actions">
+						<button
+							(click)="addMoreButtonClicked($event)"
+							class="facebook-btn convo-btn-normal"
+							data-cs-id="1648b2da-7577-4b5f-91bb-3aef94b90946"
+							data-cs-label="Add Groups"
+							data-cs-source="page"
+						>
+							<span class="bt-spinner" *ngIf="showSpinnerOnAddGroupBtn"></span>
+							<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M15.1161 0H0.883078C0.395699 0 0 0.394909 0 0.883078V15.1161C0 15.6043 0.395699 15.9997 0.883078 15.9997H8.54573V9.8037H6.4608V7.38867H8.54573V5.60776C8.54573 3.54153 9.80739 2.41582 11.651 2.41582C12.5349 2.41582 13.2928 2.48195 13.5138 2.51066V4.67041L12.2351 4.67094C11.2326 4.67094 11.0393 5.14751 11.0393 5.84644V7.38788H13.4309L13.1181 9.80264H11.039V15.9989H15.1159C15.6038 15.9989 15.9997 15.603 15.9997 15.1161V0.882552C15.9995 0.394909 15.604 0 15.1161 0Z"
+									fill="white"
+								/>
+							</svg>
+							<span>Add Groups</span>
+						</button>
+						<a
+							(click)="howItWorkBtnClick($event)"
+							class="btn btn-link"
+							data-cs-id="d02d3fbf-aa50-45d7-8246-73e0c99df7f9"
+							data-cs-label="How it works"
+							data-cs-source="page"
+							href="javascript:"
+							>How it works?</a
+						>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+
+	<ng-template #loading>
+		<div class="loader-wrapper">
+			<div class="loading-strip primary"></div>
+			<div class="loading-strip secondary"></div>
+		</div>
+	</ng-template>
+</div>
+
+<ng-container *ngIf="showHowItWork">
+	<app-how-add-app-to-group (closeHowAddToApp)="closeHowAddToApp($event)"></app-how-add-app-to-group>
+</ng-container>

@@ -1,0 +1,263 @@
+<div class="campaigns-proposal-component">
+	<div class="your-campaigns-wrapper">
+		<div class="container mb-0">
+			<div class="head-wrapper">
+				<div class="left-section">
+					<a class="back-btn" (click)="closeCampaignProposal()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19.0005 11H7.83047L12.7105 6.11997C13.1005 5.72997 13.1005 5.08997 12.7105 4.69997C12.3205 4.30997 11.6905 4.30997 11.3005 4.69997L4.71047 11.29C4.32047 11.68 4.32047 12.31 4.71047 12.7L11.3005 19.29C11.6905 19.68 12.3205 19.68 12.7105 19.29C13.1005 18.9 13.1005 18.27 12.7105 17.88L7.83047 13H19.0005C19.5505 13 20.0005 12.55 20.0005 12C20.0005 11.45 19.5505 11 19.0005 11Z"
+								fill="#3654ff"
+							/>
+						</svg>
+						Back</a
+					>
+					<h4 class="m-0">{{ selectedCampaign?.campaignName }}</h4>
+					<ul class="list-unstyled breadcrumb-nav head-tag" *ngIf="selectedCampaign">
+						<li>
+							<a
+								><strong>Start date: </strong>
+								<span>{{ selectedCampaign.startDateAtUTC | date: 'dd MMM, yyyy' }}</span>
+								. <strong>End date: </strong> <span>{{ selectedCampaign.endDateAtUTC | date: 'dd MMM, yyyy' }}</span></a
+							>
+						</li>
+					</ul>
+				</div>
+				<div
+					*ngIf="selectedCampaign && selectedCampaign.status !== 'Scheduled' && selectedCampaign.status !== 'Active'"
+					class="right-section"
+				>
+					<button
+						class="btn btn-outline-danger convo-btn-normal mr-4"
+						data-target="#feedback-proposal"
+						data-toggle="modal"
+						hidden
+					>
+						Suggest changes
+					</button>
+					<button
+						(click)="
+							acceptCampaignProposal();
+							recordButtonClick($event, null, null, {campaignId: campaignId, brandId: brand.id})
+						"
+						[disabled]="isRequestInProgress || campaignTaskViewDetails?.length === 0"
+						class="convo-btn-primary convo-btn-normal"
+						data-cs-id="7d636502-9e8e-4ece-981c-3709618eb577"
+						data-cs-label="Approve Campaign"
+						data-cs-source="page"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.50013 13.4749L4.02513 9.99987L2.8418 11.1749L7.50013 15.8332L17.5001 5.8332L16.3251 4.6582L7.50013 13.4749Z"
+								fill="white"
+							/>
+						</svg>
+						<span>{{ isRequestInProgress ? 'Approving...' : 'Approve Campaign' }}</span>
+					</button>
+					<div class="icon-wrapper" *ngIf="campaignTaskViewDetails?.length === 0">
+						<div class="tooltip-wrapper position-static">
+							<app-tooltip
+								setTooltipText="A Campaign can be approved when there is atleast one task planned"
+							></app-tooltip>
+						</div>
+					</div>
+					<span data-target="#accept-proposal" data-toggle="modal" id="acceptProposal"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="!viewDetailsmarketingCampaign" class="campaign-proposal-body-wrapper">
+		<div class="container" *ngIf="selectedCampaign">
+			<div class="section-wrap">
+				<div class="report-box">
+					<div class="report-box-header" hidden>
+						<h5>{{ selectedCampaign.campaignName }}</h5>
+						<ul class="list-unstyled">
+							<li>
+								<strong>Start: </strong><span>{{ selectedCampaign.startDateAtUTC | date: 'dd MMM, yyyy' }}</span>
+							</li>
+							<li>
+								<strong>End: </strong><span>{{ selectedCampaign.endDateAtUTC | date: 'dd MMM, yyyy' }}</span>
+							</li>
+						</ul>
+					</div>
+					<div class="report-box-body">
+						<div class="about-report">
+							<div class="col-view">
+								<div *ngIf="selectedCampaign.keywordBrand">
+									<h6>Brand</h6>
+									<p>{{ selectedCampaign.keywordBrand }}</p>
+								</div>
+								<div *ngIf="selectedCampaign.keywordCategory">
+									<h6>Category</h6>
+									<p>{{ selectedCampaign.keywordCategory }}</p>
+								</div>
+								<div *ngIf="selectedCampaign.keywordSubCategories?.length > 0">
+									<h6>Sub-category</h6>
+									<ul class="list-unstyled ul-list">
+										<li *ngFor="let keywordSubCategory of selectedCampaign.keywordSubCategories">
+											{{ keywordSubCategory }}
+										</li>
+									</ul>
+								</div>
+							</div>
+							<hr />
+							<h6>Campaign Brief</h6>
+							<div *ngIf="selectedCampaign.details" [innerHtml]="selectedCampaign.details | sanitizeHtml"></div>
+							<hr />
+							<h6 *ngIf="selectedCampaign.objective">Objective</h6>
+							<div *ngIf="selectedCampaign.objective" [innerHtml]="selectedCampaign.objective | sanitizeHtml"></div>
+							<hr *ngIf="selectedCampaign.objective" />
+							<h6 *ngIf="selectedCampaign.primaryObjective || selectedCampaign.secondaryObjective">
+								Campaign Objectives
+							</h6>
+							<div class="row" *ngIf="selectedCampaign.primaryObjective || selectedCampaign.secondaryObjective">
+								<div class="col pl-0">
+									<div *ngIf="selectedCampaign.primaryObjective">
+										<h6 class="mb-0"><small>Primary Objective</small></h6>
+										<p>{{ selectedCampaign.primaryObjective }}</p>
+									</div>
+								</div>
+								<div class="col">
+									<div *ngIf="selectedCampaign.secondaryObjective">
+										<h6 class="mb-0"><small>Secondary Objective</small></h6>
+										<p>{{ selectedCampaign.secondaryObjective }}</p>
+									</div>
+								</div>
+							</div>
+							<hr *ngIf="selectedCampaign.primaryObjective || selectedCampaign.secondaryObjective" />
+							<div class="row" *ngIf="selectedCampaign.cmcType || selectedCampaign.selectedKPIs">
+								<div class="col pl-0">
+									<div *ngIf="selectedCampaign.cmcType">
+										<h6>Campaign Type</h6>
+										<ul class="list-unstyled ul-list">
+											<li *ngFor="let cmcType of selectedCampaign.selectedCmcType">{{ cmcType }}</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col">
+									<div *ngIf="selectedCampaign.selectedKPIs?.length > 0">
+										<h6>Campaign KPIs</h6>
+										<ul class="list-unstyled ul-list">
+											<li *ngFor="let kpi of selectedCampaign.selectedKPIs">{{ kpi }}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr
+								*ngIf="
+									(selectedCampaign.cmcType || selectedCampaign.selectedKPIs) && selectedCampaign.keywords?.length > 0
+								"
+							/>
+							<h6 *ngIf="selectedCampaign.keywords?.length > 0">Keywords tracked</h6>
+							<div class="keywords-wrapper">
+								<span *ngFor="let keyword of selectedCampaign.keywords" class="badge">{{ keyword }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="section-wrap">
+				<div *ngIf="campaignTaskViewDetails && campaignTaskViewDetails.length > 0">
+					<app-community-marketing-campaign-tasks-old
+						(closeTaskDetailsView)="closeTaskDetailsView($event)"
+						[campaignTaskViewDetails]="campaignTaskViewDetails"
+						[isCsAdmin]="isCsAdmin"
+						[isFromBrand]="true"
+						[numberOfMissings]="'0'"
+						[taskName]="selectedCampaign.campaignName + ' - Task1'"
+					>
+					</app-community-marketing-campaign-tasks-old>
+				</div>
+			</div>
+		</div>
+		<div
+			class="container"
+			*ngIf="isCampaignTaskDetailsLoaded && campaignTaskViewDetails && campaignTaskViewDetails.length === 0"
+		>
+			<div class="report-box">
+				<div>
+					<h6>Tasks</h6>
+				</div>
+				<div class="no-results-wrapper">
+					<div>
+						<h5>No tasks planned yet</h5>
+						<p>Tasks planned by your Convosight account manager for this campaign will be displayed here</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="viewDetailsmarketingCampaign && selectedCampaign">
+		<app-community-marketing-campaign-tasks-old
+			(closeTaskDetailsView)="closeTaskDetailsView($event)"
+			[campaignTaskViewDetails]="campaignTaskViewDetails"
+			[isFromBrand]="true"
+			[numberOfMissings]="'0'"
+			[taskName]="selectedCampaign.campaignName + ' - Task 1'"
+		></app-community-marketing-campaign-tasks-old>
+	</div>
+</div>
+
+<div class="modal fade proposal-modal" id="accept-proposal" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document" *ngIf="selectedCampaign">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+				<figure><img alt="" src="assets/images/icon-success.svg" /></figure>
+				<h6>Thank you for accepting this proposal</h6>
+				<p>
+					The reports for this solution will appear starting
+					<strong>{{ selectedCampaign.startDateAtUTC | date: 'dd MMM, yyyy' }}</strong>
+				</p>
+				<button
+					(click)="closeCampaignProposalAfterAcceptance()"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+				>
+					Back
+				</button>
+				<span data-dismiss="modal" id="cancelProposal"></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade feedback-modal" id="feedback-proposal" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Tell us how we can improve this proposal</h6>
+				<textarea placeholder="Enter your feedback here"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" type="button">Cancel</button>
+				<button
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					data-target="#feedback-success-modal"
+					data-toggle="modal"
+					type="button"
+				>
+					Submit feedback
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade feedback-success-modal" id="feedback-success-modal" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+				<figure><img alt="" src="assets/images/icon-success.svg" /></figure>
+				<h6>Your feedback has been submitted</h6>
+				<p>We will review your feedback and get back to you</p>
+				<button class="convo-btn-primary convo-btn-normal" type="button">Go back to all campaigns</button>
+			</div>
+		</div>
+	</div>
+</div>

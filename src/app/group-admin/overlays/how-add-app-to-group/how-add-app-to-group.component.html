@@ -1,0 +1,64 @@
+<div class="custom-modal-wrapper">
+	<div class="custom-modal-overlay"></div>
+	<div class="custom-modal-content">
+		<div class="modal-dialog modal-dialog-scrollable modal-lg">
+			<div class="modal-content" data-test-id="how-it-works-overlay">
+				<div class="modal-header">
+					<h5 class="modal-title">How it works</h5>
+					<button
+						(click)="closeHowAddToAppPopup($event)"
+						class="close"
+						data-cs-id="9299e309-d921-4e2a-bee1-6b5ed2a60445"
+						data-test-id="how-it-works-overlay-close-button"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+						type="button"
+					>
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="how-it-works-content">
+						<h2 class="step-title">Step 1 - Signup</h2>
+						<p>
+							In this step, you authorize Convosight to get you profile picture, name and email id (depending on your
+							privacy setting) from Facebook.
+						</p>
+
+						<h2 class="step-title">Step 2 - Add Group to Convosight</h2>
+						<p>You authorize Convosight to get basic group details of groups you admin.</p>
+
+						<h2 class="step-title">Step 3 - Add Convosight to your group</h2>
+						<p>You add Convosight app on your group from Facebook group settings page.</p>
+
+						<h2 class="step-title">Step 4 - Convosight Analyze the data</h2>
+						<p>
+							Once all of the above steps are done, Convosight pulls in all the conversation to analyze them and find
+							some meaningful and actionable insight. It uses Data Science and Machine Learning to make smart
+							recommendations.
+						</p>
+
+						<div class="note">
+							Note: Convosight is a Facebook Approved app. It uses only FB APIs to exchange data. It does not share data
+							with anyone else than the group admins and authorized moderators added by Admin on Convosight
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						(click)="addMoreGroup($event)"
+						class="btn add-group-btn"
+						data-cs-id="5228eb1d-1cea-45bc-93f4-e6e4e8243527"
+						data-cs-label="Add Groups"
+						data-test-id="how-it-works-overlay-add-groups-button"
+						data-cs-source="dialog"
+						type="button"
+					>
+						<span *ngIf="showSpinnerOnAddGroupBtn" class="bt-spinner"></span>
+						Add Groups
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

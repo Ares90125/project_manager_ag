@@ -1,0 +1,669 @@
+<div class="modal file-alert ediBrandsModal" *ngIf="brandListStage">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit most talked about brands</h5>
+				<button
+					#closeButtonForEditBrands
+					aria-label="Close"
+					(click)="closeModalHandle($event)"
+					[disabled]="isSaveInProgress"
+					data-cs-id="427889bd-e15a-4672-bd9d-5c355ac529b1"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="show-brands-wrap main-row">
+					<p class="settings-field m-0">Show most talked about brands</p>
+					<div class="slide-toggle-wrapper">
+						<mat-slide-toggle
+							(toggleChange)="recordToggleClicked($event); updateBrands()"
+							[attr.data-cs-toggle-status]="!(groupProfilePage.showMostTalkedAboutBrands && noOfBrandsEnabled() > 0)"
+							[checked]="groupProfilePage.showMostTalkedAboutBrands && noOfBrandsEnabled() > 0"
+							[(ngModel)]="groupProfilePage.showMostTalkedAboutBrands"
+							[disabled]="
+								isSaveInProgress || !(groupProfilePage?.mostTalkedAboutBrands?.length > 0) || noOfBrandsEnabled() === 0
+							"
+							data-cs-id="85961deb-7180-4218-ab36-b39a4d1672f5"
+							data-cs-label="show group admins"
+							data-cs-source="dialog"
+						></mat-slide-toggle>
+					</div>
+				</div>
+				<ng-container>
+					<div class="number-brands-warning">
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.33203 10.0002H8.66536V11.3335H7.33203V10.0002ZM7.33203 4.66683H8.66536V8.66683H7.33203V4.66683ZM7.99203 1.3335C4.31203 1.3335 1.33203 4.32016 1.33203 8.00016C1.33203 11.6802 4.31203 14.6668 7.99203 14.6668C11.6787 14.6668 14.6654 11.6802 14.6654 8.00016C14.6654 4.32016 11.6787 1.3335 7.99203 1.3335ZM7.9987 13.3335C5.05203 13.3335 2.66536 10.9468 2.66536 8.00016C2.66536 5.0535 5.05203 2.66683 7.9987 2.66683C10.9454 2.66683 13.332 5.0535 13.332 8.00016C13.332 10.9468 10.9454 13.3335 7.9987 13.3335Z"
+								fill="#A26700"
+							/>
+						</svg>
+						<p *ngIf="!!groupProfilePage?.mostTalkedAboutBrands?.length">
+							You can add only a <strong>maximum of 5 brand names</strong>
+						</p>
+						<p *ngIf="!groupProfilePage?.mostTalkedAboutBrands?.length">
+							You can show most talked about brands only if you add at least one brand name.
+						</p>
+					</div>
+					<ng-container *ngFor="let brand of groupProfilePage.mostTalkedAboutBrands">
+						<div class="brands-settings-card">
+							<div class="brands-row">
+								<div class="settings-field m-0">
+									<img
+										[appDefaultImageSrc]="'./assets/images/brand-logo/default-brand-logo.png'"
+										[src]="brand.brandImageURL"
+										alt=""
+										class="brand-img"
+									/>
+									<div class="d-flex flex-column justify-content-center">
+										<p *ngIf="hasDifferentBrands" class="brand-type-title">
+											{{ brand.isCustomBrand ? 'Brand created by you' : 'Brand picked by you' }}
+										</p>
+										<p class="brand-name">{{ brand.brandName }}</p>
+									</div>
+								</div>
+								<div class="edit-brand-wrap">
+									<button
+										*ngIf="!brand.isCustomBrand && hasDifferentBrands"
+										#tooltip="matTooltip"
+										matTooltip="Editing disabled"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle(); recordButtonClick($event, null, null, null, groupProfilePage)"
+										data-cs-id="79996849-50dd-4577-8dee-bc902e32c04e"
+										class="edit-brand-btn"
+										data-cs-label="Edit default brand"
+										data-cs-source="dialog"
+										data-dismiss="modal"
+										type="button"
+									>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M10.8334 9.41922L4.41421 3L3 4.41421L19.7345 21.1487L21.1487 19.7345L14.582 13.1677L17.8102 9.9425L14.0602 6.1925L10.8334 9.41922Z"
+												fill="#D6D6DC"
+											/>
+											<path
+												d="M20.7101 7.0425C21.1001 6.6525 21.1001 6.0225 20.7101 5.6325L18.3702 3.2925C17.9802 2.9025 17.3502 2.9025 16.9601 3.2925L15.1302 5.1225L18.8801 8.8725L20.7101 7.0425Z"
+												fill="#D6D6DC"
+											/>
+											<path
+												d="M3.00015 20.5025V17.4625C3.00015 17.3225 3.05015 17.2025 3.15015 17.1025L8.41922 11.8334L12.1666 15.5808L6.89015 20.8525C6.80015 20.9525 6.67015 21.0025 6.54015 21.0025H3.50015C3.22015 21.0025 3.00015 20.7825 3.00015 20.5025Z"
+												fill="#D6D6DC"
+											/>
+										</svg>
+									</button>
+									<button
+										*ngIf="brand.isCustomBrand"
+										(click)="toUpdateBrand($event, brand)"
+										data-cs-id="79996849-50dd-4577-8dee-bc902e32c04e"
+										class="edit-brand-btn"
+										data-cs-label="Edit custom brand"
+										data-cs-source="dialog"
+										data-dismiss="modal"
+										type="button"
+									>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M3 17.4601V20.5001C3 20.7801 3.22 21.0001 3.5 21.0001H6.54C6.67 21.0001 6.8 20.9501 6.89 20.8501L17.81 9.94006L14.06 6.19006L3.15 17.1001C3.05 17.2001 3 17.3201 3 17.4601ZM20.71 7.04006C21.1 6.65006 21.1 6.02006 20.71 5.63006L18.37 3.29006C17.98 2.90006 17.35 2.90006 16.96 3.29006L15.13 5.12006L18.88 8.87006L20.71 7.04006Z"
+												fill="#707084"
+											/>
+										</svg>
+									</button>
+									<button
+										(click)="openDeleteBrandModal($event, brand)"
+										matTooltip="Delete brand"
+										matTooltipPosition="above"
+										[disabled]="isSaveInProgress"
+										data-cs-id="cab3f945-4246-4658-850f-7d5ed0c7418a"
+										data-cs-label="Delete brand"
+										data-cs-source="dialog"
+										data-dismiss="modal"
+										type="button"
+									>
+										<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM8 9H16V19H8V9ZM15.5 4L14.5 3H9.5L8.5 4H5V6H19V4H15.5Z"
+												fill="#707084"
+											/>
+										</svg>
+									</button>
+								</div>
+							</div>
+							<div class="slide-toggle-wrapper">
+								<span>Show in page</span>
+								<mat-slide-toggle
+									(toggleChange)="recordToggleClicked($event); toggleBrandSelection(brand)"
+									[attr.data-cs-toggle-status]="!brand.isSelected"
+									[(ngModel)]="brand.isSelected"
+									[disabled]="isSaveInProgress"
+									data-cs-id="dabbf0ed-1211-de34-8018-38cc99771b70"
+									data-cs-label="hide admin profile"
+									data-cs-source="dialog"
+								></mat-slide-toggle>
+							</div>
+						</div>
+					</ng-container>
+					<button
+						(click)="toAddBrandStage($event)"
+						*ngIf="groupProfilePage?.mostTalkedAboutBrands?.length < 5"
+						class="convo-btn-bordered convo-btn-small add-brand-btn"
+						data-cs-id="78b252b9-262f-419d-a030-50313efc6da8"
+						data-cs-label="Add new brand"
+						data-cs-source="dialog"
+					>
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.6654 8.66659H8.66536V12.6666H7.33203V8.66659H3.33203V7.33325H7.33203V3.33325H8.66536V7.33325H12.6654V8.66659Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						Add new brand
+					</button>
+				</ng-container>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); closeButtonForEditBrands.click()"
+					[disabled]="isSaveInProgress || !(groupProfilePage?.mostTalkedAboutBrands?.length > 0) || !isSaveEnabled()"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="da51606d-8734-4166-9a07-448aac265830"
+					data-cs-label="Save changes"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert ediBrandsModal search-brand" *ngIf="addBrandStage">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="d-flex align-items-center">
+					<button
+						(click)="toBrandListStage($event)"
+						[disabled]="isSaveInProgress"
+						data-cs-id="416db7d0-7df9-437d-a8f4-04f51a4d9369"
+						data-cs-label="Back to brands"
+						data-cs-source="dialog"
+						data-dismiss="modal"
+						type="button"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19.0005 11H7.83047L12.7105 6.12C13.1005 5.73 13.1005 5.09 12.7105 4.7C12.3205 4.31 11.6905 4.31 11.3005 4.7L4.71047 11.29C4.32047 11.68 4.32047 12.31 4.71047 12.7L11.3005 19.29C11.6905 19.68 12.3205 19.68 12.7105 19.29C13.1005 18.9 13.1005 18.27 12.7105 17.88L7.83047 13H19.0005C19.5505 13 20.0005 12.55 20.0005 12C20.0005 11.45 19.5505 11 19.0005 11Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+					<h5 class="modal-title">Add new brand</h5>
+				</div>
+				<button
+					#closeButtonForEditBrands
+					aria-label="Close"
+					(click)="closeModalHandle($event)"
+					[disabled]="isSaveInProgress"
+					data-cs-id="c60b83f8-acc6-4301-ab3c-6885280dce8e"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="input-wrap" *ngIf="!selectedBrand">
+					<label>Brand name <sup>*</sup></label>
+					<div class="input-row">
+						<input
+							type="text"
+							name="topic"
+							(delayedInput)="searchBrandsHandle($event)"
+							appDelayedInput
+							formControlName="topic"
+							maxlength="60"
+							[appFocusInput]="true"
+							class="convo-input"
+							placeholder="Example: Dettol"
+						/>
+						<span class="spinner debounce-spinner" *ngIf="isSearchInProgress"></span>
+					</div>
+					<div class="dropdown-menu-wrapper dropdown-menu" *ngIf="foundedBrands?.length && customBrandNameValue">
+						<div class="dropdown-srollable-wrap">
+							<div class="dropdown-container">
+								<div
+									*ngFor="let brand of foundedBrands"
+									class="form-check category-item"
+									(click)="selectBrandHadle($event, brand)"
+								>
+									<div class="dropdown-item">
+										<div class="brand-row">
+											<div class="brand-img-wrap">
+												<img
+													[appDefaultImageSrc]="'./assets/images/brand-logo/default-brand-logo.png'"
+													[src]="brand?.iconUrl"
+													alt=""
+												/>
+											</div>
+											<span>{{ brand.name }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="dropdown-menu-wrapper dropdown-menu" *ngIf="createCustomBrand && customBrandNameValue">
+						<div class="dropdown-container">
+							<div class="form-check category-item">
+								<div class="no-brands-row">
+									<p>No brands found for ‘{{ customBrandNameValue }}’</p>
+									<button
+										(click)="toCustomBrand($event)"
+										data-cs-id="20eac654-f61c-429f-976d-b84bb74029fc"
+										data-cs-label="Add custom brand"
+										data-cs-source="dialog"
+										data-dismiss="modal"
+										type="button"
+									>
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.6654 8.66671H8.66536V12.6667H7.33203V8.66671H3.33203V7.33337H7.33203V3.33337H8.66536V7.33337H12.6654V8.66671Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<span>Add {{ customBrandNameValue }}</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="input-wrap existing-brand-preview" *ngIf="selectedBrand">
+					<label>Brand name <sup>*</sup></label>
+					<div class="input-row">
+						<input
+							type="text"
+							disabled
+							[value]="selectedBrand.name"
+							appDelayedInput
+							maxlength="200"
+							class="convo-input"
+						/>
+					</div>
+					<div class="image-prview-frame">
+						<div class="img-wrap">
+							<img
+								[src]="selectedBrand.iconUrl"
+								[appDefaultImageSrc]="'./assets/images/brand-logo/default-brand-logo.png'"
+								alt=""
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="addFoundedBrand($event)"
+					[disabled]="isSaveInProgress || !selectedBrand"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="8ee9f7f0-fcc5-4dbd-93cc-0e2ebe788929"
+					data-cs-label="Save changes"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert ediBrandsModal custom-brand-modal" *ngIf="customBrandStage">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="d-flex align-items-center">
+					<button
+						(click)="toBrandListStage($event)"
+						[disabled]="isSaveInProgress"
+						data-cs-id="9f168e52-f5e1-4b85-bbd1-d8598721d55d"
+						data-cs-label="Back to brands"
+						data-cs-source="dialog"
+						data-dismiss="modal"
+						type="button"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19.0005 11H7.83047L12.7105 6.12C13.1005 5.73 13.1005 5.09 12.7105 4.7C12.3205 4.31 11.6905 4.31 11.3005 4.7L4.71047 11.29C4.32047 11.68 4.32047 12.31 4.71047 12.7L11.3005 19.29C11.6905 19.68 12.3205 19.68 12.7105 19.29C13.1005 18.9 13.1005 18.27 12.7105 17.88L7.83047 13H19.0005C19.5505 13 20.0005 12.55 20.0005 12C20.0005 11.45 19.5505 11 19.0005 11Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+					<h5 class="modal-title">Add new brand</h5>
+				</div>
+				<button
+					#closeButtonForEditBrands
+					aria-label="Close"
+					(click)="closeModalHandle($event)"
+					[disabled]="isSaveInProgress"
+					data-cs-id="d73685ac-9576-4380-9773-12c1f2b0058c"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="input-wrap existing-brand-preview">
+					<label>Brand name <sup>*</sup></label>
+					<div class="input-row">
+						<input
+							type="text"
+							[defaultValue]="customBrandNameValue"
+							[(ngModel)]="customBrandNameValue"
+							appDelayedInput
+							maxlength="60"
+							class="convo-input"
+						/>
+					</div>
+					<div class="image-prview-frame">
+						<div class="img-wrap">
+							<img
+								[src]="previewImage"
+								[appDefaultImageSrc]="'./assets/images/brand-logo/default-brand-logo.png'"
+								alt=""
+							/>
+						</div>
+						<div class="add-logo-title">
+							<p *ngIf="!uploading">
+								<svg
+									*ngIf="loadedAvatarUrl"
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M6.0001 10.7799L3.2201 7.9999L2.27344 8.9399L6.0001 12.6666L14.0001 4.66656L13.0601 3.72656L6.0001 10.7799Z"
+										fill="#27AE60"
+									/>
+								</svg>
+								{{ loadedAvatarUrl ? 'Logo uploaded successfully!' : 'Add a logo for this brand' }}
+							</p>
+							<p *ngIf="uploading">
+								<span class="spinner upload-spinner"></span>
+								<span class="uploading-title"> Uploading... </span>
+							</p>
+							<button
+								*ngIf="!uploading"
+								class="convo-btn-normal convo-btn-bordered"
+								data-cs-id="9794fee6-f981-430b-8bf0-4b6dc03244aa"
+								data-cs-label="Browse image"
+								data-cs-source="dialog"
+								(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+							>
+								<input
+									(change)="onSelectFile($event)"
+									class="input-file"
+									title=""
+									type="file"
+									accept=".jpg,.jpeg,.png"
+								/>
+								<svg
+									*ngIf="loadedAvatarUrl"
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<g clip-path="url(#clip0_13086_289309)">
+										<path
+											d="M8.0013 2.66685V1.47352C8.0013 1.17352 7.6413 1.02685 7.43463 1.24018L5.56797 3.10018C5.43464 3.23352 5.43464 3.44018 5.56797 3.57352L7.42797 5.43352C7.6413 5.64018 8.0013 5.49352 8.0013 5.19352V4.00018C10.208 4.00018 12.0013 5.79352 12.0013 8.00018C12.0013 8.52685 11.9013 9.04018 11.708 9.50018C11.608 9.74018 11.6813 10.0135 11.8613 10.1935C12.2013 10.5335 12.7746 10.4135 12.9546 9.96685C13.2013 9.36018 13.3346 8.69352 13.3346 8.00018C13.3346 5.05352 10.948 2.66685 8.0013 2.66685ZM8.0013 12.0002C5.79464 12.0002 4.0013 10.2069 4.0013 8.00018C4.0013 7.47352 4.1013 6.96018 4.29464 6.50018C4.39464 6.26018 4.3213 5.98685 4.1413 5.80685C3.8013 5.46685 3.22797 5.58685 3.04797 6.03352C2.8013 6.64018 2.66797 7.30685 2.66797 8.00018C2.66797 10.9468 5.05464 13.3335 8.0013 13.3335V14.5269C8.0013 14.8269 8.3613 14.9735 8.56797 14.7602L10.428 12.9002C10.5613 12.7669 10.5613 12.5602 10.428 12.4268L8.56797 10.5669C8.3613 10.3602 8.0013 10.5068 8.0013 10.8068V12.0002Z"
+											fill="#3654FF"
+										/>
+									</g>
+									<defs>
+										<clipPath id="clip0_13086_289309">
+											<rect width="16" height="16" fill="white" />
+										</clipPath>
+									</defs>
+								</svg>
+								<span>
+									{{ loadedAvatarUrl ? 'Change logo' : 'Browse image' }}
+								</span>
+							</button>
+						</div>
+					</div>
+					<div class="custom-image-warning">
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M6 4.66671H7.33333V3.33337H6V4.66671ZM6 10H7.33333V6.00004H6V10ZM6.66 13.3334C2.98 13.3334 0 10.3467 0 6.66671C0 2.98671 2.98 4.00543e-05 6.66 4.00543e-05C10.3467 4.00543e-05 13.3333 2.98671 13.3333 6.66671C13.3333 10.3467 10.3467 13.3334 6.66 13.3334ZM6.66667 1.33337C3.72 1.33337 1.33333 3.72004 1.33333 6.66671C1.33333 9.61337 3.72 12 6.66667 12C9.61333 12 12 9.61337 12 6.66671C12 3.72004 9.61333 1.33337 6.66667 1.33337Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span> A logo of minimum dimensions 120x120 pixels and 1:1 ratio (square) will look the best. </span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="editBrandMode ? updateCustomBrand($event) : createCustomBrandHandle($event)"
+					[disabled]="isSaveInProgress || !customBrandNameValue || uploading"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="444d7eec-5ef5-40a5-a295-9c2e930efb1f"
+					data-cs-label="Save brand"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving brands' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert ediBrandsModal crop-image-modal" *ngIf="cropImageStage">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="d-flex align-items-center">
+					<button
+						(click)="toCustomBrand($event)"
+						[disabled]="isSaveInProgress"
+						data-cs-id="1cf3e332-157b-42e9-81fd-580ccf5b87d2"
+						data-cs-label="Back to brands"
+						data-cs-source="dialog"
+						data-dismiss="modal"
+						type="button"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19.0005 11H7.83047L12.7105 6.12C13.1005 5.73 13.1005 5.09 12.7105 4.7C12.3205 4.31 11.6905 4.31 11.3005 4.7L4.71047 11.29C4.32047 11.68 4.32047 12.31 4.71047 12.7L11.3005 19.29C11.6905 19.68 12.3205 19.68 12.7105 19.29C13.1005 18.9 13.1005 18.27 12.7105 17.88L7.83047 13H19.0005C19.5505 13 20.0005 12.55 20.0005 12C20.0005 11.45 19.5505 11 19.0005 11Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+					<h5 class="modal-title">Edit logo</h5>
+				</div>
+				<button
+					#closeButtonForEditBrands
+					aria-label="Close"
+					(click)="closeModalHandle($event)"
+					[disabled]="isSaveInProgress"
+					data-cs-id="45d3e6ae-fa0b-46db-baf1-3f1453104d1a"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="crop-image-title">
+					<svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M6.83203 4.66658H8.16536V3.33325H6.83203V4.66658ZM6.83203 9.99992H8.16536V5.99992H6.83203V9.99992ZM7.49203 13.3333C3.81203 13.3333 0.832031 10.3466 0.832031 6.66658C0.832031 2.98658 3.81203 -8.2016e-05 7.49203 -8.2016e-05C11.1787 -8.2016e-05 14.1654 2.98658 14.1654 6.66658C14.1654 10.3466 11.1787 13.3333 7.49203 13.3333ZM7.4987 1.33325C4.55203 1.33325 2.16536 3.71992 2.16536 6.66658C2.16536 9.61325 4.55203 11.9999 7.4987 11.9999C10.4454 11.9999 12.832 9.61325 12.832 6.66658C12.832 3.71992 10.4454 1.33325 7.4987 1.33325Z"
+							fill="#3654FF"
+						/>
+					</svg>
+					<span> Adjust the logo to fit inside the circle </span>
+				</div>
+				<div class="input-wrap" *ngIf="!selectedBrand">
+					<div>
+						<section *ngIf="imageUrl">
+							<angular-cropper [cropperOptions]="cropperConfig" [imageUrl]="imageUrl" #angularCropper></angular-cropper>
+						</section>
+					</div>
+					<div class="scale-image-slider-wrap">
+						<button
+							(click)="decreaseImageScale($event)"
+							[disabled]="scaleValue === 1"
+							data-cs-id="e2b3c215-644b-4422-85e7-7936dfb1fb0b"
+							data-cs-label="Decrease image scale"
+							data-cs-source="dialog"
+							data-dismiss="modal"
+							type="button"
+						>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M19 13H5V11H19V13Z" fill="#33334F" />
+							</svg>
+						</button>
+						<mat-slider
+							min="1"
+							max="2"
+							step="0.05"
+							value="1"
+							(change)="scaleImageHandle($event)"
+							[(ngModel)]="scaleValue"
+						></mat-slider>
+						<button
+							(click)="increaseImageScale($event)"
+							[disabled]="scaleValue === 2"
+							data-cs-id="bb153996-63aa-435e-a4a2-0f02032eb95c"
+							data-cs-label="Increase image scale"
+							data-cs-source="dialog"
+							data-dismiss="modal"
+							type="button"
+						>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#33334F" />
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer crop-image-footer border-0 pt-0">
+				<button
+					(click)="toCustomBrand($event)"
+					class="convo-btn-outline convo-btn-normal"
+					type="button"
+					data-cs-id="efc416be-75de-4503-b6c6-46d0a34d2ac1"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					Cancel
+				</button>
+				<button
+					(click)="saveCroppedImage($event)"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="4b48c95a-ce30-4bb0-9c81-a3e9bc5b1141"
+					data-cs-label="Save changes"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Remove Brand Modal -->
+<div *ngIf="deletableBrand" class="modal file-alert delete-brand-modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					data-dismiss="modal"
+					(click)="toBrandListStage($event)"
+					data-cs-id="07f132ad-1d34-4d6a-84d6-5444d7c07fbb"
+					data-cs-label="Back"
+					data-cs-source="dialog"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19.0005 10.9988H7.83047L12.7105 6.11875C13.1005 5.72875 13.1005 5.08875 12.7105 4.69875C12.3205 4.30875 11.6905 4.30875 11.3005 4.69875L4.71047 11.2888C4.32047 11.6788 4.32047 12.3087 4.71047 12.6987L11.3005 19.2888C11.6905 19.6788 12.3205 19.6788 12.7105 19.2888C13.1005 18.8988 13.1005 18.2687 12.7105 17.8787L7.83047 12.9987H19.0005C19.5505 12.9987 20.0005 12.5487 20.0005 11.9988C20.0005 11.4488 19.5505 10.9988 19.0005 10.9988Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<h5 class="modal-title">Remove brand</h5>
+				<button
+					type="button"
+					data-dismiss="modal"
+					data-cs-id="55f371cc-4ab5-4d01-9573-2ccf9789e959"
+					data-cs-label="Cross"
+					data-cs-source="dialog"
+					(click)="toBrandListStage($event)"
+					class="close"
+					aria-label="Close"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Are you sure you want to remove <strong>{{ deletableBrand.brandName }}</strong> brand?
+				</p>
+			</div>
+			<div class="modal-footer border-0">
+				<button
+					type="button"
+					class="btn btn-cancel convo-btn-bordered"
+					data-dismiss="modal"
+					data-cs-id="05c4aafe-74c3-4712-acc1-03973d55c732"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+					(click)="toBrandListStage($event)"
+				>
+					Cancel
+				</button>
+				<button
+					(click)="deleteBrand($event)"
+					type="button"
+					class="btn convo-btn-danger"
+					data-cs-id="18443975-be6e-4742-87dd-fcd7dc919dce"
+					data-cs-label="Remove"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+				>
+					Remove
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

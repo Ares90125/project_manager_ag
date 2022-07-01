@@ -1,0 +1,1428 @@
+<div class="keyword-tracking-wrapper">
+	<div
+		*ngIf="
+			selectedReport === null &&
+			group?.percentageLast14DaysMetricsAvailable < 100 &&
+			!group?.areMetricsAvailable &&
+			type === 'group'
+		"
+		class="container"
+	>
+		<div class="row">
+			<div class="col">
+				<div *ngIf="type === 'group'">
+					<h4 class="pb-1 alert-title" data-test-id="heading-keywords-alert-page">Keyword Alerts</h4>
+					<p class="text-secondary small">Setup tracking to find conversations that need your attention</p>
+				</div>
+				<div class="report-table-wrapper" data-test-id="keyword-alert-report-table">
+					<table aria-describedby="" class="report-table">
+						<tbody *ngIf="!reports">
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody *ngIf="reports">
+							<tr *ngFor="let report of reports" data-cs-parent-label="Urgent alerts" data-cs-source="page">
+								<td class="reportName-wrapper" style="width: 35%">
+									<h5>
+										<span class="report-name">{{ report.displayName | titlecase }}</span>
+									</h5>
+								</td>
+								<td>
+									<h5>
+										{{ report.keywords.split('|').length }}
+										<small class="text-secondary">Keywords</small>
+									</h5>
+								</td>
+								<td class="conversation-wrapper analysing">
+									<div>
+										<app-analysis-state
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[value]="group?.percentageLast28DaysMetricsAvailable"
+											[inline]="true"
+											[diameter]="28"
+										></app-analysis-state>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div
+		*ngIf="selectedReport === null"
+		class="container"
+		[hidden]="type === 'group' && group?.percentageLast14DaysMetricsAvailable < 100 && !group?.areMetricsAvailable"
+	>
+		<div class="row">
+			<div class="col">
+				<div *ngIf="type === 'group' && renderedOn !== 'Mobile'">
+					<h4 class="pb-1 alert-title" data-test-id="heading-keywords-alert-page">Keyword Alerts</h4>
+					<p class="text-secondary small" data-test-id="subheading-keyword-alert">
+						Setup tracking to find conversations that need your attention
+					</p>
+				</div>
+				<div *ngIf="type === 'brand'" class="pt-5">
+					<h4 class="pb-1 alert-title">Brand Track</h4>
+					<p class="text-secondary small">
+						Keep a track of conversations relevant to your brand in Facebook groups and Whatsapp groups as they happen.
+					</p>
+				</div>
+				<div class="report-table-wrapper" data-test-id="keyword-alert-report-table">
+					<table aria-describedby="" class="report-table">
+						<tbody
+							*ngIf="
+								reports === null ||
+								isEmpty(totalConversationsIn2DaysForReport) ||
+								sizeOfReportObject(totalConversationsIn2DaysForReport) === 0
+							"
+						>
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="loading-strip tertiary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+								<td>
+									<div class="loading-strip secondary my-2"></div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody
+							*ngIf="
+								reports !== null &&
+								!isEmpty(totalConversationsIn2DaysForReport) &&
+								sizeOfReportObject(totalConversationsIn2DaysForReport) !== 0
+							"
+						>
+							<tr
+								(click)="navigateToReportDetails(report); recordButtonClick($event, group, report.displayName)"
+								*ngFor="let report of reports"
+								data-cs-parent-label="Urgent alerts"
+								data-cs-source="page"
+								data-test-id="reporntName-table"
+							>
+								<td class="reportName-wrapper" style="width: 35%">
+									<h5>
+										<span
+											class="report-name"
+											(click)="tooltip.toggle()"
+											#tooltip="matTooltip"
+											matTooltip="View the Report"
+											matTooltipPosition="above"
+											data-test-id="heading-report-name"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="View the Report"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+											>{{ report.displayName | titlecase }}</span
+										>
+									</h5>
+								</td>
+								<td data-test-id="keywords-report">
+									<h5 data-test-id="count-keywords-report">
+										{{ report.keywords.split('|').length }}
+										<small class="text-secondary">Keywords</small>
+									</h5>
+								</td>
+								<td class="conversation-wrapper">
+									<h5 *ngIf="totalConversationsIn2DaysForReport" data-test-id="number-conversation">
+										{{ totalConversationsIn2DaysForReport[report.displayName] }}
+										<small *ngIf="type !== 'group'" class="text-secondary">
+											{{
+												totalConversationsIn2DaysForReport[report.displayName] > 1 ? 'conversations' : 'conversation'
+											}}
+											found in last 2 days
+										</small>
+										<small
+											class="text-secondary"
+											*ngIf="type === 'group'"
+											(click)="tooltip.toggle()"
+											#tooltip="matTooltip"
+											matTooltip="There are pending conversations that requires action to be taken"
+											matTooltipPosition="above"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="There are pending conversations that requires action to be taken"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+											>conversation<span *ngIf="totalConversationsIn2DaysForReport[report.displayName] > 1">s</span>
+											found in last 2 days</small
+										>
+									</h5>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="selectedReport !== null" class="report-inner-page">
+		<div *ngIf="type === 'group' && renderedOn === 'Desktop'" class="link-go-back-wrapper">
+			<div class="container">
+				<a
+					(click)="goBack(); recordButtonClick($event)"
+					class="link-go-back"
+					data-cs-id="e80fb01b-bcee-47ed-bb9b-269bf88aa9db"
+					data-cs-label="Back"
+					data-cs-source="page"
+					data-test-id="link-back-report-table"
+				>
+					<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+						<path
+							clip-rule="evenodd"
+							d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+							fill-rule="evenodd"
+						/>
+					</svg>
+					Back
+				</a>
+			</div>
+		</div>
+		<div *ngIf="type === 'brand'" class="link-go-back-wrapper mt-0">
+			<div class="container">
+				<a (click)="goBack()" class="link-go-back">
+					<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+						<path
+							clip-rule="evenodd"
+							d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+							fill-rule="evenodd"
+						/>
+					</svg>
+					Back
+				</a>
+			</div>
+		</div>
+		<div class="mobile-header" *ngIf="type === 'group' && renderedOn === 'Mobile'">
+			<button class="back-btn" (click)="goBack(); recordButtonClick($event)">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M19.0005 11H7.83047L12.7105 6.11997C13.1005 5.72997 13.1005 5.08997 12.7105 4.69997C12.3205 4.30997 11.6905 4.30997 11.3005 4.69997L4.71047 11.29C4.32047 11.68 4.32047 12.31 4.71047 12.7L11.3005 19.29C11.6905 19.68 12.3205 19.68 12.7105 19.29C13.1005 18.9 13.1005 18.27 12.7105 17.88L7.83047 13H19.0005C19.5505 13 20.0005 12.55 20.0005 12C20.0005 11.45 19.5505 11 19.0005 11Z"
+						fill="#707084"
+					/>
+				</svg>
+			</button>
+			<div class="mobile-header-content">
+				<h5>{{ selectedReport?.displayName }}</h5>
+			</div>
+			<div style="width: 24px"></div>
+		</div>
+		<div class="group-conversation-report-details">
+			<div class="container">
+				<div class="head-section">
+					<div class="group-info-wrapper">
+						<div class="category-header-info">
+							<h5 class="font-weight-medium" data-test-id="heading-page-report-name">
+								{{ selectedReport.displayName | titlecase }}
+								<ng-container *ngIf="type === 'group'"
+									>report<a
+										[hidden]="group.role === 'Moderator'"
+										(click)="showReportNameModal($event)"
+										data-cs-id="299aa00e-d93d-46ac-b713-27f128d9efca"
+										data-cs-label="Rename"
+										data-cs-source="page"
+										data-target="#editNameModal"
+										data-toggle="modal"
+										><span data-test-id="link-rename-report">Rename</span>
+										<img alt="" src="assets/images/pencil-icon.svg" /></a
+									><a
+										[hidden]="installedGroups?.length < 2 || group.role === 'Moderator'"
+										class="btn-copy-keywords"
+										data-target="#PublishQueueGroup"
+										data-toggle="modal"
+										data-test-id="link-copy-keywords"
+										>Copy keywords to other groups</a
+									>
+								</ng-container>
+							</h5>
+
+							<div class="keywords-wrapper pt-3 pb-2">
+								<p *ngIf="type === 'group'" class="small text-secondary" data-test-id="subheading-page-report">
+									Input keywords to find conversations about {{ selectedReport?.displayName }}
+								</p>
+								<p *ngIf="type === 'brand'" class="small text-secondary">
+									Conversations are being fetched from Facebook and WhatsApp groups for the keywords below:
+								</p>
+								<span style="cursor: pointer">
+									<div class="input-group keyword-search-container">
+										<div
+											(click)="showKeywordEditor($event)"
+											class="editable"
+											data-cs-id="65e2c6e0-5644-4163-bc30-b97a3e48d759"
+											data-cs-label="Keyword editor"
+											data-cs-source="page"
+											data-target="#myModal"
+											data-toggle="modal"
+											style="cursor: pointer"
+										>
+											<div class="filter-tags-wrapper">
+												<ul class="list-unstyled" *ngIf="selectedReport" data-test-id="list-keyword-selected-report">
+													<li *ngFor="let selectedReport of selectedReport.keywordList | slice: 0:4; let i = index">
+														<strong>{{ selectedReport }}</strong>
+													</li>
+													<li
+														*ngIf="selectedReport.keywordList.length > 4"
+														class="reportkeywords"
+														data-test-id="btn-more-keywords-tracker"
+													>
+														<strong
+															>+
+															{{ selectedReport.keywordList.length - 4 }}
+															more</strong
+														>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<button
+											(click)="refreshConversations(); recordButtonClick($event)"
+											[hidden]="isLoadingConversations"
+											class="btn submit-btn"
+											data-cs-id="3f98d9b6-faec-4788-a582-ec9d52e6b3b1"
+											data-cs-label="Refresh conversations"
+											data-cs-source="page"
+											type="submit"
+										>
+											Refresh conversations
+										</button>
+										<button
+											(click)="refreshConversations()"
+											[hidden]="!isLoadingConversations"
+											class="btn submit-btn loading-state"
+										>
+											<span class="loader"></span>
+											<span>Fetching</span>
+										</button>
+									</div>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<ng-container *ngIf="selectedReport && selectedReport.numOfOccurances > 0">
+				<h4 class="card-title">
+					<span *ngIf="false" class="font-weight-normal">{{ selectedReport.displayName | titlecase }} summary</span>
+					<span *ngIf="type === 'brand'" class="font-weight-normal"
+						>Conversation volume for
+						<span class="font-weight-medium">
+							{{ selectedReport.keywordList.length + selectedReport.displayName.replace('Your', '') | lowercase }}
+						</span>
+					</span>
+				</h4>
+				<div *ngIf="false" class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-5">
+								<div class="summary-text-wrapper">
+									<ul class="list-unstyled">
+										<li>
+											<div class="summary-count">
+												<span>{{ selectedReport.numOfOccurances }}</span>
+											</div>
+											<h6 class="m-0">Total conversations</h6>
+										</li>
+										<li>
+											<div class="summary-count">
+												<span>{{ selectedReport.numOfActionRequired }}</span>
+											</div>
+											<h6 class="m-0">Conversations requires action</h6>
+										</li>
+										<li>
+											<div class="summary-count">
+												<span>{{ selectedReport.numOfOccurances - selectedReport.numOfActionRequired }}</span>
+											</div>
+											<h6 class="m-0">Conversations action taken</h6>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-7">
+								<div *ngIf="conversationsChart" class="d-flex conversations-chart-wrapper">
+									<div class="conversations-chart">
+										<app-high-chart [chartData]="conversationsChart.chartOptions"></app-high-chart>
+									</div>
+									<div class="legend-wrapper">
+										<ul class="list-unstyled">
+											<li>
+												<em class="legend-color color-1"></em>
+												<span>
+													Action required
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfActionRequired / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}
+														%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-2"></em>
+												<span>
+													Blocked user
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfBlockedUser / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-3"></em>
+												<span>
+													Comment hidden
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfHiddenComments / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}
+														%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-4"></em>
+												<span>
+													Comment removed
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfRemovedComments / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}
+														%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-5"></em>
+												<span>
+													Muted member
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfMutedMembers / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-6"></em>
+												<span>
+													Removed member
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfRemovedMembers / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}
+														%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-7"></em>
+												<span>
+													Removed post
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfRemovedPost / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-8"></em>
+												<span>
+													Reported
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfReported / selectedReport.numOfOccurances) * 100 | number: '1.1-1'
+														}}%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-9"></em>
+												<span>
+													Turned off commenting
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfTurnedOffCommenting / selectedReport.numOfOccurances) * 100
+																| number: '1.1-1'
+														}}
+														%
+													</span>
+												</span>
+											</li>
+											<li>
+												<em class="legend-color color-10"></em>
+												<span>
+													Read
+													<span class="percentage-data">
+														{{
+															(selectedReport.numOfIgnored / selectedReport.numOfOccurances) * 100 | number: '1.1-1'
+														}}%
+													</span>
+												</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div *ngIf="type === 'brand'" class="mb-5">
+					<div class="row">
+						<div class="w-100">
+							<div class="fixed-tabs">
+								<div class="container">
+									<ul class="nav nav-tabs graph-tabs" id="insightsTab" role="tablist">
+										<li class="nav-item">
+											<span class="description" href="javascript:void(0);">Volume for: </span>
+										</li>
+										<li class="nav-item">
+											<button
+												(click)="reportType = 'currentMonth'"
+												aria-controls="currentmonth"
+												aria-selected="true"
+												class="btn-month active"
+												data-toggle="tab"
+												href="#insightsTabContent"
+												id="currentMonthTab"
+												role="tab"
+											>
+												Current Month
+											</button>
+										</li>
+										<li class="nav-item">
+											<button
+												(click)="reportType = 'lastMonth'"
+												aria-controls="1month"
+												aria-selected="false"
+												class="btn-month"
+												data-toggle="tab"
+												href="#insightsTabContent"
+												id="oneMonthTab"
+												role="tab"
+											>
+												Last 1 month
+											</button>
+										</li>
+										<li class="nav-item">
+											<button
+												(click)="reportType = 'lastTwoMonths'"
+												aria-controls="2months"
+												aria-selected="false"
+												class="btn-month"
+												data-toggle="tab"
+												href="#insightsTabContent"
+												id="twoMonthsTab"
+												role="tab"
+											>
+												Last 2 months
+											</button>
+										</li>
+										<li class="nav-item">
+											<button
+												(click)="reportType = 'lastThreeMonths'"
+												aria-controls="3months"
+												aria-selected="false"
+												class="btn-month"
+												data-toggle="tab"
+												href="#insightsTabContent"
+												id="threeMonthsTab"
+												role="tab"
+											>
+												Last 3 months
+											</button>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div
+								aria-labelledby="oneMonthTab"
+								class="tab-pane fade show active"
+								id="insightsTabContent"
+								role="tabpanel"
+							>
+								<div class="container">
+									<div class="row">
+										<div class="col">
+											<div class="graph-wrapper">
+												<div class="chart-dataLabels full-graph-container">
+													<div *ngIf="reportType === 'currentMonth'">
+														<div *ngIf="currentMonthGraph; else loadingKeywordTrackerReport">
+															<div *ngIf="!currentMonthGraph.isEmpty; else emptyKeywordTrackerReport">
+																<app-high-chart [chartData]="currentMonthGraph.chartData.chartOptions">
+																</app-high-chart>
+															</div>
+															<ng-template #emptyKeywordTrackerReport>
+																<div class="no-data-wrapper">
+																	<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+																	<p class="primary-text">No data for selected time period</p>
+																	<p class="secondary-text">Select another time period</p>
+																</div>
+															</ng-template>
+														</div>
+														<ng-template #loadingKeywordTrackerReport>
+															<div class="loader-wrapper">
+																<div class="loader"></div>
+																<p class="loading-text">Loading data</p>
+															</div>
+														</ng-template>
+													</div>
+													<div *ngIf="reportType === 'lastMonth'">
+														<div *ngIf="lastMonthGraph; else loadingKeywordTrackerReport">
+															<div *ngIf="!lastMonthGraph.isEmpty; else emptyKeywordTrackerReport">
+																<app-high-chart [chartData]="lastMonthGraph.chartData.chartOptions"> </app-high-chart>
+															</div>
+															<ng-template #emptyKeywordTrackerReport>
+																<div class="no-data-wrapper">
+																	<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+																	<p class="primary-text">No data for selected time period</p>
+																	<p class="secondary-text">Select another time period</p>
+																</div>
+															</ng-template>
+														</div>
+														<ng-template #loadingKeywordTrackerReport>
+															<div class="loader-wrapper">
+																<div class="loader"></div>
+																<p class="loading-text">Loading data</p>
+															</div>
+														</ng-template>
+													</div>
+													<div *ngIf="reportType === 'lastTwoMonths'">
+														<div *ngIf="lastTwoMonthsGraph; else loadingKeywordTrackerReport">
+															<div *ngIf="!lastTwoMonthsGraph.isEmpty; else emptyKeywordTrackerReport">
+																<app-high-chart [chartData]="lastTwoMonthsGraph.chartData.chartOptions">
+																</app-high-chart>
+															</div>
+															<ng-template #emptyKeywordTrackerReport>
+																<div class="no-data-wrapper">
+																	<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+																	<p class="primary-text">No data for selected time period</p>
+																	<p class="secondary-text">Select another time period</p>
+																</div>
+															</ng-template>
+														</div>
+														<ng-template #loadingKeywordTrackerReport>
+															<div class="loader-wrapper">
+																<div class="loader"></div>
+																<p class="loading-text">Loading data</p>
+															</div>
+														</ng-template>
+													</div>
+													<div *ngIf="reportType === 'lastThreeMonths'">
+														<div *ngIf="lastThreeMonthsGraph; else loadingKeywordTrackerReport">
+															<div *ngIf="!lastThreeMonthsGraph.isEmpty; else emptyKeywordTrackerReport">
+																<app-high-chart [chartData]="lastThreeMonthsGraph.chartData.chartOptions">
+																</app-high-chart>
+															</div>
+															<ng-template #emptyKeywordTrackerReport>
+																<div class="no-data-wrapper">
+																	<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+																	<p class="primary-text">No data for selected time period</p>
+																	<p class="secondary-text">Select another time period</p>
+																</div>
+															</ng-template>
+														</div>
+														<ng-template #loadingKeywordTrackerReport>
+															<div class="loader-wrapper">
+																<div class="loader"></div>
+																<p class="loading-text">Loading data</p>
+															</div>
+														</ng-template>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="filters-wrapper">
+					<div class="row">
+						<div class="col-md-8" data-test-id="heading-conversations-report">
+							<h5>
+								Conversations in
+								<span class="font-weight-medium">
+									{{ selectedReport.displayName.replace('Your', '') | lowercase }}
+								</span>
+								:
+							</h5>
+						</div>
+					</div>
+					<div *ngIf="type === 'group'" class="row">
+						<div class="col-12">
+							<app-convosight-filters
+								(filterChanged)="updateActionTakeFilter($event)"
+								[filters]="conversationFilters"
+								[headerText]="headerText"
+								isConversationFilters="true"
+							>
+							</app-convosight-filters>
+						</div>
+					</div>
+				</div>
+				<div class="results-wrapper" id="ConversationsContainer">
+					<ng-container *ngIf="!isLoadingConversations; else shimmerStrips">
+						<p data-test-id="heading-conversation-two-days">
+							<span>{{ getConversationCountForTwoDays() > 0 ? getConversationCountForTwoDays() : 'No' }}</span>
+							{{ getConversationCountForTwoDays() !== 1 ? 'conversations' : 'conversation' }}
+							in Last 2 days - <strong>Today and Yesterday</strong>
+						</p>
+						<div
+							*ngFor="let conv of conversationsInlast2Days[selectedReport.displayName]; trackBy: trackByConvId"
+							[ngClass]="conv.hide ? 'slow-hide-wrapper slow-hide' : ''"
+							class="card"
+							data-test-id="card-keyword-tracker"
+						>
+							<div class="card-body">
+								<p class="m-0 post-title" data-test-id="conversation-two-days-text">{{ conv.rawText }}</p>
+							</div>
+							<div class="sec-info">
+								<span class="small text-secondary">
+									{{ getTimeZoneTime(conv.createdatutc) | date: 'h:mm a, MMM d' }}
+								</span>
+								<a (click)="openPermaLink(conv)" *ngIf="type === 'group'" class="link">
+									<span *ngIf="conv.contenType === 'Comment'">
+										<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M13.3335 1.33333H2.66683C1.9335 1.33333 1.3335 1.93333 1.3335 2.66666V14.6667L4.00016 12H13.3335C14.0668 12 14.6668 11.4 14.6668 10.6667V2.66666C14.6668 1.93333 14.0668 1.33333 13.3335 1.33333ZM12.6668 10.6667H4.00016L2.66683 12V3.33333C2.66683 2.96666 2.96683  2.66666 3.3335 2.66666H12.6668C13.0335 2.66666 13.3335 2.96666 13.3335 3.33333V10C13.3335 10.3667 13.0335 10.6667 12.6668 10.6667Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<small>View comment on Facebook</small>
+									</span>
+
+									<span *ngIf="conv.contenType !== 'Comment'">
+										<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.6667 2H3.33333C2.59333 2 2 2.6 2 3.33333V12.6667C2 13.4 2.59333 14 3.33333 14H12.6667C13.4 14 14 13.4 14 12.6667V3.33333C14 2.6 13.4067 2 12.6667 2ZM12.6667 12.6667H3.33333V4.66667H12.6667V12.6667ZM11.3333 8H4.66667V6.66667H11.3333V8ZM8.66667 10.6667H4.66667V9.33333H8.66667V10.6667Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<small data-test-id="view-post-fb-link">View post on Facebook</small>
+									</span>
+								</a>
+								<span *ngIf="type === 'brand'">
+									<a class="link">
+										<img alt="" src="assets/images/fb-small-icon.svg" />
+										<small>{{ conv.contenType }}</small>
+									</a>
+								</span>
+							</div>
+							<div class="card-footer">
+								<ul *ngIf="type === 'group'" class="list-unstyled">
+									<li [class.activated]="conv.actionTaken === 'Ignored'" class="ignored-btn width-1">
+										<a
+											(click)="takeAction(conv, 'Ignored', conv.actionTaken === 'Ignored', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-mark-read"
+										>
+											{{ conv.actionTaken !== 'Ignored' ? 'Mark as read' : 'Read' }}
+										</a>
+										<div class="tooltip-text-wrapper">Don't take any action for now</div>
+									</li>
+								</ul>
+								<ul *ngIf="type === 'group'" class="list-unstyled">
+									<li
+										[class.activated]="conv.actionTaken === 'Comment hidden'"
+										[hidden]="conv.contenType !== 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Comment hidden', conv.actionTaken === 'Comment hidden', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+										>
+											{{ conv.actionTaken !== 'Comment hidden' ? 'Hide comment' : 'Comment hidden' }}
+										</a>
+										<div class="tooltip-text-wrapper">Hide this comment on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Comment removed'"
+										[hidden]="conv.contenType !== 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Comment removed', conv.actionTaken === 'Comment removed', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+										>
+											{{ conv.actionTaken !== 'Comment removed' ? 'Remove comment' : 'Comment removed' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this comment on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Reported'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Reported', conv.actionTaken === 'Reported', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Report"
+											data-cs-source="page"
+											data-test-id="button-report"
+										>
+											{{ conv.actionTaken !== 'Reported' ? 'Report' : 'Reported' }}
+										</a>
+										<div class="tooltip-text-wrapper">Report this post on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Turned off commenting'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-3"
+									>
+										<a
+											(click)="
+												takeAction(conv, 'Turned off commenting', conv.actionTaken === 'Turned off commenting', $event)
+											"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-turnoff-commenting"
+										>
+											{{
+												conv.actionTaken !== 'Turned off commenting' ? 'Turn off commenting' : 'Turned off commenting'
+											}}
+										</a>
+										<div class="tooltip-text-wrapper">Turn off commenting on this post on Facebook</div>
+									</li>
+									<li [class.activated]="conv.actionTaken === 'Muted member'" class="width-2">
+										<a
+											(click)="takeAction(conv, 'Muted member', conv.actionTaken === 'Muted member', $event)"
+											data-test-id="button-mute-member"
+										>
+											{{ conv.actionTaken !== 'Muted member' ? 'Mute member' : 'Muted member' }}
+										</a>
+										<div class="tooltip-text-wrapper">Mute this member on your group</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Removed post'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Removed post', conv.actionTaken === 'Removed post', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-remove-post"
+										>
+											{{ conv.actionTaken !== 'Removed post' ? 'Remove post' : 'Removed post' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Blocked user'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-3"
+									>
+										<a
+											(click)="takeAction(conv, 'Blocked user', conv.actionTaken === 'Blocked user', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-block-user"
+										>
+											{{ conv.actionTaken !== 'Blocked user' ? 'Block user' : 'Blocked user' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post and block user on Facebook</div>
+									</li>
+									<li [class.activated]="conv.actionTaken === 'Removed member'" class="width-3">
+										<a
+											(click)="takeAction(conv, 'Removed member', conv.actionTaken === 'Removed member', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-remove-member"
+										>
+											{{ conv.actionTaken !== 'Removed member' ? 'Remove member' : 'Removed member' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post and member on Facebook</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div
+							*ngIf="conversationsInlast2Days[selectedReport.displayName]?.length === 0"
+							class="no-results-wrapper zero-conversations-found"
+						>
+							<div class="no-results-found" data-test-id="no-conversation-in-two-days">
+								<h6 data-test-id="heading-no-conversation-in-two-days">All clear ✅</h6>
+								<p data-test-id="subheading-no-conversation-in-two-days">No conversations found in last 2 days</p>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="!isLoadingConversations; else shimmerStrips">
+						<p data-test-id="heading-conversation-fourteen-days">
+							<span>{{
+								getConversationCountForFourteenDays() > 0 ? getConversationCountForFourteenDays() : 'No'
+							}}</span>
+							{{ getConversationCountForFourteenDays() !== 1 ? 'conversations' : 'conversation' }}
+							found in last <strong>14 days </strong>
+						</p>
+						<div
+							*ngFor="let conv of conversationsInLast14Days[selectedReport.displayName]; trackBy: trackByConvId"
+							[ngClass]="conv.hide ? 'slow-hide-wrapper slow-hide' : ''"
+							class="card"
+							data-test-id="card-keyword-tracker-fourteen-days"
+						>
+							<div class="card-body">
+								<p class="m-0 post-title" data-test-id="conversation-fourteen-days-text">{{ conv.rawText }}</p>
+							</div>
+							<div class="sec-info">
+								<span class="small text-secondary">
+									{{ getTimeZoneTime(conv.createdatutc) | date: 'h:mm a, MMM d' }}
+								</span>
+								<a (click)="openPermaLink(conv)" *ngIf="type === 'group'" class="link">
+									<span *ngIf="conv.contenType === 'Comment'">
+										<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M13.3335 1.33333H2.66683C1.9335 1.33333 1.3335 1.93333 1.3335 2.66666V14.6667L4.00016 12H13.3335C14.0668 12 14.6668 11.4 14.6668 10.6667V2.66666C14.6668 1.93333 14.0668 1.33333 13.3335 1.33333ZM12.6668 10.6667H4.00016L2.66683 12V3.33333C2.66683 2.96666 2.96683  2.66666 3.3335 2.66666H12.6668C13.0335 2.66666 13.3335 2.96666 13.3335 3.33333V10C13.3335 10.3667 13.0335 10.6667 12.6668 10.6667Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<small>View comment on Facebook</small>
+									</span>
+
+									<span *ngIf="conv.contenType !== 'Comment'">
+										<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.6667 2H3.33333C2.59333 2 2 2.6 2 3.33333V12.6667C2 13.4 2.59333 14 3.33333 14H12.6667C13.4 14 14 13.4 14 12.6667V3.33333C14 2.6 13.4067 2 12.6667 2ZM12.6667 12.6667H3.33333V4.66667H12.6667V12.6667ZM11.3333 8H4.66667V6.66667H11.3333V8ZM8.66667 10.6667H4.66667V9.33333H8.66667V10.6667Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<small data-test-id="view-post-fb-link-fourteen-days">View post on Facebook</small>
+									</span>
+								</a>
+								<span *ngIf="type === 'brand'">
+									<a class="link">
+										<img alt="" src="assets/images/fb-small-icon.svg" />
+										<small>{{ conv.contenType }}</small>
+									</a>
+								</span>
+							</div>
+							<div class="card-footer">
+								<ul *ngIf="type === 'group'" class="list-unstyled">
+									<li [class.activated]="conv.actionTaken === 'Ignored'" class="ignored-btn width-1">
+										<a
+											(click)="takeAction(conv, 'Ignored', conv.actionTaken === 'Ignored', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-mark-read-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Ignored' ? 'Mark as read' : 'Read' }}
+										</a>
+										<div class="tooltip-text-wrapper">Don't take any action for now</div>
+									</li>
+								</ul>
+								<ul *ngIf="type === 'group'" class="list-unstyled">
+									<li
+										[class.activated]="conv.actionTaken === 'Comment hidden'"
+										[hidden]="conv.contenType !== 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Comment hidden', conv.actionTaken === 'Comment hidden', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+										>
+											{{ conv.actionTaken !== 'Comment hidden' ? 'Hide comment' : 'Comment hidden' }}
+										</a>
+										<div class="tooltip-text-wrapper">Hide this comment on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Comment removed'"
+										[hidden]="conv.contenType !== 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Comment removed', conv.actionTaken === 'Comment removed', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+										>
+											{{ conv.actionTaken !== 'Comment removed' ? 'Remove comment' : 'Comment removed' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this comment on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Reported'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Reported', conv.actionTaken === 'Reported', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Report"
+											data-cs-source="page"
+											data-test-id="button-report-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Reported' ? 'Report' : 'Reported' }}
+										</a>
+										<div class="tooltip-text-wrapper">Report this post on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Turned off commenting'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-3"
+									>
+										<a
+											(click)="
+												takeAction(conv, 'Turned off commenting', conv.actionTaken === 'Turned off commenting', $event)
+											"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-turnoff-commenting-fourteen-days"
+										>
+											{{
+												conv.actionTaken !== 'Turned off commenting' ? 'Turn off commenting' : 'Turned off commenting'
+											}}
+										</a>
+										<div class="tooltip-text-wrapper">Turn off commenting on this post on Facebook</div>
+									</li>
+									<li [class.activated]="conv.actionTaken === 'Muted member'" class="width-2">
+										<a
+											(click)="takeAction(conv, 'Muted member', conv.actionTaken === 'Muted member', $event)"
+											data-test-id="button-mute-member-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Muted member' ? 'Mute member' : 'Muted member' }}
+										</a>
+										<div class="tooltip-text-wrapper">Mute this member on your group</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Removed post'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-2"
+									>
+										<a
+											(click)="takeAction(conv, 'Removed post', conv.actionTaken === 'Removed post', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-remove-post-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Removed post' ? 'Remove post' : 'Removed post' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post on Facebook</div>
+									</li>
+									<li
+										[class.activated]="conv.actionTaken === 'Blocked user'"
+										[hidden]="conv.contenType === 'Comment'"
+										class="width-3"
+									>
+										<a
+											(click)="takeAction(conv, 'Blocked user', conv.actionTaken === 'Blocked user', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-block-user-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Blocked user' ? 'Block user' : 'Blocked user' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post and block user on Facebook</div>
+									</li>
+									<li [class.activated]="conv.actionTaken === 'Removed member'" class="width-3">
+										<a
+											(click)="takeAction(conv, 'Removed member', conv.actionTaken === 'Removed member', $event)"
+											data-cs-id="dab96515-3372-4ab8-8e06-17280050fe08"
+											data-cs-label="Take Action"
+											data-cs-source="page"
+											data-test-id="button-remove-member-fourteen-days"
+										>
+											{{ conv.actionTaken !== 'Removed member' ? 'Remove member' : 'Removed member' }}
+										</a>
+										<div class="tooltip-text-wrapper">Remove this post and member on Facebook</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div
+							*ngIf="
+								selectedReport &&
+								selectedReport.numOfOccurances > 0 &&
+								conversationsInLast14Days[selectedReport.displayName]?.length === 0
+							"
+							class="no-results-wrapper zero-conversations-found"
+						>
+							<div class="no-results-found" data-test-id="no-conversation-in-fourteen-days">
+								<h6 data-test-id="heading-no-conversation-in-fourteen-days">All clear ✅</h6>
+								<p data-test-id="subheading-no-conversation-in-fourteen-days">No conversations found in last 14 days</p>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+			</ng-container>
+			<!-- No Result Found Start -->
+			<div
+				*ngIf="selectedReport && selectedReport.numOfOccurances === 0"
+				[hidden]="isLoadingConversations"
+				class="no-results-wrapper"
+			>
+				<div class="no-results-found">
+					<figure>
+						<img alt="" src="assets/images/empty_state_icon.svg" />
+					</figure>
+					<h5>No conversations found</h5>
+				</div>
+			</div>
+			<!-- No Result Found End -->
+		</div>
+	</div>
+</div>
+<ng-template #shimmerStrips>
+	<div class="card-body">
+		<div class="loading-strip primary"></div>
+		<div class="loading-strip secondary"></div>
+	</div>
+	<div class="card-footer">
+		<div class="loading-strip tertiary"></div>
+	</div>
+</ng-template>
+<div
+	id="myModal"
+	class="modal fade report-keywords-modal"
+	role="dialog"
+	*ngIf="selectedReport !== null"
+	data-test-id="modal-keyword-editor"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<!-- Modal content-->
+		<div class="modal-content" data-test-id="modal-keyword-tracker">
+			<div class="modal-header">
+				<h6 *ngIf="type === 'group'" class="modal-title" data-test-id="heading-keyword-editor">
+					Enter keywords to track.
+				</h6>
+				<h6 *ngIf="type === 'brand'" class="modal-title" data-test-id="modal-header-brand-keyword-tracker">
+					List of keywords
+				</h6>
+				<button
+					(click)="enableScrolling(); recordButtonClick($event)"
+					class="close"
+					data-cs-id="9c7a0a48-6c7c-41be-8d77-34850ab913dd"
+					data-cs-label="Close"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+					data-test-id="button-close-keyword-editor"
+				>
+					&times;
+				</button>
+			</div>
+			<div *ngIf="type === 'group'" class="small textry p-3" data-test-id="subheading-keyword-editor">
+				Enter new keyword in a new line (minimum 1 keyword is required)
+			</div>
+			<div *ngIf="type === 'brand'" class="small text-secondary p-3">
+				These are the keywords being tracked currently
+			</div>
+			<div class="modal-body mx-3 mb-3 p-0">
+				<div>
+					<div class="keywords-wrapper">
+						<div class="keywords-count">
+							<span *ngFor="let lineNum of lineNumbersForEditor">{{ lineNum + 1 }}</span>
+						</div>
+						<textarea
+							(keypress)="increaseRowNumber($event)"
+							(ngModelChange)="keywordListEdited()"
+							[(ngModel)]="keywordForEditor"
+							[readonly]="type === 'brand'"
+							id="KeywordEditor"
+							rows="{{ selectedReport.keywordList.length }}"
+							data-test-id="text-area-keyword-editor"
+						>
+						</textarea>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="type === 'group'" class="modal-footer">
+				<button
+					(click)="enableScrolling(); recordButtonClick($event)"
+					class="btn btn-default"
+					data-cs-id="5cdcbd44-63e7-4661-87a3-14074cd037c0"
+					data-cs-label="Cancel"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+					data-test-id="button-cancel-keyword-editor"
+				>
+					Cancel
+				</button>
+				<button
+					(click)="saveKeywords($event)"
+					[disabled]="!isKeywordListEdited || group.role === 'Moderator' || keywordForEditor === ''"
+					class="btn btn-secondary"
+					data-cs-id="65e23bbe-2e28-40a5-a1ae-926726aef8e8"
+					data-cs-label="Save"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+					data-test-id="button-save-keyword-editor"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div *ngIf="showUpgradeModal" class="upgrade-modal-wrapper">
+	<div class="upgrade-modal-content">
+		<div class="upgrade-modal-header">
+			<button (click)="showUpgradeModal = false" class="close-btn"></button>
+		</div>
+		<div class="upgrade-modal-body">
+			<figure>
+				<img alt="" src="assets/images/diamond-icon.svg" />
+			</figure>
+			<h3>Upgrade your subscription</h3>
+			<p>Competition conversation tracking is a premium feature that is not included in your subscription</p>
+		</div>
+		<div class="upgrade-modal-footer">
+			Please contact your Account Manager at
+			<a href="mailto:hello@convosight.com">hello@convosight.com</a> to get more details.
+		</div>
+	</div>
+</div>
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	id="editNameModal"
+	role="dialog"
+	*ngIf="reportNameForm"
+	data-test-id="rename-report-modal"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title" data-test-id="heading-rename-report-modal">Rename Title</h6>
+				<button
+					(click)="enableScrolling(); recordButtonClick($event)"
+					class="close"
+					data-cs-id="170922f0-40a0-4913-8d12-fedbfd84a955"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+					data-test-id="button-close-rename-report-modal"
+				>
+					&times;
+				</button>
+			</div>
+			<form [formGroup]="reportNameForm">
+				<div class="p-4">
+					<div class="mt-2 mb-3 small textry" data-test-id="subheading-rename-report-modal">
+						Edit the name of the title below
+					</div>
+					<div class="">
+						<input
+							formControlName="reportName"
+							name="reportName"
+							class="mb-1 p-2"
+							data-test-id="type-field-rename-report-modal"
+							id="editNameModalInput"
+						/>
+						<span class="input-error" *ngIf="reportNameForm.get('reportName').errors"
+							>Please enter the alphanumeric character.</span
+						>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						(click)="enableScrolling(); recordButtonClick($event)"
+						class="btn btn-default"
+						data-cs-id="bbac4603-e295-4bb8-8889-333c4155b405"
+						data-cs-label="Cancel"
+						data-cs-source="dialog"
+						data-dismiss="modal"
+						type="button"
+						data-test-id="button-cancel-rename-report-modal"
+					>
+						Cancel
+					</button>
+					<button
+						(click)="recordButtonClick($event); saveReportName(reportNameForm)"
+						[disabled]="!reportNameForm.valid"
+						class="btn btn-secondary"
+						data-cs-id="d3768f09-697f-49be-b0f8-28cd4b2d80e1"
+						data-cs-label="Save"
+						data-cs-source="dialog"
+						type="submit"
+						data-test-id="button-save-rename-report-modal"
+					>
+						Save
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div
+	aria-hidden="true"
+	aria-labelledby="mobilePublishQueue"
+	class="modal fade publish-queue-groups-modal"
+	id="PublishQueueGroup"
+	role="dialog"
+	tabindex="-1"
+	data-test-id="copy-keyword-pop-up"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" data-test-id="select-groups-copy-keywords">Select Groups</h5>
+				<button
+					(click)="recordButtonClick($event, group)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="5aca730e-d2b7-4c36-90b3-b2b145016c5f"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+					data-test-id="button-close-copy-keyword-pop-up"
+				>
+					x
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="group-note" data-test-id="subheading-select-group">
+					Select all groups where you want to update keywords in
+					<strong>{{ selectedReport?.displayName }} Report</strong>
+				</div>
+				<div class="groups-listing">
+					<ul *ngIf="installedGroups?.length > 1" class="list-unstyled">
+						<li class="select-all-groups">
+							<mat-checkbox #selectAllGroups (click)="toggleAllGroupSelection()" data-test-id="checkbox-select-all"
+								>Select all groups
+							</mat-checkbox>
+						</li>
+					</ul>
+				</div>
+				<app-group-selection-overlay
+					(setGroupSelection)="toggleGroupSelection($event)"
+					[group]="group"
+					[installedGroups]="installedGroupsWithRoleAdmin"
+					[selectedGroups]="selectedGroups"
+					data-test-id="group-selection-copy-keyword-popup"
+				>
+				</app-group-selection-overlay>
+			</div>
+			<div class="modal-footer">
+				<div>
+					<mat-radio-group aria-label="Select an option">
+						<mat-radio-button value="false" data-test-id="radio-replace-existing-keywords-other-group"
+							>Replace existing keywords
+						</mat-radio-button>
+						<mat-radio-button #appendKeywords checked value="true" data-test-id="radio-add-new-keywords-other-group"
+							>Add new keywords to existing keywords
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<button
+					(click)="updateKeywordTrackerReportForSelectedGroups(); recordButtonClick($event)"
+					class="convo-btn-normal convo-btn-primary view-btn"
+					data-cs-id="df08ee55-2d4d-42a5-8339-fa61a67878d0"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					data-test-id="button-done-copy-keywords"
+					[disabled]="numOfGroupSelected === 1"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,173 @@
+<div class="onboarding-head">
+	<button
+		class="back-button"
+		(click)="
+			recordButtonClick($event, null, null, {
+				current_step: 2,
+				onboarding_type: this.isPitch ? 'pitch' : 'profile'
+			})
+		"
+		data-cs-id="6af524d6-5064-4523-bc90-30200e24443f"
+		data-cs-label="Prev page"
+		data-cs-source="page"
+		type="button"
+		[routerLink]="'/group-admin/campaigns/' + groupProfilePage?.groupId + '/profile-pages/'"
+	>
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M19.0005 11.0007H7.83047L12.7105 6.1207C13.1005 5.7307 13.1005 5.0907 12.7105 4.7007C12.3205 4.3107 11.6905 4.3107 11.3005 4.7007L4.71047 11.2907C4.32047 11.6807 4.32047 12.3107 4.71047 12.7007L11.3005 19.2907C11.6905 19.6807 12.3205 19.6807 12.7105 19.2907C13.1005 18.9007 13.1005 18.2707 12.7105 17.8807L7.83047 13.0007H19.0005C19.5505 13.0007 20.0005 12.5507 20.0005 12.0007C20.0005 11.4507 19.5505 11.0007 19.0005 11.0007Z"
+				fill="#707084"
+			/>
+		</svg>
+	</button>
+	<div *ngIf="groupProfilePage" class="head-profile-data">
+		<div class="head-profile-image">
+			<img
+				[fbEntityId]="groupProfilePage?.fbGroupId"
+				alt=""
+				class="banner-background"
+				src="{{ groupProfilePage?.coverImageUrl }}"
+			/>
+		</div>
+		<div class="head-profile-description">
+			<h5 class="head-name-profile">
+				{{ groupProfilePage?.name }}
+			</h5>
+			<span> {{ groupProfilePage?.keyStats.totalMembers | shortNumber }} members </span>
+		</div>
+	</div>
+	<app-loading-shimmer *ngIf="!groupProfilePage" [type]="4"></app-loading-shimmer>
+</div>
+
+<div class="popular-topics-wrap">
+	<div class="overview-header-wrap">
+		<h1>
+			{{ isPitch ? 'Customize your topics for the target brand' : 'What topics are discussed in your group?' }}
+		</h1>
+		<svg class="line-separator" width="78" height="4" viewBox="0 0 78 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M76.8643 3C74.5916 3 74.5916 1 72.4096 1C70.137 1 70.137 3 67.955 3C65.6824 3 65.6824 1 63.5004 0.999999C61.2278 0.999999 61.2278 3 59.0458 3C56.7732 3 56.7732 0.999999 54.5912 0.999999C52.4092 0.999999 52.4092 3 50.1366 3C47.8639 3 47.8639 0.999999 45.6819 0.999999C43.5 0.999999 43.5 3 41.2273 3C38.9547 3 38.9547 0.999998 36.7727 0.999998C34.5001 0.999998 34.5001 3 32.3181 3C30.0455 3 30.0455 0.999998 27.8635 0.999998C25.5909 0.999998 25.5909 3 23.4089 3C21.1362 3 21.1362 0.999998 18.9543 0.999997C16.6816 0.999997 16.6816 3 14.4996 3C12.227 3 12.227 0.999997 10.045 0.999997C7.77239 0.999997 7.77239 3 5.5904 3C3.40841 3 3.31778 0.999997 1.13579 0.999997"
+				stroke="#ADADB9"
+				stroke-miterlimit="10"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</svg>
+		<img *ngIf="!isPitch" src="assets/images/group_admin/message_cloud.png" alt="" class="brand-img" />
+		<h4 *ngIf="!isPitch" class="edit-topics-title">Add the 5 most talked about topics in your group:</h4>
+		<p>
+			You can add up to 5 topics here. Brands quickly understand the kind of conversations happening in your group by
+			looking at these topics.
+		</p>
+
+		<div *ngIf="isPitch" class="pitch-card-warning">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M10.0013 1.66602C5.4013 1.66602 1.66797 5.39935 1.66797 9.99935C1.66797 14.5993 5.4013 18.3327 10.0013 18.3327C14.6013 18.3327 18.3346 14.5993 18.3346 9.99935C18.3346 5.39935 14.6013 1.66602 10.0013 1.66602ZM10.0013 14.166C9.54297 14.166 9.16797 13.791 9.16797 13.3327V9.99935C9.16797 9.54102 9.54297 9.16602 10.0013 9.16602C10.4596 9.16602 10.8346 9.54102 10.8346 9.99935V13.3327C10.8346 13.791 10.4596 14.166 10.0013 14.166ZM10.8346 7.49935H9.16797V5.83268H10.8346V7.49935Z"
+					fill="#E08E15"
+				/>
+			</svg>
+			<p>Add topics <strong>relevant to the brand your are pitching to</strong> here to impress the brand.</p>
+		</div>
+		<button
+			(click)="toggleSampleTopics($event)"
+			*ngIf="!isPitch && !showSampleTopic"
+			class="convo-btn-primary convo-btn-normal"
+			data-cs-id="e98a42e4-493f-4ffe-b83c-a7e03afbaf57"
+			data-cs-label="See sample topics"
+			data-cs-source="page"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M8.00033 3C4.66699 3 1.82033 5.07333 0.666992 8C1.82033 10.9267 4.66699 13 8.00033 13C11.3337 13 14.1803 10.9267 15.3337 8C14.1803 5.07333 11.3337 3 8.00033 3ZM8.00033 11.3333C6.16033 11.3333 4.66699 9.84 4.66699 8C4.66699 6.16 6.16033 4.66667 8.00033 4.66667C9.84033 4.66667 11.3337 6.16 11.3337 8C11.3337 9.84 9.84033 11.3333 8.00033 11.3333ZM8.00033 6C6.89366 6 6.00033 6.89333 6.00033 8C6.00033 9.10667 6.89366 10 8.00033 10C9.10699 10 10.0003 9.10667 10.0003 8C10.0003 6.89333 9.10699 6 8.00033 6Z"
+					fill="#3654FF"
+				/>
+			</svg>
+			<span> See sample topics </span>
+		</button>
+		<div *ngIf="!isPitch && showSampleTopic" class="sample-topic-wrap">
+			<div class="sample-topic-head">
+				<button
+					(click)="toggleSampleTopics($event)"
+					class="close-sample-topic-btn"
+					data-cs-id="5695905d-3766-4746-89b5-c145826ef310"
+					data-cs-label="Sample topics"
+					data-cs-source="page"
+				>
+					<span>Sample topics:</span>
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8Z"
+							fill="#EFEFF1"
+						/>
+						<path
+							d="M11.1848 4.81897C10.9876 4.62177 10.669 4.62177 10.4719 4.81897L7.99935 7.28642L5.52684 4.81391C5.32965 4.61672 5.0111 4.61672 4.81391 4.81391C4.61672 5.0111 4.61672 5.32965 4.81391 5.52684L7.28642 7.99935L4.81391 10.4719C4.61672 10.669 4.61672 10.9876 4.81391 11.1848C5.0111 11.382 5.32965 11.382 5.52684 11.1848L7.99935 8.71228L10.4719 11.1848C10.669 11.382 10.9876 11.382 11.1848 11.1848C11.382 10.9876 11.382 10.669 11.1848 10.4719L8.71228 7.99935L11.1848 5.52684C11.3769 5.33471 11.3769 5.0111 11.1848 4.81897Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<ul class="sample-topic-list list-unstyled">
+				<li class="sample-topic-item">Cooking</li>
+				<li class="sample-topic-item">Shopping</li>
+				<li class="sample-topic-item">Skin care</li>
+				<li class="sample-topic-item">Hygiene</li>
+				<li class="sample-topic-item">Kids</li>
+			</ul>
+		</div>
+	</div>
+
+	<h5 *ngIf="isPitch">
+		Enter topics relevant to target brand
+		<sup>*</sup>
+	</h5>
+	<div #topicsFormField class="popular-topics-wrap mat-chip-frame">
+		<div class="mat-chip-wrapper">
+			<mat-form-field appearance="fill" class="custom-input w-100">
+				<mat-chip-list #chipList aria-label="Fruit selection">
+					<mat-chip
+						(removed)="topic.showTopic = false"
+						*ngFor="let topic of groupProfilePage.popularTopics"
+						[hidden]="!topic.showTopic"
+						[removable]="isSaveInProgress ? false : true"
+						[selectable]="true"
+					>
+						{{ topic.keyword }}
+						<button *ngIf="'true'" matChipRemove>
+							<mat-icon>cancel</mat-icon>
+						</button>
+					</mat-chip>
+					<input
+						#topicsInput
+						[disabled]="noOfPopularTopics() > 4 || isSaveInProgress"
+						(matChipInputTokenEnd)="addKeywords($event, groupProfilePage.popularTopics)"
+						value=""
+						(click)="showSampleTopic = false"
+						class="popular-topic-input"
+						[matChipInputFor]="chipList"
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+						[matChipInputAddOnBlur]="false"
+						placeholder="{{ noOfPopularTopics() < 5 ? 'Enter comma (,) separated topics' : '' }}"
+					/>
+					<mat-error *ngIf="noOfPopularTopics() > 4">You can only add upto 5 topics </mat-error>
+				</mat-chip-list>
+			</mat-form-field>
+		</div>
+	</div>
+	<app-onboarding-step-nav
+		[currentStep]="1"
+		[isPitch]="isPitch"
+		[extraRecordEventData]="extraRecordEventData"
+		[fetching]="isSaveInProgress || stageFetching"
+		(nextStep)="nextStepHandler()"
+		(prevStep)="prevStepHandler()"
+	></app-onboarding-step-nav>
+</div>
+
+<app-skip-step-modal
+	*ngIf="!isPitch"
+	[isOpen]="isSkipModalOpen"
+	[isConversationStep]="false"
+	(closeModal)="closeSkipModal()"
+	(skipStep)="nextStep.next(true)"
+></app-skip-step-modal>

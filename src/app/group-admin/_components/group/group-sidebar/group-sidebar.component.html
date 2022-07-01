@@ -1,0 +1,750 @@
+<div class="main-sidebar-wrapper" *ngIf="renderedOn === 'Desktop'">
+	<div class="main-sidebar">
+		<div
+			class="back-link"
+			data-cs-label="Groups home"
+			data-cs-source="page"
+			data-cs-id="c350ded3-8781-451e-9eef-6016f739c0ea"
+			(click)="goBack($event)"
+		>
+			<svg
+				width="6"
+				height="8"
+				viewBox="0 0 6 8"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+				data-test-id="link-back-group-manage"
+			>
+				<path d="M5.27331 0.94L4.33331 0L0.333313 4L4.33331 8L5.27331 7.06L2.21998 4L5.27331 0.94Z" fill="#6F6F83" />
+			</svg>
+			<span data-test-id="heading-back-link">Groups home</span>
+		</div>
+
+		<div class="position-relative">
+			<div
+				class="group-row dropdown-toggle"
+				data-toggle="dropdown"
+				*ngIf="installedGroups && installedGroups.length > 1; else singleGroup"
+				data-test-id="toggle-group-list-drop-down"
+			>
+				<figure>
+					<app-fb-group-cover-image
+						[coverImageUrl]="group.coverImageUrl"
+						[fbGroupId]="group.fbGroupId"
+					></app-fb-group-cover-image>
+				</figure>
+				<div
+					class="group-row-info"
+					(click)="tooltip.toggle()"
+					#tooltip="matTooltip"
+					matTooltip="{{ group.name }}"
+					data-cs-parent-label="Tooltip"
+					[attr.data-cs-label]="group.name"
+					data-cs-source="page"
+					(mouseenter)="tooltipHovered($event)"
+				>
+					<h6 data-test-id="group-name-sidebar">
+						{{ group.name.length > 35 ? (group.name | slice: 0:35) + '...' : group.name }}
+					</h6>
+					<ul class="list-unstyled">
+						<li>
+							<svg
+								*ngIf="group.privacy !== 'OPEN'"
+								width="16"
+								height="16"
+								viewBox="0 0 16 16"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M11.9998 5.33329H11.3332V3.99996C11.3332 2.15996 9.83984 0.666626 7.99984 0.666626C6.15984 0.666626 4.6665 2.15996 4.6665 3.99996V5.33329H3.99984C3.2665 5.33329 2.6665 5.93329 2.6665 6.66663V13.3333C2.6665 14.0666 3.2665 14.6666 3.99984 14.6666H11.9998C12.7332 14.6666 13.3332 14.0666 13.3332 13.3333V6.66663C13.3332 5.93329 12.7332 5.33329 11.9998 5.33329ZM7.99984 11.3333C7.2665 11.3333 6.6665 10.7333 6.6665 9.99996C6.6665 9.26663 7.2665 8.66663 7.99984 8.66663C8.73317 8.66663 9.33317 9.26663 9.33317 9.99996C9.33317 10.7333 8.73317 11.3333 7.99984 11.3333ZM10.0665 5.33329H5.93317V3.99996C5.93317 2.85996 6.85984 1.93329 7.99984 1.93329C9.13984 1.93329 10.0665 2.85996 10.0665 3.99996V5.33329Z"
+									fill="#9999A7"
+								/>
+							</svg>
+
+							<svg
+								*ngIf="group.privacy === 'OPEN'"
+								width="16"
+								height="16"
+								viewBox="0 0 16 16"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<g opacity="0.5">
+									<path
+										d="M8.00016 1.33337C4.32016 1.33337 1.3335 4.32004 1.3335 8.00004C1.3335 11.68 4.32016 14.6667 8.00016 14.6667C11.6802 14.6667 14.6668 11.68 14.6668 8.00004C14.6668 4.32004 11.6802 1.33337 8.00016 1.33337ZM7.3335 13.2867C4.70016 12.96 2.66683 10.72 2.66683 8.00004C2.66683 7.58671 2.72016 7.19337 2.80683 6.80671L6.00016 10V10.6667C6.00016 11.4 6.60016 12 7.3335 12V13.2867ZM11.9335 11.5934C11.7602 11.0534 11.2668 10.6667 10.6668 10.6667H10.0002V8.66671C10.0002 8.30004 9.70016 8.00004 9.3335 8.00004H5.3335V6.66671H6.66683C7.0335 6.66671 7.3335 6.36671 7.3335 6.00004V4.66671H8.66683C9.40016 4.66671 10.0002 4.06671 10.0002 3.33337V3.06004C11.9535 3.85337 13.3335 5.76671 13.3335 8.00004C13.3335 9.38671 12.8002 10.6467 11.9335 11.5934Z"
+										fill="#33334F"
+									/>
+								</g>
+							</svg>
+							<span class="group-type">
+								{{ group.privacy === 'OPEN' ? 'Public' : 'Private' }}
+							</span>
+						</li>
+						<li>
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<g opacity="0.5">
+									<path
+										d="M10.6665 7.33337C11.7732 7.33337 12.6598 6.44004 12.6598 5.33337C12.6598 4.22671 11.7732 3.33337 10.6665 3.33337C9.55984 3.33337 8.6665 4.22671 8.6665 5.33337C8.6665 6.44004 9.55984 7.33337 10.6665 7.33337ZM5.33317 7.33337C6.43984 7.33337 7.3265 6.44004 7.3265 5.33337C7.3265 4.22671 6.43984 3.33337 5.33317 3.33337C4.2265 3.33337 3.33317 4.22671 3.33317 5.33337C3.33317 6.44004 4.2265 7.33337 5.33317 7.33337ZM5.33317 8.66671C3.77984 8.66671 0.666504 9.44671 0.666504 11V12C0.666504 12.3667 0.966504 12.6667 1.33317 12.6667H9.33317C9.69984 12.6667 9.99984 12.3667 9.99984 12V11C9.99984 9.44671 6.8865 8.66671 5.33317 8.66671ZM10.6665 8.66671C10.4732 8.66671 10.2532 8.68004 10.0198 8.70004C10.0332 8.70671 10.0398 8.72004 10.0465 8.72671C10.8065 9.28004 11.3332 10.02 11.3332 11V12C11.3332 12.2334 11.2865 12.46 11.2132 12.6667H14.6665C15.0332 12.6667 15.3332 12.3667 15.3332 12V11C15.3332 9.44671 12.2198 8.66671 10.6665 8.66671Z"
+										fill="#33334F"
+									/>
+								</g>
+							</svg>
+
+							<span
+								>{{ group.memberCount | shortNumber }}
+								{{ group.memberCount | i18nPlural: pluralWordMapping['member'] | lowercase }}</span
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<ng-template #singleGroup>
+				<div class="group-row single-group-row">
+					<figure>
+						<app-fb-group-cover-image
+							[coverImageUrl]="group.coverImageUrl"
+							[fbGroupId]="group.fbGroupId"
+						></app-fb-group-cover-image>
+					</figure>
+					<div
+						class="group-row-info"
+						(click)="tooltip.toggle()"
+						#tooltip="matTooltip"
+						matTooltip="{{ group.name }}"
+						data-cs-parent-label="Tooltip"
+						[attr.data-cs-label]="group.name"
+						data-cs-source="page"
+						(mouseenter)="tooltipHovered($event)"
+					>
+						<h6>{{ group.name }}</h6>
+						<ul class="list-unstyled">
+							<li>
+								<svg
+									*ngIf="group.privacy !== 'OPEN'"
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M11.9998 5.33329H11.3332V3.99996C11.3332 2.15996 9.83984 0.666626 7.99984 0.666626C6.15984 0.666626 4.6665 2.15996 4.6665 3.99996V5.33329H3.99984C3.2665 5.33329 2.6665 5.93329 2.6665 6.66663V13.3333C2.6665 14.0666 3.2665 14.6666 3.99984 14.6666H11.9998C12.7332 14.6666 13.3332 14.0666 13.3332 13.3333V6.66663C13.3332 5.93329 12.7332 5.33329 11.9998 5.33329ZM7.99984 11.3333C7.2665 11.3333 6.6665 10.7333 6.6665 9.99996C6.6665 9.26663 7.2665 8.66663 7.99984 8.66663C8.73317 8.66663 9.33317 9.26663 9.33317 9.99996C9.33317 10.7333 8.73317 11.3333 7.99984 11.3333ZM10.0665 5.33329H5.93317V3.99996C5.93317 2.85996 6.85984 1.93329 7.99984 1.93329C9.13984 1.93329 10.0665 2.85996 10.0665 3.99996V5.33329Z"
+										fill="#9999A7"
+									/>
+								</svg>
+
+								<svg
+									*ngIf="group.privacy === 'OPEN'"
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<g opacity="0.5">
+										<path
+											d="M8.00016 1.33337C4.32016 1.33337 1.3335 4.32004 1.3335 8.00004C1.3335 11.68 4.32016 14.6667 8.00016 14.6667C11.6802 14.6667 14.6668 11.68 14.6668 8.00004C14.6668 4.32004 11.6802 1.33337 8.00016 1.33337ZM7.3335 13.2867C4.70016 12.96 2.66683 10.72 2.66683 8.00004C2.66683 7.58671 2.72016 7.19337 2.80683 6.80671L6.00016 10V10.6667C6.00016 11.4 6.60016 12 7.3335 12V13.2867ZM11.9335 11.5934C11.7602 11.0534 11.2668 10.6667 10.6668 10.6667H10.0002V8.66671C10.0002 8.30004 9.70016 8.00004 9.3335 8.00004H5.3335V6.66671H6.66683C7.0335 6.66671 7.3335 6.36671 7.3335 6.00004V4.66671H8.66683C9.40016 4.66671 10.0002 4.06671 10.0002 3.33337V3.06004C11.9535 3.85337 13.3335 5.76671 13.3335 8.00004C13.3335 9.38671 12.8002 10.6467 11.9335 11.5934Z"
+											fill="#33334F"
+										/>
+									</g>
+								</svg>
+								<span class="group-type">
+									{{ group.privacy === 'OPEN' ? 'Public' : 'Private' }}
+								</span>
+							</li>
+							<li>
+								<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<g opacity="0.5">
+										<path
+											d="M10.6665 7.33337C11.7732 7.33337 12.6598 6.44004 12.6598 5.33337C12.6598 4.22671 11.7732 3.33337 10.6665 3.33337C9.55984 3.33337 8.6665 4.22671 8.6665 5.33337C8.6665 6.44004 9.55984 7.33337 10.6665 7.33337ZM5.33317 7.33337C6.43984 7.33337 7.3265 6.44004 7.3265 5.33337C7.3265 4.22671 6.43984 3.33337 5.33317 3.33337C4.2265 3.33337 3.33317 4.22671 3.33317 5.33337C3.33317 6.44004 4.2265 7.33337 5.33317 7.33337ZM5.33317 8.66671C3.77984 8.66671 0.666504 9.44671 0.666504 11V12C0.666504 12.3667 0.966504 12.6667 1.33317 12.6667H9.33317C9.69984 12.6667 9.99984 12.3667 9.99984 12V11C9.99984 9.44671 6.8865 8.66671 5.33317 8.66671ZM10.6665 8.66671C10.4732 8.66671 10.2532 8.68004 10.0198 8.70004C10.0332 8.70671 10.0398 8.72004 10.0465 8.72671C10.8065 9.28004 11.3332 10.02 11.3332 11V12C11.3332 12.2334 11.2865 12.46 11.2132 12.6667H14.6665C15.0332 12.6667 15.3332 12.3667 15.3332 12V11C15.3332 9.44671 12.2198 8.66671 10.6665 8.66671Z"
+											fill="#33334F"
+										/>
+									</g>
+								</svg>
+
+								<span
+									>{{ group.memberCount | shortNumber }}
+									{{ group.memberCount | i18nPlural: pluralWordMapping['member'] | lowercase }}</span
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</ng-template>
+
+			<div class="more-groups-dropdown dropdown-menu">
+				<ul class="list-unstyled">
+					<li
+						*ngFor="let group of installedGroups; let i = index"
+						class="dropdown-item"
+						data-cs-id="8b0472de-76f9-4f2b-aa6b-92060d9ebd02"
+						data-cs-label="Change group"
+						data-cs-source="page"
+						(click)="changeGroup(group); recordButtonClick($event, group)"
+						data-test-id="group-list-drop-down"
+					>
+						<figure>
+							<app-fb-group-cover-image
+								[coverImageUrl]="group.coverImageUrl"
+								[fbGroupId]="group.fbGroupId"
+							></app-fb-group-cover-image>
+						</figure>
+						<h5>{{ group.name }}</h5>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="seperator"></div>
+
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordEvents('overview'); recordButtonClick($event, group)"
+					data-cs-label="Overview"
+					data-cs-source="page"
+					data-test-id="btn-group-overview"
+					data-cs-id="5dcca6d2-7397-40cc-828e-224df779ce9f"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'overview'"
+						[routerLink]="['/group-admin/group', group.id, 'overview']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15.8333 4.16667V5.83333H12.5V4.16667H15.8333ZM7.5 4.16667V9.16667H4.16667V4.16667H7.5ZM15.8333 10.8333V15.8333H12.5V10.8333H15.8333ZM7.5 14.1667V15.8333H4.16667V14.1667H7.5ZM17.5 2.5H10.8333V7.5H17.5V2.5ZM9.16667 2.5H2.5V10.8333H9.16667V2.5ZM17.5 9.16667H10.8333V17.5H17.5V9.16667ZM9.16667 12.5H2.5V17.5H9.16667V12.5Z"
+							/>
+						</svg>
+						<span>Overview</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="seperator"></div>
+
+		<h6 class="sidebar-title">ALERTS</h6>
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordEvents('unanswered'); recordButtonClick($event, group)"
+					data-cs-label="Unanswered posts"
+					data-cs-source="page"
+					data-test-id="btn-group-unanswered-posts"
+					data-cs-id="f8520afe-e0ec-421e-9e0f-77f92afc667e"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'unanswered'"
+						[routerLink]="['/group-admin/group', group.id, 'unanswered']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M16.6665 4.16667V15.8333H3.33317V4.16667H16.6665ZM16.6665 2.5H3.33317C2.40817 2.5 1.6665 3.24167 1.6665 4.16667V15.8333C1.6665 16.7583 2.40817 17.5 3.33317 17.5H16.6665C17.5915 17.5 18.3332 16.7583 18.3332 15.8333V4.16667C18.3332 3.24167 17.5915 2.5 16.6665 2.5ZM14.9998 12.5H4.99984V14.1667H14.9998V12.5ZM8.33317 5.83333H4.99984V10.8333H8.33317V5.83333ZM9.99984 7.5H14.9998V5.83333H9.99984V7.5ZM14.9998 9.16667H9.99984V10.8333H14.9998V9.16667Z"
+							/>
+						</svg>
+						<span>Unanswered posts</span>
+					</a>
+				</li>
+				<li
+					(click)="recordEvents('urgentAlerts'); recordButtonClick($event, group)"
+					data-cs-label="Keyword alerts"
+					data-cs-source="page"
+					data-cs-id="02d668f3-bced-42dd-8cb0-b4775118090f"
+					data-test-id="btn-group-keyword-alerts"
+					class="nav-item"
+				>
+					<a [class.active]="hashParam === 'keywordTracking' || hashParam === 'urgentAlerts'">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10.8332 8.33334H9.1665V5H10.8332V8.33334ZM10.8332 10H9.1665V11.6667H10.8332V10ZM18.3332 3.33333V13.3333C18.3332 13.7754 18.1576 14.1993 17.845 14.5118C17.5325 14.8244 17.1085 15 16.6665 15H4.99984L1.6665 18.3333V3.33333C1.6665 2.89131 1.8421 2.46738 2.15466 2.15482C2.46722 1.84226 2.89114 1.66667 3.33317 1.66667H16.6665C17.1085 1.66667 17.5325 1.84226 17.845 2.15482C18.1576 2.46738 18.3332 2.89131 18.3332 3.33333ZM16.6665 3.33333H3.33317V14.3333L4.33317 13.3333H16.6665V3.33333Z"
+							/>
+						</svg>
+						<span>Keyword alerts</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<h6 class="sidebar-title">POST PUBLISHER</h6>
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordEvents('scheduledposts'); recordButtonClick($event, group)"
+					data-cs-label="Create a post"
+					data-cs-source="page"
+					data-cs-id="828e473e-a7f6-4327-b76e-890dac5c78bd"
+					data-test-id="btn-group-create-a-post"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'scheduledposts'"
+						[routerLink]="['/group-admin/group', group.id, 'scheduledposts']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M9.99984 16.6667C6.32484 16.6667 3.33317 13.675 3.33317 10C3.33317 6.325 6.32484 3.33333 9.99984 3.33333C13.6748 3.33333 16.6665 6.325 16.6665 10C16.6665 13.675 13.6748 16.6667 9.99984 16.6667ZM9.99984 1.66666C8.90549 1.66666 7.82186 1.88221 6.81081 2.301C5.79976 2.71979 4.8811 3.33362 4.10728 4.10744C2.54448 5.67024 1.6665 7.78986 1.6665 10C1.6665 12.2101 2.54448 14.3298 4.10728 15.8926C4.8811 16.6664 5.79976 17.2802 6.81081 17.699C7.82186 18.1178 8.90549 18.3333 9.99984 18.3333C12.21 18.3333 14.3296 17.4554 15.8924 15.8926C17.4552 14.3298 18.3332 12.2101 18.3332 10C18.3332 8.90565 18.1176 7.82202 17.6988 6.81097C17.28 5.79992 16.6662 4.88126 15.8924 4.10744C15.1186 3.33362 14.1999 2.71979 13.1889 2.301C12.1778 1.88221 11.0942 1.66666 9.99984 1.66666ZM10.8332 5.83333H9.1665V9.16667H5.83317V10.8333H9.1665V14.1667H10.8332V10.8333H14.1665V9.16667H10.8332V5.83333Z"
+							/>
+						</svg>
+						<span>Create a post</span>
+					</a>
+				</li>
+
+				<li
+					(click)="recordEvents('postanalytics'); recordButtonClick($event, group)"
+					data-cs-label="Post analytics"
+					data-cs-source="page"
+					data-test-id="btn-group-post-analytics"
+					data-cs-id="a62cbad1-9ed8-49c0-8769-c73d5c3d9e86"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'postanalytics'"
+						[routerLink]="['/group-admin/group', group.id, 'postanalytics']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM15.8333 15.8333H4.16667V4.16667H15.8333V15.8333ZM5.83333 8.33333H7.5V14.1667H5.83333V8.33333ZM9.16667 5.83333H10.8333V14.1667H9.16667V5.83333ZM12.5 10.8333H14.1667V14.1667H12.5V10.8333Z"
+							/>
+						</svg>
+						<span>Post analytics</span>
+					</a>
+				</li>
+				<li
+					(click)="recordEvents('postTrends'); recordButtonClick($event, group)"
+					data-cs-label="Reshare posts"
+					data-cs-source="page"
+					data-test-id="btn-group-reshare-post"
+					data-cs-id="b4aeb182-827f-417b-8138-0abd49d11c98"
+					data-test-id="btn-group-reshare-posts"
+					class="nav-item"
+					[class.disabled]="!group.isReSharePostTabAvailable()"
+				>
+					<a
+						*ngIf="group.isReSharePostTabAvailable(); else forbiddenReSharePost"
+						[class.active]="hashParam === 'postTrends'"
+						[routerLink]="['/group-admin/group', group.id, 'postTrends']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10.0002 4.99999V7.49999L13.3335 4.16666L10.0002 0.833328V3.33333C6.31683 3.33333 3.3335 6.31666 3.3335 9.99999C3.3335 11.3083 3.71683 12.525 4.36683 13.55L5.5835 12.3333C5.2085 11.6417 5.00016 10.8417 5.00016 9.99999C5.00016 7.24166 7.24183 4.99999 10.0002 4.99999ZM15.6335 6.44999L14.4168 7.66666C14.7835 8.36666 15.0002 9.15833 15.0002 9.99999C15.0002 12.7583 12.7585 15 10.0002 15V12.5L6.66683 15.8333L10.0002 19.1667V16.6667C13.6835 16.6667 16.6668 13.6833 16.6668 9.99999C16.6668 8.69166 16.2835 7.47499 15.6335 6.44999Z"
+							/>
+						</svg>
+						<span>Reshare posts</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<h6 class="sidebar-title">INSIGHTS</h6>
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordEvents('statistics'); recordButtonClick($event, group)"
+					data-cs-label="Group health"
+					data-cs-source="page"
+					data-cs-id="8a4fd9bc-f7bd-47bc-9f2d-1e6b0bca7253"
+					data-test-id="btn-group-group-health"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'statistics'"
+						[routerLink]="['/group-admin/group', group.id, 'statistics']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M13.0585 3.33332H11.6668V1.66666H8.3335V3.33332H6.94183C6.3335 3.33332 5.8335 3.83332 5.8335 4.44166V17.2167C5.8335 17.8333 6.3335 18.3333 6.94183 18.3333H13.0502C13.6668 18.3333 14.1668 17.8333 14.1668 17.225V4.44166C14.1668 3.83332 13.6668 3.33332 13.0585 3.33332ZM9.16683 16.6667V12.0833H7.50016L10.8335 5.83332V10.4167H12.5002L9.16683 16.6667Z"
+							/>
+						</svg>
+						<span>Group health</span>
+					</a>
+				</li>
+				<li
+					(click)="recordEvents('conversationtrends'); recordButtonClick($event, group)"
+					data-cs-label="Conversations"
+					data-cs-source="page"
+					data-cs-id="ce46ea57-adfa-42d5-b374-38d8a11709a8"
+					data-test-id="btn-group-conversations"
+					class="nav-item"
+				>
+					<a
+						[class.active]="
+							hashParam === 'conversationtrends' ||
+							hashParam === 'conversationtrends#7days' ||
+							hashParam === 'conversationtrends#14days'
+						"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.4998 3.33332V9.16666H4.30817L3.8165 9.65832L3.33317 10.1417V3.33332H12.4998ZM13.3332 1.66666H2.49984C2.0415 1.66666 1.6665 2.04166 1.6665 2.49999V14.1667L4.99984 10.8333H13.3332C13.7915 10.8333 14.1665 10.4583 14.1665 9.99999V2.49999C14.1665 2.04166 13.7915 1.66666 13.3332 1.66666ZM17.4998 4.99999H15.8332V12.5H4.99984V14.1667C4.99984 14.625 5.37484 15 5.83317 15H14.9998L18.3332 18.3333V5.83332C18.3332 5.37499 17.9582 4.99999 17.4998 4.99999Z"
+							/>
+						</svg>
+						<span>Conversations</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="seperator"></div>
+
+		<h6 class="sidebar-title">GROUP SETTINGS</h6>
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordEvents('moderator'); recordButtonClick($event, group)"
+					data-cs-label="Add Moderators"
+					data-cs-source="page"
+					data-cs-id="6bf3d54d-3c0d-4d42-a9a5-2db27b4dabda"
+					class="nav-item"
+					*ngIf="group.role !== 'Moderator'"
+				>
+					<a
+						[class.active]="hashParam === 'moderator'"
+						[routerLink]="['/group-admin/group', group.id, 'moderator']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.5002 10C14.3418 10 15.8335 8.50834 15.8335 6.66668C15.8335 4.82501 14.3418 3.33334 12.5002 3.33334C10.6585 3.33334 9.16683 4.82501 9.16683 6.66668C9.16683 8.50834 10.6585 10 12.5002 10ZM12.5002 5.00001C13.4168 5.00001 14.1668 5.75001 14.1668 6.66668C14.1668 7.58334 13.4168 8.33334 12.5002 8.33334C11.5835 8.33334 10.8335 7.58334 10.8335 6.66668C10.8335 5.75001 11.5835 5.00001 12.5002 5.00001ZM12.5002 11.6667C10.2752 11.6667 5.8335 12.7833 5.8335 15V16.6667H19.1668V15C19.1668 12.7833 14.7252 11.6667 12.5002 11.6667ZM7.50016 15C7.6835 14.4 10.2585 13.3333 12.5002 13.3333C14.7502 13.3333 17.3335 14.4083 17.5002 15H7.50016ZM5.00016 12.5V10H7.50016V8.33334H5.00016V5.83334H3.3335V8.33334H0.833496V10H3.3335V12.5H5.00016Z"
+							/>
+						</svg>
+
+						<span data-test-id="btn-group-add-moderators">Add Moderators</span>
+					</a>
+				</li>
+				<li
+					(click)="recordEvents('groupdetails'); recordButtonClick($event, group)"
+					data-cs-label="Group details"
+					data-cs-source="page"
+					data-test-id="btn-group-group-details"
+					data-cs-id="95f94876-6be3-4032-8fc9-cade1c68942e"
+					class="nav-item"
+				>
+					<a
+						[class.active]="hashParam === 'groupdetails'"
+						[routerLink]="['/group-admin/group', group.id, 'groupdetails']"
+						routerLinkActive="active"
+					>
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M16.1915 10.8167C16.2249 10.55 16.2499 10.2833 16.2499 9.99999C16.2499 9.71666 16.2249 9.44999 16.1915 9.18332L17.9499 7.80832C18.1082 7.68332 18.1499 7.45832 18.0499 7.27499L16.3832 4.39166C16.3082 4.25832 16.1665 4.18332 16.0165 4.18332C15.9665 4.18332 15.9165 4.19166 15.8749 4.20832L13.7999 5.04166C13.3665 4.70832 12.8999 4.43332 12.3915 4.22499L12.0749 2.01666C12.0499 1.81666 11.8749 1.66666 11.6665 1.66666H8.3332C8.12487 1.66666 7.94987 1.81666 7.92487 2.01666L7.6082 4.22499C7.09987 4.43332 6.6332 4.71666 6.19987 5.04166L4.12487 4.20832C4.07487 4.19166 4.02487 4.18332 3.97487 4.18332C3.8332 4.18332 3.69153 4.25832 3.61653 4.39166L1.94987 7.27499C1.84153 7.45832 1.89153 7.68332 2.04987 7.80832L3.8082 9.18332C3.77487 9.44999 3.74987 9.72499 3.74987 9.99999C3.74987 10.275 3.77487 10.55 3.8082 10.8167L2.04987 12.1917C1.89153 12.3167 1.84987 12.5417 1.94987 12.725L3.61653 15.6083C3.69153 15.7417 3.8332 15.8167 3.9832 15.8167C4.0332 15.8167 4.0832 15.8083 4.12487 15.7917L6.19987 14.9583C6.6332 15.2917 7.09987 15.5667 7.6082 15.775L7.92487 17.9833C7.94987 18.1833 8.12487 18.3333 8.3332 18.3333H11.6665C11.8749 18.3333 12.0499 18.1833 12.0749 17.9833L12.3915 15.775C12.8999 15.5667 13.3665 15.2833 13.7999 14.9583L15.8749 15.7917C15.9249 15.8083 15.9749 15.8167 16.0249 15.8167C16.1665 15.8167 16.3082 15.7417 16.3832 15.6083L18.0499 12.725C18.1499 12.5417 18.1082 12.3167 17.9499 12.1917L16.1915 10.8167ZM14.5415 9.39166C14.5749 9.64999 14.5832 9.82499 14.5832 9.99999C14.5832 10.175 14.5665 10.3583 14.5415 10.6083L14.4249 11.55L15.1665 12.1333L16.0665 12.8333L15.4832 13.8417L14.4249 13.4167L13.5582 13.0667L12.8082 13.6333C12.4499 13.9 12.1082 14.1 11.7665 14.2417L10.8832 14.6L10.7499 15.5417L10.5832 16.6667H9.41653L9.2582 15.5417L9.12487 14.6L8.24153 14.2417C7.8832 14.0917 7.54987 13.9 7.21653 13.65L6.4582 13.0667L5.57487 13.425L4.51653 13.85L3.9332 12.8417L4.8332 12.1417L5.57487 11.5583L5.4582 10.6167C5.4332 10.3583 5.41653 10.1667 5.41653 9.99999C5.41653 9.83332 5.4332 9.64166 5.4582 9.39166L5.57487 8.44999L4.8332 7.86666L3.9332 7.16666L4.51653 6.15832L5.57487 6.58332L6.44153 6.93332L7.19153 6.36666C7.54987 6.09999 7.89153 5.89999 8.2332 5.75832L9.11653 5.39999L9.24987 4.45832L9.41653 3.33332H10.5749L10.7332 4.45832L10.8665 5.39999L11.7499 5.75832C12.1082 5.90832 12.4415 6.09999 12.7749 6.34999L13.5332 6.93332L14.4165 6.57499L15.4749 6.14999L16.0582 7.15832L15.1665 7.86666L14.4249 8.44999L14.5415 9.39166ZM9.99987 6.66666C8.1582 6.66666 6.66653 8.15832 6.66653 9.99999C6.66653 11.8417 8.1582 13.3333 9.99987 13.3333C11.8415 13.3333 13.3332 11.8417 13.3332 9.99999C13.3332 8.15832 11.8415 6.66666 9.99987 6.66666ZM9.99987 11.6667C9.0832 11.6667 8.3332 10.9167 8.3332 9.99999C8.3332 9.08332 9.0832 8.33332 9.99987 8.33332C10.9165 8.33332 11.6665 9.08332 11.6665 9.99999C11.6665 10.9167 10.9165 11.6667 9.99987 11.6667Z"
+							/>
+						</svg>
+						<span>Group details</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="seperator"></div>
+
+		<div class="links-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="recordButtonClick($event, group)"
+					data-cs-label="Open group on Facebook"
+					data-cs-source="dialog"
+					data-cs-id="97f605b8-f23b-4d5c-a289-3fadc508d182"
+					data-test-id="link-group-group-url"
+					class="nav-item"
+				>
+					<a href="https://www.facebook.com/groups/{{ group.fbGroupId }}" rel="noopener" target="_blank">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M18.3332 9.99999C18.3332 5.39999 14.5998 1.66666 9.99984 1.66666C5.39984 1.66666 1.6665 5.39999 1.6665 9.99999C1.6665 14.0333 4.53317 17.3917 8.33317 18.1667V12.5H6.6665V9.99999H8.33317V7.91666C8.33317 6.30832 9.6415 4.99999 11.2498 4.99999H13.3332V7.49999H11.6665C11.2082 7.49999 10.8332 7.87499 10.8332 8.33332V9.99999H13.3332V12.5H10.8332V18.2917C15.0415 17.875 18.3332 14.325 18.3332 9.99999Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Open group on Facebook</span></a
+					>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!-- All Tools Modal -->
+<div class="modal fade mobile-modal-slide" id="allToolsModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">All tools</h5>
+				<button
+					type="button"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="57480898-fdeb-46c7-92e0-6ddab09094a1"
+					data-cs-label="Close"
+					data-cs-source="page"
+					class="close"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2997 5.70997C17.9097 5.31997 17.2797 5.31997 16.8897 5.70997L11.9997 10.59L7.10973 5.69997C6.71973 5.30997 6.08973 5.30997 5.69973 5.69997C5.30973 6.08997 5.30973 6.71997 5.69973 7.10997L10.5897 12L5.69973 16.89C5.30973 17.28 5.30973 17.91 5.69973 18.3C6.08973 18.69 6.71973 18.69 7.10973 18.3L11.9997 13.41L16.8897 18.3C17.2797 18.69 17.9097 18.69 18.2997 18.3C18.6897 17.91 18.6897 17.28 18.2997 16.89L13.4097 12L18.2997 7.10997C18.6797 6.72997 18.6797 6.08997 18.2997 5.70997Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="modal-menu-links">
+					<h6>ALERTS</h6>
+					<ul class="list-unstyled">
+						<li
+							(click)="recordEvents('unanswered'); recordButtonClick($event, group)"
+							data-cs-label="Unanswered posts"
+							data-cs-source="page"
+							data-cs-id="f8520afe-e0ec-421e-9e0f-77f92afc667e"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'unanswered'"
+								><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M16.6665 4.16667V15.8333H3.33317V4.16667H16.6665ZM16.6665 2.5H3.33317C2.40817 2.5 1.6665 3.24167 1.6665 4.16667V15.8333C1.6665 16.7583 2.40817 17.5 3.33317 17.5H16.6665C17.5915 17.5 18.3332 16.7583 18.3332 15.8333V4.16667C18.3332 3.24167 17.5915 2.5 16.6665 2.5ZM14.9998 12.5H4.99984V14.1667H14.9998V12.5ZM8.33317 5.83333H4.99984V10.8333H8.33317V5.83333ZM9.99984 7.5H14.9998V5.83333H9.99984V7.5ZM14.9998 9.16667H9.99984V10.8333H14.9998V9.16667Z"
+									/>
+								</svg>
+								<span>Unanswered posts</span></a
+							>
+						</li>
+						<li
+							(click)="recordEvents('urgentAlerts'); recordButtonClick($event, group)"
+							data-cs-label="Keyword alerts"
+							data-cs-source="page"
+							data-cs-id="02d668f3-bced-42dd-8cb0-b4775118090f"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'keywordTracking' || hashParam === 'urgentAlerts'">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.8332 8.33334H9.1665V5H10.8332V8.33334ZM10.8332 10H9.1665V11.6667H10.8332V10ZM18.3332 3.33333V13.3333C18.3332 13.7754 18.1576 14.1993 17.845 14.5118C17.5325 14.8244 17.1085 15 16.6665 15H4.99984L1.6665 18.3333V3.33333C1.6665 2.89131 1.8421 2.46738 2.15466 2.15482C2.46722 1.84226 2.89114 1.66667 3.33317 1.66667H16.6665C17.1085 1.66667 17.5325 1.84226 17.845 2.15482C18.1576 2.46738 18.3332 2.89131 18.3332 3.33333ZM16.6665 3.33333H3.33317V14.3333L4.33317 13.3333H16.6665V3.33333Z"
+									/>
+								</svg>
+								<span>Keyword alerts</span>
+							</a>
+						</li>
+					</ul>
+					<h6>POST PUBLISHER</h6>
+					<ul class="list-unstyled">
+						<li
+							(click)="recordEvents('scheduledposts'); recordButtonClick($event, group)"
+							data-cs-label="Create a post"
+							data-cs-source="page"
+							data-cs-id="828e473e-a7f6-4327-b76e-890dac5c78bd"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'scheduledposts'">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M9.99984 16.6667C6.32484 16.6667 3.33317 13.675 3.33317 10C3.33317 6.325 6.32484 3.33333 9.99984 3.33333C13.6748 3.33333 16.6665 6.325 16.6665 10C16.6665 13.675 13.6748 16.6667 9.99984 16.6667ZM9.99984 1.66666C8.90549 1.66666 7.82186 1.88221 6.81081 2.301C5.79976 2.71979 4.8811 3.33362 4.10728 4.10744C2.54448 5.67024 1.6665 7.78986 1.6665 10C1.6665 12.2101 2.54448 14.3298 4.10728 15.8926C4.8811 16.6664 5.79976 17.2802 6.81081 17.699C7.82186 18.1178 8.90549 18.3333 9.99984 18.3333C12.21 18.3333 14.3296 17.4554 15.8924 15.8926C17.4552 14.3298 18.3332 12.2101 18.3332 10C18.3332 8.90565 18.1176 7.82202 17.6988 6.81097C17.28 5.79992 16.6662 4.88126 15.8924 4.10744C15.1186 3.33362 14.1999 2.71979 13.1889 2.301C12.1778 1.88221 11.0942 1.66666 9.99984 1.66666ZM10.8332 5.83333H9.1665V9.16667H5.83317V10.8333H9.1665V14.1667H10.8332V10.8333H14.1665V9.16667H10.8332V5.83333Z"
+									/>
+								</svg>
+								<span>Create a post</span>
+							</a>
+						</li>
+
+						<li
+							(click)="recordEvents('postanalytics'); recordButtonClick($event, group)"
+							data-cs-label="Post analytics"
+							data-cs-source="page"
+							data-cs-id="828e473e-a7f6-4327-b76e-890dac5c78bd"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'postanalytics'"
+								><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM15.8333 15.8333H4.16667V4.16667H15.8333V15.8333ZM5.83333 8.33333H7.5V14.1667H5.83333V8.33333ZM9.16667 5.83333H10.8333V14.1667H9.16667V5.83333ZM12.5 10.8333H14.1667V14.1667H12.5V10.8333Z"
+									/>
+								</svg>
+								<span>Post analytics</span></a
+							>
+						</li>
+						<li
+							(click)="recordEvents('postTrends'); recordButtonClick($event, group)"
+							data-cs-label="Reshare posts"
+							data-cs-source="page"
+							data-cs-id="b4aeb182-827f-417b-8138-0abd49d11c98"
+							class="nav-item"
+							data-dismiss="modal"
+							[class.disabled]="!group.isReSharePostTabAvailable()"
+						>
+							<a
+								*ngIf="group.isReSharePostTabAvailable(); else forbiddenReSharePost"
+								[class.active]="hashParam === 'postTrends'"
+								[routerLink]="['/group-admin/group', group.id, 'postTrends']"
+								routerLinkActive="active"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0002 4.99999V7.49999L13.3335 4.16666L10.0002 0.833328V3.33333C6.31683 3.33333 3.3335 6.31666 3.3335 9.99999C3.3335 11.3083 3.71683 12.525 4.36683 13.55L5.5835 12.3333C5.2085 11.6417 5.00016 10.8417 5.00016 9.99999C5.00016 7.24166 7.24183 4.99999 10.0002 4.99999ZM15.6335 6.44999L14.4168 7.66666C14.7835 8.36666 15.0002 9.15833 15.0002 9.99999C15.0002 12.7583 12.7585 15 10.0002 15V12.5L6.66683 15.8333L10.0002 19.1667V16.6667C13.6835 16.6667 16.6668 13.6833 16.6668 9.99999C16.6668 8.69166 16.2835 7.47499 15.6335 6.44999Z"
+									/>
+								</svg>
+								<span>Reshare posts</span>
+							</a>
+						</li>
+					</ul>
+					<h6>INSIGHTS</h6>
+					<ul class="list-unstyled">
+						<li
+							(click)="recordEvents('statistics'); recordButtonClick($event, group)"
+							data-cs-label="Group health"
+							data-cs-source="page"
+							data-cs-id="8a4fd9bc-f7bd-47bc-9f2d-1e6b0bca7253"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'statistics'">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M13.0585 3.33332H11.6668V1.66666H8.3335V3.33332H6.94183C6.3335 3.33332 5.8335 3.83332 5.8335 4.44166V17.2167C5.8335 17.8333 6.3335 18.3333 6.94183 18.3333H13.0502C13.6668 18.3333 14.1668 17.8333 14.1668 17.225V4.44166C14.1668 3.83332 13.6668 3.33332 13.0585 3.33332ZM9.16683 16.6667V12.0833H7.50016L10.8335 5.83332V10.4167H12.5002L9.16683 16.6667Z"
+									/>
+								</svg>
+								<span>Group health</span>
+							</a>
+						</li>
+						<li
+							(click)="recordEvents('conversationtrends'); recordButtonClick($event, group)"
+							data-cs-label="Conversations"
+							data-cs-source="page"
+							data-cs-id="ce46ea57-adfa-42d5-b374-38d8a11709a8"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a
+								[class.active]="
+									hashParam === 'conversationtrends' ||
+									hashParam === 'conversationtrends#7days' ||
+									hashParam === 'conversationtrends#14days'
+								"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12.4998 3.33332V9.16666H4.30817L3.8165 9.65832L3.33317 10.1417V3.33332H12.4998ZM13.3332 1.66666H2.49984C2.0415 1.66666 1.6665 2.04166 1.6665 2.49999V14.1667L4.99984 10.8333H13.3332C13.7915 10.8333 14.1665 10.4583 14.1665 9.99999V2.49999C14.1665 2.04166 13.7915 1.66666 13.3332 1.66666ZM17.4998 4.99999H15.8332V12.5H4.99984V14.1667C4.99984 14.625 5.37484 15 5.83317 15H14.9998L18.3332 18.3333V5.83332C18.3332 5.37499 17.9582 4.99999 17.4998 4.99999Z"
+									/>
+								</svg>
+								<span>Conversations</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- More Options Modal -->
+<div class="modal fade mobile-modal-slide" id="moreOptionsModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">More options</h5>
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					aria-label="Close"
+					(click)="recordButtonClick($event, group)"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-cs-id="a024a1a3-1bbe-4450-baf1-d81540039369"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2997 5.70997C17.9097 5.31997 17.2797 5.31997 16.8897 5.70997L11.9997 10.59L7.10973 5.69997C6.71973 5.30997 6.08973 5.30997 5.69973 5.69997C5.30973 6.08997 5.30973 6.71997 5.69973 7.10997L10.5897 12L5.69973 16.89C5.30973 17.28 5.30973 17.91 5.69973 18.3C6.08973 18.69 6.71973 18.69 7.10973 18.3L11.9997 13.41L16.8897 18.3C17.2797 18.69 17.9097 18.69 18.2997 18.3C18.6897 17.91 18.6897 17.28 18.2997 16.89L13.4097 12L18.2997 7.10997C18.6797 6.72997 18.6797 6.08997 18.2997 5.70997Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="modal-menu-links">
+					<ul class="list-unstyled">
+						<li
+							(click)="recordButtonClick($event, group)"
+							data-cs-label="Open group on Facebook"
+							data-cs-source="page"
+							data-cs-id="97f605b8-f23b-4d5c-a289-3fadc508d182"
+							class="nav-item"
+						>
+							<a href="https://www.facebook.com/groups/{{ group.fbGroupId }}" rel="noopener" target="_blank">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M18.3332 9.99999C18.3332 5.39999 14.5998 1.66666 9.99984 1.66666C5.39984 1.66666 1.6665 5.39999 1.6665 9.99999C1.6665 14.0333 4.53317 17.3917 8.33317 18.1667V12.5H6.6665V9.99999H8.33317V7.91666C8.33317 6.30832 9.6415 4.99999 11.2498 4.99999H13.3332V7.49999H11.6665C11.2082 7.49999 10.8332 7.87499 10.8332 8.33332V9.99999H13.3332V12.5H10.8332V18.2917C15.0415 17.875 18.3332 14.325 18.3332 9.99999Z"
+										fill="#9999A7"
+									/>
+								</svg>
+								<span>Open group on Facebook</span></a
+							>
+						</li>
+					</ul>
+					<h6>GROUP SETTINGS</h6>
+					<ul class="list-unstyled">
+						<li
+							(click)="recordEvents('moderator'); recordButtonClick($event, group)"
+							data-cs-label="Add Moderators"
+							data-cs-source="page"
+							data-cs-id="6bf3d54d-3c0d-4d42-a9a5-2db27b4dabda"
+							class="nav-item"
+							*ngIf="group.role !== 'Moderator'"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'moderator'">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12.5002 10C14.3418 10 15.8335 8.50834 15.8335 6.66668C15.8335 4.82501 14.3418 3.33334 12.5002 3.33334C10.6585 3.33334 9.16683 4.82501 9.16683 6.66668C9.16683 8.50834 10.6585 10 12.5002 10ZM12.5002 5.00001C13.4168 5.00001 14.1668 5.75001 14.1668 6.66668C14.1668 7.58334 13.4168 8.33334 12.5002 8.33334C11.5835 8.33334 10.8335 7.58334 10.8335 6.66668C10.8335 5.75001 11.5835 5.00001 12.5002 5.00001ZM12.5002 11.6667C10.2752 11.6667 5.8335 12.7833 5.8335 15V16.6667H19.1668V15C19.1668 12.7833 14.7252 11.6667 12.5002 11.6667ZM7.50016 15C7.6835 14.4 10.2585 13.3333 12.5002 13.3333C14.7502 13.3333 17.3335 14.4083 17.5002 15H7.50016ZM5.00016 12.5V10H7.50016V8.33334H5.00016V5.83334H3.3335V8.33334H0.833496V10H3.3335V12.5H5.00016Z"
+									/>
+								</svg>
+
+								<span>Add Moderators</span>
+							</a>
+						</li>
+						<li
+							(click)="recordEvents('groupdetails'); recordButtonClick($event, group)"
+							data-cs-label="Group details"
+							data-cs-source="page"
+							data-cs-id="95f94876-6be3-4032-8fc9-cade1c68942e"
+							class="nav-item"
+							data-dismiss="modal"
+						>
+							<a [class.active]="hashParam === 'groupdetails'"
+								><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M16.1915 10.8167C16.2249 10.55 16.2499 10.2833 16.2499 9.99999C16.2499 9.71666 16.2249 9.44999 16.1915 9.18332L17.9499 7.80832C18.1082 7.68332 18.1499 7.45832 18.0499 7.27499L16.3832 4.39166C16.3082 4.25832 16.1665 4.18332 16.0165 4.18332C15.9665 4.18332 15.9165 4.19166 15.8749 4.20832L13.7999 5.04166C13.3665 4.70832 12.8999 4.43332 12.3915 4.22499L12.0749 2.01666C12.0499 1.81666 11.8749 1.66666 11.6665 1.66666H8.3332C8.12487 1.66666 7.94987 1.81666 7.92487 2.01666L7.6082 4.22499C7.09987 4.43332 6.6332 4.71666 6.19987 5.04166L4.12487 4.20832C4.07487 4.19166 4.02487 4.18332 3.97487 4.18332C3.8332 4.18332 3.69153 4.25832 3.61653 4.39166L1.94987 7.27499C1.84153 7.45832 1.89153 7.68332 2.04987 7.80832L3.8082 9.18332C3.77487 9.44999 3.74987 9.72499 3.74987 9.99999C3.74987 10.275 3.77487 10.55 3.8082 10.8167L2.04987 12.1917C1.89153 12.3167 1.84987 12.5417 1.94987 12.725L3.61653 15.6083C3.69153 15.7417 3.8332 15.8167 3.9832 15.8167C4.0332 15.8167 4.0832 15.8083 4.12487 15.7917L6.19987 14.9583C6.6332 15.2917 7.09987 15.5667 7.6082 15.775L7.92487 17.9833C7.94987 18.1833 8.12487 18.3333 8.3332 18.3333H11.6665C11.8749 18.3333 12.0499 18.1833 12.0749 17.9833L12.3915 15.775C12.8999 15.5667 13.3665 15.2833 13.7999 14.9583L15.8749 15.7917C15.9249 15.8083 15.9749 15.8167 16.0249 15.8167C16.1665 15.8167 16.3082 15.7417 16.3832 15.6083L18.0499 12.725C18.1499 12.5417 18.1082 12.3167 17.9499 12.1917L16.1915 10.8167ZM14.5415 9.39166C14.5749 9.64999 14.5832 9.82499 14.5832 9.99999C14.5832 10.175 14.5665 10.3583 14.5415 10.6083L14.4249 11.55L15.1665 12.1333L16.0665 12.8333L15.4832 13.8417L14.4249 13.4167L13.5582 13.0667L12.8082 13.6333C12.4499 13.9 12.1082 14.1 11.7665 14.2417L10.8832 14.6L10.7499 15.5417L10.5832 16.6667H9.41653L9.2582 15.5417L9.12487 14.6L8.24153 14.2417C7.8832 14.0917 7.54987 13.9 7.21653 13.65L6.4582 13.0667L5.57487 13.425L4.51653 13.85L3.9332 12.8417L4.8332 12.1417L5.57487 11.5583L5.4582 10.6167C5.4332 10.3583 5.41653 10.1667 5.41653 9.99999C5.41653 9.83332 5.4332 9.64166 5.4582 9.39166L5.57487 8.44999L4.8332 7.86666L3.9332 7.16666L4.51653 6.15832L5.57487 6.58332L6.44153 6.93332L7.19153 6.36666C7.54987 6.09999 7.89153 5.89999 8.2332 5.75832L9.11653 5.39999L9.24987 4.45832L9.41653 3.33332H10.5749L10.7332 4.45832L10.8665 5.39999L11.7499 5.75832C12.1082 5.90832 12.4415 6.09999 12.7749 6.34999L13.5332 6.93332L14.4165 6.57499L15.4749 6.14999L16.0582 7.15832L15.1665 7.86666L14.4249 8.44999L14.5415 9.39166ZM9.99987 6.66666C8.1582 6.66666 6.66653 8.15832 6.66653 9.99999C6.66653 11.8417 8.1582 13.3333 9.99987 13.3333C11.8415 13.3333 13.3332 11.8417 13.3332 9.99999C13.3332 8.15832 11.8415 6.66666 9.99987 6.66666ZM9.99987 11.6667C9.0832 11.6667 8.3332 10.9167 8.3332 9.99999C8.3332 9.08332 9.0832 8.33332 9.99987 8.33332C10.9165 8.33332 11.6665 9.08332 11.6665 9.99999C11.6665 10.9167 10.9165 11.6667 9.99987 11.6667Z"
+									/>
+								</svg>
+								<span>Group details</span></a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<ng-template #forbiddenReSharePost>
+	<a>
+		<img src="./assets/images/lock-icon.svg" alt="" />
+		<span
+			(click)="tooltip.toggle()"
+			#tooltip="matTooltip"
+			matTooltip="Reshare post will be available here in 24 hours"
+			data-cs-parent-label="Tooltip"
+			data-cs-source="page"
+			data-cs-label="Reshare post will be available here in 24 hours"
+			(mouseenter)="tooltipHovered($event)"
+		>
+			Reshare posts
+		</span>
+	</a>
+</ng-template>

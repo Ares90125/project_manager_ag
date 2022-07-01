@@ -1,0 +1,100 @@
+<div class="create-campaign-wrapper">
+	<div class="add-new-campaign-wrapper">
+		<div class="add-new-campaign">
+			<h1>Add new Campaigns</h1>
+			<form [formGroup]="createCampaignsForm">
+				<div formArrayName="data">
+					<div *ngFor="let campaign of data.controls; let i = index">
+						<div [formGroupName]="i" class="campaigns-row">
+							<div class="input-group input-group-column">
+								<input formControlName="userId" name="userId" placeholder="User id" class="form-control" type="text" />
+								<span class="input-error" *ngIf="showError && campaign.get('userId').errors"
+									>Please enter user id.</span
+								>
+							</div>
+							<div class="input-group input-group-column">
+								<input formControlName="hsmTemplate" placeholder="HSM Template" class="form-control" type="text" />
+								<span class="input-error" *ngIf="showError && campaign.get('hsmTemplate').errors"
+									>HSM template should contains only numbers.</span
+								>
+							</div>
+							<div class="input-group input-group-column">
+								<input formControlName="customerId" placeholder="Landbot id" class="form-control" type="text" />
+								<span class="input-error" *ngIf="showError && campaign.get('customerId').errors"
+									>Landbot id should contains only numbers.</span
+								>
+							</div>
+							<div class="values-wrapper" formArrayName="valuesArr">
+								<div *ngFor="let value of getValues(i).controls; let valueIndex = index" class="input-group">
+									<div class="input-group-column">
+										<input
+											class="form-control"
+											type="text"
+											placeholder="value {{ valueIndex + 1 }}"
+											[formControlName]="valueIndex"
+										/>
+										<span class="input-error" *ngIf="showError && value.errors"
+											>Please enter value {{ valueIndex + 1 }}.</span
+										>
+									</div>
+									<button
+										*ngIf="valueIndex + 1 > defaultNumberOfValues"
+										(click)="removeValue(i, valueIndex)"
+										class="btn btn-remove"
+										title="Remove Campaign"
+									>
+										<img alt="Remove Campaign" src="assets/images/cross-icon-small-white.svg" />
+									</button>
+								</div>
+							</div>
+							<div class="campaigns-actions">
+								<button type="button" (click)="addValue(i)" class="btn btn-secondary btn-add-value" title="Add value">
+									<img alt="Add value" src="assets/images/add_icon-dark.svg" />
+									Add Value
+								</button>
+								<button
+									*ngIf="i + 1 > defaultNumberOfForms"
+									(click)="removeCampaign(i)"
+									class="btn btn-remove btn-remove-campaign"
+									title="Remove Campaign"
+								>
+									Remove Campaign
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="fixed-wrapper">
+				<form (ngSubmit)="uploadFile($event)">
+					<input type="file" accept=".csv" />
+					<button class="convo-btn-primary convo-btn-normal" type="submit">Upload CSV</button>
+				</form>
+				<span>|</span>
+				<div class="buttons-wrapper">
+					<button
+						*ngIf="!creationInProgress"
+						type="button"
+						(click)="addCampaign()"
+						class="btn btn-secondary btn-add-campaign"
+						title="Add Campaigns"
+					>
+						<img alt="Add Campaigns" src="assets/images/add_icon-dark.svg" />
+						Add Campaign
+					</button>
+					<button
+						*ngIf="!creationInProgress"
+						(click)="onSubmit()"
+						type="button"
+						class="convo-btn-tertiary convo-btn-normal"
+						data-cs-label="Proceed"
+						data-cs-source="page"
+					>
+						Create Campaigns
+					</button>
+				</div>
+				<span *ngIf="creationInProgress" class="bt-spinner btn-spinner-white"></span>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,469 @@
+<div class="preview-overlap-wrap" [class.not-public-view-wrap]="adminBioFromSetting">
+	<div class="preview-overlap-wrap-body">
+		<div class="preview-header">
+			<div class="preview-header-left">
+				<ng-container *ngIf="adminBioFromSetting">
+					<img src="./assets/images/logo-black.svg" alt="" height="20px" />
+				</ng-container>
+				<ng-container *ngIf="!adminBioFromSetting">
+					<img
+						src="./assets/images/logo-black.svg"
+						data-cs-id="34b91ee5-6608-92Js-84b3-f956ba73a4b9"
+						data-cs-label="Convosight"
+						data-cs-source="page"
+						(click)="redirectToLandingPage()"
+						alt=""
+						height="20px"
+					/>
+				</ng-container>
+			</div>
+			<div class="preview-header-right" *ngIf="adminBioFromSetting">
+				<button
+					class="close-prev"
+					(click)="closePreviewOverlay(); recordButtonClick($event)"
+					data-cs-id="34b91ee5-6608-4880-84b3-f956ba73a4b9"
+					data-cs-label="Close preview"
+					data-cs-source="page"
+				>
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M15.2498 4.75819C14.9248 4.43319 14.3998 4.43319 14.0748 4.75819L9.99984 8.82485L5.92484 4.74985C5.59984 4.42485 5.07484 4.42485 4.74984 4.74985C4.42484 5.07485 4.42484 5.59985 4.74984 5.92485L8.82484 9.99985L4.74984 14.0749C4.42484 14.3999 4.42484 14.9249 4.74984 15.2499C5.07484 15.5749 5.59984 15.5749 5.92484 15.2499L9.99984 11.1749L14.0748 15.2499C14.3998 15.5749 14.9248 15.5749 15.2498 15.2499C15.5748 14.9249 15.5748 14.3999 15.2498 14.0749L11.1748 9.99985L15.2498 5.92485C15.5665 5.60819 15.5665 5.07485 15.2498 4.75819Z"
+							fill="#D6D6DC"
+						/>
+					</svg>
+					<span>Close preview</span>
+				</button>
+			</div>
+		</div>
+		<ng-container *ngIf="!isLoading; else showDefaultBioHeader">
+			<app-bio-preview-heder
+				[adminBio]="draftAdminBio ? adminBioFromSetting : adminBio"
+				[draftAdminBio]="draftAdminBio"
+				[kudosData]="kudosData"
+				[isFromSettingPage]="!!adminBioFromSetting"
+			></app-bio-preview-heder>
+		</ng-container>
+		<ng-template #showDefaultBioHeader>
+			<div class="preview-profile-wrap">
+				<div class="container-sm">
+					<div class="preview-profile">
+						<div class="preview-profile-left">
+							<figure>
+								<img src="assets/images/default_user.png" alt="" />
+							</figure>
+							<div class="preview-profile-info">
+								<app-loading-shimmer [type]="1"></app-loading-shimmer>
+
+								<div class="user-actions mt-2">
+									<button class="convo-btn-normal convo-btn-rounded convo-btn-bordered kudos-btn">
+										<figure>
+											<img src="assets/images/favorite-outline.svg" alt="" />
+										</figure>
+										Hearts
+									</button>
+
+									<button class="convo-btn-bordered convo-btn-normal convo-btn-rounded btn-share-bio">
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12 10.7202C11.4933 10.7202 11.04 10.9202 10.6933 11.2335L5.94 8.46683C5.97333 8.3135 6 8.16016 6 8.00016C6 7.84016 5.97333 7.68683 5.94 7.5335L10.64 4.7935C11 5.12683 11.4733 5.3335 12 5.3335C13.1067 5.3335 14 4.44016 14 3.3335C14 2.22683 13.1067 1.3335 12 1.3335C10.8933 1.3335 10 2.22683 10 3.3335C10 3.4935 10.0267 3.64683 10.06 3.80016L5.36 6.54016C5 6.20683 4.52667 6.00016 4 6.00016C2.89333 6.00016 2 6.8935 2 8.00016C2 9.10683 2.89333 10.0002 4 10.0002C4.52667 10.0002 5 9.7935 5.36 9.46016L10.1067 12.2335C10.0733 12.3735 10.0533 12.5202 10.0533 12.6668C10.0533 13.7402 10.9267 14.6135 12 14.6135C13.0733 14.6135 13.9467 13.7402 13.9467 12.6668C13.9467 11.5935 13.0733 10.7202 12 10.7202Z"
+												fill="#33334f"
+											/>
+										</svg>
+										<span>Share</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-template>
+		<div class="preview-profile-wrap" *ngIf="renderedOn === 'Mobile' && !adminBioFromSetting">
+			<div class="container-sm">
+				<div class="preview-profile">
+					<div class="preview-profile-left">
+						<ul class="list-unstyled">
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="fea1343c-b704-4f47-9f6e-84d03f9d985f"
+								data-cs-label="Bio"
+								data-cs-source="page"
+								*ngIf="adminBio?.bio"
+							>
+								<a (click)="scrollToSection($event)" class="active" dataHref="bio-preview-introduction">About me</a>
+							</li>
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="c44e6ca2-161f-62e4-b3a6-30744b3f5f6d"
+								data-cs-label="My achievements"
+								data-cs-source="page"
+								*ngIf="adminBio?.keyAchievements && adminBio?.keyAchievements.length > 0"
+							>
+								<a (click)="scrollToSection($event)" dataHref="bio-preview-key">My achievements</a>
+							</li>
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="a3b842ed-6064-4f18-a01b-32336d99a87e"
+								data-cs-label="Media coverage"
+								data-cs-source="page"
+								*ngIf="adminBio?.mediaCoverages && adminBio?.mediaCoverages.length > 0"
+							>
+								<a (click)="scrollToSection($event)" dataHref="bio-preview-media-coverage">Media coverage</a>
+							</li>
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="5fa5f8aa-cd8c-46f0-87c0-91be2a213b7c"
+								data-cs-label="My Groups"
+								data-cs-source="page"
+								*ngIf="
+									(adminBio?.selectedAdministratedGroups && adminBio?.selectedAdministratedGroups.length > 0) ||
+									(adminBio?.selectedSupportedGroups && adminBio?.selectedSupportedGroups.length > 0)
+								"
+							>
+								<a (click)="scrollToSection($event)" dataHref="bio-preview-my-groups">My Groups</a>
+							</li>
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="ecb30b80-e28a-44b4-9f6c-21330dd5673b"
+								data-cs-label="Files"
+								data-cs-source="page"
+								*ngIf="adminBio?.files && adminBio?.files.length > 0"
+							>
+								<a (click)="scrollToSection($event)" dataHref="bio-preview-files">Files</a>
+							</li>
+							<li
+								(click)="recordButtonClick($event)"
+								data-cs-id="ecb30b80-e28a-44b4-9f6c-21330dd5238s"
+								data-cs-label="Social"
+								data-cs-source="page"
+								*ngIf="adminBio?.socialProfiles && adminBio?.socialProfiles.length > 0"
+							>
+								<a (click)="scrollToSection($event)" dataHref="bio-preview-social-profile">Social</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<ng-container *ngIf="!isLoading; else LoadState">
+			<div class="preview-body-wrap">
+				<div class="container-sm">
+					<div class="preview-body">
+						<div class="preview-body-left">
+							<ng-container *ngIf="adminBio?.bio || adminBio?.pitchVideo?.url">
+								<div class="bio-card-wrap" id="bio-preview-introduction">
+									<h5 class="bio-card-title" data-test-id="text-Bio-adminBio-public-page">
+										<img src="./assets/images/bio-icon.png" alt="" />
+										<span>About me</span>
+									</h5>
+									<div class="bio-card">
+										<app-bio-preview-introduction
+											[bio]="adminBio?.bio"
+											[pitchVideo]="adminBio?.pitchVideo"
+										></app-bio-preview-introduction>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="adminBio?.keyAchievements && adminBio?.keyAchievements.length > 0">
+								<div class="bio-card-wrap" id="bio-preview-key">
+									<h5 class="bio-card-title">
+										<img src="./assets/images/achievements-icon.png" alt="" /> <span>My achievements</span>
+									</h5>
+									<div class="bio-card">
+										<app-bio-preview-key-achievements
+											[keyAchievement]="adminBio?.keyAchievements"
+										></app-bio-preview-key-achievements>
+									</div>
+								</div>
+							</ng-container>
+
+							<ng-container *ngIf="adminBio?.mediaCoverages && adminBio?.mediaCoverages.length > 0">
+								<div class="bio-card-wrap" id="bio-preview-media-coverage">
+									<h5 class="bio-card-title">
+										<img src="./assets/images/media-icon.png" alt="" /> <span>Media coverage</span>
+									</h5>
+									<app-bio-preview-media-coverage
+										[mediaCoverages]="adminBio?.mediaCoverages"
+									></app-bio-preview-media-coverage>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="adminBio?.files && adminBio?.files.length > 0 && renderedOn === 'Desktop'">
+								<div class="bio-card-wrap" id="bio-preview-files">
+									<h5 class="bio-card-title"><img src="./assets/images/files-icon.png" alt="" /> <span>Files</span></h5>
+									<div class="bio-card">
+										<app-bio-preview-supporting-docs [files]="adminBio?.files"></app-bio-preview-supporting-docs>
+									</div>
+								</div>
+							</ng-container>
+						</div>
+
+						<div class="preview-body-right">
+							<ng-container
+								*ngIf="adminBio?.selectedAdministratedGroups && adminBio?.selectedAdministratedGroups.length > 0"
+							>
+								<div class="bio-card-wrap" id="bio-preview-my-groups">
+									<h5 class="bio-card-title">
+										<img src="./assets/images/groups-icon.png" alt="" />
+										<span
+											>{{
+												adminBio?.selectedAdministratedGroups?.length === 0 ||
+												adminBio?.selectedAdministratedGroups.length === 1
+													? 'Group'
+													: 'Groups'
+											}}
+											I admin</span
+										>
+									</h5>
+									<div class="group-member-card">
+										<ul class="list-unstyled">
+											<li>
+												<strong>{{ adminBio?.selectedAdministratedGroups?.length }} </strong>
+												<span>{{
+													adminBio?.selectedAdministratedGroups?.length === 0 ||
+													adminBio?.selectedAdministratedGroups.length === 1
+														? 'group'
+														: 'groups'
+												}}</span>
+											</li>
+											<li>
+												<strong> {{ totalGroupMember | shortNumber }} </strong>
+												<span>total {{ totalGroupMember === 1 || totalGroupMember === 0 ? 'member' : 'members' }}</span>
+											</li>
+										</ul>
+									</div>
+									<div class="bio-card">
+										<app-bio-preview-facebook-groups-list
+											[groups]="adminBio?.selectedAdministratedGroups"
+											[groupType]="'admin'"
+										></app-bio-preview-facebook-groups-list>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="adminBio?.selectedSupportedGroups && adminBio?.selectedSupportedGroups.length > 0">
+								<div class="bio-card-wrap" id="bio-preview-my-groups">
+									<h5 class="bio-card-title">
+										<img src="./assets/images/groups-icon.png" alt="" />
+										<span
+											>{{
+												adminBio?.selectedSupportedGroups?.length === 0 ||
+												adminBio?.selectedSupportedGroups.length === 1
+													? 'Group'
+													: 'Groups'
+											}}
+											I support · {{ adminBio?.selectedSupportedGroups?.length ?? 0 }}</span
+										>
+									</h5>
+									<div class="bio-card">
+										<app-bio-preview-facebook-groups-list
+											[groups]="adminBio?.selectedSupportedGroups"
+											[groupType]="'support'"
+										></app-bio-preview-facebook-groups-list>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="adminBio?.files && adminBio?.files.length > 0 && renderedOn === 'Mobile'">
+								<div class="bio-card-wrap" id="bio-preview-files">
+									<h5 class="bio-card-title"><img src="./assets/images/files-icon.png" alt="" /> <span>Files</span></h5>
+									<div class="bio-card">
+										<app-bio-preview-supporting-docs [files]="adminBio?.files"></app-bio-preview-supporting-docs>
+									</div>
+								</div>
+							</ng-container>
+							<ng-container *ngIf="adminBio?.socialProfiles && adminBio?.socialProfiles.length > 0">
+								<div class="bio-card-wrap" id="bio-preview-social-profile">
+									<h5 class="bio-card-title"><img src="assets/images/social-icon.png" alt="" /> <span>Social</span></h5>
+									<div class="bio-card">
+										<app-bio-preview-social-profiles
+											[socialProfiles]="adminBio?.socialProfiles"
+										></app-bio-preview-social-profiles>
+									</div>
+								</div>
+							</ng-container>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+
+		<ng-template #LoadState>
+			<ng-container *ngIf="isLoading; else bioState">
+				<div class="preview-body-wrap">
+					<div class="container-sm">
+						<div class="preview-body">
+							<div class="preview-body-left">
+								<div class="bio-card-wrap">
+									<div class="bio-card" style="height: 140px; margin-bottom: 32px">
+										<app-loading-shimmer [type]="2"></app-loading-shimmer>
+									</div>
+									<div class="bio-card" style="height: 140px">
+										<app-loading-shimmer [type]="2"></app-loading-shimmer>
+									</div>
+								</div>
+							</div>
+							<div class="preview-body-right">
+								<div class="bio-card-wrap">
+									<div class="bio-card" style="height: 232px">
+										<div><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+										<div class="mt-4"><app-loading-shimmer [type]="3"></app-loading-shimmer></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+		</ng-template>
+		<ng-template #bioState>
+			<ng-container *ngIf="adminBio && !adminBio?.isBioCompleted && !isLoading">
+				<div class="container-sm" *ngIf="adminBioFromSetting">
+					<div class="empty-state-wrap">
+						<div class="empty-state-content">
+							<figure>
+								<svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="21" cy="21" r="21" fill="#33334F" />
+									<path
+										d="M23.06 18.02L23.98 18.94L14.92 28H14V27.08L23.06 18.02ZM26.66 12C26.41 12 26.15 12.1 25.96 12.29L24.13 14.12L27.88 17.87L29.71 16.04C30.1 15.65 30.1 15.02 29.71 14.63L27.37 12.29C27.17 12.09 26.92 12 26.66 12ZM23.06 15.19L12 26.25V30H15.75L26.81 18.94L23.06 15.19Z"
+										fill="white"
+									/>
+								</svg>
+							</figure>
+							<div>
+								<h6 *ngIf="!adminBioFromSetting">Your bio is incomplete!</h6>
+								<h6
+									*ngIf="adminBioFromSetting"
+									(click)="closePreviewOverlay(); recordButtonClick($event)"
+									data-cs-id="37e3041b-2506-4f95-a521-411521a31b74"
+									data-cs-label="Your bio is incomplete!"
+									data-cs-source="page"
+									style="cursor: pointer"
+								>
+									Your bio is incomplete!
+								</h6>
+								<p>Complete your bio before sharing it with someone.</p>
+							</div>
+						</div>
+						<img src="./assets/images/dummy_content.png" alt="" />
+					</div>
+				</div>
+				<div class="full-height" *ngIf="!adminBioFromSetting"></div>
+			</ng-container>
+		</ng-template>
+	</div>
+
+	<div class="preview-footer-wrap">
+		<div class="footer-row">
+			<small
+				>Create your
+				<u
+					*ngIf="!adminBioFromSetting"
+					style="cursor: pointer"
+					data-cs-id="eba7bde4-9f04-4639-8543-ce02b1460958"
+					data-cs-label="personalised admin bio"
+					data-cs-source="page"
+					(click)="signIn($event)"
+					>personalized admin bio</u
+				>
+				<u
+					*ngIf="adminBioFromSetting"
+					style="cursor: pointer"
+					data-cs-id="eba7bde4-9f04-4639-92ks-ce02b1460958"
+					data-cs-label="personalised admin bio"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); closePreviewOverlay()"
+					>personalized admin bio</u
+				>
+				now
+			</small>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert optIn-modal" *ngIf="showAdminContactInfoPopup">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="optIn-modal-body">
+					<figure><img src="./assets/images/megaphone.svg" alt="" /></figure>
+					<h5>Before you create your bio...</h5>
+					<h6>Would you like to receive notifications when Brands want to connect with you?</h6>
+					<form [formGroup]="optInForm" class="text-left">
+						<div class="note-wrap">
+							<mat-checkbox formControlName="sendAdminBioNotificationCampaign"
+								><span class="label-text">Yes, send me message notifications</span></mat-checkbox
+							>
+						</div>
+						<ng-container *ngIf="optInForm.get('sendAdminBioNotificationCampaign').value">
+							<div
+								class="mobile-number-wrapper input-wrap"
+								[class.phoneError]="
+									optInForm.get('adminBioContactPhoneNumber').errors !== null &&
+									optInForm.get('adminBioContactPhoneNumber').value
+								"
+							>
+								<label>WhatsApp Number</label>
+								<ngx-intl-tel-input
+									[enableAutoCountrySelect]="false"
+									[enablePlaceholder]="false"
+									[customPlaceholder]="'Enter phone number...'"
+									[formControl]="optInForm.controls['adminBioContactPhoneNumber']"
+									[maxLength]="15"
+									[phoneValidation]="true"
+									[preferredCountries]="preferredCountries"
+									[searchCountryFlag]="true"
+									[selectFirstCountry]="false"
+									[selectedCountryISO]="CountryISO.India"
+									[separateDialCode]="separateDialCode"
+									class="w-100"
+									name="adminBioContactPhoneNumber"
+								>
+								</ngx-intl-tel-input>
+								<div
+									class="error-wrap"
+									*ngIf="
+										optInForm.get('adminBioContactPhoneNumber').errors !== null &&
+										optInForm.get('adminBioContactPhoneNumber').value
+									"
+								>
+									Please enter a valid WhatsApp Number.
+								</div>
+							</div>
+							<div class="input-wrap">
+								<label>Email</label>
+								<input
+									formControlName="adminBioContactEmail"
+									class="convo-input"
+									matInput
+									placeholder="Enter your email..."
+									type="email"
+									name="adminBioContactEmail"
+								/>
+								<div
+									class="error-wrap"
+									*ngIf="
+										optInForm.get('adminBioContactEmail').errors !== null && optInForm.get('adminBioContactEmail').value
+									"
+								>
+									Please enter a valid Email.
+								</div>
+							</div>
+						</ng-container>
+
+						<button
+							[disabled]="
+								optInForm.get('adminBioContactEmail').errors !== null ||
+								optInForm.get('adminBioContactPhoneNumber').errors !== null
+							"
+							class="convo-btn-normal convo-btn-primary w-100"
+							(click)="recordButtonClick($event); saveOptInForm(optInForm)"
+							data-cs-id="c7938ee0-806f-4e3d-8891-b1c71feca244"
+							data-cs-label="Continue to Create your Bio"
+							data-cs-source="dialog"
+						>
+							Continue to Create your Bio
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

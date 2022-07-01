@@ -1,0 +1,26 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.bio-preview-into-wrap {
+	@include font-paragraph-s;
+	p {
+		margin-bottom: 16px;
+	}
+	a {
+		color: $emp-blue-1;
+		font-weight: 500;
+	}
+}
+
+.pitch-video {
+	position: relative;
+	width: 100%;
+	margin-top: 20px;
+	border-radius: 4px;
+	background: #000;
+	.video {
+		width: 100%;
+		border-radius: 4px;
+		max-height: 300px;
+	}
+}

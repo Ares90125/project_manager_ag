@@ -1,0 +1,125 @@
+<!-- Communication mode verification Modal -->
+<div aria-hidden="true" class="modal modal-component" style="display: block" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div *ngIf="!showConfirmationDialog" class="modal-content">
+			<div class="modal-header">
+				<h5 *ngIf="modeOfCommunicationToBeVerified === 'WhatsApp'" class="modal-title">WhatsApp Subscription</h5>
+				<h5 *ngIf="modeOfCommunicationToBeVerified === 'Email'" class="modal-title">Communication Email</h5>
+			</div>
+			<div class="modal-body">
+				<p>
+					<strong> {{ user?.modeOfCommunicationUpdatedBy }} </strong> from Convosight Team has added your
+					<span *ngIf="modeOfCommunicationToBeVerified === 'WhatsApp'; else email">WhatsApp number</span>
+					<ng-template #email>Email address</ng-template>
+					for recieving notifications for new and active campaigns and other activity in your groups.
+				</p>
+
+				<h6 *ngIf="modeOfCommunicationToBeVerified === 'Email'">
+					Please click on confirm to add this email to your account.
+				</h6>
+				<h6 *ngIf="modeOfCommunicationToBeVerified === 'WhatsApp'">
+					Please verify the number and confirm to complete the subscription process
+				</h6>
+				<form
+					(ngSubmit)="submitModeOfCommunication(modeOfCommunication, 'whatsapp')"
+					*ngIf="modeOfCommunicationToBeVerified === 'WhatsApp'"
+					[class.phoneError]="
+						modeOfCommunication.get('whatsapp').errors !== null && modeOfCommunication.get('whatsapp').value
+					"
+					[formGroup]="modeOfCommunication"
+				>
+					<div class="mobile-number-wrapper">
+						<ngx-intl-tel-input
+							[enablePlaceholder]="false"
+							[maxLength]="15"
+							[phoneValidation]="true"
+							[preferredCountries]="preferredCountries"
+							[searchCountryFlag]="true"
+							[selectFirstCountry]="false"
+							[selectedCountryISO]="CountryISO.India"
+							[separateDialCode]="true"
+							class="w-100"
+							formControlName="whatsapp"
+							name="phoneNumber"
+						>
+						</ngx-intl-tel-input>
+					</div>
+					<div class="action-row">
+						<button
+							[disabled]="isUpdating || modeOfCommunication.invalid"
+							class="convo-btn-normal convo-btn-primary w-100"
+							type="submit"
+						>
+							<span *ngIf="!isUpdating">Update</span>
+							<span *ngIf="isUpdating" class="bt-spinner"></span>
+						</button>
+					</div>
+				</form>
+				<div *ngIf="modeOfCommunicationToBeVerified === 'Email'">
+					<input
+						#emailInput
+						[(ngModel)]="emailToBeVerified"
+						[email]="true"
+						[pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'"
+						class="form-control"
+						matInput
+						placeholder="Enter your email"
+						type="email"
+					/>
+
+					<div class="action-row">
+						<button
+							(click)="submitModeOfCommunication(null, 'email')"
+							[disabled]="
+								isUpdating ||
+								emailToBeVerified === '' ||
+								emailToBeVerified === null ||
+								emailInput.classList.contains('ng-invalid')
+							"
+							class="convo-btn-normal convo-btn-primary w-100"
+							type="button"
+						>
+							<span *ngIf="!isUpdating">Update</span>
+							<span *ngIf="isUpdating" class="bt-spinner"></span>
+						</button>
+					</div>
+				</div>
+				<div (click)="showConfirmationDialog = true" class="remove-modal-link">
+					I don’t want to subscribe on
+					<span *ngIf="modeOfCommunicationToBeVerified === 'WhatsApp'; else emailText">WhatsApp</span>
+					<ng-template #emailText>Email</ng-template>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="showConfirmationDialog" class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Remove from Campaign</h5>
+			</div>
+			<div class="modal-body">
+				<p>
+					<strong> {{ user?.modeOfCommunicationUpdatedBy }} </strong> from Convosight team is trying to invite you to a
+					campaign. Denying to add a WhatsApp number will remove your group from the campaign.
+				</p>
+
+				<div class="action-row">
+					<button
+						(click)="
+							showConfirmationDialog = false; modeOfCommunication.get('whatsapp').setValue(this.decryptedPhoneNumber)
+						"
+						class="convo-btn-normal convo-btn-primary"
+					>
+						Back
+					</button>
+					<button
+						(click)="submitModeOfCommunication(null, 'decline')"
+						class="convo-btn-normal convo-btn-bordered text-danger"
+					>
+						<span *ngIf="!isUpdating">Remove from Campaign</span> <span *ngIf="isUpdating" class="bt-spinner"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

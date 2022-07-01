@@ -1,0 +1,45 @@
+<div class="onboarding-navigation" [class.middle-step-nav]="currentStep !== 0 && currentStep !== 3">
+	<div class="onboarding-back-btn">
+		<button
+			*ngIf="currentStep !== 0"
+			class="convo-btn-outline convo-btn-normal"
+			(click)="prevStepHandle($event)"
+			[disabled]="fetching"
+			data-cs-id="8da8c186-3d5d-4947-a89f-3a902d35c22a"
+			data-cs-label="Preview"
+			data-cs-source="page"
+		>
+			<svg *ngIf="!fetching" width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					opacity="0.95"
+					d="M7.01526 1.41127C7.30002 1.12651 7.30002 0.664829 7.01526 0.380072C6.73051 0.0953146 6.26882 0.0953146 5.98407 0.380072L0.879902 5.48424C0.595144 5.769 0.595144 6.23068 0.879902 6.51544L5.98407 11.6196C6.26882 11.9044 6.73051 11.9044 7.01526 11.6196C7.30002 11.3348 7.30002 10.8732 7.01526 10.5884L3.15586 6.729H11.6038C12.0065 6.729 12.333 6.40254 12.333 5.99983C12.333 5.59713 12.0065 5.27067 11.6038 5.27067H3.15587L7.01526 1.41127Z"
+					fill="#3654FF"
+				/>
+			</svg>
+			<span *ngIf="!fetching">Back</span>
+			<span class="btn-spinner btn-spinner-blue" *ngIf="fetching"></span>
+		</button>
+	</div>
+	<div class="onboarding-next-btn" [class.middle-steps-nav-btn]="currentStep !== 0">
+		<button
+			(click)="nextStepHandle($event)"
+			[disabled]="fetching"
+			class="convo-btn-primary convo-btn-normal"
+			data-cs-id="49597752-619f-4f33-bc76-263cc2fd8214"
+			data-cs-label="Customize"
+			data-cs-source="page"
+		>
+			<span class="btn-spinner" *ngIf="fetching"></span>
+			<span *ngIf="!fetching">
+				{{ currentStep !== 3 ? 'Next' : 'I will publish it later' }}
+			</span>
+			<svg *ngIf="!fetching" width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					opacity="0.95"
+					d="M5.98376 1.41127C5.699 1.12651 5.699 0.664829 5.98376 0.380072C6.26852 0.0953146 6.7302 0.0953146 7.01496 0.380072L12.1191 5.48424C12.4039 5.769 12.4039 6.23068 12.1191 6.51544L7.01496 11.6196C6.7302 11.9044 6.26852 11.9044 5.98376 11.6196C5.699 11.3348 5.699 10.8732 5.98376 10.5884L9.84316 6.729H1.39518C0.992475 6.729 0.666016 6.40254 0.666016 5.99983C0.666016 5.59713 0.992475 5.27067 1.39518 5.27067H9.84315L5.98376 1.41127Z"
+					fill="white"
+				/>
+			</svg>
+		</button>
+	</div>
+</div>

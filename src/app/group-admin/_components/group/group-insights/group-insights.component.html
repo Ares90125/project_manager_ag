@@ -1,0 +1,1688 @@
+<div class="group-insight-container">
+	<div class="container">
+		<div class="page-headers">
+			<h1 data-test-id="heading-group-Health">Group Health</h1>
+			<h6 data-test-id="subheading-group-health">{{ description }}</h6>
+		</div>
+	</div>
+	<ng-container *ngIf="group.isGroupHealthTabAvailable(); else metricsNotYetAvailable">
+		<div class="fixed-tabs">
+			<div class="container">
+				<ul class="nav nav-tabs graph-tabs" id="insightsTab" role="tablist">
+					<li class="nav-item" *ngIf="!group.isLast30DaysPillDisabled">
+						<button
+							(click)="changeReportType('last30Days'); recordButtonClick($event, group)"
+							[attr.data-cs-label]="group?.getPillNameBasedOnReportType('last30Days')"
+							[class.active]="reportType === 'last30Days'"
+							aria-controls="last30Days"
+							aria-selected="true"
+							class="btn-month"
+							data-cs-id="de10cd98-e47f-4a37-87a5-70ecd3b4fe37"
+							data-cs-source="page"
+							data-toggle="tab"
+							href="#insightsTabContent"
+							id="last30DaysTab"
+							role="tab"
+						>
+							{{ group?.getPillNameBasedOnReportType('last30Days') }}
+						</button>
+					</li>
+					<li class="nav-item" *ngIf="!group.isLastMonthPillDisabled">
+						<button
+							(click)="changeReportType('lastMonth'); recordButtonClick($event, group)"
+							[attr.data-cs-label]="group?.getPillNameBasedOnReportType('lastMonth')"
+							[class.active]="reportType === 'lastMonth'"
+							aria-controls="1month"
+							aria-selected="false"
+							class="btn-month"
+							data-cs-id="b0975434-9754-44ef-b40e-7a022f307fd6"
+							data-cs-source="page"
+							data-toggle="tab"
+							href="#insightsTabContent"
+							id="oneMonthTab"
+							role="tab"
+						>
+							{{ group?.getPillNameBasedOnReportType('lastMonth') }}
+						</button>
+					</li>
+					<li class="nav-item" *ngIf="!group.isSecondLastMonthPillDisabled">
+						<button
+							(click)="changeReportType('lastTwoMonths'); recordButtonClick($event, group)"
+							[attr.data-cs-label]="group?.getPillNameBasedOnReportType('lastTwoMonths')"
+							[class.active]="reportType === 'lastTwoMonths'"
+							aria-controls="2months"
+							aria-selected="false"
+							class="btn-month"
+							data-cs-id="7001a07f-a133-49b2-8169-76a33de3562f"
+							data-cs-source="page"
+							data-toggle="tab"
+							href="#insightsTabContent"
+							id="twoMonthsTab"
+							role="tab"
+						>
+							{{ group?.getPillNameBasedOnReportType('lastTwoMonths') }}
+						</button>
+					</li>
+					<li class="nav-item" *ngIf="!group.isThirdLastMonthPillDisabled">
+						<button
+							(click)="changeReportType('lastThreeMonths'); recordButtonClick($event, group)"
+							[attr.data-cs-label]="group?.getPillNameBasedOnReportType('lastThreeMonths')"
+							[class.active]="reportType === 'lastThreeMonths'"
+							aria-controls="3months"
+							aria-selected="false"
+							class="btn-month"
+							data-cs-id="bc299f34-eff6-42f2-b4ef-ee4deca4aace"
+							data-cs-source="page"
+							data-toggle="tab"
+							href="#insightsTabContent"
+							id="threeMonthsTab"
+							role="tab"
+						>
+							{{ group?.getPillNameBasedOnReportType('lastThreeMonths') }}
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<div class="matrics-top-container">
+				<div class="summary-row" *ngIf="isPercentageForHealthReportlessThan100">
+					<div class="metrics-wrapper analysing">
+						<div class="heading-wrapper">
+							<h3 class="heading-overview">
+								<span> Engagement Metrics</span>
+								<p class="sub-heading-overview">
+									Insights about <strong>Posts</strong>, <strong>Comments</strong>, and <strong>Reactions</strong>
+								</p>
+							</h3>
+							<div>
+								<app-analysis-state
+									[value]="group?.percentageLast28DaysMetricsAvailable"
+									[inline]="true"
+									[diameter]="28"
+								></app-analysis-state>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="summary-row"
+					*ngIf="
+						isPercentageForHealthReport100 ||
+						(this.group?.percentageLast28DaysMetricsAvailable === 100 && this.reportType === 'currentMonth')
+					"
+				>
+					<div class="metrics-wrapper">
+						<ng-container
+							*ngIf="
+								selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+								else loadingTotalEngagementRate
+							"
+						>
+							<div class="tooltip-wrapper">
+								<app-tooltip
+									setTooltipText="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+								></app-tooltip>
+							</div>
+							<h6 class="metric-name">Engagement Rate</h6>
+							<p class="metric-value">
+								{{
+									selectedSummaryMetrics?.totalEngagementRate === 0
+										? 'N.A.'
+										: (selectedSummaryMetrics?.totalEngagementRate | number: '1.0-0') + '%'
+								}}
+							</p>
+							<div
+								*ngIf="
+									toBeComparedToSummaryMetrics &&
+									toBeComparedToSummaryMetrics?.totalEngagementRate !== 0 &&
+									selectedSummaryMetrics
+								"
+								class="comparison-box"
+							>
+								<div class="icon-higher-or-lower"></div>
+								<div class="">
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalEngagementRate > selectedSummaryMetrics?.totalEngagementRate
+										"
+										class="lower"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-red.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalEngagementRate !== 0
+														? ((toBeComparedToSummaryMetrics?.totalEngagementRate -
+																selectedSummaryMetrics?.totalEngagementRate) /
+																toBeComparedToSummaryMetrics?.totalEngagementRate | percent) + ' lower'
+														: selectedSummaryMetrics?.totalEngagementRate + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalEngagementRate !== 0 ? 'vs' : 'in' }}
+												{{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalEngagementRate < selectedSummaryMetrics?.totalEngagementRate
+										"
+										class="higher"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-green.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalEngagementRate !== 0
+														? ((selectedSummaryMetrics?.totalEngagementRate -
+																toBeComparedToSummaryMetrics?.totalEngagementRate) /
+																toBeComparedToSummaryMetrics?.totalEngagementRate | percent) + ' higher'
+														: selectedSummaryMetrics?.totalEngagementRate + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalEngagementRate !== 0 ? 'vs' : 'in' }}
+												{{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalEngagementRate === selectedSummaryMetrics?.totalEngagementRate
+										"
+										class="equal"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-equal.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">No change</div>
+											<div class="time-span">vs {{ previousMonth }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loadingTotalEngagementRate>
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</ng-template>
+					</div>
+					<div class="metrics-wrapper">
+						<ng-container
+							*ngIf="
+								selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+								else loadingTotalActivityRate
+							"
+						>
+							<div class="tooltip-wrapper">
+								<app-tooltip
+									setTooltipText="Average number of actions (comments + reactions + shares) a post gets in your group"
+								></app-tooltip>
+							</div>
+							<h6 class="metric-name">Activity Rate</h6>
+							<p class="metric-value">
+								{{ selectedSummaryMetrics?.totalActivityRate }}
+							</p>
+							<div class="comparison-box" *ngIf="toBeComparedToSummaryMetrics">
+								<div class="icon-higher-or-lower"></div>
+								<div class="">
+									<div
+										*ngIf="toBeComparedToSummaryMetrics?.totalActivityRate > selectedSummaryMetrics?.totalActivityRate"
+										class="lower"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-red.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalActivityRate !== 0
+														? ((toBeComparedToSummaryMetrics?.totalActivityRate -
+																selectedSummaryMetrics?.totalActivityRate) /
+																toBeComparedToSummaryMetrics?.totalActivityRate | percent) + ' lower'
+														: selectedSummaryMetrics?.totalActivityRate + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalActivityRate !== 0 ? 'vs' : 'in' }} {{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="toBeComparedToSummaryMetrics?.totalActivityRate < selectedSummaryMetrics?.totalActivityRate"
+										class="higher"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-green.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalActivityRate !== 0
+														? ((selectedSummaryMetrics?.totalActivityRate -
+																toBeComparedToSummaryMetrics?.totalActivityRate) /
+																toBeComparedToSummaryMetrics?.totalActivityRate | percent) + ' higher'
+														: selectedSummaryMetrics?.totalActivityRate + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalActivityRate !== 0 ? 'vs' : 'in' }} {{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalActivityRate === selectedSummaryMetrics?.totalActivityRate
+										"
+										class="equal"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-equal.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">No change</div>
+											<div class="time-span">vs {{ previousMonth }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loadingTotalActivityRate>
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</ng-template>
+					</div>
+					<div class="metrics-wrapper">
+						<div></div>
+						<ng-container
+							*ngIf="
+								selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+								else loadingTotalPosts
+							"
+						>
+							<div class="tooltip-wrapper">
+								<app-tooltip
+									setTooltipText="These are the total number of posts in your community in the above time period"
+								>
+								</app-tooltip>
+							</div>
+							<h6 class="metric-name">Posts</h6>
+							<p class="metric-value">
+								{{ selectedSummaryMetrics?.totalPosts }}
+							</p>
+							<div class="comparison-box" *ngIf="toBeComparedToSummaryMetrics">
+								<div class="icon-higher-or-lower"></div>
+								<div class="">
+									<div
+										*ngIf="toBeComparedToSummaryMetrics?.totalPosts > selectedSummaryMetrics?.totalPosts"
+										class="lower"
+									>
+										<div class="icon-higher-or-lower"><img src="assets/images/icon-arrow-red.svg" /></div>
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalPosts !== 0
+														? ((toBeComparedToSummaryMetrics?.totalPosts - selectedSummaryMetrics?.totalPosts) /
+																toBeComparedToSummaryMetrics?.totalPosts | percent) + ' lower'
+														: selectedSummaryMetrics?.totalPosts + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalPosts !== 0 ? 'vs' : 'in' }} {{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="toBeComparedToSummaryMetrics?.totalPosts < selectedSummaryMetrics?.totalPosts"
+										class="higher"
+									>
+										<div class="icon-higher-or-lower"><img src="assets/images/icon-arrow-green.svg" /></div>
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalPosts !== 0
+														? ((selectedSummaryMetrics?.totalPosts - toBeComparedToSummaryMetrics?.totalPosts) /
+																toBeComparedToSummaryMetrics?.totalPosts | percent) + ' higher'
+														: selectedSummaryMetrics?.totalPosts + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalPosts !== 0 ? 'vs' : 'in' }} {{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="toBeComparedToSummaryMetrics?.totalPosts === selectedSummaryMetrics?.totalPosts"
+										class="equal"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-equal.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">No change</div>
+											<div class="time-span">vs {{ previousMonth }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+
+						<ng-template #loadingTotalPosts>
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</ng-template>
+					</div>
+					<div class="metrics-wrapper">
+						<ng-container
+							*ngIf="
+								selectedSummaryMetrics && (toBeComparedToSummaryMetrics || monthSelected === 'lastThreeMonths');
+								else loadingTotalConversations
+							"
+						>
+							<div class="tooltip-wrapper">
+								<app-tooltip
+									setTooltipText="These are total number of Conversations in your community in the above time period. They are calculated as (posts + Comments)"
+								>
+								</app-tooltip>
+							</div>
+							<h6 class="metric-name">Conversations</h6>
+							<p class="metric-value">
+								{{ selectedSummaryMetrics?.totalConversations }}
+							</p>
+							<div class="comparison-box" *ngIf="toBeComparedToSummaryMetrics">
+								<div class="icon-higher-or-lower"></div>
+								<div class="">
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalConversations > selectedSummaryMetrics?.totalConversations
+										"
+										class="lower"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-red.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalConversations !== 0
+														? ((toBeComparedToSummaryMetrics?.totalConversations -
+																selectedSummaryMetrics?.totalConversations) /
+																toBeComparedToSummaryMetrics?.totalConversations | percent) + ' lower'
+														: selectedSummaryMetrics?.totalConversations + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalConversations !== 0 ? 'vs' : 'in' }}
+												{{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalConversations < selectedSummaryMetrics?.totalConversations
+										"
+										class="higher"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-green.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">
+												{{
+													toBeComparedToSummaryMetrics?.totalConversations !== 0
+														? ((selectedSummaryMetrics?.totalConversations -
+																toBeComparedToSummaryMetrics?.totalConversations) /
+																toBeComparedToSummaryMetrics?.totalConversations | percent) + ' higher'
+														: selectedSummaryMetrics?.totalConversations + ' vs 0'
+												}}
+											</div>
+											<div class="time-span">
+												{{ toBeComparedToSummaryMetrics?.totalConversations !== 0 ? 'vs' : 'in' }}
+												{{ previousMonth }}
+											</div>
+										</div>
+									</div>
+									<div
+										*ngIf="
+											toBeComparedToSummaryMetrics?.totalConversations === selectedSummaryMetrics?.totalConversations
+										"
+										class="equal"
+									>
+										<div class="icon-higher-or-lower"><img alt="" src="assets/images/icon-arrow-equal.svg" /></div>
+
+										<div class="metrics-content">
+											<div class="value">No change</div>
+											<div class="time-span">vs {{ previousMonth }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loadingTotalConversations>
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-content graph-tab-content">
+			<div aria-labelledby="oneMonthTab" class="tab-pane fade show active" id="insightsTabContent" role="tabpanel">
+				<div class="container">
+					<div class="row">
+						<div
+							class="col"
+							*ngIf="
+								isPercentageForHealthReport100 ||
+								(group?.percentageLast28DaysMetricsAvailable === 100 && reportType === 'last30Days')
+							"
+						>
+							<div class="graph-wrapper">
+								<div class="head-wrapper">
+									<h4 class="graph-name">
+										Engagement metrics
+										<div class="tooltip-wrapper position-static">
+											<app-tooltip
+												setTooltipText="This chart will show you total comments, posts and reactions in the above time period"
+											>
+											</app-tooltip>
+										</div>
+									</h4>
+									<div class="legend-wrapper">
+										<div class="legend post">
+											<div class="legend-marker-box post-box"></div>
+											<span class="legend-text">Posts</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box comments-box"></div>
+											<span class="legend-text">Comments</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box reactions-box"></div>
+											<span class="legend-text">Reactions</span>
+										</div>
+									</div>
+								</div>
+								<div class="chart-dataLabels full-graph-container">
+									<div *ngIf="reportType === 'last30Days'">
+										<app-chart [setChartObject]="group?.engagementReportForLast30Days | async"></app-chart>
+									</div>
+									<div *ngIf="reportType === 'lastMonth'">
+										<app-chart [setChartObject]="group?.engagementReportForLastMonth | async"></app-chart>
+									</div>
+									<div *ngIf="reportType === 'lastTwoMonths'">
+										<app-chart [setChartObject]="group?.engagementReportForLastTwoMonths | async"></app-chart>
+									</div>
+									<div *ngIf="reportType === 'lastThreeMonths'">
+										<app-chart [setChartObject]="group?.engagementReportForLastThreeMonths | async"></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'last30Days'" class="row">
+						<div class="col-12 col-sm-6">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLast28DaysMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Post type distribution</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentageLast28DaysMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-post-type.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLast28DaysMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">
+									Post type distribution
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip
+											setTooltipText="This chart will show you, what different types of posts did you do in your community"
+										>
+										</app-tooltip>
+									</div>
+								</h4>
+								<ng-container
+									*ngIf="group?.postTypeDistributionReportForLast30Days | async; else loadingPostTypeDistributionReport"
+								>
+									<div
+										class="container graph-container"
+										*ngIf="
+											!(group?.postTypeDistributionReportForLast30Days | async).isEmpty;
+											else emptyPostTypeDistributionReport
+										"
+									>
+										<div class="row align-items-center">
+											<div class="col-md-12">
+												<app-chart
+													[setChartObject]="group?.postTypeDistributionReportForLast30Days | async"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(0) }}
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="legend-wrapper">
+													<div class="legend post">
+														<div class="legend-marker-box status-box"></div>
+														<span class="legend-text">Status</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box link-box"></div>
+														<span class="legend-text">Link</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box video-box"></div>
+														<span class="legend-text">Video</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box event-box"></div>
+														<span class="legend-text">Event</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box photo-box"></div>
+														<span class="legend-text">Photo</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<ng-template #emptyPostTypeDistributionReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</ng-container>
+								<ng-template #loadingPostTypeDistributionReport>
+									<div class="loader-wrapper">
+										<div class="loader"></div>
+										<p class="loading-text">Loading data</p>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLast28DaysMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Engagement per post type</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentageLast28DaysMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-engagement.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLast28DaysMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">
+									Engagement per post type
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip
+											setTooltipText="This chart will show you, what was the engagement on each post type. Together with post distribution, you can see which types of posts are the best in your community"
+										>
+										</app-tooltip>
+									</div>
+								</h4>
+								<ng-container
+									*ngIf="
+										group?.engagementPerPostTypeDistributionForLast30Days | async;
+										else loadingEngagementPerPostTypeReport
+									"
+								>
+									<div
+										class="container graph-container"
+										*ngIf="
+											!(group?.engagementPerPostTypeDistributionForLast30Days | async).isEmpty;
+											else emptyEngagementPerPostTypeReport
+										"
+									>
+										<div class="row align-items-center">
+											<div class="col-md-12">
+												<app-chart [setChartObject]="group?.engagementPerPostTypeDistributionForLast30Days | async">
+												</app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(0) }}
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="legend-wrapper">
+													<div class="legend post">
+														<div class="legend-marker-box status-box"></div>
+														<span class="legend-text">Status</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box link-box"></div>
+														<span class="legend-text">Link</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box video-box"></div>
+														<span class="legend-text">Video</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box event-box"></div>
+														<span class="legend-text">Event</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box photo-box"></div>
+														<span class="legend-text">Photo</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<ng-template #emptyEngagementPerPostTypeReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</ng-container>
+								<ng-template #loadingEngagementPerPostTypeReport>
+									<div class="loader-wrapper">
+										<div class="loader"></div>
+										<p class="loading-text">Loading data</p>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'lastMonth'" class="row">
+						<div class="col-12 col-sm-6">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Post type distribution</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentageLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-post-type.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">
+									Post type distribution
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip
+											setTooltipText="This chart will show you, what different types of posts did you do in your community"
+										>
+										</app-tooltip>
+									</div>
+								</h4>
+								<ng-container
+									*ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingPostTypeDistributionReport"
+								>
+									<div
+										class="container graph-container"
+										*ngIf="
+											!(group?.postTypeDistributionReportForLastMonth | async).isEmpty;
+											else emptyPostTypeDistributionReport
+										"
+									>
+										<div class="row align-items-center">
+											<div class="col-md-12">
+												<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="legend-wrapper">
+													<div class="legend post">
+														<div class="legend-marker-box status-box"></div>
+														<span class="legend-text">Status</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box link-box"></div>
+														<span class="legend-text">Link</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box video-box"></div>
+														<span class="legend-text">Video</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box event-box"></div>
+														<span class="legend-text">Event</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box photo-box"></div>
+														<span class="legend-text">Photo</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<ng-template #emptyPostTypeDistributionReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</ng-container>
+								<ng-template #loadingPostTypeDistributionReport>
+									<div class="loader-wrapper">
+										<div class="loader"></div>
+										<p class="loading-text">Loading data</p>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Engagement per post type</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentageLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-engagement.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentageLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">
+									Engagement per post type
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip
+											setTooltipText="This chart will show you, what was the engagement on each post type. Together with post distribution, you can see which types of posts are the best in your community"
+										>
+										</app-tooltip>
+									</div>
+								</h4>
+								<ng-container
+									*ngIf="
+										group?.engagementPerPostTypeDistributionForLastMonth | async;
+										else loadingEngagementPerPostTypeReport
+									"
+								>
+									<div
+										class="container graph-container"
+										*ngIf="
+											!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+											else emptyEngagementPerPostTypeReport
+										"
+									>
+										<div class="row align-items-center">
+											<div class="col-md-12">
+												<app-chart [setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async">
+												</app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="legend-wrapper">
+													<div class="legend post">
+														<div class="legend-marker-box status-box"></div>
+														<span class="legend-text">Status</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box link-box"></div>
+														<span class="legend-text">Link</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box video-box"></div>
+														<span class="legend-text">Video</span>
+													</div>
+													<div class="legend comments">
+														<div class="legend-marker-box event-box"></div>
+														<span class="legend-text">Event</span>
+													</div>
+													<div class="legend reactions">
+														<div class="legend-marker-box photo-box"></div>
+														<span class="legend-text">Photo</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<ng-template #emptyEngagementPerPostTypeReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</ng-container>
+								<ng-template #loadingEngagementPerPostTypeReport>
+									<div class="loader-wrapper">
+										<div class="loader"></div>
+										<p class="loading-text">Loading data</p>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'lastTwoMonths'" class="row">
+						<div class="col">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesSecondLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Post type distribution</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-post-type.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesSecondLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<div class="head-wrapper">
+									<h4 class="graph-name">
+										Post type distribution
+										<div class="tooltip-wrapper position-static">
+											<app-tooltip
+												setTooltipText="This chart will show you, what different types of posts did you do in your community"
+											>
+											</app-tooltip>
+										</div>
+									</h4>
+									<div class="legend-wrapper">
+										<div class="legend post">
+											<div class="legend-marker-box status-box"></div>
+											<span class="legend-text">Status</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box link-box"></div>
+											<span class="legend-text">Link</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box video-box"></div>
+											<span class="legend-text">Video</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box event-box"></div>
+											<span class="legend-text">Event</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box photo-box"></div>
+											<span class="legend-text">Photo</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 col-sm-6">
+										<ng-container
+											*ngIf="group?.postTypeDistributionReportForLastTwoMonths | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.postTypeDistributionReportForLastTwoMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.postTypeDistributionReportForLastTwoMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(2) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<div class="col-12 col-sm-6">
+										<ng-container
+											*ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.postTypeDistributionReportForLastMonth | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'lastThreeMonths'" class="row">
+						<div class="col">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesThirdLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Post type distribution</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-post-type.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesThirdLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<div class="head-wrapper">
+									<h4 class="graph-name">
+										Post type distribution
+										<div class="tooltip-wrapper position-static">
+											<app-tooltip
+												setTooltipText="This chart will show you, what different types of posts did you do in your community"
+											>
+											</app-tooltip>
+										</div>
+									</h4>
+									<div class="legend-wrapper">
+										<div class="legend post">
+											<div class="legend-marker-box status-box"></div>
+											<span class="legend-text">Status</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box link-box"></div>
+											<span class="legend-text">Link</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box video-box"></div>
+											<span class="legend-text">Video</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box event-box"></div>
+											<span class="legend-text">Event</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box photo-box"></div>
+											<span class="legend-text">Photo</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="group?.postTypeDistributionReportForLastThreeMonths | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.postTypeDistributionReportForLastThreeMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.postTypeDistributionReportForLastThreeMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(3) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="group?.postTypeDistributionReportForLastTwoMonths | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.postTypeDistributionReportForLastTwoMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.postTypeDistributionReportForLastTwoMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(2) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="group?.postTypeDistributionReportForLastMonth | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.postTypeDistributionReportForLastMonth | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart [setChartObject]="group?.postTypeDistributionReportForLastMonth | async"></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'lastTwoMonths'" class="row">
+						<div class="col">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesSecondLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Engagement per post type</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-engagement.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesSecondLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<div class="head-wrapper">
+									<h4 class="graph-name">
+										Engagement per post type
+										<div class="tooltip-wrapper position-static">
+											<app-tooltip
+												setTooltipText="This chart will show you, what was the engagement on each post type. Together with post distribution, you can see which types of posts are the best in your community"
+											>
+											</app-tooltip>
+										</div>
+									</h4>
+									<div class="legend-wrapper">
+										<div class="legend post">
+											<div class="legend-marker-box status-box"></div>
+											<span class="legend-text">Status</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box link-box"></div>
+											<span class="legend-text">Link</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box video-box"></div>
+											<span class="legend-text">Video</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box event-box"></div>
+											<span class="legend-text">Event</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box photo-box"></div>
+											<span class="legend-text">Photo</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 col-sm-6">
+										<ng-container
+											*ngIf="
+												group?.engagementPerPostTypeDistributionForLastTwoMonths | async;
+												else loadingEngagementReport
+											"
+										>
+											<div
+												*ngIf="
+													!(group?.engagementPerPostTypeDistributionForLastTwoMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.engagementPerPostTypeDistributionForLastTwoMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(2) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<div class="col-12 col-sm-6">
+										<ng-container
+											*ngIf="group?.engagementPerPostTypeDistributionForLastMonth | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart [setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async">
+												</app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="reportType === 'lastThreeMonths'" class="row">
+						<div class="col">
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesThirdLastMonthMetricsAvailable < 100 && !group?.areMetricsAvailable"
+							>
+								<h4 class="graph-name">Engagement per post type</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<app-analysis-state
+											[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+											[iconLg]="'assets/images/group-icons/analysing-engagement.svg'"
+											[inline]="false"
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[diameter]="72"
+										></app-analysis-state>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="group?.percentagesThirdLastMonthMetricsAvailable === 100 || group?.areMetricsAvailable"
+							>
+								<div class="head-wrapper">
+									<h4 class="graph-name">
+										Engagement per post type
+										<div class="tooltip-wrapper position-static">
+											<app-tooltip
+												setTooltipText="This chart will show you, what was the engagement on each post type. Together with post distribution, you can see which types of posts are the best in your community"
+											>
+											</app-tooltip>
+										</div>
+									</h4>
+									<div class="legend-wrapper">
+										<div class="legend post">
+											<div class="legend-marker-box status-box"></div>
+											<span class="legend-text">Status</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box link-box"></div>
+											<span class="legend-text">Link</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box video-box"></div>
+											<span class="legend-text">Video</span>
+										</div>
+										<div class="legend comments">
+											<div class="legend-marker-box event-box"></div>
+											<span class="legend-text">Event</span>
+										</div>
+										<div class="legend reactions">
+											<div class="legend-marker-box photo-box"></div>
+											<span class="legend-text">Photo</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="
+												group?.engagementPerPostTypeDistributionForLastThreeMonths | async;
+												else loadingEngagementReport
+											"
+										>
+											<div
+												*ngIf="
+													!(group?.engagementPerPostTypeDistributionForLastThreeMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.engagementPerPostTypeDistributionForLastThreeMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(3) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="
+												group?.engagementPerPostTypeDistributionForLastTwoMonths | async;
+												else loadingEngagementReport
+											"
+										>
+											<div
+												*ngIf="
+													!(group?.engagementPerPostTypeDistributionForLastTwoMonths | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart
+													[setChartObject]="group?.engagementPerPostTypeDistributionForLastTwoMonths | async"
+													[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+												></app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(2) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+
+									<div class="col-12 col-sm-4 col-lg-4 col-md-12">
+										<ng-container
+											*ngIf="group?.engagementPerPostTypeDistributionForLastMonth | async; else loadingEngagementReport"
+										>
+											<div
+												*ngIf="
+													!(group?.engagementPerPostTypeDistributionForLastMonth | async).isEmpty;
+													else emptyEngagementReport
+												"
+											>
+												<app-chart [setChartObject]="group?.engagementPerPostTypeDistributionForLastMonth | async">
+												</app-chart>
+												<div class="month-name">
+													{{ getMonthDisplayNameForChart(1) }}
+												</div>
+											</div>
+											<ng-template #emptyEngagementReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingEngagementReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-sm-6">
+							<div class="graph-wrapper" *ngIf="isPercentageForHealthReportlessThan100">
+								<h4 class="graph-name">Comments per post</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<div *ngIf="reportType === 'last30Days'">
+											<app-analysis-state
+												[value]="group?.percentageLast28DaysMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-comment.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastMonth'">
+											<app-analysis-state
+												[value]="group?.percentageLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-comment.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastTwoMonths'">
+											<app-analysis-state
+												[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-comment.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastThreeMonths'">
+											<app-analysis-state
+												[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-comment.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="
+									isPercentageForHealthReport100 ||
+									(group?.percentageLast28DaysMetricsAvailable === 100 && reportType === 'last30Days')
+								"
+							>
+								<h4 class="graph-name">
+									Comments per post
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip
+											setTooltipText="This graph shows the average number of comments per post in your community in the above time period. This is calculated as total comments in all the ( posts / Total posts )"
+										>
+										</app-tooltip>
+									</div>
+								</h4>
+								<div *ngIf="reportType === 'last30Days'">
+									<app-chart
+										[setChartObject]="group?.commentsPerPostReportForLast30Days | async"
+										[setChartOptionsKey]="'commentsChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastMonth'">
+									<app-chart
+										[setChartObject]="group?.commentsPerPostReportForLastMonth | async"
+										[setChartOptionsKey]="'commentsChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastTwoMonths'">
+									<app-chart
+										[setChartObject]="group?.commentsPerPostReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'commentsChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastThreeMonths'">
+									<app-chart
+										[setChartObject]="group?.commentsPerPostReportForLastThreeMonths | async"
+										[setChartOptionsKey]="'commentsChartOptions'"
+									></app-chart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6">
+							<div class="graph-wrapper" *ngIf="isPercentageForHealthReportlessThan100">
+								<h4 class="graph-name">Member Growth</h4>
+								<ng-container>
+									<div class="no-data-wrapper analysing">
+										<div *ngIf="reportType === 'last30Days'">
+											<app-analysis-state
+												[value]="group?.percentageLast28DaysMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-members.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastMonth'">
+											<app-analysis-state
+												[value]="group?.percentageLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-members.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastTwoMonths'">
+											<app-analysis-state
+												[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-members.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+										<div *ngIf="reportType === 'lastThreeMonths'">
+											<app-analysis-state
+												[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+												[iconLg]="'assets/images/group-icons/analysing-members.svg'"
+												[inline]="false"
+												[heading]="'Analysing Information'"
+												[subHeading]="'Please wait...'"
+												[diameter]="72"
+											></app-analysis-state>
+										</div>
+									</div>
+								</ng-container>
+							</div>
+							<div
+								class="graph-wrapper"
+								*ngIf="
+									isPercentageForHealthReport100 ||
+									(group?.percentageLast28DaysMetricsAvailable === 100 && reportType === 'last30Days')
+								"
+							>
+								<h4 class="graph-name">
+									Member Growth
+									<div class="tooltip-wrapper position-static">
+										<app-tooltip setTooltipText="This chart shows how are the members growing in your community">
+										</app-tooltip>
+									</div>
+								</h4>
+
+								<div *ngIf="reportType === 'last30Days'">
+									<app-chart
+										[setChartObject]="group?.memberGrowthReportForLast30Days | async"
+										[setChartOptionsKey]="'memberChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastMonth'">
+									<app-chart
+										[setChartObject]="group?.memberGrowthReportForLastMonth | async"
+										[setChartOptionsKey]="'memberChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastTwoMonths'">
+									<app-chart
+										[setChartObject]="group?.memberGrowthReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'memberChartOptions'"
+									></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastThreeMonths'">
+									<app-chart
+										[setChartObject]="group?.memberGrowthReportForLastThreeMonths | async"
+										[setChartOptionsKey]="'memberChartOptions'"
+									></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<app-group-insights-reports
+			[group]="group"
+			[container]="container"
+			[hashParam]="hashParam"
+			[reportType]="reportType"
+			[selectedSummaryMetrics]="selectedSummaryMetrics"
+			[toBeComparedToSummaryMetrics]="toBeComparedToSummaryMetrics"
+			[previousMonth]="previousMonth"
+			[monthSelected]="monthSelected"
+		>
+		</app-group-insights-reports>
+	</ng-container>
+	<ng-template #metricsNotYetAvailable>
+		<div class="container">
+			<div class="no-result-state">
+				<figure><img src="./assets/images/insight_icon.svg" alt="" /></figure>
+				<h5>We are preparing insights for your group</h5>
+				<h6>
+					Group health analytics will start showing up after 2 days of installation. <br />Only posts after your group
+					install are analysed.
+				</h6>
+			</div>
+		</div>
+	</ng-template>
+</div>
+`

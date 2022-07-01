@@ -1,0 +1,154 @@
+<div class="notification-wrapper" *ngIf="isDialogOpen">
+	<div class="notification-dialog" *ngIf="!showBriefInput && !notificationSent">
+		<div class="header">
+			<h4>Send Update Notifications</h4>
+			<div class="close" (click)="closeDialog.emit(false)">
+				<img alt="" src="./assets/images/close-icon.svg" />
+			</div>
+		</div>
+		<div class="body">
+			<p>Choose an update type from below to send out to the selected communities for the campaign.</p>
+			<div class="action">
+				<div>
+					<mat-radio-group [(ngModel)]="notificationType">
+						<div *ngIf="!isCampaignBriefEnabled || !campaign?.typeformId" class="locked-state">
+							<div class="icon">
+								<img alt="" src="./assets/images/lock-outline.svg" />
+							</div>
+							<div class="locked-content">
+								<h6>Campaign Brief & Content Request</h6>
+								<small *ngIf="!isCampaignBriefAlreadySent && !isCampaignBriefEnabled"
+									>Disabled since Community Admin, Community Manager and Cohort info are not added for all the selected
+									groups.</small
+								>
+								<small *ngIf="isCampaignBriefAlreadySent && !isCampaignBriefEnabled"
+									>Disabled since the campaign is already accepted by some of the selected communities.</small
+								>
+								<small *ngIf="!campaign?.typeformId && isCampaignBriefEnabled">
+									Disabled since Typeform ID is not added in Campaign Details
+								</small>
+							</div>
+						</div>
+						<mat-radio-button
+							[disabled]="!isCampaignBriefEnabled"
+							color="primary"
+							value="brief"
+							*ngIf="isCampaignBriefEnabled && campaign?.typeformId"
+							[disabled]="!isCampaignBriefEnabled || !campaign?.typeformId"
+							>Campaign Brief & Content Request
+						</mat-radio-button>
+						<div *ngIf="!isNotificationEnabled" class="locked-state">
+							<div class="icon">
+								<img alt="" src="./assets/images/lock-outline.svg" />
+							</div>
+							<div class="locked-content">
+								<h6>Campaign Status Update</h6>
+								<small>Disabled since Campaign Brief is not shared with some of the selected groups.</small>
+							</div>
+						</div>
+						<mat-radio-button *ngIf="isNotificationEnabled" color="primary" value="status"
+							>Campaign Status Update
+						</mat-radio-button>
+						<div *ngIf="notificationType === 'status'" class="mb-3">
+							<app-custom-dropdown
+								(selectionChange)="campaignStatus = $event"
+								[(ngModel)]="campaignStatus"
+								[class.disabled]="!notificationType || notificationType === 'brief'"
+								[disabled]="!notificationType || notificationType === 'brief'"
+								[items]="['On-hold', 'Resume', 'Over']"
+								[value]="''"
+								defaultText="Select Status"
+							>
+							</app-custom-dropdown>
+						</div>
+						<mat-radio-button *ngIf="isCampaignBriefReminderEnabled" color="primary" value="briefReminder"
+							>Campaign Brief & Pricing Reminder
+						</mat-radio-button>
+						<mat-radio-button *ngIf="isTaskReminderEnabled" color="primary" value="taskReminder"
+							>Task Reminder
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<div *ngIf="!isCampaignBriefReminderEnabled" class="locked-state">
+					<div class="icon">
+						<img alt="" src="./assets/images/lock-outline.svg" />
+					</div>
+					<div class="locked-content">
+						<h6>Campaign Brief & Pricing Reminder</h6>
+						<small>Locked until you share the initial brief & pricing with admin</small>
+					</div>
+				</div>
+				<div *ngIf="!isTaskReminderEnabled" class="locked-state">
+					<div class="icon">
+						<img alt="" src="./assets/images/lock-outline.svg" />
+					</div>
+					<div class="locked-content">
+						<h6>Task Reminder</h6>
+						<small>Locked until you share the task with admin</small>
+					</div>
+				</div>
+			</div>
+			<button
+				(click)="setInputToSendUpdates()"
+				[disabled]="!notificationType || (notificationType === 'status' && !campaignStatus) || !campaign?.typeformId"
+			>
+				Next
+			</button>
+		</div>
+	</div>
+	<div class="notification-dialog" *ngIf="showBriefInput && !notificationSent">
+		<div class="header">
+			<div class="header-left">
+				<button class="back-btn">
+					<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#33334F" />
+					</svg>
+				</button>
+				<h4>Campaign Brief & Content Request</h4>
+			</div>
+			<div (click)="closeDialog.emit(false)" class="close">
+				<img alt="" src="./assets/images/close-icon.svg" />
+			</div>
+		</div>
+		<div class="body">
+			<label
+				>Message to be shared<sup>*</sup>
+				<span class="loading-image-wrapper" hidden>{{ isLoadingImage ? 'Uploading Image...' : '' }}</span>
+			</label>
+			<div class="invisible-input-cont">
+				<input #quillFile (change)="quillFileSelected($event)" hidden type="file" />
+			</div>
+			<div class="message-input">
+				<p><strong>New Campaign</strong></p>
+				<p>{{ messageToBeSent }}</p>
+				<p class="m-0">Submit your copies before the given time</p>
+			</div>
+			<quill-editor
+				#meQuill
+				(onEditorCreated)="getMeEditorInstance($event)"
+				[(ngModel)]="campaignBrief"
+				[modules]="quillConfig"
+				hidden
+			>
+			</quill-editor>
+			<label>Campaign brief link<sup>*</sup> </label>
+			<div class="id-row">{{ campaignBriefLink }}</div>
+			<button
+				(click)="sendBriefUpdate()"
+				*ngIf="!isUpdating"
+				(click)="sendBriefUpdate()"
+				[disabled]="isUpdating || !campaignBrief || !campaign?.typeformId"
+			>
+				<span *ngIf="!isUpdating">Share Message</span>
+			</button>
+			<button *ngIf="isUpdating" class="convo-btn-normal convo-btn-primary w-100" disabled>
+				<span class="bt-spinner"></span>
+			</button>
+		</div>
+	</div>
+	<div class="notification-dialog notification-sent-dialog" *ngIf="notificationSent">
+		<img src="assets/images/group-icons/icon-paper-plane.svg" />
+		<h4>Notifications Sent Successfully!</h4>
+		<button (click)="closeDialog.emit(false)">Close</button>
+	</div>
+</div>

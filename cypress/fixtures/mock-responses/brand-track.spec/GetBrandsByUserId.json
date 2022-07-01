@@ -1,0 +1,15 @@
+{
+	"data": {
+		"getBrandsByUserId": [
+			{
+				"__typename": "Brand",
+				"id": "e3a7501b-c4c5-49fe-841f-ac0e86385fd5",
+				"createdAtUTC": "2019-09-02T11:31:39.000Z",
+				"updatedAtUTC": "2019-09-02T11:31:39.000Z",
+				"name": "Danone",
+				"description": "Danone Campaign",
+				"iconUrl": "https://app.convosight.com/assets/images/brand-logo/Danone.png"
+			}
+		]
+	}
+}

@@ -1,0 +1,281 @@
+<div class="publish-queue-component">
+	<div [hidden]="noGroupsAvailable">
+		<div class="publish-queue-sidebar">
+			<div class="sidebar-into-title" data-test-id="heading-publish-screen">
+				Select a group to view its schedule posts:
+			</div>
+			<div class="groups-listing">
+				<ng-container *ngIf="installedGroups; else loadingInstalledGroups">
+					<ul *ngFor="let group of installedGroups; let i = index" class="list-unstyled">
+						<li
+							(click)="toggleGroupSelection($event, group)"
+							data-cs-id="c2c93d61-f990-4b69-81ac-427299da04f4"
+							data-cs-label="Group selection"
+							data-cs-source="page"
+							data-test-id="list-installed-groups"
+						>
+							<input [checked]="group.id === selectedGroup?.id" name="group_selection" type="radio" />
+							<span class="selected-sign"></span>
+							<figure>
+								<app-fb-group-cover-image
+									[coverImageUrl]="group.coverImageUrl"
+									[fbGroupId]="group.fbGroupId"
+								></app-fb-group-cover-image>
+							</figure>
+							<h5 data-test-id="heading-group-name">{{ group.name }}</h5>
+						</li>
+					</ul>
+				</ng-container>
+				<ng-template #loadingInstalledGroups>
+					<div class="shimmer-wrapper group-shimmers">
+						<ul class="list-unstyled">
+							<li>
+								<img alt="" src="assets/images/frame-landscape.svg" />
+								<span></span>
+							</li>
+							<li>
+								<img alt="" src="assets/images/frame-landscape.svg" />
+								<span></span>
+							</li>
+							<li>
+								<img alt="" src="assets/images/frame-landscape.svg" />
+								<span></span>
+							</li>
+							<li>
+								<img alt="" src="assets/images/frame-landscape.svg" />
+								<span></span>
+							</li>
+							<li>
+								<img alt="" src="assets/images/frame-landscape.svg" />
+								<span></span>
+							</li>
+						</ul>
+					</div>
+				</ng-template>
+			</div>
+		</div>
+
+		<!-- first-time-users-guide Start -->
+		<div class="first-time-users-guide" *ngIf="firstTimeUser">
+			<div class="guide-content">
+				<h5>Switch between groups</h5>
+				<p>You can view the schedule posts for only one group at a time.</p>
+				<button (click)="firstTimeUser = false">OK</button>
+			</div>
+		</div>
+		<!-- first-time-users-guide End -->
+
+		<div class="publish-queue-content-wrapper">
+			<div class="publish-queue-content-header">
+				<nav>
+					<ul class="list-unstyled">
+						<li
+							(click)="
+								tabSelected = 'scheduledposts';
+								navigateAsPerUrl('scheduledposts', selectedGroup?.id);
+								recordButtonClick($event, selectedGroup)
+							"
+							[class.active]="tabSelected === 'scheduledposts'"
+							data-cs-id="9556c85c-6fed-4433-95b0-7263598b4c01"
+							data-cs-label="Create a post"
+							data-cs-source="page"
+						>
+							<a href="javascript:void(0)">Create a post</a>
+						</li>
+						<li
+							(click)="
+								tabSelected = 'postanalytics';
+								navigateAsPerUrl('postanalytics', selectedGroup?.id);
+								recordButtonClick($event, selectedGroup)
+							"
+							[class.active]="tabSelected === 'postanalytics'"
+							data-cs-id="f21e624f-d704-4abe-abc2-e191aed26009"
+							data-cs-label="Post Analytics"
+							data-cs-source="page"
+						>
+							<a href="javascript:void(0)">Post Analytics</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="group-item-wrapper">
+					<div class="group-item-wrapper-content">
+						<ul class="list-unstyled">
+							<li>
+								<figure>
+									<app-fb-group-cover-image
+										[coverImageUrl]="selectedGroup.coverImageUrl"
+										[fbGroupId]="selectedGroup.fbGroupId"
+									></app-fb-group-cover-image>
+								</figure>
+								<h5>
+									<span data-test-id="selected-group-name">{{ selectedGroup?.name }}</span>
+									<a
+										class="link-new-tab"
+										href="https://www.facebook.com/groups/{{ selectedGroup?.fbGroupId }}"
+										style="display: inline-block"
+										target="_blank"
+										rel="noopener"
+										data-test-id="fb-group-link"
+									>
+										<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M11.2899 7.6494C10.9776 7.6494 10.7244 7.90257 10.7244 8.21492V12.5046C10.7244 12.9812 10.3366 13.3689 9.86002 13.3689H1.99565C1.51905 13.3689 1.13129 12.9812 1.13129 12.5046V4.64022C1.13129 4.16361 1.51905 3.77585 1.99565 3.77585H6.28531C6.59763 3.77585 6.85084 3.52265 6.85084 3.21033C6.85084 2.89801 6.59763 2.64481 6.28531 2.64481H1.99565C0.895396 2.64481 0.000244141 3.53996 0.000244141 4.64022V12.5046C0.000244141 13.6049 0.895396 14.5 1.99565 14.5H9.85999C10.9603 14.5 11.8554 13.6049 11.8555 12.5046V8.21492C11.8555 7.90257 11.6023 7.6494 11.2899 7.6494Z"
+											/>
+											<path
+												d="M13.4345 0.500031H9.14489C8.83254 0.500031 8.57936 0.753234 8.57936 1.06555C8.57936 1.37787 8.83254 1.63108 9.14489 1.63108H12.869V5.35521C12.869 5.66753 13.1222 5.92074 13.4345 5.92074C13.7469 5.92074 14.0001 5.66753 14.0001 5.35521V1.06555C14.0001 0.753234 13.7469 0.500031 13.4345 0.500031Z"
+											/>
+											<path
+												d="M13.8348 0.665621C13.6139 0.444793 13.2558 0.444793 13.035 0.665621L5.17062 8.52996C4.94976 8.75081 4.94976 9.10888 5.17062 9.32973C5.28103 9.44018 5.42579 9.49538 5.57052 9.49538C5.71528 9.49538 5.86001 9.44015 5.97042 9.32973L13.8348 1.4654C14.0556 1.24454 14.0556 0.886477 13.8348 0.665621Z"
+											/>
+										</svg>
+									</a>
+								</h5>
+							</li>
+						</ul>
+						<!-- <div class="publish-queue-filter">
+							<button
+								(click)="recordButtonClick($event, selectedGroup)"
+								[class.not-all-active]="
+									!viewScheduledPost || !viewSuggestedTime || !viewSuggestedPost || !viewModeratorPost
+								"
+								class="chips-button"
+								data-cs-id="d4bd9751-0b9f-4b33-a333-b7f8ff1e326d"
+								data-cs-label="Filter"
+								data-cs-source="page"
+								data-target="#mobileFilerts"
+								data-toggle="modal"
+							>
+								<img alt="" src="assets/images/filter-icon.svg" />
+								<span>Filter</span>
+							</button>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="mobile-publish-queue-groups">
+				<div class="mobile-group" [class.without-filter]="tabSelected === 'postanalytics'">
+					<button
+						class="chips-button w-100"
+						(click)="recordButtonClick($event, selectedGroup)"
+						data-cs-id="22669a4f-0dba-4188-af7d-6f58537d409a"
+						data-cs-label="Group selection"
+						data-cs-source="page"
+						data-target="#mobileScheduledPosts"
+						data-toggle="modal"
+						*ngIf="selectedGroup !== undefined"
+					>
+						<figure>
+							<app-fb-group-cover-image
+								[coverImageUrl]="selectedGroup.coverImageUrl"
+								[fbGroupId]="selectedGroup.fbGroupId"
+							></app-fb-group-cover-image>
+						</figure>
+						<span>{{ selectedGroup?.name }}</span>
+						<i>
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M2 11.5V14H4.5L11.8733 6.62665L9.37333 4.12666L2 11.5ZM13.8067 4.69332C14.0667 4.43332 14.0667 4.01332 13.8067 3.75332L12.2467 2.19332C11.9867 1.93332 11.5667 1.93332 11.3067 2.19332L10.0867 3.41332L12.5867 5.91332L13.8067 4.69332Z"
+									fill="#707084"
+								/>
+							</svg>
+						</i>
+					</button>
+				</div>
+				<!-- <div *ngIf="tabSelected === 'scheduledposts'" class="publish-queue-filter">
+					<button
+						[class.not-all-active]="filterApplied"
+						class="chips-button"
+						data-target="#mobileFilerts"
+						(click)="recordButtonClick($event)"
+						data-cs-id="a1e38012-5971-402e-b5ae-178bf035356b"
+						data-cs-label="Filter"
+						data-cs-source="page"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/filter-icon.svg" /><span>Filter</span>
+					</button>
+				</div> -->
+			</div>
+
+			<div class="publish-queue-content-body">
+				<ng-container *ngIf="tabSelected === 'scheduledposts'">
+					<app-queue
+						(isFilterApplied)="filterApplied = $event"
+						[queueData]="{
+							selectedGroup: selectedGroup,
+							currentUser: currentUser,
+							isNavRequired: true
+						}"
+					>
+					</app-queue>
+				</ng-container>
+				<ng-container *ngIf="tabSelected === 'postanalytics'">
+					<app-post-analytics
+						[postAnalyticData]="{
+							selectedGroup: selectedGroup,
+							isNavRequired: true
+						}"
+						(toQueuePage)="this.tabSelected = $event"
+					></app-post-analytics>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+	<div class="no-results-wrapper" [hidden]="!noGroupsAvailable">
+		<div class="no-results-found">
+			<figure>
+				<img alt="" src="assets/images/empty_state_icon.svg" />
+			</figure>
+			<h5>Publish feature is not available for now</h5>
+			<p>Publish feature will be available only if you have installed Convosight to at least one group.</p>
+		</div>
+	</div>
+</div>
+
+<!-- mobile-publish-queue-groups-modal -->
+<div
+	aria-hidden="true"
+	aria-labelledby="mobileScheduledPosts"
+	class="modal fade mobile-publish-queue-groups-modal"
+	id="mobileScheduledPosts"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Select Facebook groups</h5>
+				<button
+					(click)="sortInstalledGroup(); recordButtonClick($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="a3841d6c-ce3e-4fef-a1d2-c62d2dcc120a"
+					data-cs-label="Done"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+				>
+					Done
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="group-note">Select which Facebook groups you want to see in the schedule posts:</div>
+				<div class="groups-listing">
+					<ul *ngFor="let group of mobViewInstalledGroups; let i = index" class="list-unstyled">
+						<li (click)="toggleGroupSelection($event, group)">
+							<input [checked]="i === 0" name="group_selection_modal" type="radio" />
+							<span class="selected-sign"></span>
+							<figure>
+								<app-fb-group-cover-image
+									[coverImageUrl]="group.coverImageUrl"
+									[fbGroupId]="group.fbGroupId"
+								></app-fb-group-cover-image>
+							</figure>
+							<h5>{{ group.name }}</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

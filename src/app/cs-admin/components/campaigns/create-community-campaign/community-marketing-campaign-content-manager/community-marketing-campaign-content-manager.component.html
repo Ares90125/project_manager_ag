@@ -1,0 +1,418 @@
+<div class="content-manager-component-wrap">
+	<div class="content-manager-header">
+		<div class="header-left">
+			<h5>Content Manager</h5>
+			<div *ngIf="!isUpdatingCampaignTasks" class="status">
+				<span><img alt="" src="./assets/images/check-circle-icon.svg" /></span>
+				<span>Saved</span>
+			</div>
+			<div *ngIf="isUpdatingCampaignTasks" class="status">
+				<span class="bt-spinner"></span>
+				<span>Saving...</span>
+			</div>
+		</div>
+
+		<div class="header-center">
+			<ul class="list-unstyled header-menu">
+				<li>
+					<button
+						(click)="selectedContentFilter = 'all'; applyContentFilters('all')"
+						[disabled]="isUpdatingCampaignTasks"
+						[ngClass]="selectedContentFilter === 'all' ? 'active' : ''"
+						class="convo-btn-bordered convo-btn-normal"
+					>
+						All
+					</button>
+				</li>
+				<li>
+					<button
+						(click)="selectedContentFilter = 'contentAdded'; applyContentFilters('contentAdded')"
+						[disabled]="isUpdatingCampaignTasks"
+						[ngClass]="selectedContentFilter === 'contentAdded' ? 'active' : ''"
+						class="convo-btn-bordered convo-btn-normal"
+					>
+						Content Added
+					</button>
+				</li>
+				<li>
+					<button
+						(click)="selectedContentFilter = 'contentPending'; applyContentFilters('contentPending')"
+						[disabled]="isUpdatingCampaignTasks"
+						[ngClass]="selectedContentFilter === 'contentPending' ? 'active' : ''"
+						class="convo-btn-bordered convo-btn-normal"
+					>
+						Content Pending
+					</button>
+				</li>
+				<li>
+					<button
+						(click)="selectedContentFilter = 'shellTasks'; applyContentFilters('shellTasks')"
+						[disabled]="isUpdatingCampaignTasks"
+						[ngClass]="selectedContentFilter === 'shellTasks' ? 'active' : ''"
+						class="convo-btn-bordered convo-btn-normal"
+					>
+						Shell Tasks
+					</button>
+				</li>
+			</ul>
+			<div class="dropdown custom-dropdown">
+				<button class="convo-btn-normal convo-btn-border dropdown-toggle no-after" data-toggle="dropdown">
+					<span class="sort-icon"><img alt="" src="./assets/images/icon-filter-list.svg" /></span>
+					<span>Filter</span>
+					<span *ngIf="numberOfSelectedFilters > 0" class="badge">{{ numberOfSelectedFilters }}</span>
+				</button>
+				<div (click)="$event.stopPropagation()" class="convo-dropdown-wrapper dropdown-menu dropdown-menu-wrap">
+					<div class="dropdown-menu-left">
+						<ul class="list-unstyled">
+							<li
+								(click)="selectedFilterType = 'communityManager'"
+								[ngClass]="selectedFilterType === 'communityManager' ? 'active' : ''"
+							>
+								Community Manger
+							</li>
+							<li
+								(click)="selectedFilterType = 'postType'"
+								[ngClass]="selectedFilterType === 'postType' ? 'active' : ''"
+							>
+								Task Type
+							</li>
+						</ul>
+					</div>
+					<div class="dropdown-menu-right">
+						<ul *ngIf="selectedFilterType === 'postType'" class="list-unstyled">
+							<li *ngFor="let postType of postTypes">
+								<mat-checkbox
+									(change)="postType.isSelected = !postType.isSelected; applyFilters()"
+									[checked]="postType.isSelected"
+									[indeterminate]="false"
+									>{{ postType.name }}</mat-checkbox
+								>
+							</li>
+						</ul>
+						<ul *ngIf="selectedFilterType === 'communityManager'" class="list-unstyled">
+							<li *ngFor="let communityManager of selectedCommunityManagers">
+								<mat-checkbox
+									(change)="communityManager.isSelected = !communityManager.isSelected; applyFilters()"
+									[checked]="communityManager.isSelected"
+									[indeterminate]="false"
+									>{{ communityManager.fullname }}</mat-checkbox
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="header-right">
+			<div class="search-input-wrap">
+				<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.3333 9.33333H9.80667L9.62 9.15333C10.2733 8.39333 10.6667 7.40667 10.6667 6.33333C10.6667 3.94 8.72667 2 6.33333 2C3.94 2 2 3.94 2 6.33333C2 8.72667 3.94 10.6667 6.33333 10.6667C7.40667 10.6667 8.39333 10.2733 9.15333 9.62L9.33333 9.80667V10.3333L12.6667 13.66L13.66 12.6667L10.3333 9.33333ZM6.33333 9.33333C4.67333 9.33333 3.33333 7.99333 3.33333 6.33333C3.33333 4.67333 4.67333 3.33333 6.33333 3.33333C7.99333 3.33333 9.33333 4.67333 9.33333 6.33333C9.33333 7.99333 7.99333 9.33333 6.33333 9.33333Z"
+						fill="#ADADB9"
+					/>
+				</svg>
+				<input (input)="searchByName($event.target.value)" placeholder="group or admin name..." type="text" />
+			</div>
+			<button (click)="closeContentManager.emit(true)" class="close-btn">
+				<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+						fill="#33334F"
+					/>
+				</svg>
+			</button>
+		</div>
+	</div>
+	<div class="content-manager-body">
+		<div *ngFor="let community of selectedCommunities" class="content-manager-body-row">
+			<div class="body-group-row">
+				<div class="body-group-row-left">
+					<figure><img alt="" src="./assets/images/default_group_image.jpg" /></figure>
+					<div>
+						<h6>{{ community.name }}</h6>
+						<ul class="list-unstyled">
+							<li>Group Admin: {{ community.communityAdminName }}</li>
+							•
+							<li>Manager: {{ community.communityManagerName }}</li>
+						</ul>
+					</div>
+				</div>
+				<div class="body-group-row-right">
+					<div [ngClass]="{'disable-edit-event': !community.isEditable}" class="dropdown custom-dropdown">
+						<button
+							[disabled]="!community.isEditable || isUpdatingCampaignTasks"
+							class="convo-btn-normal convo-btn-bordered dropdown-toggle"
+							data-toggle="dropdown"
+						>
+							<span>{{ community.selectedPostType }}</span>
+						</button>
+						<div class="convo-dropdown-wrapper dropdown-menu">
+							<ul class="list-unstyled">
+								<li (click)="setPostType(community, postType.name)" *ngFor="let postType of postTypes">
+									<h6>{{ postType.name }}</h6>
+									<small>{{ postType.type }}</small>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<button
+						(click)="openWhatsappOrEmailChatWindow(community.email, 'whatsapp')"
+						*ngIf="
+							community.modeOfCommunication === 'WhatsApp' &&
+							community.modeOfCommunicationVerificationStatus === 'Verified'
+						"
+						class="convo-btn-normal convo-btn-bordered"
+					>
+						<img alt="" src="./assets/images/whatsapp-icon-blue.svg" /><span>Contact on WhatsApp</span>
+					</button>
+					<button
+						(click)="openWhatsappOrEmailChatWindow(community.email, 'email')"
+						*ngIf="
+							community.modeOfCommunication === 'Email' &&
+							community.modeOfCommunicationVerificationStatus === 'Verified'
+						"
+						class="convo-btn-normal convo-btn-bordered"
+					>
+						<img alt="" src="./assets/images/email-icon-blue.svg" /><span>Contact on Email</span>
+					</button>
+				</div>
+			</div>
+
+			<div
+				*ngIf="
+					!(
+						community.selectedPostType === 'Text' ||
+						community.selectedPostType === 'Text + Image / Video' ||
+						community.selectedPostType === 'Image / Video'
+					) && community.isCommunityAdminAccepted
+				"
+				class="add-post-link-wrap"
+			>
+				<h6>Add a post url to track</h6>
+				<input
+					(keyup)="saveDataForShellTask($event, community)"
+					[disabled]="community.isEditable"
+					[value]="community.fbPermlink"
+					placeholder="add post url..."
+					type="text"
+				/>
+				<p *ngIf="!community.isFbPermLinkValid" class="error-message">Incorrect url format</p>
+			</div>
+
+			<div *ngIf="community.isCommunityAdminAccepted" class="body-content-row-wrap">
+				<div class="body-content-row">
+					<div
+						*ngIf="
+							community.selectedPostType === 'Text' ||
+							community.selectedPostType === 'Text + Image / Video' ||
+							community.selectedPostType === 'Image / Video'
+						"
+						[ngClass]="{onlyTextColumn: community.selectedPostType === 'Text'}"
+						class="content-col-wrap"
+					>
+						<div
+							*ngIf="community.selectedPostType === 'Text' || community.selectedPostType === 'Text + Image / Video'"
+							[ngClass]="{'emoji-wrapper': community.isTextContentEdit && community.isEditable}"
+							class="content-col editable-content"
+						>
+							<emoji-mart
+								#emojis
+								(emojiSelect)="emojiSelect($event, community)"
+								[hidden]="!community['hideEmojis']"
+								emoji="point_up"
+								id="emojiMart"
+								title="Pick your emoji…"
+							></emoji-mart>
+							<textarea
+								(focus)="updateEmoji(false)"
+								[(ngModel)]="community.content"
+								[readonly]="!community.isTextContentEdit || !community.isEditable"
+								id="text{{ community.id }}"
+								placeholder="Enter post content..."
+							></textarea>
+							<div class="content-actions">
+								<button #emojiToggle (click)="updateEmojiOnCommunity(community)" id="toggleEmoji">
+									<img alt="" src="./assets/images/tag-faces-icon.svg" />
+								</button>
+							</div>
+						</div>
+						<div
+							*ngIf="
+								!community.isTextContentEdit &&
+								(community.selectedPostType === 'Text' || community.selectedPostType === 'Text + Image / Video')
+							"
+							class="action-wrap"
+						>
+							<div class="actions-left">
+								<button (click)="copyToClipBoard(community, 'text')" class="convo-btn-normal convo-btn-bordered">
+									<img alt="" src="./assets/images/content-copy-icon.svg" />
+								</button>
+								<button
+									(click)="community.isTextContentEdit = true"
+									[disabled]="!community.isEditable"
+									class="convo-btn-normal convo-btn-bordered"
+								>
+									<img alt="" src="./assets/images/edit-content-icon.svg" />
+								</button>
+							</div>
+						</div>
+						<div
+							*ngIf="
+								community.isTextContentEdit &&
+								(community.selectedPostType === 'Text' || community.selectedPostType === 'Text + Image / Video')
+							"
+							class="action-wrap"
+						>
+							<div class="actions-left">
+								<button (click)="onDiscardTextChanges(community)" class="convo-btn-normal convo-btn-bordered">
+									Discard Changes
+								</button>
+							</div>
+							<div class="actions-right">
+								<button
+									(click)="savePostData(community)"
+									[disabled]="!community.content || !community.isEditable"
+									class="convo-btn-normal convo-btn-primary"
+								>
+									Save
+								</button>
+							</div>
+						</div>
+					</div>
+					<div
+						*ngFor="let img of community.previewImage; let i = index"
+						[hidden]="
+							!(
+								(community.imageUrls?.length > 0 || community.videoUrls?.length > 0) &&
+								(community.selectedPostType === 'Text + Image / Video' ||
+									community.selectedPostType === 'Image / Video')
+							)
+						"
+						class="content-col-wrap"
+					>
+						<div *ngIf="img?.type === 'image'" class="content-col uploaded-media">
+							<img alt="" id="img{{ i }}" src="{{ img?.src }}" />
+						</div>
+						<div *ngIf="img?.type === 'video'" class="content-col uploaded-media">
+							<video id="video{{ i }}" src="{{ img?.src }}"></video>
+							<!-- <img src="{{ img?.src }}" id="img{{ i }}" /> -->
+						</div>
+						<!-- <canvas id="canvas{{i}}"></canvas> -->
+						<div class="action-wrap">
+							<div class="actions-left">
+								<button (click)="copyToClipBoard(community, img?.type, i)" class="convo-btn-normal convo-btn-bordered">
+									<img alt="" src="./assets/images/content-copy-icon.svg" />
+								</button>
+								<button (click)="onDownload(community, img.src)" class="convo-btn-normal convo-btn-bordered">
+									<img alt="" src="./assets/images/icon-file-download.svg" />
+								</button>
+							</div>
+							<div class="actions-right">
+								<button
+									(click)="removePreview(community, i)"
+									[disabled]="!community.isEditable"
+									class="convo-btn-normal convo-btn-bordered"
+								>
+									<img alt="" src="./assets/images/delete-outline-icon.svg" />
+								</button>
+							</div>
+						</div>
+					</div>
+					<div
+						*ngIf="
+							community.selectedPostType === 'Text + Image / Video' || community.selectedPostType === 'Image / Video'
+						"
+						class="content-col-wrap"
+					>
+						<div (fileDropped)="fileUpload($event, community, true)" appDragAndDrop class="content-col custom-upload">
+							<input
+								(change)="fileUpload($event, community)"
+								[disabled]="isUpdatingCampaignTasks || !community.isEditable"
+								id="file{{ community.id }}"
+								title=" "
+								type="file"
+							/>
+							<figure><img alt="" src="./assets/images/add-photo-icon.svg" /></figure>
+							<h6>Upload Post Media</h6>
+							<p>
+								Drag and drop or <span class="text-primary">browse</span> an image/video file to upload, or paste with
+								the button below
+							</p>
+							<div><strong>(Max size 4 MB)</strong></div>
+						</div>
+						<div class="action-wrap">
+							<div class="actions-left">
+								<button
+									(click)="onClickPasteButton(community)"
+									[disabled]="isUpdatingCampaignTasks || !community.isEditable"
+									class="convo-btn-normal convo-btn-bordered"
+								>
+									<img alt="" src="./assets/images/content-paste-icon.svg" /><span>Paste</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="!community.isCommunityAdminAccepted" class="body-content-row-wrap content-edit-disabled">
+				<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M9.82683 4.17333C9.04683 3.39333 8.02683 2.99999 7.00016 2.99999V7L4.1735 9.82666C5.7335 11.3867 8.26683 11.3867 9.8335 9.82666C11.3935 8.26666 11.3935 5.73333 9.82683 4.17333ZM7.00016 0.333328C3.32016 0.333328 0.333496 3.31999 0.333496 7C0.333496 10.68 3.32016 13.6667 7.00016 13.6667C10.6802 13.6667 13.6668 10.68 13.6668 7C13.6668 3.31999 10.6802 0.333328 7.00016 0.333328ZM7.00016 12.3333C4.0535 12.3333 1.66683 9.94666 1.66683 7C1.66683 4.05333 4.0535 1.66666 7.00016 1.66666C9.94683 1.66666 12.3335 4.05333 12.3335 7C12.3335 9.94666 9.94683 12.3333 7.00016 12.3333Z"
+						fill="#EB5757"
+					/>
+				</svg>
+				Content creation is disabled until the group admin accepts the campaign.
+			</div>
+		</div>
+
+		<div *ngIf="selectedCommunities.length === 0 && searchResults" class="no-results-wrapper">
+			<figure>
+				<img alt="" src="assets/images/icon-search.svg" />
+			</figure>
+			<h6>No results found for</h6>
+			<p class="m-0">“{{ searchResults }}”</p>
+		</div>
+		<div
+			*ngIf="selectedCommunities.length === 0 && !searchResults && numberOfSelectedFilters === 0"
+			class="no-results-wrapper"
+		>
+			<figure>
+				<img alt="" src="assets/images/icon-search.svg" />
+			</figure>
+			<h6>No results found for</h6>
+			<p *ngIf="selectedContentFilter === 'all'" class="m-0">“All”</p>
+			<p *ngIf="selectedContentFilter === 'contentPending'" class="m-0">“Content Pending”</p>
+			<p *ngIf="selectedContentFilter === 'contentAdded'" class="m-0">“Content Added”</p>
+			<p *ngIf="selectedContentFilter === 'shellTasks'" class="m-0">“Shell Tasks”</p>
+		</div>
+		<div
+			*ngIf="selectedCommunities.length === 0 && !searchResults && numberOfSelectedFilters > 0"
+			class="no-results-wrapper"
+		>
+			<figure>
+				<img alt="" src="assets/images/icon-search.svg" />
+			</figure>
+			<h6>No results found for</h6>
+			<p class="m-0">Seleted filters</p>
+		</div>
+	</div>
+</div>
+
+<!-- file-size-alert modal -->
+<div *ngIf="showAlert" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h5>{{ alertMessage?.heading }}</h5>
+				<p class="m-0">{{ alertMessage?.content }}</p>
+			</div>
+			<div class="modal-footer">
+				<button (click)="showAlert = false" class="px-4 full-btn convo-btn-normal convo-btn-primary" type="button">
+					OK
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

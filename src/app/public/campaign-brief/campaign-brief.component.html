@@ -1,0 +1,22 @@
+<div class="campaign-brief-page">
+	<h5>
+		Brand: <strong *ngIf="campaign && campaign.brandName">{{ campaign.brandName }}</strong>
+	</h5>
+	<h5>
+		Campaign: <strong *ngIf="campaign && campaign.brandName">{{ campaign.campaignName }}</strong>
+	</h5>
+
+	<!-- <quill-editor
+    *ngIf="!showPreview"
+    [(ngModel)]="campaign.details"
+    placeholder="Text asset..."
+    [modules]="quillConfig"
+    (onContentChanged)="changeAssetText($event)"
+  >
+  </quill-editor> -->
+
+	<div class="editor-wrapper">
+		<span>Brief preview: </span>
+		<quill-view-html *ngIf="showPreview" [content]="campaign.details" id="copyText" theme="snow"></quill-view-html>
+	</div>
+</div>

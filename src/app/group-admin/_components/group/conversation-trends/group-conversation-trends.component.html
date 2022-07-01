@@ -1,0 +1,545 @@
+<div *ngIf="!showCategory" class="group-conversation-trends">
+	<div class="container">
+		<div class="page-headers" *ngIf="renderedOn !== 'Mobile'">
+			<div>
+				<h1 data-test-id="group-conversation-heading">Conversations</h1>
+				<h6 data-test-id="group-conversation-subHeading">
+					Detailed insights on the conversations happening in your group
+				</h6>
+			</div>
+		</div>
+	</div>
+	<div class="fixed-tabs">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<ul class="nav nav-tabs graph-tabs" role="tablist">
+						<li class="nav-item">
+							<button
+								(click)="getConversationTrendsData(7); recordButtonClick($event, group)"
+								[class.active]="hashParam === '7days'"
+								aria-selected="true"
+								data-cs-id="18222a9f-fc31-456c-a787-6e4cf09b8734"
+								data-cs-label="7 days"
+								data-cs-source="page"
+								class="btn-month"
+								data-toggle="tab"
+								role="tab"
+							>
+								7 days
+							</button>
+						</li>
+						<li class="nav-item">
+							<button
+								(click)="getConversationTrendsData(14); recordButtonClick($event, group)"
+								[class.active]="hashParam === '14days'"
+								aria-selected="false"
+								data-cs-id="0bbf1677-6d41-43e7-9bc2-68802ece9dcf"
+								data-cs-label="14 days"
+								data-cs-source="page"
+								class="btn-month"
+								data-toggle="tab"
+								role="tab"
+							>
+								14 days
+							</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fixed-border"></div>
+
+	<div class="tab-content graph-tab-content">
+		<div class="tab-pane fade show active" id="insightsTabContent" role="tabpanel" aria-labelledby="oneMonthTab">
+			<div class="container" [hidden]="!noTrendsFound || loadingTrends">
+				<div class="no-results-wrapper">
+					<div class="no-results-found">
+						<figure>
+							<img data-test-id="image-no-conversation-trend" alt="" src="assets/images/empty_state_icon.svg" />
+						</figure>
+						<ng-container *ngIf="showInactivityMsg; else noConvTrendText">
+							<h5 data-test-id="heading-text-no-conversation-trend">No conversation trends found, yet</h5>
+							<div data-test-id="subheading-text-no-conversation-trend">
+								Due to your inactivity on Convosight, we did not update your latest data. You will be able to see
+								updated data in 24 hours
+							</div>
+						</ng-container>
+						<ng-template #noConvTrendText>
+							<h5 data-test-id="heading-text-no-conversation-trend">No conversation trends found, yet</h5>
+							<div data-test-id="subheading-text-no-conversation-trend">Try selecting another time period</div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+			<div class="container" [hidden]="!loadingTrends">
+				<div class="row">
+					<div class="col">
+						<div class="card mt-4 loading-box">
+							<div class="card-header">
+								<h4 class="loading-strip primary"></h4>
+								<p class="mb-0 loading-strip secondary"></p>
+							</div>
+							<div class="card-body py-1">
+								<div class="custom-tags-container mt-4">
+									<div *ngFor="let in of counter(10)" class="custom-tag mb-4 py-3">
+										<h5 class="loading-strip secondary"></h5>
+										<p class="m-0 loading-strip tertiary"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<ng-container *ngIf="!group?.isConversationTrendAvailable && !group?.areMetricsAvailable">
+				<div class="container" [hidden]="noTrendsFound || loadingTrends">
+					<div class="row">
+						<div class="col">
+							<div class="card mt-4">
+								<div class="card-header analysing">
+									<div>
+										<h4>Top 10 trending keywords</h4>
+										<p class="text-secondary small m-0">
+											These are the keywords that are trending right now in this group
+										</p>
+									</div>
+									<div>
+										<app-analysis-state
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[value]="group?.percentageLast3DaysMetricsAvailable"
+											[inline]="true"
+											[diameter]="28"
+										></app-analysis-state>
+									</div>
+								</div>
+							</div>
+							<div class="card mt-4">
+								<div class="card-header analysing">
+									<div>
+										<h4>Top 10 trending topics</h4>
+										<p class="text-secondary small m-0">
+											These are the topics that are trending right now in this group
+										</p>
+									</div>
+									<div>
+										<app-analysis-state
+											[heading]="'Analysing Information'"
+											[subHeading]="'Please wait...'"
+											[value]="group?.percentageLast3DaysMetricsAvailable"
+											[inline]="true"
+											[diameter]="28"
+										></app-analysis-state>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+
+			<ng-container
+				*ngIf="
+					group['businessCategory'] === 'Parenting' &&
+					(group?.isConversationTrendAvailable || group?.areMetricsAvailable)
+				"
+			>
+				<div class="container" [hidden]="noTrendsFound || loadingTrends">
+					<div class="row">
+						<div class="col">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="heading-top10DiscussedTopics">Top 10 discussed topics</h4>
+									<p data-test-id="subheading-top10DiscussedTopics" class="text-secondary small m-0">
+										These are the topics that is being talked about the most recently in your group
+									</p>
+								</div>
+								<div class="card-body py-1" data-test-id="top10-dicsussed-topics">
+									<div class="custom-tags-container mt-4" *ngIf="topTopics">
+										<div
+											(click)="showConversations(topic.key, 'toptopics', $event); tooltip.toggle()"
+											data-cs-parent-label="Topic"
+											data-cs-source="page"
+											class="custom-tag topics-tag mb-4"
+											*ngFor="let topic of topTopics | keyvalue: preserveOrder | slice: 0:10; let i = index"
+											matTooltip="View mentions"
+											matTooltipPosition="above"
+											data-test-id="card-top-10-topics"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="View mentions"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+										>
+											<h5 data-test-id="conversation-card-name">{{ topic.key | titlecase }}</h5>
+											<p data-test-id="mentions-count" class="m-0 text-secondary small">{{ topic.value }}+ mentions</p>
+										</div>
+									</div>
+									<div class="mentions-list" *ngIf="!topTopics">
+										<div class="no-data-wrapper">
+											<p class="primary-text">Nothing to show here, yet</p>
+											<p class="secondary-text">Check back at some other time.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="heading-top5categories">Top {{ numberOfTopCategories }} categories</h4>
+									<p data-test-id="subheading-top5categories" class="text-secondary small m-0">
+										These are some of the categories identified from the conversations in your group
+									</p>
+								</div>
+								<div class="card-body py-1">
+									<div class="custom-tags-container mt-4" *ngIf="topCategories">
+										<div
+											*ngFor="let item of topCategories | keyvalue: preserveOrder"
+											(click)="
+												showCategory = true;
+												selectedCategory = item.key;
+												groupTabVisibilityToggle();
+												recordButtonClick($event, group, item.key);
+												tooltip.toggle()
+											"
+											data-cs-parent-label="Category"
+											class="custom-tag category-tag mb-4"
+											matTooltip="View detailed report"
+											matTooltipPosition="above"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="View detailed report"
+											data-cs-source="page"
+											data-test-id="top-5-Categories-cards"
+											(mouseenter)="tooltipHovered($event)"
+										>
+											<h5 data-test-id="category-card-name">{{ item.key | titlecase }}</h5>
+											<p data-test-id="mentions-categories" class="m-0 text-secondary small">
+												{{ item.value }} + conversations
+											</p>
+										</div>
+									</div>
+
+									<div class="mentions-list" *ngIf="!topCategories">
+										<div class="no-data-wrapper">
+											<p class="primary-text">Nothing to show here, yet</p>
+											<p class="secondary-text">Check back at some other time.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-sm-6">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="parenting-heading-card-issues" class="font-weight-normal m-0">
+										Top 5
+										<span class="font-weight-medium">Issue keywords</span>
+										identified
+									</h4>
+								</div>
+								<ul data-test-id="list-card-issues" class="mentions-list" *ngIf="topIssues">
+									<li
+										class="text-secondary"
+										(click)="showConversations(issue.key, 'issue', $event); tooltip.toggle()"
+										data-cs-parent-label="Issue"
+										data-cs-source="page"
+										*ngFor="let issue of topIssues | keyvalue: preserveOrder | slice: 0:5; let i = index"
+										matTooltip="View mentions"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="View mentions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+										data-test-id="text-card-isssue"
+									>
+										<strong>{{ issue.key | titlecase }}</strong>
+										{{ issue.value }}+ mentions
+									</li>
+								</ul>
+								<div class="mentions-list" *ngIf="!topIssues">
+									<div class="no-data-wrapper">
+										<p class="primary-text">Nothing to show here, yet</p>
+										<p class="secondary-text">Check back at some other time.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="parenting-heading-card-remedy" class="font-weight-normal m-0">
+										Top 5
+										<span class="font-weight-medium">Remedy keywords</span>
+										identified
+									</h4>
+								</div>
+								<ul class="mentions-list" *ngIf="topRemedies">
+									<li
+										class="text-secondary"
+										(click)="showConversations(remedy.key, 'remedy', $event); tooltip.toggle()"
+										data-cs-parent-label="Remedy"
+										data-cs-source="page"
+										*ngFor="let remedy of topRemedies | keyvalue: preserveOrder | slice: 0:5; let i = index"
+										matTooltip="View mentions"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="View mentions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+										data-test-id="remedy-keyword-text"
+									>
+										<strong>{{ remedy.key | titlecase }}</strong>
+										{{ remedy.value }}+ mentions
+									</li>
+								</ul>
+								<div class="mentions-list" *ngIf="!topRemedies">
+									<div class="no-data-wrapper">
+										<p class="primary-text">Nothing to show here, yet</p>
+										<p class="secondary-text">Check back at some other time.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-5">
+						<div class="col-12 col-sm-6">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="parenting-heading-card-products" class="font-weight-normal m-0">
+										Top 5
+										<span class="font-weight-medium"> Products</span> identified
+									</h4>
+								</div>
+								<ul class="mentions-list" *ngIf="topProducts">
+									<li
+										class="text-secondary"
+										(click)="showConversations(product.key, 'product', $event); tooltip.toggle()"
+										data-cs-parent-label="Product"
+										data-cs-source="page"
+										*ngFor="let product of topProducts | keyvalue: preserveOrder | slice: 0:5; let i = index"
+										matTooltip="View mentions"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="View mentions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+										data-test-id="top-5-products-text"
+									>
+										<strong>{{ product.key | titlecase }}</strong>
+										{{ product.value }}+ mentions
+									</li>
+								</ul>
+								<div class="mentions-list" *ngIf="!topProducts">
+									<div class="no-data-wrapper">
+										<p class="primary-text">Nothing to show here, yet</p>
+										<p class="secondary-text">Check back at some other time.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4 data-test-id="parenting-heading-card-brands" class="font-weight-normal m-0">
+										Top 5
+										<span class="font-weight-medium"> Brands</span> identified
+									</h4>
+								</div>
+								<ul class="mentions-list" *ngIf="topBrands">
+									<li
+										class="text-secondary"
+										(click)="showConversations(brand.key, 'brand', $event); tooltip.toggle()"
+										data-cs-parent-label="Brand"
+										data-cs-source="page"
+										*ngFor="let brand of topBrands | keyvalue: preserveOrder | slice: 0:5; let i = index"
+										matTooltip="View mentions"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="View mentions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+										data-test-id="top-5-brands-list"
+									>
+										<strong>{{ brand.key | titlecase }}</strong>
+										{{ brand.value }}+ mentions
+									</li>
+								</ul>
+								<div class="mentions-list" *ngIf="!topBrands">
+									<div class="no-data-wrapper">
+										<p class="primary-text">Nothing to show here, yet</p>
+										<p class="secondary-text">Check back at some other time.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+
+			<ng-container
+				*ngIf="
+					group['businessCategory'] !== 'Parenting' &&
+					(group?.isConversationTrendAvailable || group?.areMetricsAvailable)
+				"
+			>
+				<div class="container" [hidden]="noTrendsFound || loadingTrends">
+					<div class="row">
+						<div class="col">
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4>Top 10 trending keywords</h4>
+									<p class="text-secondary small m-0">
+										These are the keywords that are trending right now in this group
+									</p>
+								</div>
+								<div class="card-body py-1">
+									<div class="custom-tags-container mt-4" *ngIf="topTopics">
+										<div
+											(click)="showConversations(topic.key, 'toptopics', $event); tooltip.toggle()"
+											data-cs-parent-label="Topic"
+											data-cs-source="page"
+											class="custom-tag topics-tag mb-4"
+											*ngFor="let topic of topTopics | keyvalue: preserveOrder | slice: 0:10; let i = index"
+											matTooltip="View mentions"
+											matTooltipPosition="above"
+											#tooltip="matTooltip"
+											data-cs-parent-label="Tooltip"
+											data-cs-label="View mentions"
+											data-cs-source="page"
+											(mouseenter)="tooltipHovered($event)"
+										>
+											<h5>{{ topic.key | titlecase }}</h5>
+											<p class="m-0 text-secondary small">{{ topic.value }}+ mentions</p>
+										</div>
+									</div>
+									<div class="mentions-list" *ngIf="!topTopics">
+										<div class="no-data-wrapper">
+											<p class="primary-text">Nothing to show here, yet</p>
+											<p class="secondary-text">Check back at some other time.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mt-4">
+								<div class="card-header">
+									<h4>Top 10 trending topics</h4>
+									<p class="text-secondary small m-0">These are the topics that are trending right now in this group</p>
+								</div>
+								<div class="card-body py-1">
+									<div class="custom-tags-container mt-4" *ngIf="top10Bigrams">
+										<div
+											class="custom-tag category-tag mb-4"
+											style="pointer-events: none"
+											*ngFor="let bigram of top10Bigrams | keyvalue: preserveOrder | slice: 0:10; let i = index"
+										>
+											<h5>{{ bigram.key | titlecase }}</h5>
+											<p class="m-0 text-secondary small">{{ bigram.value }} + conversations</p>
+										</div>
+									</div>
+
+									<div class="mentions-list" *ngIf="!top10Bigrams">
+										<div class="no-data-wrapper">
+											<p class="primary-text">Nothing to show here, yet</p>
+											<p class="secondary-text">Check back at some other time.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row mb-5">
+								<div class="col-12 col-sm-6">
+									<div class="card mt-4">
+										<div class="card-header">
+											<h4>World cloud of trending keywords</h4>
+										</div>
+										<div class="card-body card-min-height">
+											<div *ngIf="wordCloud; else loadingWordCloud">
+												<div *ngIf="wordCloud.wordCloudData; else emptyWordCloud">
+													<img alt="" class="word-cloud-wrapper" src="{{ wordCloud.wordCloudData }}" />
+												</div>
+												<ng-template #emptyWordCloud>
+													<div class="mentions-list">
+														<div class="no-data-wrapper">
+															<p class="primary-text">Nothing to show here, yet</p>
+															<p class="secondary-text">Check back at some other time.</p>
+														</div>
+													</div>
+												</ng-template>
+											</div>
+											<ng-template #loadingWordCloud>
+												<div class="bt-spinner-wrapper">
+													<div class="loader-wrapper">
+														<div class="loader"></div>
+														<p class="loading-text">Loading data</p>
+													</div>
+												</div>
+											</ng-template>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+	</div>
+</div>
+
+<div class="convosight-overlay" *ngIf="showConversationList" (click)="closeConversationList(false)"></div>
+<div *ngIf="showConversationList">
+	<app-conversation-list
+		(closeConversationList)="closeConversationList($event)"
+		[keywords]="keyWords"
+		[groupIds]="groupIds"
+		[conversationType]="conversationType"
+		[group]="group"
+	></app-conversation-list>
+</div>
+
+<div *ngIf="showCategory">
+	<app-group-conversation-category-details
+		(closeCategory)="closeCategory($event)"
+		(goToOverviewPage)="goToOverview($event)"
+		[category]="selectedCategory"
+		[groupId]="group.id"
+		[group]="group"
+		[days]="days"
+	></app-group-conversation-category-details>
+</div>
+
+<div *ngIf="!group.businessCategory && !showCategorySurvey" class="message-wrapper-without-content blur-bg">
+	<div class="message-content">
+		<h5>To See the Insights - Select your Category</h5>
+		<button
+			(click)="group['businessCategory'] = 'Entertainment'; showCategorySurvey = true; recordButtonClick($event, group)"
+			data-cs-id="d5fc1dd0-e846-4ea3-8d10-2740b04a76ad"
+			data-cs-label="Select Category"
+			data-cs-source="page"
+			class="convo-btn-primary convo-btn-normal"
+		>
+			Select Category
+		</button>
+	</div>
+</div>
+
+<!-- Category Survey starts here -->
+<ng-container *ngIf="showCategorySurvey">
+	<app-business-category
+		[selectedGroup]="group"
+		[convoTrendPage]="true"
+		(closeBusinessCategory)="closeBusinessCategory($event)"
+	></app-business-category>
+</ng-container>
+<!-- Category Survey ends here -->

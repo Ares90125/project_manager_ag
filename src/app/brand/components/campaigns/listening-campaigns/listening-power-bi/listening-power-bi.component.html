@@ -1,0 +1,45 @@
+<div *ngIf="!loadingData" class="campaign-details-container">
+	<div class="listen-campaign-wrapper">
+		<div class="container">
+			<div class="head-wrapper">
+				<h2 class="head-text">
+					Listening insights from
+					<a
+						(click)="showCommunitiesList(); tooltip.toggle()"
+						*ngIf="campaign.campaignGroupIds"
+						class="head-link"
+						matTooltip="View the list of communities in this campaign"
+						#tooltip="matTooltip"
+						data-cs-parent-label="Tooltip"
+						data-cs-label="View the list of communities in this campaign"
+						data-cs-source="page"
+						(mouseenter)="tooltipHovered($event)"
+					>
+						{{ campaign.campaignGroupIds.length }} communities
+					</a>
+				</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="listen-campaign-content-wrapper">
+		<iframe
+			width="100%"
+			height="100%"
+			[src]="campaign?.powerBIDashboardUrl | sanitizeUrl"
+			frameborder="0"
+			allowFullScreen="false"
+		></iframe>
+	</div>
+</div>
+
+<div class="convosight-overlay" *ngIf="showCommunityList" (click)="closeCommunityList(false)"></div>
+
+<div *ngIf="showCommunityList">
+	<app-brand-community-list
+		(closeCommunityList)="closeCommunityList($event)"
+		[campaign]="campaign"
+		[headerText]="'Communities part of this campaign'"
+	>
+	</app-brand-community-list>
+</div>

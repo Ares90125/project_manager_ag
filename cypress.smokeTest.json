@@ -1,0 +1,40 @@
+{
+	"baseUrl": "https://localhost:4200/",
+	"integrationFolder": "cypress/tests",
+	"defaultCommandTimeout": 60000,
+	"responseTimeout": 30000,
+	"chromeWebSecurity": false,
+	"projectId": "kooxvh",
+	"watchForFileChanges": false,
+	"nodeVersion": "system",
+	"numTestsKeptInMemory": 10,
+	"videoUploadOnPasses": false,
+	"viewportWidth": 1366,
+	"viewportHeight": 768,
+	"scrollBehavior": "center",
+	"retries": {
+		"runMode": 2,
+		"openMode": 0
+	},
+	"env": {
+		"browserPermissions": {
+			"notifications": "allow",
+			"images": "allow",
+			"javascript": "allow",
+			"popups": "allow",
+			"plugins": "allow",
+			"cookies": "allow"
+		},
+		"grepTags": "@pullRequest",
+		"coverage": false,
+		"MAILOSAUR_API_KEY": "pTei1Musx2GPNFZ",
+		"developAppSyncUrl": "https://graph.develop.convosight.com/graphql",
+		"compressionUrl": "https://bd-convosight-dev-image-compressor-destination.s3.ap-south-1.amazonaws.com/public/imageCompressionSource/*",
+		"uploadUrl": "https://bd-cs-dev-media.s3.us-east-1.amazonaws.com/public/pics/*",
+		"developAPIKey": "da2-mgh5233rcvbyjgaag6mhtchpgm",
+		"valueCalculatorURL": "https://extension.convosight.com/group-value-dev/group-value-calculator",
+		"eventURL": "https://api.segment.io/v1/t",
+		"logsURL": "https://api.convosight.com/v1/bulk/logs",
+		"pageEventURL": "https://api.segment.io/v1/p"
+	}
+}

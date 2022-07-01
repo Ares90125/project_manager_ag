@@ -1,0 +1,25 @@
+<highcharts-chart
+	[(update)]="updateFlag"
+	[Highcharts]="Highcharts"
+	[callbackFunction]="onChartCreated"
+	[constructorType]="'chart'"
+	[oneToOne]="oneToOneFlag"
+	[options]="chartOptions"
+	[runOutsideAngular]="runOutsideAngularFlag"
+	style="width: 70%; height: fit-content; display: inline-block"
+></highcharts-chart>
+
+<div *ngIf="chartOptions?.series" class="custom-stackbar-legends-container">
+	<h2>Legends:</h2>
+	<ul #legendList [ngClass]="{'show-border': scrollExistsonLegendList}" [ngStyle]="{height: chartHeight + 'px'}">
+		<li *ngFor="let item of chartOptions?.series; let i = index">
+			<span
+				[style.background-color]="chartOptions?.series[chartOptions?.series?.length - 1 - i].color"
+				class="item-color"
+			></span>
+			<span [title]="chartOptions?.series[chartOptions?.series?.length - 1 - i].name" class="brand-name">{{
+				chartOptions?.series[chartOptions?.series?.length - 1 - i].name
+			}}</span>
+		</li>
+	</ul>
+</div>

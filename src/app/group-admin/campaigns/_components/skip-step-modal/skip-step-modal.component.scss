@@ -1,0 +1,141 @@
+@import '../../../../../assets/scss/custom/_variables.scss';
+@import '../../../../../assets/scss/custom/_mixins.scss';
+
+.skip-step-modal {
+	.modal-dialog {
+		max-width: 532px;
+		width: 100%;
+	}
+	.modal-header {
+		padding: 24px 16px 20px;
+		border: none;
+		.modal-title {
+			width: 100%;
+			text-align: center;
+			@include font-label-l-md;
+			@media (max-width: 767px) {
+				@include font-label-m-md;
+				text-align: left;
+			}
+		}
+		button {
+			padding: 7px;
+			border-radius: 50%;
+			height: 24px;
+			width: 24px;
+			display: flex;
+			border: none;
+			background-color: $cta-bg-grey;
+		}
+	}
+	.skip-step-content {
+		padding: 0 16px;
+		.skip-step-frame {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 24px;
+			border-radius: 8px;
+			background-color: $convo-bg;
+			background-repeat: repeat;
+			background-size: 30%;
+			background-position-x: 2px;
+			span {
+				@include font-paragraph-s;
+				display: inline-block;
+				text-align: center;
+				max-width: 400px;
+				width: 100%;
+				margin-bottom: 24px;
+				&:first-child {
+					margin-bottom: 32px;
+				}
+			}
+			.skip-step-description {
+				text-align: center;
+			}
+		}
+		.skip-step-list {
+			margin: 0;
+		}
+		.skip-step-list-item {
+			width: 300px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 8px;
+			border: 1px solid #d3d8eb;
+			background-color: #fff;
+			box-shadow: 0px 3px 6px rgba(51, 51, 79, 0.1);
+			border-radius: 8px;
+			padding: 10px;
+			cursor: pointer;
+			img {
+				width: 40px;
+				height: 40px;
+				border-radius: 2px;
+				-o-object-fit: cover;
+				object-fit: cover;
+				-o-object-position: top;
+				object-position: top;
+			}
+			span {
+				max-width: 176px;
+				margin: 0;
+				text-align: left;
+				@include font-label-xs-md;
+			}
+			.convo-btn-normal {
+				border-radius: 50%;
+				padding: 8px;
+				border: none;
+				max-height: 32px;
+				background-color: $light-blue-1;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-color: transparent;
+			}
+			&:last-child {
+				margin-bottom: 0px;
+			}
+		}
+	}
+	.modal-body {
+		padding: 24px 16px 16px !important;
+		.skip-step-navigation {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			@media (max-width: 767px) {
+				flex-direction: column;
+				.current-step-btn,
+				.next-step-btn {
+					width: 100%;
+					button {
+						width: 100%;
+					}
+				}
+				.current-step-btn {
+					margin-bottom: 12px;
+				}
+			}
+			.convo-btn-outline {
+				border: 1px solid $borders-grey !important;
+				box-shadow: 0px 1px 2px rgba(51, 51, 79, 0.1);
+				padding-left: 20px;
+				padding-right: 20px;
+				cursor: pointer;
+				background: none;
+				outline: none;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 3px;
+				@include font-paragraph-s-md;
+				color: $emp-blue-1;
+			}
+		}
+	}
+}

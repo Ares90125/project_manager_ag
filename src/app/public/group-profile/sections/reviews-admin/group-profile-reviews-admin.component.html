@@ -1,0 +1,237 @@
+<mat-accordion *ngIf="isEditAvailable; else publicPage">
+	<div class="review-wrap red-border" [class.expanded-state]="isExpanded" [class.not-completed]="showNoFilledBorder">
+		<div class="completed-flag" *ngIf="showNoFilledBorder">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="a36ef5f2-0705-430c-b0d7-762d06a84953"
+			data-cs-label="Reviews"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header expandedHeight="96px" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M16.666 1.66665H3.33268C2.41602 1.66665 1.66602 2.41665 1.66602 3.33331V18.3333L4.99935 15H16.666C17.5827 15 18.3327 14.25 18.3327 13.3333V3.33331C18.3327 2.41665 17.5827 1.66665 16.666 1.66665ZM16.666 13.3333H4.30768L3.33268 14.3083V3.33331H16.666V13.3333Z"
+								fill="#9999A7"
+							/>
+							<path
+								d="M9.99935 12.5L11.3077 9.64165L14.166 8.33331L11.3077 7.02498L9.99935 4.16665L8.69102 7.02498L5.83268 8.33331L8.69102 9.64165L9.99935 12.5Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Reviews</span>
+						<button
+							*ngIf="isExpanded"
+							data-cs-id="a2a5b1fc-68d3-4b6a-bca3-8c2dbbe22a50"
+							data-cs-label="What's this?"
+							data-cs-source="page"
+							class="convo-btn-bordered what-this-btn"
+							(click)="
+								$event.stopPropagation();
+								recordButtonClick($event, null, null, null, groupProfilePage);
+								openReviewHelpVideo()
+							"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							What's this?
+						</button>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span>Share your group profile with your members for them to rate and review your group.</span>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right section-icon-wrap">
+						<button
+							class="edit-row-btn"
+							(click)="
+								$event.stopPropagation();
+								handleAdminEditClick.emit();
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="c60798f7-2985-415c-b7b1-264f7c5ccdd0"
+							data-cs-label="Edit File Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div class="profile-card-body">
+				<div *ngIf="ratingCount" class="review-body-wrap">
+					<div class="review-body-wrap__reviews-heading">
+						<div class="reviews-heading__rating">
+							<div class="star"></div>
+							<span>{{ averageRating }}</span>
+						</div>
+
+						<div class="reviews-heading__info">
+							<span class="title">{{ averageRating }} out of 5 stars</span>
+							<span class="subtitle">Average rating</span>
+						</div>
+					</div>
+
+					<div class="reviews-wrapper">
+						<ng-container *ngFor="let review of reviews.slice(0, 2)">
+							<div class="review-container">
+								<div class="review-heading">
+									<img
+										src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+										alt=""
+										class="profile-image"
+									/>
+									<div class="d-flex flex-column">
+										<span class="reviewer-name">{{ review.fullname }}</span>
+										<div class="stars" [style.--rating]="review.rating"></div>
+									</div>
+								</div>
+								<span *ngIf="!review.isDisabled" class="review-text">{{ review.reviewText }}</span>
+							</div>
+						</ng-container>
+
+						<button
+							*ngIf="ratingCount > 2"
+							class="convo-btn-outline"
+							data-cs-id="57b1a748-cb82-4887-a6da-b9ce3ea6ad4f"
+							data-cs-label="View all review"
+							data-cs-source="page"
+							(click)="processReviewsModal()"
+						>
+							<span>View all {{ ratingCount }} reviews</span>
+						</button>
+					</div>
+				</div>
+
+				<div *ngIf="!ratingCount" class="review-body-wrap--empty">
+					<div class="no-review-wrap">
+						<figure><img alt="" src="./assets/images/stars-icon.svg" /></figure>
+						<h5>No reviews yet!</h5>
+						<h6>Be the first to review this group!</h6>
+					</div>
+				</div>
+
+				<div class="unavailable-reviews-state" *ngIf="!showReviews">
+					<div class="hidden-state">
+						<img alt="" src="./assets/images/visibility_off.svg" />
+						<span>This section is hidden</span>
+					</div>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="review-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M16.666 1.66665H3.33268C2.41602 1.66665 1.66602 2.41665 1.66602 3.33331V18.3333L4.99935 15H16.666C17.5827 15 18.3327 14.25 18.3327 13.3333V3.33331C18.3327 2.41665 17.5827 1.66665 16.666 1.66665ZM16.666 13.3333H4.30768L3.33268 14.3083V3.33331H16.666V13.3333Z"
+						fill="#9999A7"
+					/>
+					<path
+						d="M9.99935 12.5L11.3077 9.64165L14.166 8.33331L11.3077 7.02498L9.99935 4.16665L8.69102 7.02498L5.83268 8.33331L8.69102 9.64165L9.99935 12.5Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Reviews</h5>
+			</div>
+		</div>
+		<div class="profile-card-body preview">
+			<div *ngIf="ratingCount" class="review-body-wrap">
+				<div class="review-body-wrap__reviews-heading">
+					<div class="reviews-heading__rating">
+						<div class="star"></div>
+						<span>{{ averageRating }}</span>
+					</div>
+
+					<div class="reviews-heading__info">
+						<span class="title">{{ averageRating }} out of 5 stars</span>
+						<span class="subtitle">Average rating</span>
+					</div>
+				</div>
+
+				<div class="reviews-wrapper">
+					<ng-container *ngFor="let review of reviews.slice(0, 2)">
+						<div class="review-container">
+							<div class="review-heading">
+								<img
+									src="{{ review.profilePictureUrl ? review.profilePictureUrl : './assets/images/default_user.png' }}"
+									alt=""
+									class="profile-image"
+								/>
+								<div class="d-flex flex-column">
+									<span class="reviewer-name">{{ review.fullname }}</span>
+									<div class="stars" [style.--rating]="review.rating"></div>
+								</div>
+							</div>
+							<span *ngIf="!review.isDisabled" class="review-text">{{ review.reviewText }}</span>
+						</div>
+					</ng-container>
+
+					<button
+						*ngIf="ratingCount > 2"
+						class="convo-btn-outline"
+						data-cs-id="57b1a748-cb82-4887-a6da-b9ce3ea6ad4f"
+						data-cs-label="View all review"
+						data-cs-source="page"
+						(click)="processReviewsModal()"
+					>
+						<span>View all {{ ratingCount }} reviews</span>
+					</button>
+				</div>
+			</div>
+
+			<div *ngIf="!ratingCount" class="review-body-wrap--empty">
+				<div class="no-review-wrap">
+					<figure><img alt="" src="./assets/images/stars-icon.svg" /></figure>
+					<h5>No reviews yet!</h5>
+					<h6>Be the first to review this group!</h6>
+				</div>
+			</div>
+
+			<div class="unavailable-reviews-state" *ngIf="!showReviews">
+				<div class="hidden-state">
+					<img alt="" src="./assets/images/visibility_off.svg" />
+					<span>This section is hidden</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-container *ngIf="openReviewsModal">
+	<app-group-reviews-modal
+		[copyUrl]="copyUrl"
+		[groupId]="groupId"
+		type="profile"
+		(closePopup)="closeReviewsPopup($event)"
+	></app-group-reviews-modal>
+</ng-container>
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showReviewsVideo">
+	<app-what-this-video
+		[title]="'Reviews'"
+		[videoLink]="'./assets/videos/reviews.mp4'"
+		(closeVideoPlayer)="closeVideoPlayer($event)"
+	></app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

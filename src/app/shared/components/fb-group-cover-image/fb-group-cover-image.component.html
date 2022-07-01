@@ -1,0 +1,6 @@
+<ng-container *ngIf="coverImageUrl; else defaultCoverImage">
+	<img [fbEntityId]="fbGroupId" alt="" class="group-img" src="{{ coverImageUrl }}" />
+</ng-container>
+<ng-template #defaultCoverImage>
+	<img alt="" class="group-img" src="assets/images/default_group_image.jpg" />
+</ng-template>

@@ -1,0 +1,410 @@
+<div *ngIf="brand" class="manage-brand-campaigns-wrapper">
+	<div class="manage-brand-header-wrapper">
+		<div class="brand-header-top">
+			<div class="container">
+				<div class="brand-header-top-row">
+					<div>
+						<div class="brand-name">
+							<a class="go-back" routerLink="/cs-admin/manage-brands">
+								<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M8.70711 1.70711C9.09763 1.31658 9.09763 0.683418 8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.292893 7.29289C-0.0976311 7.68342 -0.0976311 8.31658 0.292893 8.70711L7.29289 15.7071C7.68342 16.0976 8.31658 16.0976 8.70711 15.7071C9.09763 15.3166 9.09763 14.6834 8.70711 14.2929L3.41421 9H15C15.5523 9 16 8.55228 16 8C16 7.44772 15.5523 7 15 7H3.41421L8.70711 1.70711Z"
+										fill="#33334F"
+										opacity="0.56"
+									/>
+								</svg>
+							</a>
+
+							<div class="dropdown brand-dropdown">
+								<button
+									aria-expanded="false"
+									aria-haspopup="true"
+									class="brand-dropdown-button"
+									data-toggle="dropdown"
+									type="button"
+								>
+									<figure><img alt="" src="{{ brand.iconUrl }}" /></figure>
+									<figcaption>{{ brand.name }}</figcaption>
+									<svg fill="none" height="5" viewBox="0 0 9 5" width="9" xmlns="http://www.w3.org/2000/svg">
+										<path d="M4.5 5L9 -4.76837e-07H0L4.5 5Z" fill="#33334F" opacity="0.8" />
+									</svg>
+								</button>
+								<div class="dropdown-menu">
+									<a (click)="selectBrand(brand)" *ngFor="let brand of brands" class="dropdown-item">{{
+										brand.name
+									}}</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<a class="brand-communities">Campaigns</a>
+						<a class="brand-campaigns" (click)="navigateToBrandCommunities()">Brand Communities</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="brand-header-left">
+						<h1 class="component-title"><span>Campaigns</span></h1>
+					</div>
+				</div>
+				<!-- <div class="col-md-6">
+					<div class="brand-header-right">
+						<button (click)="createCampaignType(brand)" class="convo-btn-tertiary convo-btn-normal">
+							<img alt="" src="assets/images/add_icon.svg" /> <span>Create new campaign</span>
+						</button>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	<div class="brand-campaigns-body-wrapper">
+		<div class="tabs-wrapper">
+			<div class="container">
+				<ul class="nav nav-tabs group-info-tabs" role="tablist">
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('all'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'all'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="0f8b4d9e-1098-446e-8cc3-1973a78cd9e9"
+							data-cs-label="All campaigns"
+							data-cs-source="page"
+							>All campaigns <span class="badge">{{ numberCampaignList.all }}</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Draft'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Draft'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="99634d69-6a20-4481-9d36-744cca856c23"
+							data-cs-label="Draft"
+							data-cs-source="page"
+							>Draft <span class="badge">{{ numberCampaignList.draft }}</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('PendingApproval'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'PendingApproval'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="93078f916-3dec-4e62-9dcd-7be5c4b37230"
+							data-cs-label="Pending Approval"
+							data-cs-source="page"
+							>Pending Approval <span class="badge">{{ numberCampaignList.pendingApproval }}</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Scheduled'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Scheduled'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="05732fa2-b105-4a1c-adc6-76bb730a66a2"
+							data-cs-label="Scheduled"
+							data-cs-source="page"
+							>Scheduled <span class="badge">{{ numberCampaignList.scheduled }}</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Active'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Active'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="98e4728d-1d36-4962-910d-409e57f8cb9e"
+							data-cs-label="Active"
+							data-cs-source="page"
+							>Active <span class="badge">{{ numberCampaignList.active }}</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Completed'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Completed'}"
+							aria-controls="insights"
+							aria-selected="false"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="all-campaigns-tab"
+							role="tab"
+							data-cs-id="e3fb7c08-0c57-4ef9-a017-f8034adbe61d"
+							data-cs-label="Completed"
+							data-cs-source="page"
+							>Completed <span class="badge">{{ numberCampaignList.completed }}</span></a
+						>
+					</li>
+					<!--					<li class="nav-item">-->
+					<!--						<a-->
+					<!--							(click)="getCampaignsBasedOnStatus('Suspended')"-->
+					<!--							[ngClass]="{active: currentStateOfCampaigns === 'Suspended'}"-->
+					<!--							aria-controls="insights"-->
+					<!--							aria-selected="false"-->
+					<!--							class="nav-link"-->
+					<!--							data-toggle="tab"-->
+					<!--							href="#AllCampaigns"-->
+					<!--							id="all-campaigns-tab"-->
+					<!--							role="tab"-->
+					<!--							>Suspended <span class="badge">{{ numberCampaignList.suspended }}</span></a-->
+					<!--						>-->
+					<!--					</li>-->
+				</ul>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="tab-content">
+				<div aria-labelledby="all-campaigns-tab" class="tab-pane fade show active" id="AllCampaigns" role="tabpanel">
+					<div *ngIf="!isCampaignsLoading && campaignKeys.length > 0">
+						<div *ngFor="let key of campaignKeys">
+							<div class="date-stamp">{{ key === 'Invalid Date' ? 'No Start Date' : key }}</div>
+							<div *ngFor="let campaign of campainsSortedByDate[key]" class="campaign-row">
+								<div class="campaign-row-header">
+									<div class="campaign-row-header-box">
+										<div class="header-top-box">
+											<figure *ngIf="campaign.type === 'CommunityMarketing'">
+												<img alt="" src="assets/images/community-icon.svg" />
+											</figure>
+											<figure *ngIf="campaign.type === 'Listening'">
+												<img alt="" src="assets/images/listening-icon.svg" />
+											</figure>
+											<h5>{{ campaign.campaignName }}</h5>
+											<span [ngClass]="campaign.status | lowercase" class="badge">{{
+												campaign.status === 'PendingApproval' ? 'Pending...' : campaign.status
+											}}</span>
+										</div>
+										<p class="m-0 text-secondary">
+											<span *ngIf="campaign.status === 'Active'"
+												>Active since {{ campaign.startDateAtUTC | date: 'd MMMM, y' }}</span
+											>
+											<span *ngIf="campaign.status === 'Scheduled' || campaign.status === 'PendingApproval'"
+												>Will start on {{ campaign.startDateAtUTC | date: 'd MMMM, y' }}</span
+											>
+											<span *ngIf="campaign.status === 'Draft'"
+												>In draft since {{ campaign.createdAtUTC | date: 'd MMMM, y' }}</span
+											>
+											<span *ngIf="campaign.status === 'Suspended'"
+												>Suspended since {{ campaign.updatedAtUTC | date: 'd MMMM, y' }}</span
+											>
+											<span *ngIf="campaign.status === 'Completed'"
+												>Completed on {{ campaign.endDateAtUTC | date: 'd MMMM, y' }}</span
+											>
+											<span *ngIf="campaign.status === 'Reactivating'">Reactivating...</span>
+										</p>
+									</div>
+									<div *ngIf="campaign.type === 'CommunityMarketing'" class="row-more-options">
+										<div class="d-inline-block custom-dropdown">
+											<button
+												class="convo-dropdown convo-normal-dropdown dropdown-toggle"
+												data-toggle="dropdown"
+												aria-haspopup="true"
+												aria-expanded="false"
+											>
+												<svg fill="none" height="16" viewBox="0 0 4 16" width="4" xmlns="http://www.w3.org/2000/svg">
+													<path
+														clip-rule="evenodd"
+														d="M0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12C0.9 12 0 12.9 0 14ZM0 2C0 3.1 0.9 4 2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2ZM0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6C0.9 6 0 6.9 0 8Z"
+														fill="#6D6DA7"
+														fill-rule="evenodd"
+													/>
+												</svg>
+											</button>
+											<div class="convo-dropdown-wrapper dropdown-menu">
+												<button
+													(click)="navigateToCommunityManage(brand, campaign); recordButtonClick($event)"
+													*ngIf="campaign.type === 'CommunityMarketing' && campaign.status !== 'Draft'"
+													class="dropdown-item"
+													data-cs-id="ee6c0ed4-1654-4d45-8bcc-448b654a3838"
+													data-cs-label="Manage"
+													data-cs-source="page"
+												>
+													Manage
+												</button>
+
+												<button
+													(click)="selectedCampaign = campaign"
+													*ngIf="
+														campaign.status === 'Active' ||
+														campaign.status === 'Scheduled' ||
+														campaign.status === 'PendingApproval'
+													"
+													data-target="#suspend-campaign"
+													data-toggle="modal"
+													hidden
+													class="dropdown-item"
+												>
+													Suspend
+												</button>
+
+												<button
+													(click)="navigateToCommunityEdit(brand, campaign); recordButtonClick($event)"
+													*ngIf="campaign.type === 'CommunityMarketing' && campaign.status === 'Draft'"
+													class="dropdown-item"
+													data-cs-id="55dc38ac-95ce-41ce-9354-d6b6b8ba3e89"
+													data-cs-label="Edit"
+													data-cs-source="page"
+												>
+													Edit
+												</button>
+
+												<button
+													(click)="selectedCampaign = campaign"
+													*ngIf="campaign.status === 'Suspended'"
+													data-target="#active-campaign"
+													data-toggle="modal"
+													class="dropdown-item"
+												>
+													Reactivate
+												</button>
+											</div>
+										</div>
+									</div>
+									<div class="hide-empty">
+										<div *ngIf="campaign.type === 'Listening' && campaign.status === 'Active'">
+											<button (click)="viewInsights(campaign)" class="link-btn">
+												View Insights
+												<svg fill="none" height="6" viewBox="0 0 7 6" width="7" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M3.19064 0.5891C3.01979 0.454336 3.01979 0.235839 3.19064 0.101074C3.36149 -0.0336912 3.6385 -0.0336912 3.80936 0.101074L6.87186 2.51668C7.04271 2.65145 7.04271 2.86995 6.87186 3.00471L3.80936 5.42032C3.6385 5.55508 3.36149 5.55508 3.19064 5.42032C3.01979 5.28555 3.01979 5.06706 3.19064 4.93229L5.50628 3.10578H0.4375C0.195875 3.10578 0 2.95128 0 2.7607C0 2.57011 0.195875 2.41561 0.4375 2.41561H5.50628L3.19064 0.5891Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</button>
+										</div>
+										<div *ngIf="campaign.type === 'Listening'" class="row-more-options">
+											<div class="d-inline-block custom-dropdown">
+												<button
+													class="convo-dropdown convo-normal-dropdown dropdown-toggle"
+													data-toggle="dropdown"
+													aria-haspopup="true"
+													aria-expanded="false"
+												>
+													<svg fill="none" height="16" viewBox="0 0 4 16" width="4" xmlns="http://www.w3.org/2000/svg">
+														<path
+															clip-rule="evenodd"
+															d="M0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12C0.9 12 0 12.9 0 14ZM0 2C0 3.1 0.9 4 2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2ZM0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6C0.9 6 0 6.9 0 8Z"
+															fill="#6D6DA7"
+															fill-rule="evenodd"
+														/>
+													</svg>
+												</button>
+												<div class="convo-dropdown-wrapper dropdown-menu">
+													<button
+														(click)="navigateToCommunityManage(brand, campaign); recordButtonClick($event)"
+														*ngIf="campaign.status !== 'Draft'"
+														class="dropdown-item"
+														data-cs-id="55dc38ac-95ce-41ce-9354-d6b6b8ba3e89"
+														data-cs-label="Manage"
+														data-cs-source="page"
+													>
+														Manage
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="!isCampaignsLoading && campaignKeys.length === 0" class="no-results-wrapper">
+						<div class="no-results-found">
+							<figure><img alt="" src="assets/images/empty_state_icon.svg" /></figure>
+							<h5>No Campaigns found</h5>
+						</div>
+					</div>
+				</div>
+				<div aria-labelledby="active-campaigns-tab" class="tab-pane fade" id="ActiveCampaigns" role="tabpanel">
+					Active
+				</div>
+				<div aria-labelledby="inactive-campaigns-tab" class="tab-pane fade" id="InactiveCampaigns" role="tabpanel">
+					Inactive
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade feedback-modal" id="suspend-campaign" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<p>Suspending a campaign will suspend all future tasks of the campaign.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn convo-btn-normal mr-1" data-dismiss="modal" id="cancelCampaign" type="button">
+					Cancel
+				</button>
+				<button
+					(click)="markCampaignStatus('Suspended')"
+					[disabled]="isSubmitting"
+					class="convo-btn-danger convo-btn-normal px-4"
+					type="button"
+				>
+					Accept
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade feedback-modal" id="active-campaign" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<p>
+					Reactivating the campaign will activate all future tasks of the campaign. However, all past tasks that were
+					suspended will remain suspended.
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn convo-btn-normal mr-1" data-dismiss="modal" id="cancelSuspendCampaign" type="button">
+					Cancel
+				</button>
+				<button
+					(click)="markCampaignStatus('Reactivating')"
+					[disabled]="isSubmitting"
+					class="convo-btn-primary convo-btn-normal px-4"
+					type="button"
+				>
+					Accept
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+

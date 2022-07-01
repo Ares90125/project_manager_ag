@@ -1,0 +1,35 @@
+.admin-bio-modal {
+	.modal-dialog {
+		max-width: 360px;
+		@media (max-width: 767px) {
+			height: 100%;
+			top: 0;
+			bottom: auto;
+			padding: 12px;
+		}
+	}
+	.modal-content {
+		@media (max-width: 767px) {
+			border-radius: 4px;
+		}
+		.modal-body {
+			padding: 12px;
+			.process-image {
+				figure {
+					margin: 0;
+				}
+				video {
+					width: 100%;
+				}
+			}
+			h6 {
+				margin-top: 18px;
+			}
+			p {
+				padding: 0px 12px;
+				margin: 0;
+				color: #707084;
+			}
+		}
+	}
+}

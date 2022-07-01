@@ -1,0 +1,28 @@
+<section class="container background-box" id="word-cloud-chart" [hidden]="!data?.isWordCloudVisible">
+	<div class="card-inner-wrapper">
+		<div class="flex-box">
+			<h3>Word Cloud</h3>
+			<p>Top keywords that were trending during the selected period</p>
+		</div>
+	</div>
+	<div class="word-cloud-wrapper" id="conversation-word-chart">
+		<div class="row">
+			<div class="col-md-8">
+				<div #wordCloud></div>
+			</div>
+			<div class="col-md-4">
+				<div class="legend" *ngIf="wordCloudDataToBeShown">
+					<label>Top 5 keywords </label>
+					<div class="legend-list" *ngFor="let data of wordCloudDataToBeShown">
+						<div>
+							<h5>{{ data['name'] }}</h5>
+							<p>{{ data['weight'] }} conversations</p>
+						</div>
+						<div class="percentage-value">{{ data['weight'] / totalCount | percent }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['wordCloud'] }}</p>
+	</div>
+</section>

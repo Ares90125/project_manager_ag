@@ -1,0 +1,161 @@
+<div class="campaign-details-wrapper">
+	<div class="daily-report-header">
+		<div class="container">
+			<div class="head-wrapper">
+				<div class="left-section">
+					<ul class="list-unstyled breadcrumb-nav" *ngIf="!isFromBrand">
+						<li (click)="navigateToBrands()"><a>Brands</a></li>
+						<li (click)="navigateToCampaigns()" *ngIf="brand">
+							<a>{{ brand.name }}</a>
+						</li>
+						<li (click)="navigateToCampaigns()"><a>Campaigns</a></li>
+						<li *ngIf="campaign">{{ campaign.campaignName }}</li>
+					</ul>
+					<h4 class="m-0">Community marketing solution</h4>
+				</div>
+			</div>
+		</div>
+		<div class="tabs-wrapper">
+			<div class="container">
+				<ul *ngIf="!isFromBrand" class="nav nav-tabs group-info-tabs" role="tablist">
+					<li
+						(click)="selectedSection = 'details'"
+						*ngIf="campaign && campaign.status !== 'Completed'"
+						class="nav-item"
+					>
+						<a
+							class="nav-link active"
+							data-toggle="tab"
+							href="#daily-report-details"
+							id="daily-report-details-tab"
+							role="tab"
+						>
+							Details
+						</a>
+					</li>
+					<li
+						(click)="selectedSection = 'tasks'"
+						*ngIf="campaign"
+						class="nav-item"
+						[ngClass]="campaign && campaign.status === 'Completed' ? 'active' : ''"
+					>
+						<a
+							class="nav-link"
+							[ngClass]="campaign && campaign.status === 'Completed' ? 'active' : ''"
+							data-toggle="tab"
+							href="#daily-report-task"
+							id="daily-report-task-tab"
+							role="tab"
+						>
+							Tasks
+						</a>
+					</li>
+					<li (click)="selectedSection = 'report'" class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#daily-report-reports" id="daily-report-reports-tab" role="tab">
+							Report
+						</a>
+					</li>
+				</ul>
+				<ul *ngIf="isFromBrand" class="nav nav-tabs group-info-tabs" role="tablist">
+					<li (click)="selectedSection = 'report'" class="nav-item">
+						<a
+							class="nav-link active"
+							data-toggle="tab"
+							href="#daily-report-reports"
+							id="daily-report-reports-tab"
+							role="tab"
+						>
+							Report
+						</a>
+					</li>
+					<li (click)="selectedSection = 'tasks'" class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#daily-report-task" id="daily-report-task-tab" role="tab">
+							Tasks
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="campaign-details-body-section" *ngIf="!isCampaignLoaded">
+		<div class="tab-content">
+			<div
+				*ngIf="selectedSection === 'details'"
+				[ngClass]="!isFromBrand && campaign && campaign.status !== 'Completed' ? 'active' : ''"
+				aria-labelledby="daily-report-details-tab"
+				class="tab-pane"
+				id="daily-report-details"
+				role="tabpanel"
+			>
+				<div class="container">
+					<div *ngIf="campaign && campaign.status === 'PendingApproval'" class="review-proposal-message">
+						<div class="proposal-message-left">
+							<svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="16" cy="16" fill="#FF9C28" r="16" />
+								<path
+									d="M16.0198 21.2424C14.9426 21.2424 14.0396 22.0991 14.0396 23.1212C14.0396 24.1433 14.9426 25 16.0198 25C17.0574 25 18 24.1433 17.9525 23.1663C18 22.0916 17.105 21.2424 16.0198 21.2424Z"
+									fill="white"
+								/>
+								<path
+									d="M15.5287 8.05304C14.5861 8.30856 14 9.12021 14 10.1047C14.0475 10.6984 14.0871 11.2996 14.1347 11.8933C14.2693 14.1554 14.404 16.3725 14.5386 18.6346C14.5861 19.4011 15.2119 19.9572 16.0198 19.9572C16.8277 19.9572 17.4614 19.3635 17.501 18.5895C17.501 18.1235 17.501 17.6951 17.5485 17.2217C17.6356 15.7712 17.7307 14.3208 17.8178 12.8703C17.8653 11.9309 17.9525 10.9915 18 10.0521C18 9.71392 17.9525 9.41331 17.8178 9.1127C17.4139 8.27098 16.4713 7.84261 15.5287 8.05304Z"
+									fill="white"
+								/>
+							</svg>
+
+							<div>
+								<h6>This proposal is not yet accepted by the brand</h6>
+								<small>Brand will be notified about the changes made to this solution</small>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="campaign" style="padding-bottom: 1px">
+						<app-community-marketing-campaign-info-old
+							[(campaign)]="campaign"
+							[(campaignTasks)]="campaignTasks"
+							[isReportEdit]="isReportEdit"
+							(closeCampaignDetail)="closeCampaignDetail($event)"
+						>
+						</app-community-marketing-campaign-info-old>
+					</div>
+				</div>
+			</div>
+			<div
+				*ngIf="selectedSection === 'tasks'"
+				[ngClass]="!isFromBrand && campaign && campaign.status === 'Completed' ? 'active' : ''"
+				aria-labelledby="daily-report-task-tab"
+				class="tab-pane"
+				id="daily-report-task"
+				role="tabpanel"
+			>
+				<div *ngIf="campaignTaskViewDetails" class="container">
+					<app-community-marketing-campaign-tasks-old
+						(closeAddNewTaskPopup)="closeAddNewTaskPopup()"
+						(closeTaskDetailsView)="campaignTaskViewDetails = $event"
+						[campaignTaskViewDetails]="campaignTaskViewDetails"
+						[updatedTaskDetails]="campaignTaskViewDetails"
+						[isCMCEdition]="'true'"
+						[isCsAdmin]="isCsAdmin"
+						[numberOfMissings]="campaignTaskDetails.numberOfMissings"
+						[taskName]="campaignTaskDetails.name"
+						[isFromBrand]="isFromBrand"
+						[campaign]="campaign"
+					>
+					</app-community-marketing-campaign-tasks-old>
+				</div>
+			</div>
+			<div
+				*ngIf="selectedSection === 'report'"
+				[ngClass]="isFromBrand ? 'active' : ''"
+				aria-labelledby="daily-report-reports-tab"
+				class="tab-pane"
+				id="daily-report-reports"
+				role="tabpanel"
+			>
+				<div *ngIf="campaign">
+					<app-community-marketing-campaign-report [campaign]="campaign" [isFromBrand]="isFromBrand">
+					</app-community-marketing-campaign-report>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

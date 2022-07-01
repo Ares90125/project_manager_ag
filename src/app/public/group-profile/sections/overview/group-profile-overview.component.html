@@ -1,0 +1,395 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div
+		class="overview-wrap red-border"
+		[class.expanded-state]="isExpanded"
+		[class.not-completed]="
+			!this.groupProfilePage.description && !this.groupProfilePage.country && !this.groupProfilePage.category
+		"
+	>
+		<div
+			class="completed-flag"
+			*ngIf="!this.groupProfilePage.description && !this.groupProfilePage.country && !this.groupProfilePage.category"
+		>
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="d4a35ac2-aeb3-45ed-8c3a-f91139159629"
+			data-cs-label="Overview"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header [expandedHeight]="renderedOn === 'Mobile' ? '86px' : '68px'" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Overview</span>
+						<button
+							*ngIf="isExpanded"
+							data-cs-id="0b447971-4dd8-43bb-9dd5-b8c362140689"
+							data-cs-label="What's this?"
+							data-cs-source="page"
+							class="convo-btn-bordered what-this-btn"
+							(click)="
+								$event.stopPropagation();
+								recordButtonClick($event, null, null, null, groupProfilePage);
+								openOverviewHelpVideo()
+							"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							What's this?
+						</button>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span
+							>This is the first thing that a brand will see about your group so make sure to write an amazing
+							description.</span
+						>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right section-icon-wrap">
+						<button
+							class="edit-row-btn"
+							data-target="#editOverviewModal"
+							(click)="
+								$event.stopPropagation();
+								openEditOverviewModal = true;
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="2c8af695-8d4d-4677-9c92-3642d0696f52"
+							data-cs-label="Edit Overview Modal"
+							data-cs-source="page"
+							data-toggle="modal"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+						<app-fixed-tooltip
+							*ngIf="viewToolTip"
+							[title]="welcomeTitle"
+							[content]="welcomeContent"
+						></app-fixed-tooltip>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div class="profile-card-body">
+				<div
+					class="overview-row"
+					*ngIf="
+						groupProfilePage.description || groupProfilePage.category || groupProfilePage.country;
+						else unavailable
+					"
+				>
+					<div class="overview-left">
+						<h6>About group</h6>
+						<div
+							[innerHtml]="groupProfilePage.description | sanitizeHtml"
+							class="about-description"
+							id="descriptionSection"
+							[class.active]="showFullDescription"
+						></div>
+						<button
+							*ngIf="groupProfilePage.description !== null && !hideSeeMoreBtn"
+							(click)="
+								showFullDescription = !showFullDescription;
+								scrollToTop();
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							class="see-more-link"
+							data-cs-id="52f44fab-2f81-4f19-a6c3-10e602fe312a"
+							[attr.data-cs-label]="showFullDescription ? 'See Less' : 'See More'"
+							data-cs-source="page"
+						>
+							{{ showFullDescription ? 'See less' : 'See more' }}
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M15.2458 8.08748L14.0708 6.91248L10.2458 10.7291L6.42085 6.91248L5.24585 8.08747L10.2458 13.0875L15.2458 8.08748Z"
+									fill="#3654FF"
+								/>
+							</svg>
+						</button>
+					</div>
+					<div class="overview-right">
+						<ul class="list-unstyled">
+							<li>
+								<h6>Category</h6>
+								<div class="row-with-icon">
+									<img
+										alt=""
+										src="./assets/images/groupCategoryIcons/{{ groupProfilePage?.category?.replace('/', '_') }}.png"
+									/>
+									<span>{{ groupProfilePage.category ? groupProfilePage.category : '-' }}</span>
+								</div>
+							</li>
+							<li>
+								<h6>Location</h6>
+								<div class="row-with-icon">
+									<span class="country-row">
+										<span
+											[class.iti-flag]="groupProfilePage.country"
+											class="{{ groupProfilePage.country | lowercase }}"
+										></span>
+										<span>{{ groupProfilePage.country ? getCountryName(groupProfilePage.country) : '-' }}</span>
+									</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="overview-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M11.8083 4.16667L15.8333 8.19167V15.8333H4.16667V4.16667H11.8083ZM11.8083 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V8.19167C17.5 7.75 17.325 7.325 17.0083 7.01667L12.9833 2.99167C12.675 2.675 12.25 2.5 11.8083 2.5ZM5.83333 12.5H14.1667V14.1667H5.83333V12.5ZM5.83333 9.16667H14.1667V10.8333H5.83333V9.16667ZM5.83333 5.83333H11.6667V7.5H5.83333V5.83333Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Overview</h5>
+			</div>
+		</div>
+		<div class="profile-card-body preview">
+			<div class="overview-row">
+				<div class="overview-left">
+					<h6>About group</h6>
+					<div
+						[innerHtml]="groupProfilePage.description | sanitizeHtml"
+						class="about-description"
+						id="descriptionSection"
+						[class.active]="showFullDescription"
+					></div>
+					<button
+						*ngIf="groupProfilePage.description !== null && !hideSeeMoreBtn"
+						(click)="
+							showFullDescription = !showFullDescription;
+							scrollToTop();
+							recordButtonClick($event, null, null, null, groupProfilePage)
+						"
+						class="see-more-link"
+						data-cs-id="52f44fab-2f81-4f19-a6c3-10e602fe312a"
+						[attr.data-cs-label]="showFullDescription ? 'See Less' : 'See More'"
+						data-cs-source="page"
+					>
+						{{ showFullDescription ? 'See less' : 'See more' }}
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15.2458 8.08748L14.0708 6.91248L10.2458 10.7291L6.42085 6.91248L5.24585 8.08747L10.2458 13.0875L15.2458 8.08748Z"
+								fill="#3654FF"
+							/>
+						</svg>
+					</button>
+				</div>
+				<div class="overview-right">
+					<ul class="list-unstyled">
+						<li>
+							<h6>Category</h6>
+							<div class="row-with-icon">
+								<img
+									alt=""
+									src="./assets/images/groupCategoryIcons/{{ groupProfilePage?.category?.replace('/', '_') }}.png"
+								/>
+								<span>{{ groupProfilePage.category }}</span>
+							</div>
+						</li>
+						<li>
+							<h6>Location</h6>
+							<div class="row-with-icon">
+								<span class="country-row">
+									<span class="iti-flag {{ groupProfilePage.country | lowercase }}"></span>
+									<span>{{ getCountryName(groupProfilePage.country) }}</span>
+								</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #unavailable>
+	<div class="unavailable-state-wrap">
+		<div class="unavailable-state">
+			<div class="overlay"></div>
+			<figure>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.0003 1.66666C5.40033 1.66666 1.66699 5.39999 1.66699 9.99999C1.66699 14.6 5.40033 18.3333 10.0003 18.3333C14.6003 18.3333 18.3337 14.6 18.3337 9.99999C18.3337 5.39999 14.6003 1.66666 10.0003 1.66666ZM10.8337 14.1667H9.16699V12.5H10.8337V14.1667ZM10.8337 10.8333H9.16699V5.83332H10.8337V10.8333Z"
+						fill="#EB5757"
+					/>
+				</svg>
+			</figure>
+			<h6>This section is hidden because you haven’t entered details for this group.</h6>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Start : Edit overview Overlay -->
+<div class="modal file-alert editOverviewModal" *ngIf="openEditOverviewModal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit overview</h5>
+				<button
+					#closeButtonForEditOverview
+					aria-label="Close"
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); reset()"
+					[disabled]="isSaveInProgress"
+					data-cs-id="a9c4ed56-c23b-41f2-8167-26133898da56"
+					data-cs-label="Close"
+					data-cs-source="page"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="bio-card">
+					<h6>Write a brief description about this group. <sup>*</sup></h6>
+					<quill-editor
+						#meQuill
+						[placeholder]="'Write description here...'"
+						(onEditorCreated)="getMeEditorInstance($event)"
+						[(ngModel)]="profileDescription"
+						[debounceTime]="1000"
+						[modules]="quillConfig"
+						(ngModelChange)="checkValidations()"
+						[class.inactive]="isQuillInvalid"
+					>
+					</quill-editor>
+					<span class="error-msg" *ngIf="isQuillInvalid">
+						<img alt="" src="assets/images/error-info-icon.svg" />
+						Description cannot be empty!
+					</span>
+
+					<div class="info-box">
+						<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.83301 9.9987H9.16634V11.332H7.83301V9.9987ZM7.83301 4.66536H9.16634V8.66536H7.83301V4.66536ZM8.49301 1.33203C4.81301 1.33203 1.83301 4.3187 1.83301 7.9987C1.83301 11.6787 4.81301 14.6654 8.49301 14.6654C12.1797 14.6654 15.1663 11.6787 15.1663 7.9987C15.1663 4.3187 12.1797 1.33203 8.49301 1.33203ZM8.49967 13.332C5.55301 13.332 3.16634 10.9454 3.16634 7.9987C3.16634 5.05203 5.55301 2.66536 8.49967 2.66536C11.4463 2.66536 13.833 5.05203 13.833 7.9987C13.833 10.9454 11.4463 13.332 8.49967 13.332Z"
+								fill="#A26700"
+							/>
+						</svg>
+						<span
+							>Changes made to <strong>‘Group Category’</strong> or <strong>‘Group Location’</strong> will be reflected
+							in your group profile and all brand pitches of this group.</span
+						>
+					</div>
+
+					<div class="overview-select-wrap">
+						<div class="form-group">
+							<label>Group Category <sup>*</sup></label>
+							<div class="custom-dropdown dropdown pills-dropdown">
+								<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+									<div class="dropdown-toggle-item">
+										<img src="{{ 'assets/images/groupCategoryIcons/' + groupProfilePage?.category + '.png' }}" alt="" />
+										<span *ngIf="currentCategory || groupProfilePage?.category; else noCategory" class="placeholder">
+											{{ currentCategory || groupProfilePage?.category }}
+										</span>
+									</div>
+									<ng-template #noCategory>
+										<span class="placeholder">Select category</span>
+									</ng-template>
+								</div>
+								<div class="dropdown-menu-wrapper dropdown-menu">
+									<div class="dropdown-container">
+										<div
+											*ngFor="let categoryName of businessCategory"
+											class="form-check category-item"
+											(click)="changeBusinessCategory(categoryName)"
+										>
+											<div class="dropdown-item">
+												<span class="country-row">
+													<img src="{{ 'assets/images/groupCategoryIcons/' + categoryName + '.png' }}" alt="" />
+													<span>{{ categoryName }}</span>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="input-wrap location-dropdown">
+							<label>Location <sup>*</sup></label>
+							<div class="custom-dropdown dropdown" ngxDropdown>
+								<button
+									class="btn-block dropdown-toggle"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+									type="button"
+									dropdown-toggle
+								>
+									<span class="country-row">
+										<span class="iti-flag {{ selectedCountry | lowercase }}"></span>
+										<span>{{ getCountryName(selectedCountry) }}</span>
+									</span>
+								</button>
+								<div
+									class="dropdown-menu-wrapper dropdown-menu"
+									aria-labelledby="dropdownMenu"
+									aria-labelledby="dropdownMenuLink"
+									ngxDropdownMenu
+								>
+									<div class="dropdown-item" *ngFor="let country of countryList" (click)="selectedLocation(country)">
+										<span class="country-row">
+											<span class="iti-flag {{ country.isoCode | lowercase }}"></span>
+											<span>{{ country.name }}</span>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); closeButtonForEditOverview.click()"
+					[disabled]="isSaveInProgress || !isSaveEnabled()"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="8f9772f9-2288-4dab-8d13-009a9eeb1352"
+					data-cs-label="Save changes"
+					data-cs-source="page"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End :Edit overview Overlay -->
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showOverviewVideo">
+	<app-what-this-video
+		[title]="'Overview'"
+		[videoLink]="'./assets/videos/overview.mp4'"
+		(closeVideoPlayer)="closeVideoPlayer($event)"
+	></app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

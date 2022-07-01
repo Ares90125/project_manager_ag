@@ -1,0 +1,42 @@
+<div class="settings-admin-bio-wrapper">
+	<div *ngIf="renderedOn === 'Mobile'" class="mobile-head-wrap">
+		<div>
+			<button
+				(click)="recordButtonClick($event); goBack('/group-admin/settings')"
+				data-cs-id="2e5574fd-3984-44f9-84a9-e22d19b1555b"
+				data-cs-label="Back"
+				data-cs-source="page"
+			>
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M19 11H7.83001L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.71001 11.29C4.32001 11.68 4.32001 12.31 4.71001 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.83001 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+						fill="#33334F"
+					/>
+				</svg>
+			</button>
+			<h5>Edit your bio</h5>
+		</div>
+	</div>
+
+	<div class="back-btn-wrap" *ngIf="renderedOn === 'Desktop'">
+		<button
+			class="back-btn"
+			(click)="recordButtonClick($event); goBack('/group-admin/settings')"
+			data-cs-id="ddc67290-f8a5-4546-beb7-3ea2b7258ec9"
+			data-cs-label="Back"
+			data-cs-source="page"
+		>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M12.2582 5.59173C12.5832 5.91673 12.5832 6.44173 12.2582 6.76673L9.02487 10.0001L12.2582 13.2334C12.5832 13.5584 12.5832 14.0834 12.2582 14.4084C11.9332 14.7334 11.4082 14.7334 11.0832 14.4084L7.2582 10.5834C6.9332 10.2584 6.9332 9.73339 7.2582 9.40839L11.0832 5.58339C11.3999 5.26673 11.9332 5.26673 12.2582 5.59173Z"
+					fill="#828282"
+				/>
+			</svg>
+			<span>Back</span>
+		</button>
+
+		<h5>Edit your bio</h5>
+	</div>
+
+	<app-admin-bio></app-admin-bio>
+</div>

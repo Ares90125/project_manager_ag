@@ -1,0 +1,160 @@
+<div class="custom-modal-wrapper" *ngIf="!hideAddAppOverlay">
+	<div class="custom-modal-overlay"></div>
+	<div class="custom-modal-content">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Add app to your groups</h5>
+					<button
+						(click)="closeAddAppToGroupPopup($event)"
+						class="close"
+						data-cs-id="8007f9e8-e9f6-46ff-a764-428039c1593d"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+						type="button"
+					>
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-before-body">
+					<div class="progress-wrapepr">
+						<div class="group-counts">{{ addedGroupCount }}/{{ groups?.length }} Groups</div>
+
+						<div class="progress">
+							<div class="progress-completed" [ngStyle]="{'width.%': (addedGroupCount / groups?.length) * 100}"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="app-install-modal-content">
+						<div class="list-item-wrapper">
+							<div class="list-item" *ngFor="let group of groups; let i = index">
+								<div class="left-section">
+									<div class="img-wrapper">
+										<img alt="" class="group-img" src="assets/images/default_group_image.jpg" />
+									</div>
+									<div class="name-wrapper">
+										<p class="group-name">
+											{{ group.name }}
+										</p>
+										<span class="tooltip-text-wrapper">{{ group.name }}</span>
+									</div>
+									<p class="member-count">
+										{{ group.memberCount | shortNumber }}
+										{{ group.memberCount | i18nPlural: pluralWordMapping['member'] | lowercase }}
+									</p>
+								</div>
+
+								<div class="right-section install-section" [ngSwitch]="group?.buttonState">
+									<ng-container *ngSwitchCase="'AddApp'">
+										<ng-container *ngIf="group.role !== 'Moderator'">
+											<a
+												(click)="changeButtonStateToRefresh(group, i, $event)"
+												data-cs-id="a87e885a-8b5f-46c5-bfe4-b1acdf287e31"
+												data-cs-label="Add app to group"
+												data-cs-source="dialog"
+												*ngIf="renderedOn === 'Desktop'; else mobile"
+												href="https://www.facebook.com/groups/{{
+													group.fbGroupId
+												}}/edit/?launch_popover=app_detail&app_id=336167437102103"
+												target="_blank"
+												rel="noopener"
+											>
+												<button class="convo-btn-normal convo-btn-primary btn-install" type="button">
+													Add app to group
+												</button>
+											</a>
+											<ng-template #mobile>
+												<a
+													(click)="openMobileOverlay(group, $event)"
+													data-cs-id="a87e885a-8b5f-46c5-bfe4-b1acdf287e31"
+													data-cs-label="Add app to group"
+													data-cs-source="dialog"
+													href="javascript:"
+												>
+													<button class="convo-btn-normal convo-btn-primary btn-install" type="button">
+														Add app to group
+													</button>
+												</a>
+											</ng-template>
+										</ng-container>
+									</ng-container>
+
+									<ng-container *ngSwitchCase="'Refresh'">
+										<button
+											(click)="changeBtnStateToRefreshing(group, i, $event)"
+											data-cs-id="73224b52-ad73-45bd-95a6-be5548006668"
+											data-cs-label="Refresh"
+											data-cs-source="dialog"
+											class="convo-btn-normal convo-btn-tertiary btn-refresh"
+											type="button"
+										>
+											<svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M12.4565 8.39218C13.0954 7.05067 13.1737 5.54052 12.6771 4.14013C11.6518 1.24986 8.46621 -0.267465 5.57508 0.757238C4.17575 1.25365 3.06472 2.25873 2.43196 3.56942L1.82009 1.84442C1.742 1.62491 1.50139 1.50988 1.28104 1.58777C1.06132 1.66565 0.946506 1.9071 1.02439 2.12682L2.00625 4.8951C2.0436 5.00063 2.12149 5.08674 2.22237 5.13508C2.27957 5.1623 2.34162 5.17602 2.40389 5.17602C2.45159 5.17602 2.49929 5.168 2.54509 5.15175L5.46744 4.11523C5.68716 4.03734 5.80198 3.79589 5.72409 3.57618C5.646 3.35667 5.40539 3.24164 5.18504 3.31952L3.13943 4.04515C3.66624 2.88052 4.63227 1.9873 5.85727 1.55273C8.30812 0.683367 11.0114 1.97042 11.8814 4.42253C12.3027 5.61039 12.2364 6.89111 11.6942 8.02894C11.152 9.16677 10.1994 10.0254 9.01138 10.4469C7.23677 11.0767 5.26039 10.5921 3.97714 9.213C3.81842 9.04182 3.55079 9.03296 3.38068 9.19147C3.20993 9.35018 3.20043 9.61739 3.35915 9.78793C4.43155 10.9407 5.91468 11.563 7.43306 11.563C8.0559 11.563 8.68508 11.4583 9.29357 11.2421C10.6944 10.7457 11.8174 9.73368 12.4565 8.39218Z"
+													fill="white"
+													stroke="white"
+													stroke-width="0.3"
+												/>
+											</svg>
+											<span>Refresh</span>
+										</button>
+									</ng-container>
+
+									<ng-container *ngSwitchCase="'Refreshing'">
+										<!-- Loading state -->
+										<div class="refreshing-state"><span class="bt-spinner"></span> Refreshing...</div>
+									</ng-container>
+
+									<ng-container *ngSwitchCase="'Added'">
+										<div class="success-state">
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="12" fill="#00C389" />
+												<path
+													fill-rule="evenodd"
+													clip-rule="evenodd"
+													d="M16.334 9.59588L10.4803 15.3332L7.33398 12.2498L8.28217 11.3204L10.4802 13.4745L15.3857 8.6665L16.334 9.59588Z"
+													fill="white"
+												/>
+											</svg>
+											<span>Added</span>
+										</div>
+									</ng-container>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="note-info">
+						Once you click on Add App to Group a new tab will open to Facebook group settings page. Click on Add and
+						<strong>come back</strong> to this page
+					</div>
+					<a
+						(click)="showHowAddToApp($event)"
+						class="btn btn-link"
+						data-cs-id="b6d57797-d916-488c-8f04-5766672afaee"
+						data-cs-label="How to add app to group"
+						data-cs-source="dialog"
+						href="javascript:"
+						>How to add app to group?</a
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-container *ngIf="showHowToAddGroupPopup">
+	<app-add-app-to-group-overlay
+		(closeAuthorizeConvoOverlay)="closeAuthorizeConvoOverlay($event)"
+	></app-add-app-to-group-overlay>
+</ng-container>
+<!-- How to Add App to Groups ends here -->
+
+<!-- Install overlay for mobile starts here -->
+<ng-container *ngIf="showMobileInstallationOverlay">
+	<app-mobile-installation (closeMobileInstallOverlay)="closeMobileInstallOverlay($event)"></app-mobile-installation>
+</ng-container>
+<!-- Install overlay for mobile ends here -->

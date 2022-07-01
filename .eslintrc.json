@@ -1,0 +1,58 @@
+{
+	"root": true,
+	"env": {
+		"node": true,
+		"es2021": true
+	},
+	"ignorePatterns": ["projects/**/*"],
+	"overrides": [
+		{
+			"files": ["*.ts"],
+			"excludedFiles": ["./cypress/**", "./playwright/**"],
+			"parserOptions": {
+				"project": ["./tsconfig.json"],
+				"createDefaultProgram": true
+			},
+			"extends": ["plugin:@angular-eslint/recommended", "plugin:@angular-eslint/template/process-inline-templates"],
+			"rules": {
+				"@angular-eslint/component-selector": [
+					"error",
+					{
+						"prefix": "app",
+						"style": "kebab-case",
+						"type": "element"
+					}
+				],
+				"@angular-eslint/directive-selector": [
+					"error",
+					{
+						"prefix": "app",
+						"style": "camelCase",
+						"type": "attribute"
+					}
+				]
+			}
+		},
+		{
+			"files": ["*.spec.ts"],
+			"excludedFiles": ["./src/**"],
+			"parserOptions": {
+				"project": ["./playwright/tsconfig.json", "./cypress/tsconfig.json"]
+			},
+			"extends": [
+				"plugin:playwright/playwright-test",
+				"plugin:cypress/recommended",
+				"plugin:chai-friendly/recommended"
+			],
+			"rules": {
+				"playwright/missing-playwright-await": ["error", {"customMatchers": ["toBeCustomThing"]}],
+				"no-unused-expressions": "off"
+			}
+		},
+		{
+			"files": ["*.html"],
+			"extends": ["plugin:@angular-eslint/template/recommended"],
+			"rules": {}
+		}
+	]
+}

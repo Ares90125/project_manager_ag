@@ -1,0 +1,101 @@
+<div class="preview-docs-wrap">
+	<div *ngFor="let file of files; let i = index" class="preview-docs-row">
+		<div (click)="triggerFileDownload(i)" *ngIf="!file.fileThumbnailURL" class="docs-row-left">
+			<div class="uploaded-file">
+				<figure *ngIf="fileExtensionTypes[i] === 'type1' && !defaultIconCheck[i]">
+					<img class="real-image" src="{{ file?.url }}" alt="" (error)="defaultIconCheck[i] = true" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type1' && defaultIconCheck[i]" class="file-image-icon">
+					<img class="file-icon" src="./assets/images/file-image-icon.svg" alt="" />
+				</figure>
+				<video
+					*ngIf="fileExtensionTypes[i] === 'type2' && !defaultIconCheck[i]"
+					class="real-video"
+					src="{{ file?.url + '#t=0.001' }}"
+					(error)="defaultIconCheck[i] = true"
+					type="video/mp4"
+				></video>
+				<figure *ngIf="fileExtensionTypes[i] === 'type2' && defaultIconCheck[i]" class="file-video-icon">
+					<img class="file-icon" src="./assets/images/file-video-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type3'" class="file-xls-icon">
+					<img class="file-icon" src="assets/images/file-xls-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type4'" class="file-pdf-icon">
+					<img class="file-icon" src="assets/images/file-pdf-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type5'" class="file-ppt-icon">
+					<img class="file-icon" src="assets/images/file-ppt-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type6'" class="file-zip-icon">
+					<img class="file-icon" src="assets/images/file-zip-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type7'" class="file-music-icon">
+					<img class="file-icon" src="assets/images/file-music-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type8'" class="file-doc-icon">
+					<img class="file-icon" src="assets/images/file-doc-icon.svg" alt="" />
+				</figure>
+				<figure *ngIf="fileExtensionTypes[i] === 'type9'" class="file-random-icon">
+					<img class="file-icon" src="assets/images/file-random-icon.svg" alt="" />
+				</figure>
+			</div>
+		</div>
+		<div (click)="triggerFileDownload(i)" *ngIf="!file.fileThumbnailURL" class="docs-row-right">
+			<div class="docs-info">
+				<h6 *ngIf="file.title" title="{{ file.title }}">{{ file.title }}</h6>
+				<h6 *ngIf="!file.title" title="{{ file.title }}">{{ file.fileTitle }}</h6>
+				<small>{{ file?.fileExtension | uppercase }} · {{ file.size | fileSize }}</small>
+			</div>
+			<a
+				id="downloader-{{ i }}"
+				href="{{ file.url }}"
+				download="{{ file.title }}"
+				target="_blank"
+				(click)="recordButtonClick($event, null, null, {file_type: file?.fileExtension})"
+				data-cs-id="0b980890-9ed1-454b-b415-56b19990d5d3"
+				data-cs-label="Download file"
+				data-cs-source="page"
+				class="download-btn"
+			>
+				<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M11.8331 6.79687H10.7731V3.46354C10.7731 3.09687 10.4731 2.79688 10.1064 2.79688H7.43978C7.07311 2.79688 6.77311 3.09687 6.77311 3.46354V6.79687H5.71311C5.11978 6.79687 4.81978 7.51687 5.23978 7.93687L8.29978 10.9969C8.55978 11.2569 8.97978 11.2569 9.23978 10.9969L12.2998 7.93687C12.7198 7.51687 12.4264 6.79687 11.8331 6.79687ZM4.10645 13.4635C4.10645 13.8302 4.40645 14.1302 4.77311 14.1302H12.7731C13.1398 14.1302 13.4398 13.8302 13.4398 13.4635C13.4398 13.0969 13.1398 12.7969 12.7731 12.7969H4.77311C4.40645 12.7969 4.10645 13.0969 4.10645 13.4635Z"
+						fill="#33334F"
+					/>
+				</svg>
+				<span>Download</span>
+			</a>
+		</div>
+		<div (click)="redirectToUrl(file?.url)" *ngIf="file.fileThumbnailURL" class="docs-row-left">
+			<div class="uploaded-file">
+				<ng-container *ngIf="file.fileThumbnailURL !== 'no-image'; else defaultMetaImage">
+					<figure>
+						<img (error)="showDefaultFilePreview($event)" [src]="file?.fileThumbnailURL" alt="" class="real-image" />
+					</figure>
+				</ng-container>
+				<ng-template #defaultMetaImage>
+					<figure>
+						<img alt="" class="real-image" src="assets/images/default_meta_image.png" />
+					</figure>
+				</ng-template>
+			</div>
+		</div>
+		<div (click)="redirectToUrl(file?.url)" *ngIf="file.fileThumbnailURL" class="docs-row-right">
+			<div class="docs-info">
+				<div *ngIf="!shrinkName(file?.fileTitle)" class="fakeTitle"></div>
+				<h6 *ngIf="shrinkName(file?.fileTitle)">{{ shrinkName(file?.fileTitle) }}</h6>
+				<span class="link" title="{{ file.url }}">{{ file?.url }}</span>
+			</div>
+			<a class="download-btn" href="javascript:void(0)">
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.6254 10.2778H2.06988V1.72222H6.34766V0.5H2.06988C1.39155 0.5 0.847656 1.05 0.847656 1.72222V10.2778C0.847656 10.95 1.39155 11.5 2.06988 11.5H10.6254C11.2977 11.5 11.8477 10.95 11.8477 10.2778V6H10.6254V10.2778ZM7.56988 0.5V1.72222H9.76377L3.75655 7.72944L4.61821 8.59111L10.6254 2.58389V4.77778H11.8477V0.5H7.56988Z"
+						fill="#33334F"
+					/>
+				</svg>
+				<span>View</span>
+			</a>
+		</div>
+	</div>
+</div>

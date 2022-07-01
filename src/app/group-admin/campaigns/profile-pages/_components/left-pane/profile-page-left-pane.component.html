@@ -1,0 +1,339 @@
+<div class="profile-page-left-pane-wrapper">
+	<ng-container *ngIf="isProfileLoaded; else LoadingState">
+		<div *ngIf="profilePage" class="profile-page-header">
+			<div class="profile-header-left">
+				<button
+					(click)="navigateBackToProfilesListPage(); recordButtonClick($event, null, null, null, profilePage)"
+					data-cs-id="826b4c9b-4d0a-4ddd-b7e1-d42ea375af10"
+					data-cs-label="Overview"
+					data-cs-source="page"
+					class="back-btn"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19 11H7.82998L12.71 6.12C13.1 5.73 13.1 5.09 12.71 4.7C12.32 4.31 11.69 4.31 11.3 4.7L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<figure>
+					<img [fbEntityId]="profilePage.fbGroupId" alt="" src="{{ profilePage.coverImageUrl }}" />
+				</figure>
+				<div class="profile-info">
+					<h6>{{ profilePage?.name }}</h6>
+					<small>{{ profilePage?.isDefaultProfile ? 'Customize Group Profile' : 'Customize Brand Pitch' }}</small>
+				</div>
+			</div>
+		</div>
+		<div class="main-sidebar-wrapper" *ngIf="renderedOn === 'Desktop'">
+			<div class="main-sidebar">
+				<h6>PROFILE PAGE</h6>
+				<div class="links-wrap">
+					<ul class="list-unstyled">
+						<li *ngIf="false">
+							<a
+								[routerLink]="
+									'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/overview'
+								"
+								(click)="activeRoute($event)"
+								data-cs-id="4bfc8c61-489e-482c-9775-5afd47edfcb0"
+								data-cs-label="Overview"
+								data-cs-source="page"
+								[class.active]="isOverview"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.8333 4.16667V5.83333H12.5V4.16667H15.8333ZM7.5 4.16667V9.16667H4.16667V4.16667H7.5ZM15.8333 10.8333V15.8333H12.5V10.8333H15.8333ZM7.5 14.1667V15.8333H4.16667V14.1667H7.5ZM17.5 2.5H10.8333V7.5H17.5V2.5ZM9.16667 2.5H2.5V10.8333H9.16667V2.5ZM17.5 9.16667H10.8333V17.5H17.5V9.16667ZM9.16667 12.5H2.5V17.5H9.16667V12.5Z"
+									/>
+								</svg>
+								<span>Overview</span>
+							</a>
+						</li>
+						<li>
+							<a
+								[routerLink]="
+									'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/edit'
+								"
+								(click)="activeRoute($event)"
+								data-cs-id="affa32f7-0606-4b70-a370-44bcbca8adb3"
+								data-cs-label="Edit Page"
+								data-cs-source="page"
+								[class.active]="isEdit"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M11.7167 7.51667L12.4833 8.28333L4.93333 15.8333H4.16667V15.0667L11.7167 7.51667ZM14.7167 2.5C14.5083 2.5 14.2917 2.58333 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C15.1417 2.575 14.9333 2.5 14.7167 2.5ZM11.7167 5.15833L2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833Z"
+									/>
+								</svg>
+								<span>Edit Page</span></a
+							>
+						</li>
+						<li *ngIf="false">
+							<a
+								[routerLink]="
+									'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/pricing'
+								"
+								(click)="activeRoute($event)"
+								data-cs-id="b535621d-3be9-49d0-8d57-0c699dfcdc73"
+								data-cs-label="Pricing"
+								data-cs-source="page"
+								[class.active]="isPricing"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.8333 11.6667V4.99999C15.8333 4.08333 15.0833 3.33333 14.1666 3.33333H2.49992C1.58325 3.33333 0.833252 4.08333 0.833252 4.99999V11.6667C0.833252 12.5833 1.58325 13.3333 2.49992 13.3333H14.1666C15.0833 13.3333 15.8333 12.5833 15.8333 11.6667ZM14.1666 11.6667H2.49992V4.99999H14.1666V11.6667ZM8.33325 5.83333C6.94992 5.83333 5.83325 6.94999 5.83325 8.33333C5.83325 9.71666 6.94992 10.8333 8.33325 10.8333C9.71658 10.8333 10.8333 9.71666 10.8333 8.33333C10.8333 6.94999 9.71658 5.83333 8.33325 5.83333ZM19.1666 5.83333V15C19.1666 15.9167 18.4166 16.6667 17.4999 16.6667H3.33325C3.33325 15.8333 3.33325 15.9167 3.33325 15H17.4999V5.83333C18.4166 5.83333 18.3333 5.83333 19.1666 5.83333Z"
+									/>
+								</svg>
+								<span>Pricing</span>
+							</a>
+						</li>
+						<li>
+							<a
+								[routerLink]="
+									'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/settings'
+								"
+								(click)="activeRoute($event)"
+								data-cs-id="e1597995-602a-490b-883a-9e51952424cf"
+								data-cs-label="Settings"
+								data-cs-source="page"
+								[class.active]="isSettings"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M16.1915 10.8167C16.2249 10.55 16.2499 10.2833 16.2499 9.99999C16.2499 9.71666 16.2249 9.44999 16.1915 9.18332L17.9499 7.80832C18.1082 7.68332 18.1499 7.45832 18.0499 7.27499L16.3832 4.39166C16.3082 4.25832 16.1665 4.18332 16.0165 4.18332C15.9665 4.18332 15.9165 4.19166 15.8749 4.20832L13.7999 5.04166C13.3665 4.70832 12.8999 4.43332 12.3915 4.22499L12.0749 2.01666C12.0499 1.81666 11.8749 1.66666 11.6665 1.66666H8.3332C8.12487 1.66666 7.94987 1.81666 7.92487 2.01666L7.6082 4.22499C7.09987 4.43332 6.6332 4.71666 6.19987 5.04166L4.12487 4.20832C4.07487 4.19166 4.02487 4.18332 3.97487 4.18332C3.8332 4.18332 3.69153 4.25832 3.61653 4.39166L1.94987 7.27499C1.84153 7.45832 1.89153 7.68332 2.04987 7.80832L3.8082 9.18332C3.77487 9.44999 3.74987 9.72499 3.74987 9.99999C3.74987 10.275 3.77487 10.55 3.8082 10.8167L2.04987 12.1917C1.89153 12.3167 1.84987 12.5417 1.94987 12.725L3.61653 15.6083C3.69153 15.7417 3.8332 15.8167 3.9832 15.8167C4.0332 15.8167 4.0832 15.8083 4.12487 15.7917L6.19987 14.9583C6.6332 15.2917 7.09987 15.5667 7.6082 15.775L7.92487 17.9833C7.94987 18.1833 8.12487 18.3333 8.3332 18.3333H11.6665C11.8749 18.3333 12.0499 18.1833 12.0749 17.9833L12.3915 15.775C12.8999 15.5667 13.3665 15.2833 13.7999 14.9583L15.8749 15.7917C15.9249 15.8083 15.9749 15.8167 16.0249 15.8167C16.1665 15.8167 16.3082 15.7417 16.3832 15.6083L18.0499 12.725C18.1499 12.5417 18.1082 12.3167 17.9499 12.1917L16.1915 10.8167ZM14.5415 9.39166C14.5749 9.64999 14.5832 9.82499 14.5832 9.99999C14.5832 10.175 14.5665 10.3583 14.5415 10.6083L14.4249 11.55L15.1665 12.1333L16.0665 12.8333L15.4832 13.8417L14.4249 13.4167L13.5582 13.0667L12.8082 13.6333C12.4499 13.9 12.1082 14.1 11.7665 14.2417L10.8832 14.6L10.7499 15.5417L10.5832 16.6667H9.41653L9.2582 15.5417L9.12487 14.6L8.24153 14.2417C7.8832 14.0917 7.54987 13.9 7.21653 13.65L6.4582 13.0667L5.57487 13.425L4.51653 13.85L3.9332 12.8417L4.8332 12.1417L5.57487 11.5583L5.4582 10.6167C5.4332 10.3583 5.41653 10.1667 5.41653 9.99999C5.41653 9.83332 5.4332 9.64166 5.4582 9.39166L5.57487 8.44999L4.8332 7.86666L3.9332 7.16666L4.51653 6.15832L5.57487 6.58332L6.44153 6.93332L7.19153 6.36666C7.54987 6.09999 7.89153 5.89999 8.2332 5.75832L9.11653 5.39999L9.24987 4.45832L9.41653 3.33332H10.5749L10.7332 4.45832L10.8665 5.39999L11.7499 5.75832C12.1082 5.90832 12.4415 6.09999 12.7749 6.34999L13.5332 6.93332L14.4165 6.57499L15.4749 6.14999L16.0582 7.15832L15.1665 7.86666L14.4249 8.44999L14.5415 9.39166ZM9.99987 6.66666C8.1582 6.66666 6.66653 8.15832 6.66653 9.99999C6.66653 11.8417 8.1582 13.3333 9.99987 13.3333C11.8415 13.3333 13.3332 11.8417 13.3332 9.99999C13.3332 8.15832 11.8415 6.66666 9.99987 6.66666ZM9.99987 11.6667C9.0832 11.6667 8.3332 10.9167 8.3332 9.99999C8.3332 9.08332 9.0832 8.33332 9.99987 8.33332C10.9165 8.33332 11.6665 9.08332 11.6665 9.99999C11.6665 10.9167 10.9165 11.6667 9.99987 11.6667Z"
+									/>
+								</svg>
+								<span>Settings</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="mobile-menu-wrap" *ngIf="renderedOn === 'Mobile'">
+			<nav>
+				<ul class="list-unstyled">
+					<li *ngIf="false">
+						<a
+							[routerLink]="
+								'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/overview'
+							"
+							(click)="activeRoute($event)"
+							data-cs-id="4bfc8c61-489e-482c-9775-5afd47edfcb0"
+							data-cs-label="Overview"
+							data-cs-source="page"
+							[class.active]="isOverview"
+						>
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M15.8333 4.16667V5.83333H12.5V4.16667H15.8333ZM7.5 4.16667V9.16667H4.16667V4.16667H7.5ZM15.8333 10.8333V15.8333H12.5V10.8333H15.8333ZM7.5 14.1667V15.8333H4.16667V14.1667H7.5ZM17.5 2.5H10.8333V7.5H17.5V2.5ZM9.16667 2.5H2.5V10.8333H9.16667V2.5ZM17.5 9.16667H10.8333V17.5H17.5V9.16667ZM9.16667 12.5H2.5V17.5H9.16667V12.5Z"
+								/>
+							</svg>
+							<span>Overview</span>
+						</a>
+					</li>
+					<li>
+						<a
+							[routerLink]="
+								'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/edit'
+							"
+							(click)="activeRoute($event)"
+							data-cs-id="affa32f7-0606-4b70-a370-44bcbca8adb3"
+							data-cs-label="Edit Page"
+							data-cs-source="page"
+							[class.active]="isEdit"
+						>
+							<span>Edit Page</span></a
+						>
+					</li>
+					<li *ngIf="false">
+						<a
+							[routerLink]="
+								'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/pricing'
+							"
+							(click)="activeRoute($event)"
+							data-cs-id="b535621d-3be9-49d0-8d57-0c699dfcdc73"
+							data-cs-label="Pricing"
+							data-cs-source="page"
+							[class.active]="isPricing"
+						>
+							<span>Pricing</span>
+						</a>
+					</li>
+					<li>
+						<a
+							[routerLink]="
+								'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/settings'
+							"
+							(click)="activeRoute($event)"
+							data-cs-id="e1597995-602a-490b-883a-9e51952424cf"
+							data-cs-label="Settings"
+							data-cs-source="page"
+							[class.active]="isSettings"
+						>
+							<span>Settings</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</ng-container>
+	<ng-template #LoadingState>
+		<div class="profile-page-header">
+			<div class="profile-header-left">
+				<button (click)="navigateBackToProfilesListPage()" class="back-btn">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19 11H7.82998L12.71 6.12C13.1 5.73 13.1 5.09 12.71 4.7C12.32 4.31 11.69 4.31 11.3 4.7L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<app-loading-shimmer [type]="4"></app-loading-shimmer>
+			</div>
+			<div class="profile-header-right" *ngIf="renderedOn === 'Desktop'">
+				<button
+					class="convo-btn-bordered convo-btn-normal"
+					data-cs-id="c26638c0-3c6d-4c71-a7d0-c618e2ff9ef2"
+					data-cs-label="Preview page"
+					data-cs-source="page"
+					(click)="recordButtonClick($event)"
+					[routerLink]="
+						'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/preview'
+					"
+				>
+					<img alt="" src="./assets/images/link-icon.svg" /><span>Preview page</span>
+				</button>
+				<app-fixed-tooltip
+					*ngIf="viewToolTip"
+					[content]="welcomeContent"
+					[exception]="true"
+					[title]="welcomeTitle"
+				></app-fixed-tooltip>
+				<div class="section-icon-wrap">
+					<span>
+						<button class="convo-btn-primary convo-btn-normal" disabled>
+							<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M12 10.7199C11.4933 10.7199 11.04 10.9199 10.6933 11.2333L5.94 8.46659C5.97333 8.31325 6 8.15992 6 7.99992C6 7.83992 5.97333 7.68659 5.94 7.53325L10.64 4.79325C11 5.12659 11.4733 5.33325 12 5.33325C13.1067 5.33325 14 4.43992 14 3.33325C14 2.22659 13.1067 1.33325 12 1.33325C10.8933 1.33325 10 2.22659 10 3.33325C10 3.49325 10.0267 3.64659 10.06 3.79992L5.36 6.53992C5 6.20659 4.52667 5.99992 4 5.99992C2.89333 5.99992 2 6.89325 2 7.99992C2 9.10659 2.89333 9.99992 4 9.99992C4.52667 9.99992 5 9.79325 5.36 9.45992L10.1067 12.2333C10.0733 12.3733 10.0533 12.5199 10.0533 12.6666C10.0533 13.7399 10.9267 14.6133 12 14.6133C13.0733 14.6133 13.9467 13.7399 13.9467 12.6666C13.9467 11.5933 13.0733 10.7199 12 10.7199Z"
+									fill="white"
+								/>
+							</svg>
+							<span>Share</span>
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="main-sidebar-wrapper" *ngIf="renderedOn === 'Desktop'">
+			<div class="main-sidebar">
+				<h6>PROFILE PAGE</h6>
+				<div class="links-wrap">
+					<ul class="list-unstyled loading">
+						<li>
+							<app-loading-shimmer [type]="5"></app-loading-shimmer>
+						</li>
+						<li>
+							<app-loading-shimmer [type]="5"></app-loading-shimmer>
+						</li>
+						<li>
+							<app-loading-shimmer [type]="5"></app-loading-shimmer>
+						</li>
+						<li>
+							<app-loading-shimmer [type]="5"></app-loading-shimmer>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+</div>
+
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		[copyUrl]="profilePage?.profileUrl"
+		type="profile"
+		[profilePage]="profilePage"
+		(closePopup)="closePopup($event)"
+	></app-share-widget>
+</ng-container>
+<ng-container *ngIf="profilePage?.isSuccessAnimationNeeded">
+	<div class="modal file-alert">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<div class="close-btn">
+						<button
+							(click)="
+								recordButtonClick($event, null, null, null, profilePage); profilePage.isSuccessAnimationNeeded = false
+							"
+							class="close"
+							data-cs-id="8e0cccb5-c726-4c98-9b04-b808dc91416c"
+							data-cs-label="Cross"
+							data-cs-source="page"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<g clip-path="url(#clip0_5274_201920)">
+									<path
+										d="M13.5488 0.3025C13.1588 -0.0874998 12.5288 -0.0874998 12.1388 0.3025L7.24875 5.1825L2.35875 0.2925C1.96875 -0.0975 1.33875 -0.0975 0.94875 0.2925C0.55875 0.6825 0.55875 1.3125 0.94875 1.7025L5.83875 6.5925L0.94875 11.4825C0.55875 11.8725 0.55875 12.5025 0.94875 12.8925C1.33875 13.2825 1.96875 13.2825 2.35875 12.8925L7.24875 8.0025L12.1388 12.8925C12.5288 13.2825 13.1588 13.2825 13.5488 12.8925C13.9388 12.5025 13.9388 11.8725 13.5488 11.4825L8.65875 6.5925L13.5488 1.7025C13.9288 1.3225 13.9288 0.6825 13.5488 0.3025Z"
+										fill="#707084"
+									/>
+								</g>
+								<defs>
+									<clipPath id="clip0_5274_201920">
+										<rect width="13.185" height="13.185" fill="white" transform="translate(0.65625)" />
+									</clipPath>
+								</defs>
+							</svg>
+						</button>
+					</div>
+					<figure class="icon">
+						<ng-lottie [options]="successAnimationOption" containerClass="lottie-animation" height="120px"></ng-lottie>
+					</figure>
+					<h6>Group profile published successfully!</h6>
+					<p>Share to get ratings and get discovered faster.</p>
+					<button
+						(click)="
+							recordButtonClick($event, null, null, null, profilePage);
+							openShareModal = true;
+							profilePage.isSuccessAnimationNeeded = false
+						"
+						class="convo-btn-primary convo-btn-normal convo-btn-big w-100"
+						data-cs-id="7783b4e5-8a58-4ffe-8069-9b50bb47d1c0"
+						data-cs-label="Share"
+						data-cs-source="dialog"
+					>
+						<svg fill="none" height="17" viewBox="0 0 17 17" width="17" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.5 10.9042C11.9933 10.9042 11.54 11.1042 11.1933 11.4176L6.44 8.65091C6.47333 8.49758 6.5 8.34424 6.5 8.18425C6.5 8.02424 6.47333 7.87091 6.44 7.71758L11.14 4.97758C11.5 5.31091 11.9733 5.51758 12.5 5.51758C13.6067 5.51758 14.5 4.62424 14.5 3.51758C14.5 2.41091 13.6067 1.51758 12.5 1.51758C11.3933 1.51758 10.5 2.41091 10.5 3.51758C10.5 3.67758 10.5267 3.83091 10.56 3.98424L5.86 6.72425C5.5 6.39091 5.02667 6.18425 4.5 6.18425C3.39333 6.18425 2.5 7.07758 2.5 8.18425C2.5 9.29091 3.39333 10.1842 4.5 10.1842C5.02667 10.1842 5.5 9.97758 5.86 9.64425L10.6067 12.4176C10.5733 12.5576 10.5533 12.7042 10.5533 12.8509C10.5533 13.9242 11.4267 14.7976 12.5 14.7976C13.5733 14.7976 14.4467 13.9242 14.4467 12.8509C14.4467 11.7776 13.5733 10.9042 12.5 10.9042Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Share</span>
+					</button>
+					<button
+						(click)="
+							recordButtonClick($event, null, null, null, profilePage); profilePage.isSuccessAnimationNeeded = false
+						"
+						class="convo-btn-bordered convo-btn-normal convo-btn-big w-100 mt-2"
+						data-cs-id="5e81cb11-05a4-4907-ae30-7be2d99006e8"
+						data-cs-label="Preview"
+						data-cs-source="dialog"
+						[routerLink]="
+							'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/' + profilePage?.id + '/preview'
+						"
+					>
+						<svg fill="none" height="17" viewBox="0 0 16 17" width="16" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M11.4375 13.6846H3.875C3.51033 13.6846 3.16059 13.5397 2.90273 13.2818C2.64487 13.024 2.5 12.6742 2.5 12.3096V4.74707C2.5 4.3824 2.64487 4.03266 2.90273 3.7748C3.16059 3.51694 3.51033 3.37207 3.875 3.37207H6.625V4.74707H3.875V12.3096H11.4375V9.55957H12.8125V12.3096C12.8125 12.6742 12.6676 13.024 12.4098 13.2818C12.1519 13.5397 11.8022 13.6846 11.4375 13.6846ZM7.79375 9.35813L6.82438 8.38601L11.1508 4.05957H8.6875V2.68457H13.5V7.49707H12.125V5.03238L7.79375 9.35813Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>Preview</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

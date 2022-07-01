@@ -1,0 +1,1365 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div
+		class="audience-wrap red-border"
+		[class.expanded-state]="isExpanded"
+		[class.not-completed]="checkToShowNotFilledSection()"
+	>
+		<div class="completed-flag" *ngIf="checkToShowNotFilledSection()">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="156f39e8-59b8-4456-80b5-bac84c5deb8d"
+			data-cs-label="Audience insights"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header [expandedHeight]="renderedOn === 'Mobile' ? '86px' : '68px'" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M17.4997 6.66667C16.2913 6.66667 15.6163 7.86667 15.8913 8.75834L12.933 11.725C12.683 11.65 12.3163 11.65 12.0663 11.725L9.94134 9.60001C10.2247 8.70834 9.54967 7.50001 8.33301 7.50001C7.12467 7.50001 6.44134 8.70001 6.72467 9.60001L2.92467 13.3917C2.03301 13.1167 0.833008 13.7917 0.833008 15C0.833008 15.9167 1.58301 16.6667 2.49967 16.6667C3.70801 16.6667 4.38301 15.4667 4.10801 14.575L7.89967 10.775C8.14967 10.85 8.51634 10.85 8.76634 10.775L10.8913 12.9C10.608 13.7917 11.283 15 12.4997 15C13.708 15 14.3913 13.8 14.108 12.9L17.0747 9.94167C17.9663 10.2167 19.1663 9.54167 19.1663 8.33334C19.1663 7.41667 18.4163 6.66667 17.4997 6.66667Z"
+								fill="#9999A7"
+							/>
+							<path
+								d="M12.5 7.5L13.2833 5.775L15 5L13.2833 4.225L12.5 2.5L11.7333 4.225L10 5L11.7333 5.775L12.5 7.5Z"
+								fill="#9999A7"
+							/>
+							<path
+								d="M2.91634 9.16667L3.33301 7.5L4.99967 7.08333L3.33301 6.66667L2.91634 5L2.49967 6.66667L0.833008 7.08333L2.49967 7.5L2.91634 9.16667Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Audience insights</span>
+						<button
+							*ngIf="isExpanded"
+							data-cs-id="e93a914e-b6c6-4cab-9b2f-05467195c47e"
+							data-cs-label="What's this?"
+							data-cs-source="page"
+							class="convo-btn-bordered what-this-btn"
+							(click)="
+								$event.stopPropagation();
+								recordButtonClick($event, null, null, null, groupProfilePage);
+								openAudienceInsightsVideo()
+							"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							What's this?
+						</button>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span
+							>Brands are more likely to partner with your group if they understand the audience of your group.</span
+						>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right">
+						<button
+							class="edit-row-btn"
+							(click)="
+								$event.stopPropagation();
+								setEditProfileAudience();
+								showAudienceInsightPopup = true;
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="630e8326-6a73-47dc-9f97-4471e52ca704"
+							data-cs-label="Edit Audience Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div
+				class="profile-card-body"
+				*ngIf="(groupInsightsForAge?.length > 0 && !isEditable && groupProfilePage?.showAgeAndGender) || isEditable"
+			>
+				<div class="insights-wrap">
+					<div
+						[ngClass]="{
+							'disabled-state':
+								!groupProfilePage?.showAudienceInsights ||
+								!(groupInsightsForAge?.length > 0) ||
+								(groupProfilePage?.showAudienceInsights && !(groupInsightsForAge?.length > 0) && !isEditable) ||
+								(groupProfilePage?.showAudienceInsights && !groupProfilePage?.showAgeAndGender)
+						}"
+						*ngIf="isReportLoaded && (groupProfilePage?.showAgeAndGender || isEditable)"
+					>
+						<div class="chart-header-text">
+							<h6>Age and gender</h6>
+							<div class="sub-header">
+								<span
+									*ngIf="
+										groupInsightsForAge?.length > 0 &&
+										groupInsightsForAge[0].startDate &&
+										groupInsightsForAge[0].endDate
+									"
+									>{{ groupInsightsForAge[0].startDate | date: 'MMM, dd yyyy' }} -
+									{{ groupInsightsForAge[0].endDate | date: 'MMM, dd yyyy' }}</span
+								>
+							</div>
+						</div>
+						<div class="chart-body">
+							<div class="chart-sub-header">
+								<span class="dot-row">
+									<span class="dot men"></span><span>Male - {{ chartLegends.male }}<small>%</small></span>
+								</span>
+								<span class="dot-row">
+									<span class="dot female"></span><span>Female - {{ chartLegends.female }}<small>%</small></span>
+								</span>
+								<span class="dot-row">
+									<span class="dot others"></span><span>Others - {{ chartLegends.others }}<small>%</small></span>
+								</span>
+							</div>
+							<div class="chart-sub-body">
+								<app-chart [setChartObject]="{reportData: reportData}"></app-chart>
+							</div>
+						</div>
+					</div>
+					<div
+						class="unavailable-insight-state"
+						*ngIf="groupProfilePage && !(groupInsightsForAge?.length > 0) && isEditable"
+					>
+						<div class="overlay"></div>
+						<div class="hidden-table-row" *ngIf="!isGroupInsightsLoading">
+							<div class="unavailable-state">
+								<figure>
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M10.0003 1.66666C5.40033 1.66666 1.66699 5.39999 1.66699 9.99999C1.66699 14.6 5.40033 18.3333 10.0003 18.3333C14.6003 18.3333 18.3337 14.6 18.3337 9.99999C18.3337 5.39999 14.6003 1.66666 10.0003 1.66666ZM10.8337 14.1667H9.16699V12.5H10.8337V14.1667ZM10.8337 10.8333H9.16699V5.83332H10.8337V10.8333Z"
+											fill="#EB5757"
+										/>
+									</svg>
+								</figure>
+								<h6>
+									This section is hidden because we couldn’t fetch the audience insights! Please upload it manually.
+								</h6>
+							</div>
+						</div>
+					</div>
+					<div
+						class="unavailable-insight-state"
+						*ngIf="
+							((!groupProfilePage?.showAudienceInsights && groupInsightsForAge?.length > 0) ||
+								(groupProfilePage?.showAudienceInsights && !groupProfilePage?.showAgeAndGender)) &&
+							isEditable
+						"
+					>
+						<div class="overlay"></div>
+						<div class="hidden-table-row" *ngIf="reportData">
+							<div class="hidden-state">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</div>
+					</div>
+					<div
+						class="unavailable-state"
+						*ngIf="groupProfilePage?.showAudienceInsights && !(groupInsightsForAge?.length > 0) && !isEditable"
+					>
+						<div class="overlay"></div>
+						<div class="get-insight-wrap no-insights-found" *ngIf="reportData">
+							<div class="get-insight-left">
+								<figure><img src="./assets/images/glass-chart.png" alt="" /></figure>
+								<h6>Request in-depth audience insights for this group</h6>
+							</div>
+							<div class="get-insight-right">
+								<button
+									class="convo-btn-normal"
+									(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+									data-cs-id="e5bf1e94-c80e-4569-8c89-589b8657bc43"
+									data-cs-label="See more"
+									data-cs-source="dialog"
+								>
+									<span>Request Insights</span
+									><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+											fill="#3654FF"
+										/>
+									</svg>
+								</button>
+							</div>
+						</div>
+						<!-- <div *ngIf="reportData">
+						<span>Request in-depth audience insights for this group</span>
+						<button class="convo-btn-normal convo-btn-bordered" (click)="seeMore()">Request Insights</button>
+					</div> -->
+					</div>
+					<div *ngIf="!isReportLoaded && (groupProfilePage?.showAgeAndGender || isEditable)">
+						<div class="loading-strip primary"></div>
+						<div class="loading-strip secondary"></div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="profile-card-body p-0"
+				*ngIf="
+					isEditable &&
+					(groupInsightsForCountries?.length > 0 || groupInsightForCities?.length > 0) &&
+					renderedOn === 'Desktop'
+				"
+			>
+				<div class="insights-wrap">
+					<table class="insights-table">
+						<tbody
+							*ngIf="renderedOn === 'Desktop' && (groupProfilePage?.showTopCountries || isEditable)"
+							[ngClass]="{
+								'disabled-state':
+									(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable
+							}"
+						>
+							<tr>
+								<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<h6>Top countries</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+							</tr>
+							<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+								<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+									{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+								</td>
+							</tr>
+							<tr hidden>
+								<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<div class="text-center" *ngIf="isMoreCountries">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="01d7d7cc-abb6-49f3-9770-23d7323f1fdf"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+
+							<!-- Empty row start-->
+							<tr>
+								<td class="border-0"></td>
+							</tr>
+							<!-- Empty row End-->
+						</tbody>
+						<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable">
+							<div class="overlay"></div>
+							<div class="hidden-table-state">
+								<div class="hidden-table-row">
+									<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCountries">
+										<img alt="" src="./assets/images/visibility_off.svg" />
+										<span>Hidden</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<tbody
+							*ngIf="renderedOn === 'Desktop' && (groupProfilePage?.showTopCities || isEditable)"
+							[ngClass]="{
+								'disabled-state':
+									(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable
+							}"
+						>
+							<tr>
+								<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<h6>Top cities</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+							</tr>
+							<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+								</td>
+							</tr>
+							<tr hidden>
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<div class="text-center" *ngIf="isMoreCities">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="e21cc122-b99e-48f1-8db5-69ec43c31649"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+							<!-- Empty row start-->
+							<tr>
+								<td class="border-0"></td>
+							</tr>
+							<!-- Empty row End-->
+						</tbody>
+						<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable">
+							<div class="overlay"></div>
+							<div class="hidden-table-state hidden-state-top-cities">
+								<div class="hidden-table-row">
+									<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCities">
+										<img alt="" src="./assets/images/visibility_off.svg" />
+										<span>Hidden</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</table>
+				</div>
+			</div>
+			<div
+				class="profile-card-body p-0"
+				*ngIf="
+					(((groupProfilePage?.showTopCountries && groupInsightsForCountries?.length > 0) ||
+						(groupProfilePage?.showTopCities && groupInsightForCities?.length > 0 && renderedOn === 'Desktop')) &&
+						!isEditable) ||
+					(isEditable && groupInsightsForCountries?.length > 0 && renderedOn === 'Mobile')
+				"
+			>
+				<div class="insights-wrap">
+					<div
+						[ngClass]="{
+							'disabled-state':
+								(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable
+						}"
+					>
+						<table>
+							<!-- For Desktop -->
+							<thead *ngIf="renderedOn === 'Desktop'">
+								<tr>
+									<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+										<h6>Top countries</h6>
+										<div class="sub-text">With member count</div>
+									</th>
+									<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+										<h6>Top cities</h6>
+										<div class="sub-text">With member count</div>
+									</th>
+								</tr>
+							</thead>
+
+							<!-- For Desktop -->
+							<tbody *ngIf="renderedOn === 'Desktop'">
+								<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+									<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+										{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+									</td>
+									<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+										{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+									</td>
+								</tr>
+								<tr *ngIf="isEditable" hidden>
+									<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+										<div class="text-center" *ngIf="isMoreCountries">
+											<a
+												(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+												data-cs-id="987fc501-d0ba-44aa-8e90-38aae1920085"
+												data-cs-label="See more"
+												data-cs-source="dialog"
+												class="read-more-btn"
+												><span>See more</span
+												><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</a>
+										</div>
+									</td>
+									<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+										<div class="text-center" *ngIf="isMoreCities">
+											<a
+												(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+												data-cs-id="dea2659b-ee09-492b-b936-09faaa76107f"
+												data-cs-label="See more"
+												data-cs-source="dialog"
+												class="read-more-btn"
+												><span>See more</span
+												><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+
+							<!-- For Mobile -->
+							<tbody *ngIf="renderedOn === 'Mobile'">
+								<tr>
+									<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+										<h6>Top countries</h6>
+										<div class="sub-text">With member count</div>
+									</th>
+								</tr>
+								<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+									<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+										{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+									</td>
+								</tr>
+								<tr hidden>
+									<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+										<div class="text-center" *ngIf="isMoreCountries">
+											<a
+												(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+												data-cs-id="71420e01-b1d3-4643-8671-a3419ee78221"
+												data-cs-label="See more"
+												data-cs-source="dialog"
+												class="read-more-btn"
+												><span>See more</span
+												><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable">
+						<div class="overlay"></div>
+						<div class="hidden-table-state hidden-table-state-mobile">
+							<div class="hidden-table-row">
+								<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCountries">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Hidden</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="profile-card-body p-0"
+				*ngIf="
+					(groupProfilePage?.showTopCities && groupInsightForCities?.length > 0 && !isEditable) ||
+					(isEditable && groupInsightForCities?.length > 0 && renderedOn === 'Mobile')
+				"
+			>
+				<div class="insights-wrap">
+					<div
+						[ngClass]="{
+							'disabled-state':
+								(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable
+						}"
+					>
+						<table>
+							<!-- For Mobile -->
+							<tbody *ngIf="renderedOn === 'Mobile'">
+								<tr>
+									<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+										<h6>Top cities</h6>
+										<div class="sub-text">With member count</div>
+									</th>
+								</tr>
+								<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+									<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+										{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+									</td>
+								</tr>
+								<tr hidden>
+									<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+										<div class="text-center" *ngIf="isMoreCities">
+											<a
+												(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+												data-cs-id="77504236-d229-483c-a4a0-66cb81e6abbe"
+												data-cs-label="See more"
+												data-cs-source="dialog"
+												class="read-more-btn"
+												><span>See more</span
+												><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable">
+						<div class="overlay"></div>
+						<div class="hidden-table-state hidden-table-state-mobile">
+							<div class="hidden-table-row">
+								<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCities">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Hidden</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="get-insight-wrap" *ngIf="!isEditable && groupInsightsForAge?.length > 0" hidden>
+				<div class="get-insight-left">
+					<figure><img src="./assets/images/glass-chart.png" alt="" /></figure>
+					<h6>Get in-depth audience insights for last few months</h6>
+				</div>
+				<div class="get-insight-right">
+					<button
+						class="convo-btn-normal"
+						(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+						data-cs-id="676932d8-29df-4cfe-9451-bef28aa53baa"
+						data-cs-label="Get past insights"
+						data-cs-source="dialog"
+					>
+						<span>Get past insights</span
+						><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#0B3C75" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="audience-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M17.4997 6.66667C16.2913 6.66667 15.6163 7.86667 15.8913 8.75834L12.933 11.725C12.683 11.65 12.3163 11.65 12.0663 11.725L9.94134 9.60001C10.2247 8.70834 9.54967 7.50001 8.33301 7.50001C7.12467 7.50001 6.44134 8.70001 6.72467 9.60001L2.92467 13.3917C2.03301 13.1167 0.833008 13.7917 0.833008 15C0.833008 15.9167 1.58301 16.6667 2.49967 16.6667C3.70801 16.6667 4.38301 15.4667 4.10801 14.575L7.89967 10.775C8.14967 10.85 8.51634 10.85 8.76634 10.775L10.8913 12.9C10.608 13.7917 11.283 15 12.4997 15C13.708 15 14.3913 13.8 14.108 12.9L17.0747 9.94167C17.9663 10.2167 19.1663 9.54167 19.1663 8.33334C19.1663 7.41667 18.4163 6.66667 17.4997 6.66667Z"
+						fill="#9999A7"
+					/>
+					<path
+						d="M12.5 7.5L13.2833 5.775L15 5L13.2833 4.225L12.5 2.5L11.7333 4.225L10 5L11.7333 5.775L12.5 7.5Z"
+						fill="#9999A7"
+					/>
+					<path
+						d="M2.91634 9.16667L3.33301 7.5L4.99967 7.08333L3.33301 6.66667L2.91634 5L2.49967 6.66667L0.833008 7.08333L2.49967 7.5L2.91634 9.16667Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Audience insights</h5>
+			</div>
+			<div class="header-right" *ngIf="isEditable">
+				<button
+					class="edit-row-btn"
+					(click)="setEditProfileAudience(); recordButtonClick($event, null, null, null, groupProfilePage)"
+					data-cs-id="630e8326-6a73-47dc-9f97-4471e52ca704"
+					data-cs-label="Edit Audience Modal"
+					data-cs-source="page"
+					data-target="#editAudienceModal"
+					data-toggle="modal"
+				>
+					<img alt="" src="./assets/images/btn-icon-edit.svg" />
+				</button>
+			</div>
+		</div>
+		<div
+			class="profile-card-body preview"
+			*ngIf="(groupInsightsForAge?.length > 0 && !isEditable && groupProfilePage?.showAgeAndGender) || isEditable"
+		>
+			<div class="insights-wrap">
+				<div
+					[ngClass]="{
+						'disabled-state':
+							!groupProfilePage?.showAudienceInsights ||
+							!(groupInsightsForAge?.length > 0) ||
+							(groupProfilePage?.showAudienceInsights && !(groupInsightsForAge?.length > 0) && !isEditable) ||
+							(groupProfilePage?.showAudienceInsights && !groupProfilePage?.showAgeAndGender)
+					}"
+					*ngIf="isReportLoaded && (groupProfilePage?.showAgeAndGender || isEditable)"
+				>
+					<div class="chart-header-text">
+						<h6>Age and gender</h6>
+						<div class="sub-header">
+							<span
+								*ngIf="
+									groupInsightsForAge?.length > 0 && groupInsightsForAge[0].startDate && groupInsightsForAge[0].endDate
+								"
+								>{{ groupInsightsForAge[0].startDate | date: 'MMM, dd yyyy' }} -
+								{{ groupInsightsForAge[0].endDate | date: 'MMM, dd yyyy' }}</span
+							>
+						</div>
+					</div>
+					<div class="chart-body">
+						<div class="chart-sub-header">
+							<span class="dot-row">
+								<span class="dot men"></span><span>Male - {{ chartLegends.male }}<small>%</small></span>
+							</span>
+							<span class="dot-row">
+								<span class="dot female"></span><span>Female - {{ chartLegends.female }}<small>%</small></span>
+							</span>
+							<span class="dot-row">
+								<span class="dot others"></span><span>Others - {{ chartLegends.others }}<small>%</small></span>
+							</span>
+						</div>
+						<div class="chart-sub-body">
+							<app-chart [setChartObject]="{reportData: reportData}"></app-chart>
+						</div>
+					</div>
+				</div>
+				<div
+					class="unavailable-insight-state"
+					*ngIf="groupProfilePage && !(groupInsightsForAge?.length > 0) && isEditable"
+				>
+					<div class="overlay"></div>
+					<div class="hidden-table-row" *ngIf="!isGroupInsightsLoading">
+						<div class="unavailable-state">
+							<figure>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0003 1.66666C5.40033 1.66666 1.66699 5.39999 1.66699 9.99999C1.66699 14.6 5.40033 18.3333 10.0003 18.3333C14.6003 18.3333 18.3337 14.6 18.3337 9.99999C18.3337 5.39999 14.6003 1.66666 10.0003 1.66666ZM10.8337 14.1667H9.16699V12.5H10.8337V14.1667ZM10.8337 10.8333H9.16699V5.83332H10.8337V10.8333Z"
+										fill="#EB5757"
+									/>
+								</svg>
+							</figure>
+							<h6>
+								This section is hidden because we couldn’t fetch the audience insights! Please upload it manually.
+							</h6>
+						</div>
+					</div>
+				</div>
+				<div
+					class="unavailable-insight-state"
+					*ngIf="
+						((!groupProfilePage?.showAudienceInsights && groupInsightsForAge?.length > 0) ||
+							(groupProfilePage?.showAudienceInsights && !groupProfilePage?.showAgeAndGender)) &&
+						isEditable
+					"
+				>
+					<div class="overlay"></div>
+					<div class="hidden-table-row" *ngIf="reportData">
+						<div class="hidden-state">
+							<img alt="" src="./assets/images/visibility_off.svg" />
+							<span>Hidden</span>
+						</div>
+					</div>
+				</div>
+				<div
+					class="unavailable-state"
+					*ngIf="groupProfilePage?.showAudienceInsights && !(groupInsightsForAge?.length > 0) && !isEditable"
+				>
+					<div class="overlay"></div>
+					<div class="get-insight-wrap no-insights-found" *ngIf="reportData">
+						<div class="get-insight-left">
+							<figure><img src="./assets/images/glass-chart.png" alt="" /></figure>
+							<h6>Request in-depth audience insights for this group</h6>
+						</div>
+						<div class="get-insight-right">
+							<button
+								class="convo-btn-normal"
+								(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+								data-cs-id="e5bf1e94-c80e-4569-8c89-589b8657bc43"
+								data-cs-label="See more"
+								data-cs-source="dialog"
+							>
+								<span>Request Insights</span
+								><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z"
+										fill="#3654FF"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<!-- <div *ngIf="reportData">
+					<span>Request in-depth audience insights for this group</span>
+					<button class="convo-btn-normal convo-btn-bordered" (click)="seeMore()">Request Insights</button>
+				</div> -->
+				</div>
+				<div *ngIf="!isReportLoaded && (groupProfilePage?.showAgeAndGender || isEditable)">
+					<div class="loading-strip primary"></div>
+					<div class="loading-strip secondary"></div>
+				</div>
+			</div>
+		</div>
+		<div
+			class="profile-card-body preview p-0"
+			*ngIf="
+				isEditable &&
+				(groupInsightsForCountries?.length > 0 || groupInsightForCities?.length > 0) &&
+				renderedOn === 'Desktop'
+			"
+		>
+			<div class="insights-wrap">
+				<table class="insights-table">
+					<tbody
+						*ngIf="renderedOn === 'Desktop' && (groupProfilePage?.showTopCountries || isEditable)"
+						[ngClass]="{
+							'disabled-state':
+								(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable
+						}"
+					>
+						<tr>
+							<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+								<h6>Top countries</h6>
+								<div class="sub-text">With member count</div>
+							</th>
+						</tr>
+						<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+							<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+								{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+							</td>
+						</tr>
+						<tr hidden>
+							<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+								<div class="text-center" *ngIf="isMoreCountries">
+									<a
+										(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+										data-cs-id="01d7d7cc-abb6-49f3-9770-23d7323f1fdf"
+										data-cs-label="See more"
+										data-cs-source="dialog"
+										class="read-more-btn"
+										><span>See more</span
+										><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</a>
+								</div>
+							</td>
+						</tr>
+
+						<!-- Empty row start-->
+						<tr>
+							<td class="border-0"></td>
+						</tr>
+						<!-- Empty row End-->
+					</tbody>
+					<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable">
+						<div class="overlay"></div>
+						<div class="hidden-table-state">
+							<div class="hidden-table-row">
+								<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCountries">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Hidden</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<tbody
+						*ngIf="renderedOn === 'Desktop' && (groupProfilePage?.showTopCities || isEditable)"
+						[ngClass]="{
+							'disabled-state':
+								(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable
+						}"
+					>
+						<tr>
+							<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+								<h6>Top cities</h6>
+								<div class="sub-text">With member count</div>
+							</th>
+						</tr>
+						<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+							<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+								{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+							</td>
+						</tr>
+						<tr hidden>
+							<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+								<div class="text-center" *ngIf="isMoreCities">
+									<a
+										(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+										data-cs-id="e21cc122-b99e-48f1-8db5-69ec43c31649"
+										data-cs-label="See more"
+										data-cs-source="dialog"
+										class="read-more-btn"
+										><span>See more</span
+										><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</a>
+								</div>
+							</td>
+						</tr>
+						<!-- Empty row start-->
+						<tr>
+							<td class="border-0"></td>
+						</tr>
+						<!-- Empty row End-->
+					</tbody>
+					<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable">
+						<div class="overlay"></div>
+						<div class="hidden-table-state hidden-state-top-cities">
+							<div class="hidden-table-row">
+								<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCities">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Hidden</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</table>
+			</div>
+		</div>
+		<div
+			class="profile-card-body p-0"
+			*ngIf="
+				(((groupProfilePage?.showTopCountries && groupInsightsForCountries?.length > 0) ||
+					(groupProfilePage?.showTopCities && groupInsightForCities?.length > 0 && renderedOn === 'Desktop')) &&
+					!isEditable) ||
+				(isEditable && groupInsightsForCountries?.length > 0 && renderedOn === 'Mobile')
+			"
+		>
+			<div class="insights-wrap">
+				<div
+					[ngClass]="{
+						'disabled-state':
+							(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable
+					}"
+				>
+					<table>
+						<!-- For Desktop -->
+						<thead *ngIf="renderedOn === 'Desktop'">
+							<tr>
+								<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<h6>Top countries</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+								<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<h6>Top cities</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+							</tr>
+						</thead>
+
+						<!-- For Desktop -->
+						<tbody *ngIf="renderedOn === 'Desktop'">
+							<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+								<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+									{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+								</td>
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+								</td>
+							</tr>
+							<tr *ngIf="isEditable" hidden>
+								<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<div class="text-center" *ngIf="isMoreCountries">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="987fc501-d0ba-44aa-8e90-38aae1920085"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<div class="text-center" *ngIf="isMoreCities">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="dea2659b-ee09-492b-b936-09faaa76107f"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+
+						<!-- For Mobile -->
+						<tbody *ngIf="renderedOn === 'Mobile'">
+							<tr>
+								<th *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<h6>Top countries</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+							</tr>
+							<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+								<td *ngIf="(groupProfilePage?.showTopCountries || isEditable) && i < groupInsightForCities.length">
+									{{ groupInsight.countryName }} <span class="member-count">{{ groupInsight.country }}</span>
+								</td>
+							</tr>
+							<tr hidden>
+								<td *ngIf="groupProfilePage?.showTopCountries || isEditable">
+									<div class="text-center" *ngIf="isMoreCountries">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="71420e01-b1d3-4643-8671-a3419ee78221"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCountries) && isEditable">
+					<div class="overlay"></div>
+					<div class="hidden-table-state hidden-table-state-mobile">
+						<div class="hidden-table-row">
+							<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCountries">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div
+			class="profile-card-body preview p-0"
+			*ngIf="
+				(groupProfilePage?.showTopCities && groupInsightForCities?.length > 0 && !isEditable) ||
+				(isEditable && groupInsightForCities?.length > 0 && renderedOn === 'Mobile')
+			"
+		>
+			<div class="insights-wrap">
+				<div
+					[ngClass]="{
+						'disabled-state':
+							(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable
+					}"
+				>
+					<table>
+						<!-- For Mobile -->
+						<tbody *ngIf="renderedOn === 'Mobile'">
+							<tr>
+								<th *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<h6>Top cities</h6>
+									<div class="sub-text">With member count</div>
+								</th>
+							</tr>
+							<tr *ngFor="let groupInsight of groupInsights | slice: 0:10; let i = index">
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									{{ groupInsight.cityName }} <span class="member-count">{{ groupInsight.city }}</span>
+								</td>
+							</tr>
+							<tr hidden>
+								<td *ngIf="groupProfilePage?.showTopCities || isEditable">
+									<div class="text-center" *ngIf="isMoreCities">
+										<a
+											(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+											data-cs-id="77504236-d229-483c-a4a0-66cb81e6abbe"
+											data-cs-label="See more"
+											data-cs-source="dialog"
+											class="read-more-btn"
+											><span>See more</span
+											><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.7418 5.59246C7.4168 5.91746 7.4168 6.44246 7.7418 6.76746L10.9751 10.0008L7.7418 13.2341C7.4168 13.5591 7.4168 14.0841 7.7418 14.4091C8.0668 14.7341 8.5918 14.7341 8.9168 14.4091L12.7418 10.5841C13.0668 10.2591 13.0668 9.73412 12.7418 9.40912L8.9168 5.58412C8.60013 5.26746 8.0668 5.26746 7.7418 5.59246Z"
+													fill="#3654FF"
+												/>
+											</svg>
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div *ngIf="(!groupProfilePage?.showAudienceInsights || !groupProfilePage?.showTopCities) && isEditable">
+					<div class="overlay"></div>
+					<div class="hidden-table-state hidden-table-state-mobile">
+						<div class="hidden-table-row">
+							<div class="hidden-state" *ngIf="!groupProfilePage?.showTopCities">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="get-insight-wrap" *ngIf="!isEditable && groupInsightsForAge?.length > 0" hidden>
+			<div class="get-insight-left">
+				<figure><img src="./assets/images/glass-chart.png" alt="" /></figure>
+				<h6>Get in-depth audience insights for last few months</h6>
+			</div>
+			<div class="get-insight-right">
+				<button
+					class="convo-btn-normal"
+					(click)="seeMore(); recordButtonClick($event, null, null, null, groupProfilePage)"
+					data-cs-id="676932d8-29df-4cfe-9451-bef28aa53baa"
+					data-cs-label="Get past insights"
+					data-cs-source="dialog"
+				>
+					<span>Get past insights</span
+					><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#0B3C75" />
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-container *ngIf="showContactMeForm">
+	<app-bio-contact-me
+		[kudosData]="groupProfilePage"
+		[isFromAudienceInsights]="'true'"
+		(closeContactForm)="showContactSuccessForm($event)"
+	></app-bio-contact-me>
+</ng-container>
+
+<ng-container *ngIf="contactMeSuccess">
+	<div class="modal file-alert thank-you-modal">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="close-btn">
+					<button
+						class="close"
+						(click)="closeContactForm(); recordButtonClick($event, null, null, null, groupProfilePage)"
+						data-cs-id="b941b966-f30f-47cd-89f7-4e0579b7d742"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M18.2998 5.70973C17.9098 5.31973 17.2798 5.31973 16.8898 5.70973L11.9998 10.5897L7.10979 5.69973C6.71979 5.30973 6.08979 5.30973 5.69979 5.69973C5.30979 6.08973 5.30979 6.71973 5.69979 7.10973L10.5898 11.9997L5.69979 16.8897C5.30979 17.2797 5.30979 17.9097 5.69979 18.2997C6.08979 18.6897 6.71979 18.6897 7.10979 18.2997L11.9998 13.4097L16.8898 18.2997C17.2798 18.6897 17.9098 18.6897 18.2998 18.2997C18.6898 17.9097 18.6898 17.2797 18.2998 16.8897L13.4098 11.9997L18.2998 7.10973C18.6798 6.72973 18.6798 6.08973 18.2998 5.70973Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<figure class="icon">
+						<ng-lottie containerClass="lottie-animation" height="120px" [options]="successAnimationOption"></ng-lottie>
+					</figure>
+
+					<h6>Submitted Successfully</h6>
+					<p>You will get a response soon.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<!-- Start : Edit files Overlay -->
+<div class="modal file-alert editFilesModal" *ngIf="showAudienceInsightPopup">
+	<div class="modal-dialog modal-dialog-centered" [ngClass]="{'no-cursor': isSaveInProgress}">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Audience Insights</h5>
+				<button
+					#closeButtonForAudienceFiles
+					(click)="
+						showVideo = false;
+						showAudienceInsightPopup = false;
+						recordButtonClick($event, null, null, null, groupProfilePage);
+						closeEditAudience()
+					"
+					data-cs-id="88058a26-aa52-483d-971d-e9794160e2dd"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					class="close-btn"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body pt-0">
+				<div *ngIf="!showAudienceInsights" class="files-row-0">
+					<p class="settings-field m-0">
+						<img alt="" class="info-icon" src="assets/images/influencer-info-icon.svg" />
+						You can show audience insights only if you upload the insights data from Facebook.
+					</p>
+				</div>
+				<div class="files-settings-card">
+					<div class="files-row main-row">
+						<p class="settings-field m-0">Show Audience insights</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(change)="onChangeAudienceInsights(closeButtonForAudienceFiles)"
+								[checked]="showAudienceInsights"
+								[disabled]="
+									(!insightFile && !isInsightsAlreadyLoaded) ||
+									isSaveInProgress ||
+									(fileStatus !== 'Valid' && !showAudienceInsights)
+								"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!insightFile; else uploadButtonWithFilesList" class="upload-section-wrapper">
+					<div
+						class="upload-section"
+						(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+						data-cs-id="3519de70-10f4-4b6a-bbda-acccbc6588d5"
+						data-cs-label="Upload file"
+						data-cs-source="page"
+					>
+						<input (change)="fileChange($event)" accept=".xlsx" class="input-file" title="" type="file" />
+						<div class="icon">
+							<img alt="" src="./assets/images/icon-file-upload.svg" />
+						</div>
+						<h6 *ngIf="renderedOn === 'Desktop'">Drag and drop your file here or <span>browse file</span></h6>
+						<h6 *ngIf="renderedOn === 'Mobile'"><span>Browse file to upload</span></h6>
+						<p>Upload insights data in a .xlsx file format. Max file size - 5MB</p>
+					</div>
+					<button
+						class="convo-btn-normal btn-link"
+						(click)="playVideo(); recordButtonClick($event, null, null, null, groupProfilePage)"
+						data-cs-id="4cd71a7a-d99e-420b-8997-d1df241f3d6a"
+						data-cs-label="Where do I get this file?"
+						data-cs-source="dialog"
+						*ngIf="!showVideo"
+					>
+						Where do I get this file?
+					</button>
+					<div class="video-wrap" *ngIf="showVideo">
+						<div class="video-header">
+							<h6>How to download group insights from Facebook</h6>
+							<button
+								(click)="showVideo = false; recordButtonClick($event, null, null, null, groupProfilePage)"
+								data-cs-id="1e74b848-b66e-45b6-810b-12fa6929196a"
+								data-cs-label="Play video"
+								data-cs-source="dialog"
+							>
+								<img src="./assets/images/close-icon.svg" alt="" />
+							</button>
+						</div>
+						<iframe
+							[src]="videoLink | sanitizeUrl"
+							title="YouTube video player"
+							frameborder="0"
+							allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowfullscreen
+						></iframe>
+					</div>
+				</div>
+				<div class="files-settings-card" *ngIf="showAudienceInsights || isInsightsAlreadyLoaded">
+					<div class="files-row main-row">
+						<p class="settings-field m-0">Show age and gender</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(change)="showAgeAndGender = !showAgeAndGender; onChangeSubInsights(closeButtonForAudienceFiles)"
+								[checked]="showAgeAndGender"
+								[disabled]="
+									(!insightFile && !isInsightsAlreadyLoaded) ||
+									isSaveInProgress ||
+									(fileStatus !== 'Valid' && !showAudienceInsights)
+								"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div class="files-settings-card" *ngIf="showAudienceInsights || isInsightsAlreadyLoaded">
+					<div class="files-row main-row">
+						<p class="settings-field m-0">Show top countries</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(change)="showTopCountries = !showTopCountries; onChangeSubInsights(closeButtonForAudienceFiles)"
+								[checked]="showTopCountries"
+								[disabled]="
+									(!insightFile && !isInsightsAlreadyLoaded) ||
+									isSaveInProgress ||
+									(fileStatus !== 'Valid' && !showAudienceInsights)
+								"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div class="files-settings-card" *ngIf="showAudienceInsights || isInsightsAlreadyLoaded">
+					<div class="files-row main-row pb-0 border-0">
+						<p class="settings-field m-0">Show top cities</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(change)="showTopCities = !showTopCities; onChangeSubInsights(closeButtonForAudienceFiles)"
+								[checked]="showTopCities"
+								[disabled]="
+									(!insightFile && !isInsightsAlreadyLoaded) ||
+									isSaveInProgress ||
+									(fileStatus !== 'Valid' && !showAudienceInsights)
+								"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					[disabled]="
+						isSaveInProgress ||
+						((!insightFile || !showAudienceInsights) && !isInsightsAlreadyLoaded) ||
+						fileStatus !== 'Valid' ||
+						!isSaveEnabled
+					"
+					(click)="
+						showVideo = false;
+						showAudienceInsightPopup = false;
+						recordButtonClick($event, null, null, null, groupProfilePage)
+					"
+					data-cs-id="56aeb71b-c442-433b-a893-0fbacd657ba2"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					class="convo-btn-primary convo-btn-normal"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End :Edit files Overlay -->
+
+<ng-template #uploadButtonWithFilesList>
+	<div *ngIf="insightFile" class="uploaded-file-wrapper">
+		<div class="file-wrap-left">
+			<div class="file-status-wrap">
+				<div *ngIf="fileExist" class="progress-wrap file-detail">
+					<figure>
+						<img class="w-auto" src="./assets/images/excel-icon.svg" alt="" />
+					</figure>
+					<div>
+						<h6
+							class="mb-1 pointer"
+							(click)="downloadFile(); recordButtonClick($event, null, null, null, groupProfilePage)"
+							data-cs-id="df875d03-bac4-451c-81e8-0db68abfbe5d"
+							data-cs-label="File download"
+							data-cs-source="dialog"
+							title="{{ fileName }}"
+						>
+							{{ fileName }}
+						</h6>
+						<div class="file-status">
+							<div *ngIf="!fileExist" class="progress-wrap">
+								<img src="./assets/images/pending-upload-icon.svg" alt="" /> <span class="ml-1">Upload pending</span>
+							</div>
+
+							<div *ngIf="fileUploading" class="progress-wrap">
+								<span class="bt-spinner-center ml-1"></span> <span>Uploading...</span>
+							</div>
+
+							<div class="progress-wrap" *ngIf="fileProcessing">
+								<img src="./assets/images/icon-access-time.svg" alt="" /> <span class="ml-1">Processing file...</span>
+							</div>
+
+							<div class="progress-wrap valid" *ngIf="fileStatus === 'Valid'">
+								<img src="./assets/images/icon-check-circle.svg" alt="" /><span class="ml-1">File Processed</span>
+							</div>
+
+							<div class="progress-wrap invalid" *ngIf="fileStatus === 'Invalid'">
+								<img src="./assets/images/icon-error-outline.svg" alt="" /><span class="ml-1">File invalid</span>
+							</div>
+
+							<div class="progress-wrap expired" *ngIf="fileStatus === 'Expired'">
+								<img src="./assets/images/icon-expired-outline.svg" alt="" /><span class="ml-1">File expired</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="file-wrap-right" [hidden]="!fileUploading">
+			<button
+				class="convo-btn-normal convo-btn-bordered"
+				(click)="cancelUploading(); recordButtonClick($event, null, null, null, groupProfilePage)"
+				data-cs-id="4e521d85-6fc7-400b-855a-bd52364035b5"
+				data-cs-label="Cancel upload"
+				data-cs-source="dialog"
+			>
+				Cancel upload
+			</button>
+		</div>
+	</div>
+	<div
+		class="upload-button"
+		*ngIf="fileStatus === 'Valid' || fileStatus === 'Invalid' || fileStatus === 'Expired'"
+		[ngClass]="{'upload-failed': fileStatus === 'Invalid' || fileStatus === 'Expired'}"
+	>
+		<button
+			*ngIf="fileStatus === 'Invalid' || fileStatus === 'Expired'"
+			(click)="insightFile = null; recordButtonClick($event, null, null, null, groupProfilePage)"
+			data-cs-id="fadd5496-2d5c-45f2-942c-1156bb89d943"
+			data-cs-label="Select another file"
+			data-cs-source="dialog"
+			class="convo-btn-normal convo-btn-primary"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M5.99967 10.6667H9.99967V6.66667H12.6663L7.99967 2L3.33301 6.66667H5.99967V10.6667ZM3.33301 12H12.6663V13.3333H3.33301V12Z"
+					fill="white"
+				/>
+			</svg>
+			<span>Select another file</span>
+		</button>
+		<button
+			*ngIf="fileStatus === 'Valid'"
+			(click)="insightFile = null; recordButtonClick($event, null, null, null, groupProfilePage)"
+			data-cs-id="c561d9ff-47c1-4130-90d6-0f0d16589282"
+			data-cs-label="Upload newer insights file"
+			data-cs-source="dialog"
+			class="convo-btn-normal convo-btn-bordered"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M5.99967 10.6667H9.99967V6.66667H12.6663L7.99967 2L3.33301 6.66667H5.99967V10.6667ZM3.33301 12H12.6663V13.3333H3.33301V12Z"
+					fill="#3654FF"
+				/>
+			</svg>
+			<span>Upload newer insights file</span>
+		</button>
+	</div>
+</ng-template>
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showAudienceInsightsVideo">
+	<app-what-this-video
+		[title]="'Audience insights'"
+		[videoLink]="'./assets/videos/audience-insights.mp4'"
+		(closeVideoPlayer)="closeVideoPlayer($event)"
+	></app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

@@ -1,0 +1,1765 @@
+<div
+	class="fixed-loading-bar"
+	*ngIf="
+		!insightView[monthPrefixOfReport + 'ConversationVolumeReport'] &&
+		insightView.level === 'Category' &&
+		showLoadingBar &&
+		(insightView.isInsightsLoaded | async) === false
+	"
+>
+	Please wait while we load the stats. Do not refresh your page.
+</div>
+
+<div class="compaign-insight-component-wrapper">
+	<div class="tabs-wrapper secondary-tabs-wrapper">
+		<div class="container">
+			<ul class="nav nav-tabs secondary-tabs" id="{{ insightView.level }}Tabs" role="tablist">
+				<li class="nav-item">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="true"
+						attr.aria-controls="{{ getTabId() }}{{ subcategoryId }}conversations"
+						class="nav-link active"
+						data-toggle="tab"
+						href="#{{ getTabId() }}{{ subcategoryId }}conversations"
+						id="{{ getTabId() }}{{ subcategoryId }}conversations-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/conversations.svg" />
+						<span class="tab-value">Conversations</span></a
+					>
+				</li>
+				<li class="nav-item" *ngIf="insightView.level !== 'SubCategory'">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}keywords"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}keywords"
+						id="{{ getTabId() }}keywords-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/keywords.svg" />
+						<span class="tab-value">Keywords</span>
+					</a>
+				</li>
+				<li *ngIf="insightView.level === 'SubCategory'" class="nav-item">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}{{ subcategoryId }}keywords-sub-category"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}{{ subcategoryId }}keywords-sub-category"
+						id="{{ getTabId() }}{{ subcategoryId }}keywords-tab-sub-category"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/keywords.svg" />
+						<span class="tab-value">Keywords</span>
+					</a>
+				</li>
+
+				<li *ngIf="insightView.level === 'SubCategory'" class="nav-item">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}{{ subcategoryId }}shareVoice"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}{{ subcategoryId }}shareVoice"
+						id="{{ getTabId() }}{{ subcategoryId }}shareVoice-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/share of voice.svg" /><span class="tab-value"
+							>Share of voice
+						</span></a
+					>
+				</li>
+				<li *ngIf="insightView.level === 'Brand'" class="nav-item">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}sentiment"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}sentiment"
+						id="{{ getTabId() }}sentiment-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/sentiment.svg" />
+						<span class="tab-value">Sentiment</span></a
+					>
+				</li>
+				<li class="nav-item">
+					<a
+						(click)="switchToFirstTab()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}{{ subcategoryId }}wordCloud"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}{{ subcategoryId }}wordCloud"
+						id="{{ getTabId() }}{{ subcategoryId }}wordCloud-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/wordcloud.svg" />
+						<span class="tab-value">Word cloud</span>
+					</a>
+				</li>
+				<li *ngIf="insightView.level === 'Brand'" class="nav-item">
+					<a
+						(click)="switchToFirstTab(); setAssociationTabView()"
+						aria-selected="false"
+						attr.aria-controls="{{ getTabId() }}association"
+						class="nav-link"
+						data-toggle="tab"
+						href="#{{ getTabId() }}association"
+						id="{{ getTabId() }}association-tab"
+						role="tab"
+					>
+						<img alt="" class="img-tab" src="assets/images/wordcloud.svg" />
+						<span class="tab-value">Association</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="tab-content secondary-tabs-content" id="categoryTabsContent">
+		<!-- Conversation tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}{{ subcategoryId }}conversations-tab"
+			class="tab-pane fade show active"
+			id="{{ getTabId() }}{{ subcategoryId }}conversations"
+			role="tabpanel"
+		>
+			<div class="container">
+				<h4 class="summary-head">Summary for <span class="bold-text">last 28 days</span></h4>
+				<div class="summary-wrapper">
+					<div class="summary-stats-wrapper">
+						<div class="value-wrapper">
+							<div class="tooltip-wrapper">
+								<app-tooltip setTooltipText="Sum of Facebook and WhatsApp conversation"></app-tooltip>
+							</div>
+							<p class="name">Conversations</p>
+							<p *ngIf="summaryReport; else loadingTotalConversations" class="count">
+								{{ summaryReport.totalConversations | shortNumber }}
+							</p>
+							<p class="bottom-text hide"><span class="fall-text">5.7%</span> from last month</p>
+							<ng-template #loadingTotalConversations>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<div class="value-wrapper">
+							<p class="name">Comments</p>
+							<p *ngIf="summaryReport; else loadingTotalComments" class="count">
+								{{ summaryReport.totalComments | shortNumber }}
+							</p>
+							<ng-template #loadingTotalComments>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+							<p class="bottom-text hide"><span class="rise-text">1.7%</span> from last month</p>
+						</div>
+						<div class="value-wrapper">
+							<p class="name">Posts</p>
+							<p *ngIf="summaryReport; else loadingTotalPosts" class="count">
+								{{ summaryReport.totalPosts | shortNumber }}
+							</p>
+							<p class="bottom-text hide"><span class="rise-text">0.7%</span> from last month</p>
+							<ng-template #loadingTotalPosts>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+						<div class="value-wrapper">
+							<p class="name">Comments per post</p>
+							<p *ngIf="summaryReport; else loadingTotalCommentsPerPosts" class="count">
+								{{ summaryReport.totalCommentsPerPosts }}
+							</p>
+							<p class="bottom-text hide"><span class="rise-text">0.4%</span> from last month</p>
+							<ng-template #loadingTotalCommentsPerPosts>
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+				<div class="graph-container conversation-graph">
+					<div class="pills-container">
+						<div class="pills-wrapper">
+							<span class="description">Trends for : </span>
+							<button
+								(click)="setMonthPrefixOfReport(month.key)"
+								*ngFor="let month of months | keyvalue: defaultComparator"
+								[ngClass]="{active: month.value === monthPrefixOfReport}"
+								class="btn-month"
+								type="button"
+							>
+								{{ insightView.getPillNameBasedOnReportType(month.value) }}
+							</button>
+							<app-custom-date-range
+								(setMonthPrefixOfReport)="setCustomMonthPrefixOfReport($event)"
+								*ngIf="user?.userType === 'CSAdmin'"
+								[campaignId]="campaignId"
+								[campaignStartDate]="campaignStartDate"
+								[campaignStartDate]="campaignStartDate"
+								[insightView]="insightView"
+								[monthPrefixOfReport]="monthPrefixOfReport"
+								[showCalendar]="showCalendar"
+							></app-custom-date-range>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Conversation volume for <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'ConversationVolumeReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'ConversationVolumeReport')
+											}}</small>
+										</span>
+									</p>
+									<div class="margin-left-negative">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'ConversationVolumeReport']">
+										</app-chart>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Comments per post for <span class="bold-text">'{{ insightView.viewName }}'</span
+										><span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'CommentsPerPostReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'CommentsPerPostReport')
+											}}</small>
+										</span>
+									</p>
+									<div class="margin-left-negative">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'CommentsPerPostReport']">
+										</app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Conversation tab body ends here -->
+		<!-- Keyword tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}keywords-tab"
+			class="tab-pane fade"
+			id="{{ getTabId() }}keywords"
+			role="tabpanel"
+		>
+			<div class="container">
+				<div class="graph-container">
+					<div class="pills-container">
+						<div class="pills-wrapper">
+							<span class="description">Trends for : </span>
+							<button
+								(click)="setMonthPrefixOfReport(month.key)"
+								*ngFor="let month of months | keyvalue: defaultComparator"
+								[ngClass]="{active: month.value === monthPrefixOfReport}"
+								class="btn-month"
+								type="button"
+							>
+								{{ insightView.getPillNameBasedOnReportType(month.value) }}
+							</button>
+							<app-custom-date-range
+								(setMonthPrefixOfReport)="setCustomMonthPrefixOfReport($event)"
+								*ngIf="user?.userType === 'CSAdmin'"
+								[campaignId]="campaignId"
+								[campaignStartDate]="campaignStartDate"
+								[campaignStartDate]="campaignStartDate"
+								[insightView]="insightView"
+								[monthPrefixOfReport]="monthPrefixOfReport"
+								[showCalendar]="showCalendar"
+							></app-custom-date-range>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Top keywords in <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'TopKeywordsReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'TopKeywordsReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'TopKeywordsReport']"></app-chart>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="insightView.level !== 'Brand'" class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper" data-test-id="category-breakup-pie-chart">
+									<p class="name" data-test-id="heading-category-breakup-pie-chart">
+										Category breakup in <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'CategoryBreakupReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'CategoryBreakupReport')
+											}}</small>
+										</span>
+									</p>
+									<div
+										[ngClass]="{
+											'row align-items-center':
+												insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+												!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+										}"
+									>
+										<div
+											[ngClass]="{
+												'col-sm-8':
+													insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+													!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+											}"
+										>
+											<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'CategoryBreakupReport']">
+											</app-chart>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+												!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+											"
+											class="col-sm-4"
+										>
+											<div class="legend-wrapper vertical-legends">
+												<div
+													class="legend post"
+													matTooltip="Share of {{
+														alternateTextToBeDisplayed ? alternateTextToBeDisplayed : 'Products'
+													}}
+												can be seen only at sub category level"
+													matTooltipPosition="above"
+												>
+													<div class="legend-marker-box color-1"></div>
+													<span class="legend-text">{{
+														alternateTextToBeDisplayed ? alternateTextToBeDisplayed : 'Products'
+													}}</span>
+												</div>
+												<div
+													class="legend comments"
+													matTooltip="Share of Brands can be seen only at sub category level"
+													matTooltipPosition="above"
+												>
+													<div class="legend-marker-box color-2"></div>
+													<span class="legend-text">Brands</span>
+												</div>
+												<div
+													class="legend reactions"
+													matTooltip="Share of Remedies can be seen only at sub category level"
+													matTooltipPosition="above"
+												>
+													<div class="legend-marker-box color-3"></div>
+													<span class="legend-text">Remedies</span>
+												</div>
+												<div
+													class="legend comments"
+													matTooltip="Share of Issues can be seen only at sub category level"
+													matTooltipPosition="above"
+												>
+													<div class="legend-marker-box color-4"></div>
+													<span class="legend-text">Issues</span>
+												</div>
+												<div
+													class="legend comments"
+													*ngIf="isAmenitiesEnabled"
+													matTooltip="Share of Amenities can be seen only at sub category level"
+													matTooltipPosition="above"
+												>
+													<div class="legend-marker-box color-5"></div>
+													<span class="legend-text">Amenities</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="insightView.level === 'Brand'" class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Brand mentions for <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'BrandMentionsReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'BrandMentionsReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'BrandMentionsReport']"></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Keyword tab body ends here -->
+
+		<!-- Keyword tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}{{ subcategoryId }}keywords-tab-sub-category"
+			class="tab-pane fade"
+			id="{{ getTabId() }}{{ subcategoryId }}keywords-sub-category"
+			role="tabpanel"
+		>
+			<div class="container">
+				<div class="graph-container">
+					<div class="pills-container">
+						<div class="pills-wrapper">
+							<span class="description">Trends for : </span>
+							<button
+								(click)="setMonthPrefixOfReport(month.key)"
+								*ngFor="let month of months | keyvalue: defaultComparator"
+								[ngClass]="{active: month.value === monthPrefixOfReport}"
+								class="btn-month"
+								type="button"
+							>
+								{{ insightView.getPillNameBasedOnReportType(month.value) }}
+							</button>
+							<app-custom-date-range
+								(setMonthPrefixOfReport)="setCustomMonthPrefixOfReport($event)"
+								*ngIf="user?.userType === 'CSAdmin'"
+								[campaignId]="campaignId"
+								[campaignStartDate]="campaignStartDate"
+								[campaignStartDate]="campaignStartDate"
+								[insightView]="insightView"
+								[monthPrefixOfReport]="monthPrefixOfReport"
+								[showCalendar]="showCalendar"
+								[showDateRangeSelector]="showDateRangeSelector"
+							></app-custom-date-range>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Top keywords in <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'TopKeywordsReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'TopKeywordsReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'TopKeywordsReport']"></app-chart>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="insightView.level !== 'Brand'" class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<p class="name">
+										Category breakup in <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(
+													insightView.level + '_' + monthPrefixOfReport + 'CategoryBreakupReport',
+													insightView.viewName
+												)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'CategoryBreakupReport')
+											}}</small>
+										</span>
+									</p>
+									<div
+										[ngClass]="{
+											'row align-items-center':
+												insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+												!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+										}"
+									>
+										<div
+											[ngClass]="{
+												'col-sm-8':
+													insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+													!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+											}"
+										>
+											<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'CategoryBreakupReport']">
+											</app-chart>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'CategoryBreakupReport'] &&
+												!insightView[monthPrefixOfReport + 'CategoryBreakupReport'].isEmpty
+											"
+											class="col-sm-4"
+										>
+											<div class="legend-wrapper vertical-legends" id="openAnotherTab">
+												<div class="legend post">
+													<a (click)="activateTab(730)" href="javascript:">
+														<div class="legend-marker-box color-1"></div>
+														<span class="legend-text">{{
+															alternateTextToBeDisplayed ? alternateTextToBeDisplayed : 'Products'
+														}}</span>
+													</a>
+												</div>
+												<div class="legend comments">
+													<a (click)="activateTab(730)" href="javascript:">
+														<div class="legend-marker-box color-2"></div>
+														<span class="legend-text">Brands</span>
+													</a>
+												</div>
+												<div *ngIf="!isPurchaseConsiderationEnabled" class="legend reactions">
+													<a (click)="activateTab(330)" href="javascript:">
+														<div class="legend-marker-box color-3"></div>
+														<span class="legend-text">Remedies</span>
+													</a>
+												</div>
+												<div *ngIf="!isPurchaseConsiderationEnabled" class="legend comments">
+													<a (click)="activateTab(330)" href="javascript:">
+														<div class="legend-marker-box color-4"></div>
+														<span class="legend-text">Issues</span>
+													</a>
+												</div>
+												<div class="legend comments" *ngIf="isAmenitiesEnabled">
+													<a (click)="activateTab(330)" href="javascript:">
+														<div class="legend-marker-box color-5"></div>
+														<span class="legend-text">Amenities</span>
+													</a>
+												</div>
+												<div *ngIf="isPurchaseConsiderationEnabled" class="legend comments">
+													<a (click)="activateTab(330)" href="javascript:">
+														<div class="legend-marker-box color-6"></div>
+														<span class="legend-text">Purchase Consideration</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Keyword tab body ends here -->
+
+		<!-- Sentiment tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}sentiment-tab"
+			class="tab-pane fade"
+			id="{{ getTabId() }}sentiment"
+			role="tabpanel"
+		>
+			<div class="container">
+				<h4 class="summary-head">Summary for <span class="bold-text">last 3 months</span></h4>
+				<div class="graph-container">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<div class="graph-wrapper">
+									<p class="name">
+										Sentiment Analysis for <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="
+												showInsights(insightView.level + '_' + 'sentimentalAnalysisReport', insightView.viewName)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small class="insight-count" *ngIf="insights">{{
+												getNumberOfInsights(insightView.level + '_' + 'sentimentalAnalysisReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<app-chart [setChartObject]="insightView.sentimentalAnalysisReport"></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="graph-wrapper">
+									<p class="name">
+										Emotion Analysis for <span class="bold-text">'{{ insightView.viewName }}'</span>
+										<span
+											(click)="showInsights(insightView.level + '_' + 'emotionalAnalysisReport', insightView.viewName)"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPosition="above"
+										>
+											<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small *ngIf="insights" class="insight-count">{{
+												getNumberOfInsights(insightView.level + '_' + 'emotionalAnalysisReport')
+											}}</small>
+										</span>
+									</p>
+									<div class="row">
+										<div class="col-4">
+											<div class="card-min-height position-relative">
+												<app-chart [setChartObject]="insightView.thirdMonthInPastEmotionalAnalysisReport"></app-chart>
+											</div>
+											<div class="month-name">{{ getMonthDisplayNameForChart(3) }}</div>
+										</div>
+										<div class="col-4">
+											<div class="card-min-height position-relative">
+												<app-chart [setChartObject]="insightView.secondMonthInPastEmotionalAnalysisReport"></app-chart>
+											</div>
+											<div class="month-name">{{ getMonthDisplayNameForChart(2) }}</div>
+										</div>
+										<div class="col-4">
+											<div class="card-min-height position-relative">
+												<app-chart [setChartObject]="insightView.firstMonthInPastEmotionalAnalysisReport"></app-chart>
+											</div>
+											<div class="month-name">{{ getMonthDisplayNameForChart(1) }}</div>
+										</div>
+									</div>
+									<div class="legend-wrapper pb-4">
+										<div class="legend trust">
+											<div class="legend-marker-box trust-box"></div>
+											<span class="legend-text">Trust</span>
+										</div>
+										<div class="legend joy">
+											<div class="legend-marker-box joy-box"></div>
+											<span class="legend-text">Joy</span>
+										</div>
+										<div class="legend anticipation">
+											<div class="legend-marker-box anticipation-box"></div>
+											<span class="legend-text">Anticipation</span>
+										</div>
+										<div class="legend sadness">
+											<div class="legend-marker-box sadness-box"></div>
+											<span class="legend-text">Sadness</span>
+										</div>
+										<div class="legend disgust">
+											<div class="legend-marker-box disgust-box"></div>
+											<span class="legend-text">Disgust</span>
+										</div>
+										<div class="legend fear">
+											<div class="legend-marker-box fear-box"></div>
+											<span class="legend-text">Fear</span>
+										</div>
+										<div class="legend other">
+											<div class="legend-marker-box other-box"></div>
+											<span class="legend-text">Other</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Sentiment tab body ends here -->
+		<!-- Share of voice tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}{{ subcategoryId }}shareVoice-tab"
+			class="tab-pane fade"
+			id="{{ getTabId() }}{{ subcategoryId }}shareVoice"
+			role="tabpanel"
+		>
+			<div class="container">
+				<div class="graph-container">
+					<div class="pills-container">
+						<div class="pills-wrapper">
+							<span class="description">Trends for : </span>
+							<button
+								(click)="setMonthPrefixOfReport(month.key)"
+								*ngFor="let month of months | keyvalue: defaultComparator"
+								[ngClass]="{active: month.value === monthPrefixOfReport}"
+								class="btn-month"
+								type="button"
+							>
+								{{ insightView.getPillNameBasedOnReportType(month.value) }}
+							</button>
+							<app-custom-date-range
+								(setMonthPrefixOfReport)="setCustomMonthPrefixOfReport($event)"
+								*ngIf="user?.userType === 'CSAdmin'"
+								[campaignId]="campaignId"
+								[campaignStartDate]="campaignStartDate"
+								[campaignStartDate]="campaignStartDate"
+								[insightView]="insightView"
+								[monthPrefixOfReport]="monthPrefixOfReport"
+								[showCalendar]="showCalendar"
+								[showDateRangeSelector]="showDateRangeSelector"
+							></app-custom-date-range>
+						</div>
+					</div>
+					<div class="container">
+						<div *ngIf="insightView.id !== '88c48bfd-8939-42f1-8b1e-96fcc7764a94'" class="row">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'SOVIssues']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'SOVIssues'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											Issues in <span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'SOVIssues',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPosition="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'SOVIssues')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'SOVIssues']?.isKeywordView
+											"
+											class="total-count"
+											matTooltip="View all conversations on issues"
+											matTooltipPosition="above"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Issues']['keywords'],
+														'Issues'
+													)
+												"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Issues']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'SOVIssues']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'SOVIssues'])"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'SOVIssues']?.value
+												}}"
+												matTooltipPosition="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'SOVIssues']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'SOVIssues']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'SOVIssues']?.isKeywordView">
+										<app-chart
+											[setChartObject]="insightView[monthPrefixOfReport + 'SOVIssues']?.selectedKeywordInsights"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'SOVRemedies']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'SOVRemedies'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											Remedies in <span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'SOVRemedies',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPosition="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'SOVRemedies')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'SOVRemedies']?.isKeywordView
+											"
+											class="total-count"
+											matTooltip="View all conversations on Remedies"
+											matTooltipPosition="above"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Remedies']['keywords'],
+														'Remedies'
+													)
+												"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Remedies']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'SOVRemedies']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'SOVRemedies'])"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'SOVRemedies']?.value
+												}}"
+												matTooltipPosition="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'SOVRemedies']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'SOVRemedies']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'SOVRemedies']?.isKeywordView">
+										<app-chart
+											[setChartObject]="insightView[monthPrefixOfReport + 'SOVRemedies']?.selectedKeywordInsights"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'SOVProducts']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'SOVProducts'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											{{ alternateTextToBeDisplayed ? alternateTextToBeDisplayed : 'Products' }}
+											in
+											<span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'SOVProducts',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPosition="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'SOVProducts')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'SOVProducts']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Products']['keywords'],
+														'Products'
+													)
+												"
+												matTooltip="View all conversations on {{
+													alternateTextToBeDisplayed ? alternateTextToBeDisplayed : 'Products'
+												}}"
+												matTooltipPosition="above"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Products']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'SOVProducts']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'SOVProducts'])"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'SOVProducts']?.value
+												}}"
+												matTooltipPosition="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'SOVProducts']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'SOVProducts']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'SOVProducts']?.isKeywordView">
+										<app-chart
+											[setChartObject]="insightView[monthPrefixOfReport + 'SOVProducts']?.selectedKeywordInsights"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'SOVBrands']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'SOVBrands'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											Brands in <span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'SOVBrands',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPostion="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'SOVBrands')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'SOVBrands']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Brands']['keywords'],
+														'Brands'
+													)
+												"
+												matTooltip="View all conversations on Brands"
+												matTooltipPostion="above"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Brands']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'SOVBrands']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'SOVBrands'])"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'SOVBrands']?.value
+												}}"
+												matTooltipPostion="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'SOVBrands']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'SOVBrands']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'SOVBrands']?.isKeywordView">
+										<app-chart
+											[setChartObject]="insightView[monthPrefixOfReport + 'SOVBrands']?.selectedKeywordInsights"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" *ngIf="isAmenitiesEnabled">
+							<div class="col-xs-12 col-sm-6">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'SOVAmenities']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'SOVAmenities'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											Amenities in <span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'SOVAmenities',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPostion="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'SOVAmenities')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'SOVAmenities']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Amenities']['keywords'],
+														'Amenities'
+													)
+												"
+												matTooltip="View all conversations on Amenities"
+												matTooltipPostion="above"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Amenities']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'SOVAmenities']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'SOVAmenities'])"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'SOVAmenities']?.value
+												}}"
+												matTooltipPostion="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'SOVAmenities']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'SOVAmenities']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'SOVAmenities']?.isKeywordView">
+										<app-chart
+											[setChartObject]="insightView[monthPrefixOfReport + 'SOVAmenities']?.selectedKeywordInsights"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="graph-wrapper">
+									<span
+										class="back-btn"
+										*ngIf="
+											insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+											insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.isKeywordView
+										"
+										(click)="showSOVInsights(insightView[monthPrefixOfReport + 'ShareOfVoiceReport'])"
+										>Back</span
+									>
+									<div class="d-flex justify-content-between">
+										<p class="name">
+											Share of voice in <span class="bold-text">'{{ insightView.viewName }} '</span>
+											<span
+												(click)="
+													showInsights(
+														insightView.level + '_' + monthPrefixOfReport + 'ShareOfVoiceReport',
+														insightView.viewName
+													)
+												"
+												class="insight-btn"
+												matTooltip="View insights"
+												matTooltipPostion="above"
+											>
+												<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+														stroke="#33334F"
+														stroke-width="0.2"
+													/>
+												</svg>
+
+												<small *ngIf="insights" class="insight-count">{{
+													getNumberOfInsights(insightView.level + '_' + monthPrefixOfReport + 'ShareOfVoiceReport')
+												}}</small>
+											</span>
+										</p>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												!insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="
+													openConversationPanel(
+														insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Brands']['keywords'],
+														'Share of voice'
+													)
+												"
+												matTooltip="View all conversations on Share of voice"
+												matTooltipPostion="above"
+											>
+												{{ insightView[monthPrefixOfReport + 'TotalConversationsInSOV']['Brands']['count'] }}
+												mentions
+											</a>
+										</div>
+										<div
+											*ngIf="
+												insightView[monthPrefixOfReport + 'TotalConversationsInSOV'] &&
+												insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.isKeywordView
+											"
+											class="total-count"
+										>
+											<a
+												(click)="
+													openKeywordConverstaionalPanel(insightView[monthPrefixOfReport + 'ShareOfVoiceReport'])
+												"
+												matTooltip="View all conversations on {{
+													insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.value
+												}}"
+												matTooltipPostion="above"
+											>
+												Show Conversations
+											</a>
+										</div>
+									</div>
+									<div *ngIf="!insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.isKeywordView">
+										<app-chart [setChartObject]="insightView[monthPrefixOfReport + 'ShareOfVoiceReport']"></app-chart>
+									</div>
+									<div *ngIf="insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.isKeywordView">
+										<app-chart
+											[setChartObject]="
+												insightView[monthPrefixOfReport + 'ShareOfVoiceReport']?.selectedKeywordInsights
+											"
+										></app-chart>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Share of voice tab body ends here -->
+		<!-- Word cloud tab body starts here -->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}{{ subcategoryId }}wordCloud-tab"
+			class="tab-pane fade"
+			id="{{ getTabId() }}{{ subcategoryId }}wordCloud"
+			role="tabpanel"
+		>
+			<div class="container">
+				<div class="graph-container">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-4">
+								<div class="graph-wrapper">
+									<p class="name">
+										<span class="bold-text">{{ getMonthDisplayNameForChart(3) }}</span>
+										<span
+											(click)="
+												showInsights(insightView.level + '_' + 'thirdMonthInPastWordCloudReport', insightView.viewName)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPostion="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small class="insight-count" *ngIf="insights">{{
+												getNumberOfInsights(insightView.level + '_' + 'thirdMonthInPastWordCloudReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<ng-container
+											*ngIf="insightView.thirdMonthInPastWordCloudReport; else loadingCommentsPerPostReport"
+										>
+											<div
+												*ngIf="!insightView.thirdMonthInPastWordCloudReport.isEmpty; else emptyCommentsPerPostReport"
+											>
+												<div
+													*ngIf="
+														insightView.thirdMonthInPastWordCloudReport.wordCloudImage;
+														else loadingCommentsPerPostReport
+													"
+												>
+													<img
+														alt=""
+														class="word-cloud-wrapper"
+														src="{{ insightView.thirdMonthInPastWordCloudReport.wordCloudImage }}"
+													/>
+												</div>
+											</div>
+											<ng-template #emptyCommentsPerPostReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_state_icon.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingCommentsPerPostReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-4">
+								<div class="graph-wrapper">
+									<p class="name">
+										<span class="bold-text">{{ getMonthDisplayNameForChart(2) }}</span>
+										<span
+											(click)="
+												showInsights(insightView.level + '_' + 'secondMonthInPastWordCloudReport', insightView.viewName)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPostion="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small class="insight-count" *ngIf="insights">{{
+												getNumberOfInsights(insightView.level + '_' + 'secondMonthInPastWordCloudReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<ng-container
+											*ngIf="insightView.secondMonthInPastWordCloudReport; else loadingCommentsPerPostReport"
+										>
+											<div
+												*ngIf="!insightView.secondMonthInPastWordCloudReport.isEmpty; else emptyCommentsPerPostReport"
+											>
+												<div
+													*ngIf="
+														insightView.secondMonthInPastWordCloudReport.wordCloudImage;
+														else loadingCommentsPerPostReport
+													"
+												>
+													<img
+														alt=""
+														class="word-cloud-wrapper"
+														src="{{ insightView.secondMonthInPastWordCloudReport.wordCloudImage }}"
+													/>
+												</div>
+											</div>
+											<ng-template #emptyCommentsPerPostReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_state_icon.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingCommentsPerPostReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-4">
+								<div class="graph-wrapper">
+									<p class="name">
+										<span class="bold-text">{{ getMonthDisplayNameForChart(1) }}</span>
+										<span
+											(click)="
+												showInsights(insightView.level + '_' + 'firstMonthInPastWordCloudReport', insightView.viewName)
+											"
+											class="insight-btn"
+											matTooltip="View insights"
+											matTooltipPostion="above"
+										>
+											<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M8.875 7.375H5.125C4.918 7.375 4.75 7.543 4.75 7.75C4.75 7.957 4.918 8.125 5.125 8.125H8.875C9.082 8.125 9.25 7.957 9.25 7.75C9.25 7.543 9.082 7.375 8.875 7.375ZM9.625 5.125H4.375C4.168 5.125 4 5.293 4 5.5C4 5.707 4.168 5.875 4.375 5.875H9.625C9.832 5.875 10 5.707 10 5.5C10 5.293 9.832 5.125 9.625 5.125ZM7 1C3.68651 1 1 3.35049 1 6.25C1 7.90714 1.87937 9.38237 3.25 10.3446V13L5.87837 11.4051C6.24214 11.4651 6.61637 11.5 7 11.5C10.3139 11.5 13 9.14951 13 6.25C13 3.35049 10.3139 1 7 1ZM7 10.75C6.562 10.75 6.139 10.699 5.73249 10.6124L3.96698 11.6736L3.99061 9.93437C2.63725 9.12026 1.75 7.77477 1.75 6.25C1.75 3.76488 4.10049 1.75 7 1.75C9.89951 1.75 12.25 3.76488 12.25 6.25C12.25 8.73512 9.89951 10.75 7 10.75Z"
+													stroke="#33334F"
+													stroke-width="0.2"
+												/>
+											</svg>
+
+											<small class="insight-count" *ngIf="insights">{{
+												getNumberOfInsights(insightView.level + '_' + 'firstMonthInPastWordCloudReport')
+											}}</small>
+										</span>
+									</p>
+									<div>
+										<ng-container
+											*ngIf="insightView.firstMonthInPastWordCloudReport; else loadingCommentsPerPostReport"
+										>
+											<div
+												*ngIf="!insightView.firstMonthInPastWordCloudReport.isEmpty; else emptyCommentsPerPostReport"
+											>
+												<div
+													*ngIf="
+														insightView.firstMonthInPastWordCloudReport.wordCloudImage;
+														else loadingCommentsPerPostReport
+													"
+												>
+													<img
+														alt=""
+														class="word-cloud-wrapper"
+														src="{{ insightView.firstMonthInPastWordCloudReport.wordCloudImage }}"
+													/>
+												</div>
+											</div>
+											<ng-template #emptyCommentsPerPostReport>
+												<div class="no-data-wrapper">
+													<img alt="" class="no-data-img" src="assets/images/empty_state_icon.svg" />
+													<p class="primary-text">No data for selected time period</p>
+													<p class="secondary-text">Select another time period</p>
+												</div>
+											</ng-template>
+										</ng-container>
+										<ng-template #loadingCommentsPerPostReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Word cloud tab body ends here -->
+
+		<!-- Association tab starts here-->
+		<div
+			attr.aria-labelledby="{{ getTabId() }}association-tab"
+			class="tab-pane fade"
+			id="{{ getTabId() }}association"
+			role="tabpanel"
+		>
+			<div class="container">
+				<div class="graph-container">
+					<div class="pills-container">
+						<div class="pills-wrapper">
+							<span class="description">Trends for : </span>
+							<button
+								(click)="setMonthPrefixOfReport(month.key)"
+								*ngFor="let month of months | keyvalue: defaultComparator"
+								[ngClass]="{active: month.value === monthPrefixOfReport}"
+								class="btn-month"
+								type="button"
+							>
+								{{ insightView.getPillNameBasedOnReportType(month.value) }}
+							</button>
+							<app-custom-date-range
+								(setMonthPrefixOfReport)="setCustomMonthPrefixOfReport($event)"
+								*ngIf="user?.userType === 'CSAdmin'"
+								[campaignId]="campaignId"
+								[campaignStartDate]="campaignStartDate"
+								[campaignStartDate]="campaignStartDate"
+								[insightView]="insightView"
+								[monthPrefixOfReport]="monthPrefixOfReport"
+								[showCalendar]="showCalendar"
+								[showDateRangeSelector]="showDateRangeSelector"
+								[associationInsightId]="associationInsights?.id"
+							></app-custom-date-range>
+						</div>
+					</div>
+					<div class="keyword-dropdown" *ngIf="associationKeywordMetrics?.reportData?.keywords?.length > 0">
+						<h6>Select the association keyword from the dropdown</h6>
+
+						<div class="dropdown brand-dropdown">
+							<button
+								aria-expanded="false"
+								aria-haspopup="true"
+								class="brand-dropdown-button"
+								data-toggle="dropdown"
+								type="button"
+							>
+								<span>{{ selectedAssociationKeyword }}</span>
+								<svg fill="none" height="5" viewBox="0 0 9 5" width="9" xmlns="http://www.w3.org/2000/svg">
+									<path d="M4.5 5L9 -4.76837e-07H0L4.5 5Z" fill="#33334F" opacity="0.8" />
+								</svg>
+							</button>
+							<div class="dropdown-menu">
+								<a
+									(click)="setAssociationTabView(value)"
+									*ngFor="let value of associationKeywordMetrics?.reportData?.keywords"
+									class="dropdown-item"
+									>{{ value }}</a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="container association-container">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12">
+								<div class="graph-wrapper">
+									<p class="name">{{ insightView.viewName }} Mentions Over Time</p>
+									<div *ngIf="!isAssociationGraphEmpty; else emptyReport">
+										<div
+											class="graph-wrapper-association"
+											*ngIf="associationKeywordMetrics; else loadingAssociationReport"
+										>
+											<div class="graph-wrapper-left">
+												<app-chart [setChartObject]="associationKeywordMetrics"></app-chart>
+											</div>
+											<div
+												class="graph-wrapper-right"
+												*ngIf="selectedAssociationLegendDetails && !associationKeywordMetrics.isEmpty"
+											>
+												<p class="text-header">{{ selectedAssociationLegendDetails.selectedMonth }}</p>
+												<div class="text-body">
+													<p>
+														Posts around {{ selectedAssociationKeyword }} = {{ selectedAssociationLegendDetails.posts }}
+													</p>
+													<p>
+														Conversations around {{ selectedAssociationKeyword }} =
+														{{ selectedAssociationLegendDetails.conversations }}
+													</p>
+													<p>
+														Mentions of {{ selectedAssociationKeyword }} =
+														{{
+															selectedAssociationLegendDetails.mentionOfKeyword
+																? selectedAssociationLegendDetails.mentionOfKeyword
+																: 0
+														}}
+													</p>
+													<p>
+														Mentions of {{ insightView.viewName }} =
+														{{
+															selectedAssociationLegendDetails.mentionsOfBrand[insightView.viewName.toLowerCase()]
+																? selectedAssociationLegendDetails.mentionsOfBrand[insightView.viewName.toLowerCase()]
+																: 0
+														}}
+													</p>
+													<p>
+														Mentions of {{ selectedAssociationKeyword }} and {{ insightView.viewName }} mentions
+														together =
+														{{
+															selectedAssociationLegendDetails.mentionsOfKeywordBrand[
+																insightView.viewName.toLowerCase()
+															]
+																? selectedAssociationLegendDetails.mentionsOfKeywordBrand[
+																		insightView.viewName.toLowerCase()
+																  ]
+																: 0
+														}}
+													</p>
+													<p>Frequency Percentage = {{ selectedAssociationLegendDetails['frequency'] }}</p>
+												</div>
+											</div>
+										</div>
+										<ng-template #loadingAssociationReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<ng-template #emptyReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="container association-container" *ngFor="let subCategoryView of subCategoryInsights | slice: 0:1">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12">
+								<div class="graph-wrapper">
+									<p class="name">Competitor Brand Analysis</p>
+									<div *ngIf="!isAssociationGraphEmpty; else emptyReport">
+										<div
+											class="graph-wrapper-association"
+											*ngIf="associationShareOfVoiceMetrics; else loadingAssociationReport"
+										>
+											<div>
+												<app-chart [setChartObject]="associationShareOfVoiceMetrics"></app-chart>
+											</div>
+										</div>
+										<ng-template #loadingAssociationReport>
+											<div class="loader-wrapper">
+												<div class="loader"></div>
+												<p class="loading-text">Loading data</p>
+											</div>
+										</ng-template>
+									</div>
+									<ng-template #emptyReport>
+										<div class="no-data-wrapper">
+											<img alt="" class="no-data-img" src="assets/images/empty_graph.svg" />
+											<p class="primary-text">No data for selected time period</p>
+											<p class="secondary-text">Select another time period</p>
+										</div>
+									</ng-template>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Association tab body ends here-->
+	</div>
+</div>
+
+<div (click)="closeInsights(false)" *ngIf="showInsightsList" class="convosight-overlay"></div>
+<div *ngIf="showInsightsList">
+	<app-brand-insights-sidebar
+		(closeInsights)="closeInsights($event)"
+		[insights]="selectedInsight"
+		[keyword]="selectedKeyword"
+	></app-brand-insights-sidebar>
+</div>

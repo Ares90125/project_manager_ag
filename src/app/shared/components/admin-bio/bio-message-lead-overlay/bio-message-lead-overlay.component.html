@@ -1,0 +1,182 @@
+<!-- Message Modal -->
+<div class="modal file-alert messages-modal">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<ng-container *ngIf="!messageLeadCount">You have not received any messages yet</ng-container>
+					<ng-container *ngIf="messageLeadCount > 0">You have received</ng-container>
+					<ng-container *ngIf="messageLeadCount === 1"> 1 message</ng-container>
+					<ng-container *ngIf="messageLeadCount > 1"> {{ messageLeadCount }} messages </ng-container>
+				</h5>
+				<button
+					aria-label="Close"
+					data-cs-id="c70bed0c-c94e-4eb5-9081-62ad2a55c75d"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="closeMessageLeadPopup($event)"
+					class="close"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body p-0">
+				<div class="message-recieved-wrap" *ngIf="!isLoading && messageLeadCount">
+					<div class="message-recieved-box" *ngFor="let lead of messageLead | orderBy: 'createdAtUTCTick'">
+						<div class="mr-header">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7.99337 1.33594C4.31337 1.33594 1.33337 4.3226 1.33337 8.0026C1.33337 11.6826 4.31337 14.6693 7.99337 14.6693C11.68 14.6693 14.6667 11.6826 14.6667 8.0026C14.6667 4.3226 11.68 1.33594 7.99337 1.33594ZM8.00004 13.3359C5.05337 13.3359 2.66671 10.9493 2.66671 8.0026C2.66671 5.05594 5.05337 2.66927 8.00004 2.66927C10.9467 2.66927 13.3334 5.05594 13.3334 8.0026C13.3334 10.9493 10.9467 13.3359 8.00004 13.3359ZM7.85337 4.66927H7.81337C7.54671 4.66927 7.33337 4.8826 7.33337 5.14927V8.29594C7.33337 8.52927 7.45337 8.74927 7.66004 8.86927L10.4267 10.5293C10.6534 10.6626 10.9467 10.5959 11.08 10.3693C11.22 10.1426 11.1467 9.8426 10.9134 9.70927L8.33337 8.17594V5.14927C8.33337 4.8826 8.12004 4.66927 7.85337 4.66927Z"
+									fill="#A26700"
+								/>
+							</svg>
+							<span
+								>Received at
+								<strong>
+									{{ lead.createdAtUTC | date: 'shortTime' }}, {{ lead.createdAtUTC | date: 'dd MMM y' }}
+								</strong></span
+							>
+						</div>
+						<div class="mr-body">
+							<ul class="list-unstyled">
+								<li>
+									<p>Name:</p>
+									<h6>
+										<strong>{{ lead.fullName }}</strong>
+									</h6>
+								</li>
+								<li>
+									<p>Official email:</p>
+									<h6>
+										<a
+											href="{{ 'mailto:' + lead.emailAddress }}"
+											data-cs-id="428692c7-20ee-491c-9a10-f4355eda66f9"
+											data-cs-label="Email Address"
+											data-cs-source="dialog"
+											(click)="recordButtonClick($event)"
+											>{{ lead.emailAddress }}</a
+										>
+									</h6>
+								</li>
+								<li>
+									<p>Company name:</p>
+									<h6>
+										<strong *ngIf="lead?.companyName; else notProvided">{{ lead.companyName }}</strong>
+										<ng-template #notProvided>Not Provided</ng-template>
+									</h6>
+								</li>
+								<li>
+									<p>Phone number:</p>
+									<h6>
+										<a
+											*ngIf="lead.phoneNumber; else phoneNotProvided"
+											href="{{ 'tel:' + lead.phoneNumber }}"
+											data-cs-id="e618ba62-d805-43b1-a4fc-15f469b96f9f"
+											data-cs-label="Phone number"
+											data-cs-source="dialog"
+											(click)="recordButtonClick($event)"
+											>{{ lead.phoneNumber ?? 'Not Provided' }}</a
+										>
+										<ng-template #phoneNotProvided>Not Provided</ng-template>
+									</h6>
+								</li>
+								<li class="w-100">
+									<p>Message:</p>
+									<ng-container *ngIf="!lead.message; else messageLead">
+										<h6>Not Provided</h6>
+									</ng-container>
+									<ng-template #messageLead>
+										<div [innerHtml]="lead.message | sanitizeHtml"></div>
+									</ng-template>
+								</li>
+							</ul>
+						</div>
+						<div class="mr-footer" *ngIf="lead?.targets?.length !== 0">
+							<h6>What {{ lead.fullName }} is trying to achieve with Community Marketing?</h6>
+							<ul class="list-unstyled">
+								<li *ngFor="let target of lead.targets">
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.00004 1.33594C4.32004 1.33594 1.33337 4.3226 1.33337 8.0026C1.33337 11.6826 4.32004 14.6693 8.00004 14.6693C11.68 14.6693 14.6667 11.6826 14.6667 8.0026C14.6667 4.3226 11.68 1.33594 8.00004 1.33594ZM6.66671 11.3359L3.33337 8.0026L4.27337 7.0626L6.66671 9.44927L11.7267 4.38927L12.6667 5.33594L6.66671 11.3359Z"
+											fill="#B8C0C8"
+										/>
+									</svg>
+									<span>{{ target }}</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<button class="convo-btn-normal convo-btn-bordered w-100" *ngIf="nextToken">
+						<span
+							*ngIf="!loadingExtraLead"
+							data-cs-id="2a1d91bc-cf60-4470-a39f-8e12010a8f19"
+							data-cs-label="Load more"
+							data-cs-source="dialog"
+							(click)="loadMoreMessageLead(); recordButtonClick($event)"
+							>Load more</span
+						>
+						<span class="btn-spinner" *ngIf="loadingExtraLead"></span>
+					</button>
+				</div>
+
+				<!-- Shimmers -->
+				<div class="message-recieved-wrap my-4" *ngIf="isLoading && messageLeadCount">
+					<div class="message-recieved-box">
+						<div class="mr-header">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7.99337 1.33594C4.31337 1.33594 1.33337 4.3226 1.33337 8.0026C1.33337 11.6826 4.31337 14.6693 7.99337 14.6693C11.68 14.6693 14.6667 11.6826 14.6667 8.0026C14.6667 4.3226 11.68 1.33594 7.99337 1.33594ZM8.00004 13.3359C5.05337 13.3359 2.66671 10.9493 2.66671 8.0026C2.66671 5.05594 5.05337 2.66927 8.00004 2.66927C10.9467 2.66927 13.3334 5.05594 13.3334 8.0026C13.3334 10.9493 10.9467 13.3359 8.00004 13.3359ZM7.85337 4.66927H7.81337C7.54671 4.66927 7.33337 4.8826 7.33337 5.14927V8.29594C7.33337 8.52927 7.45337 8.74927 7.66004 8.86927L10.4267 10.5293C10.6534 10.6626 10.9467 10.5959 11.08 10.3693C11.22 10.1426 11.1467 9.8426 10.9134 9.70927L8.33337 8.17594V5.14927C8.33337 4.8826 8.12004 4.66927 7.85337 4.66927Z"
+									fill="#A26700"
+								/>
+							</svg>
+							<div class="shimmer"></div>
+						</div>
+						<div class="mb-4"><app-loading-shimmer [type]="2"></app-loading-shimmer></div>
+						<div><app-loading-shimmer [type]="2"></app-loading-shimmer></div>
+					</div>
+					<div class="message-recieved-box">
+						<div class="mr-header">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7.99337 1.33594C4.31337 1.33594 1.33337 4.3226 1.33337 8.0026C1.33337 11.6826 4.31337 14.6693 7.99337 14.6693C11.68 14.6693 14.6667 11.6826 14.6667 8.0026C14.6667 4.3226 11.68 1.33594 7.99337 1.33594ZM8.00004 13.3359C5.05337 13.3359 2.66671 10.9493 2.66671 8.0026C2.66671 5.05594 5.05337 2.66927 8.00004 2.66927C10.9467 2.66927 13.3334 5.05594 13.3334 8.0026C13.3334 10.9493 10.9467 13.3359 8.00004 13.3359ZM7.85337 4.66927H7.81337C7.54671 4.66927 7.33337 4.8826 7.33337 5.14927V8.29594C7.33337 8.52927 7.45337 8.74927 7.66004 8.86927L10.4267 10.5293C10.6534 10.6626 10.9467 10.5959 11.08 10.3693C11.22 10.1426 11.1467 9.8426 10.9134 9.70927L8.33337 8.17594V5.14927C8.33337 4.8826 8.12004 4.66927 7.85337 4.66927Z"
+									fill="#A26700"
+								/>
+							</svg>
+							<div class="shimmer"></div>
+						</div>
+						<div class="mb-4"><app-loading-shimmer [type]="2"></app-loading-shimmer></div>
+						<div><app-loading-shimmer [type]="2"></app-loading-shimmer></div>
+					</div>
+				</div>
+
+				<!-- No messages -->
+				<div class="no-result" *ngIf="!messageLeadCount">
+					<ng-lottie
+						[options]="messageBoxAnimation"
+						containerClass="lottie-animation"
+						height="120px"
+						width="120px"
+					></ng-lottie>
+					<h6 class="mt-3">No messages yet!</h6>
+					<p>Share your bio with brands to receive more messages on your bio.</p>
+					<button
+						class="convo-btn-normal convo-btn-primary share-btn"
+						data-cs-id="3ac4febf-4c73-479e-bb60-9f6380a457b4"
+						data-cs-label="Share bio"
+						data-cs-source="dialog"
+						(click)="openShareModal($event)"
+					>
+						<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 10.7199C11.4933 10.7199 11.04 10.9199 10.6933 11.2333L5.94 8.46659C5.97333 8.31325 6 8.15992 6 7.99992C6 7.83992 5.97333 7.68659 5.94 7.53325L10.64 4.79325C11 5.12659 11.4733 5.33325 12 5.33325C13.1067 5.33325 14 4.43992 14 3.33325C14 2.22659 13.1067 1.33325 12 1.33325C10.8933 1.33325 10 2.22659 10 3.33325C10 3.49325 10.0267 3.64659 10.06 3.79992L5.36 6.53992C5 6.20659 4.52667 5.99992 4 5.99992C2.89333 5.99992 2 6.89325 2 7.99992C2 9.10659 2.89333 9.99992 4 9.99992C4.52667 9.99992 5 9.79325 5.36 9.45992L10.1067 12.2333C10.0733 12.3733 10.0533 12.5199 10.0533 12.6666C10.0533 13.7399 10.9267 14.6133 12 14.6133C13.0733 14.6133 13.9467 13.7399 13.9467 12.6666C13.9467 11.5933 13.0733 10.7199 12 10.7199Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Share bio</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

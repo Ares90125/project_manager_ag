@@ -1,0 +1,78 @@
+<div class="publish-queue-component">
+	<div class="publish-queue-content-wrapper">
+		<div class="publish-queue-content-header">
+			<div class="container">
+				<nav>
+					<ul class="list-unstyled">
+						<li
+							(click)="
+								tabSelected = 'scheduledposts';
+								navigateAsPerUrl('scheduledposts', selectedGroup.id);
+								recordButtonClick($event, selectedGroup)
+							"
+							[class.active]="tabSelected === 'scheduledposts'"
+							data-cs-id="dd19a75f-b738-4eb0-8e5f-60d8648631ae"
+							data-cs-label="Schedule Posts"
+							data-cs-source="page"
+						>
+							<a href="javascript:void(0)">
+								<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M5.88705 12.0818V15.0527C5.88705 15.2603 6.02224 15.4441 6.22244 15.5094C6.27249 15.5255 6.32384 15.5331 6.37454 15.5331C6.52664 15.5331 6.67354 15.4627 6.76714 15.3371L8.53058 12.9722L5.88705 12.0818Z"
+									/>
+									<path
+										d="M15.5944 0.888898C15.4449 0.784488 15.2486 0.770396 15.0861 0.854308L0.461197 8.38081C0.288297 8.46985 0.186248 8.65176 0.200548 8.84329C0.215498 9.03545 0.344847 9.19944 0.528797 9.26157L4.59453 10.6311L13.2532 3.33517L6.55298 11.2902L13.3669 13.5853C13.4176 13.602 13.4709 13.6109 13.5242 13.6109C13.6126 13.6109 13.7004 13.5872 13.7777 13.5411C13.9012 13.4668 13.9851 13.3419 14.0065 13.2016L15.794 1.35138C15.8206 1.17202 15.7439 0.993949 15.5944 0.888898Z"
+									/>
+								</svg>
+								<span>Schedule Posts</span>
+							</a>
+						</li>
+						<li
+							(click)="
+								tabSelected = 'postanalytics';
+								navigateAsPerUrl('postanalytics', selectedGroup.id);
+								recordButtonClick($event, selectedGroup)
+							"
+							[class.active]="tabSelected === 'postanalytics'"
+							data-cs-id="e025892d-5ab1-4aa7-b543-e9b0f73c1f37"
+							data-cs-label="Post Analytics"
+							data-cs-source="page"
+						>
+							<a href="javascript:void(0)">
+								<svg height="12" viewBox="0 0 16 12" width="16" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M14 0C12.8955 0 12 0.8955 12 2C12 2.4565 12.159 2.8725 12.4165 3.209L9.357 8.036C9.2405 8.015 9.122 8 9 8C8.8765 8 8.757 8.015 8.6395 8.036L7.126 5.6575C7.3595 5.3305 7.5 4.9325 7.5 4.5C7.5 3.3955 6.6045 2.5 5.5 2.5C4.3955 2.5 3.5 3.3955 3.5 4.5C3.5 4.9325 3.6405 5.3305 3.874 5.6575L2.3605 8.036C2.243 8.015 2.1235 8 2 8C0.8955 8 0 8.8955 0 10C0 11.1045 0.8955 12 2 12C3.1045 12 4 11.1045 4 10C4 9.5675 3.8595 9.1695 3.626 8.8425L5.1395 6.464C5.257 6.485 5.3765 6.5 5.5 6.5C5.6235 6.5 5.743 6.485 5.8605 6.464L7.374 8.8425C7.1405 9.1695 7 9.5675 7 10C7 11.1045 7.8955 12 9 12C10.1045 12 11 11.1045 11 10C11 9.5665 10.8585 9.1675 10.6235 8.84L13.71 3.971C13.8055 3.985 13.901 4 14 4C15.1045 4 16 3.1045 16 2C16 0.8955 15.1045 0 14 0Z"
+									/>
+								</svg>
+								<span>Post Analytics</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+		<div class="publish-queue-content-body" data-test-id="publish-content-screen">
+			<div class="container" *ngIf="currentUser">
+				<ng-container *ngIf="tabSelected === 'scheduledposts'">
+					<app-queue
+						(isFilterApplied)="filterApplied = $event"
+						[queueData]="{
+							selectedGroup: group,
+							currentUser: currentUser,
+							isNavRequired: false
+						}"
+					>
+					</app-queue>
+				</ng-container>
+				<ng-container *ngIf="tabSelected === 'postanalytics'">
+					<app-post-analytics
+						[postAnalyticData]="{selectedGroup: group, isNavRequired: false}"
+						(toQueuePage)="this.tabSelected = $event"
+					>
+					</app-post-analytics>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,162 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.card-left {
+	@media (max-width: 767px) {
+		max-width: 100%;
+	}
+}
+
+.bio-card {
+	.profile-box {
+		padding-bottom: 16px;
+
+		.change-image-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			@media (max-width: 767px) {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+			.change-image-row-left {
+				display: flex;
+				align-items: center;
+				figure {
+					margin: 0 12px 0 0;
+					img {
+						width: 50px;
+						height: 50px;
+						border-radius: 40px;
+						object-fit: cover;
+					}
+				}
+				h5 {
+					@include font-paragraph-l-md;
+					margin-bottom: 8px;
+				}
+				h6 {
+					@include font-paragraph-s;
+					margin: 0;
+					color: $black-70;
+				}
+			}
+			.change-image-row-right {
+				position: relative;
+				overflow: hidden;
+				@media (max-width: 767px) {
+					width: 100%;
+					padding-top: 32px;
+					.convo-btn-normal {
+						width: 100%;
+						justify-content: center;
+					}
+				}
+			}
+		}
+	}
+	.bio-row {
+		padding: 16px 0;
+		.row {
+			margin-left: -8px;
+			margin-right: -8px;
+			@media (max-width: 767px) {
+				flex-direction: column;
+			}
+			.col {
+				padding-left: 8px;
+				padding-right: 8px;
+				@media (max-width: 767px) {
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
+.hide-input {
+	position: absolute;
+	height: 32px;
+	width: 132px;
+	opacity: 0;
+	width: 100%;
+}
+
+.unsaved-changes-card {
+	position: sticky;
+	bottom: 0;
+	z-index: 1000;
+	background: #ffffff;
+	box-shadow: 0px -2px 4px rgba(7, 27, 47, 0.08);
+	border-radius: 6px 6px 0 0;
+	.bio-card {
+		box-shadow: none;
+		margin: 0;
+		.card-left {
+			.draft-spinner {
+				display: flex;
+				gap: 5px;
+				align-items: center;
+			}
+			p {
+				color: $primary-1;
+				@include font-label-xs;
+			}
+		}
+	}
+	.card-right {
+		.publish-bio {
+			min-width: 127px;
+			justify-content: space-evenly;
+		}
+		.convo-btn-primary {
+			height: 40px;
+		}
+	}
+}
+
+.draft-saved {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: #ffefd9;
+	border-radius: 3px;
+	padding: 10px;
+}
+.modal.file-alert {
+	.icon {
+		text-align: center;
+	}
+	.lottie-animation {
+		margin: 0px auto;
+	}
+	h6 {
+		@include font-paragraph-l-md;
+		margin-bottom: 6px;
+	}
+	p {
+		margin-bottom: 30px;
+		color: $black-70;
+	}
+	.convo-btn-normal {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		svg {
+			margin-right: 4px;
+		}
+	}
+	.close-btn {
+		padding: 16px 16px 0px 0px;
+		button {
+			opacity: 1;
+		}
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+}
+.text-primary-1 {
+	color: $primary-1;
+}

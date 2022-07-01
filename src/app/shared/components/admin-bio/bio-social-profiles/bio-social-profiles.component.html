@@ -1,0 +1,239 @@
+<div class="bio-card">
+	<h5><img src="assets/images/social-icon.png" alt="" /> Social profiles</h5>
+	<h6>Add your social profiles here.</h6>
+	<div class="social-profiles-wrap" *ngIf="socialProfileList">
+		<div class="card-row" *ngFor="let socialProfile of socialProfileList; let i = index">
+			<div class="card-row-left" (click)="openSocialProfileOnNewTab(socialProfile.profileLink)">
+				<div class="profile-wrap" data-test-id="link-socialprofile-adminbio-page">
+					<figure>
+						<ng-container *ngIf="socialProfile.platform === 'Facebook'"
+							><img src="assets/images/facebook-social-icon.svg" alt=""
+						/></ng-container>
+						<ng-container *ngIf="socialProfile.platform === 'Instagram'"
+							><img src="assets/images/instagram-social-icon.svg" alt=""
+						/></ng-container>
+						<ng-container *ngIf="socialProfile.platform === 'Twitter'"
+							><img src="assets/images/twitter-social-icon.svg" alt=""
+						/></ng-container>
+						<ng-container *ngIf="socialProfile.platform === 'LinkedIn'"
+							><img src="assets/images/linkedin-social-icon.svg" alt=""
+						/></ng-container>
+						<ng-container *ngIf="socialProfile.platform === 'YouTube'"
+							><img src="assets/images/youtube-social-icon.svg" alt=""
+						/></ng-container>
+						<ng-container *ngIf="socialProfile.platform === 'Other'"
+							><img src="assets/images/blog-social-icon.svg" alt=""
+						/></ng-container>
+					</figure>
+					<div>
+						<ng-container *ngIf="socialProfile.platform === 'Other'">
+							<h6>Website/Blog</h6>
+						</ng-container>
+						<ng-container *ngIf="socialProfile.platform !== 'Other'">
+							<h6>{{ socialProfile.platform }}</h6>
+						</ng-container>
+
+						<small>{{ socialProfile.profileLink | ellipsis: 35 }}</small>
+					</div>
+				</div>
+			</div>
+			<div class="card-row-right">
+				<button
+					data-cs-id="f8c3e0f7-594e-433a-9c59-4be904ec067b"
+					data-cs-label="Cross"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); removeSocialProfile(i)"
+					class="remove-btn"
+				>
+					<img src="assets/images/remove-icon.svg" alt="" />
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<button
+		class="convo-btn-normal convo-btn-bordered convo-btn-small"
+		data-target="#social-accounts"
+		data-toggle="modal"
+		data-cs-id="5cc68886-5afa-4dd5-b11f-70683b07f3bf"
+		data-cs-label="Add profile"
+		data-cs-source="page"
+		(click)="recordButtonClick($event)"
+	>
+		<img src="assets/images/icon_add_blue.svg" alt="" /> <span>Add profile</span>
+	</button>
+</div>
+
+<div
+	class="modal"
+	id="social-accounts"
+	tabindex="-1"
+	aria-labelledby="social-accounts"
+	aria-hidden="true"
+	data-backdrop="static"
+>
+	<div class="modal-dialog modal-dialog-sm modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<button
+						*ngIf="showForm"
+						data-cs-id="ae054062-015b-4aff-9240-57282be1f9d3"
+						data-cs-label="Close"
+						data-cs-source="page"
+						(click)="resetForm(); recordButtonClick($event); showForm = false"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19 11H7.82998L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+								fill="#33334f"
+							/>
+						</svg>
+					</button>
+					<span>Add social profile</span>
+				</h5>
+				<button
+					type="button"
+					data-cs-id="a770fafa-d45d-41e3-9225-bd0d4e67a34a"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeSocialProfile"
+					(click)="resetForm(); recordButtonClick($event)"
+					class="close-btn"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<img src="assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="social-accounts-body">
+					<ul class="list-unstyled">
+						<li
+							*ngIf="!showForm || selectedType === 'Facebook'"
+							data-cs-id="4dda0fc7-22cd-41b5-baa5-6399d571a14c"
+							data-cs-label="Facebook"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('Facebook')"
+						>
+							<figure><img src="assets/images/facebook-social-icon.svg" alt="" /></figure>
+							<h6>Facebook</h6>
+						</li>
+						<li
+							*ngIf="!showForm || selectedType === 'Instagram'"
+							data-cs-id="bc1f7047-a734-46f7-8020-3859ebbef2a5"
+							data-cs-label="Instagram"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('Instagram')"
+						>
+							<figure><img src="assets/images/instagram-social-icon.svg" alt="" /></figure>
+							<h6>Instagram</h6>
+						</li>
+						<li
+							*ngIf="!showForm || selectedType === 'Twitter'"
+							data-cs-id="79177cf4-9e88-4126-8a97-868516c5c478"
+							data-cs-label="Twitter"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('Twitter')"
+						>
+							<figure><img src="assets/images/twitter-social-icon.svg" alt="" /></figure>
+							<h6>Twitter</h6>
+						</li>
+						<li
+							*ngIf="!showForm || selectedType === 'LinkedIn'"
+							data-cs-id="5d3af9e3-3495-432b-9787-9647d8fad397"
+							data-cs-label="LinkedIn"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('LinkedIn')"
+						>
+							<figure><img src="assets/images/linkedin-social-icon.svg" alt="" /></figure>
+							<h6>LinkedIn</h6>
+						</li>
+						<li
+							*ngIf="!showForm || selectedType === 'YouTube'"
+							data-cs-id="67eec4b2-04c7-4aea-b364-4d5e0f8316ba"
+							data-cs-label="YouTube"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('YouTube')"
+						>
+							<figure><img src="assets/images/youtube-social-icon.svg" alt="" /></figure>
+							<h6>YouTube</h6>
+						</li>
+						<li
+							*ngIf="!showForm || selectedType === 'Other'"
+							data-cs-id="e51eab69-a9b6-4489-a850-d7b4c1572390"
+							data-cs-label="Website/Blog"
+							data-cs-source="dialog"
+							(click)="recordButtonClick($event); selectProfile('Other')"
+						>
+							<figure><img src="assets/images/blog-social-icon.svg" alt="" /></figure>
+							<h6>Website/Blog</h6>
+						</li>
+					</ul>
+					<ng-container *ngIf="showForm">
+						<form [formGroup]="socialForm">
+							<div class="input-wrap social-list">
+								<label *ngIf="selectedType === 'Other'">URL <sup>*</sup></label>
+								<label *ngIf="selectedType === 'YouTube'">Channel URL <sup>*</sup></label>
+								<label *ngIf="selectedType === 'Instagram'">Instagram handle <sup>*</sup></label>
+								<label *ngIf="selectedType === 'Twitter'">Twitter handle <sup>*</sup></label>
+								<label
+									*ngIf="
+										selectedType !== 'Instagram' &&
+										selectedType !== 'Twitter' &&
+										selectedType !== 'YouTube' &&
+										selectedType !== 'Other'
+									"
+									>Profile URL <sup>*</sup></label
+								>
+								<div class="social-item-input">
+									<input
+										[ngClass]="{'extra-left-pad': selectedType === 'Instagram' || selectedType === 'Twitter'}"
+										[placeholder]="
+											selectedType === 'Other'
+												? 'Paste URL here...'
+												: selectedType === 'YouTube'
+												? 'Paste channel URL here...'
+												: selectedType === 'Instagram'
+												? 'your instagram handle'
+												: selectedType === 'Twitter'
+												? 'your twitter handle'
+												: 'Paste profile URL here...'
+										"
+										class="convo-input"
+										formControlName="profileUrl"
+										name="profileUrl"
+										type="text"
+									/>
+									<p
+										*ngIf="selectedType === 'Instagram' || selectedType === 'Twitter'"
+										class="specific-placeholder m-0"
+									>
+										@
+									</p>
+								</div>
+							</div>
+							<div class="error-message" *ngIf="showError">
+								<img src="assets/images/icon-error.svg" alt="" />
+								<span>Please enter a valid {{ selectedType }} URL</span>
+							</div>
+						</form>
+					</ng-container>
+				</div>
+			</div>
+			<div class="modal-footer border-0" *ngIf="showForm">
+				<button
+					type="button"
+					[disabled]="!socialForm.valid || !socialForm.get('profileUrl').value"
+					class="convo-btn-normal convo-btn-primary w-100 convo-btn-big"
+					data-cs-id="9342f728-834f-4590-b916-aae51cfb35ab"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event); saveProfile()"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,52 @@
+[
+	{
+		"id": 1,
+		"heading": "Welcome New Members (weekly)",
+		"description": "Copy this post and use this weekly to welcome the new members of your group",
+		"thumbnail": "assets/images/group_admin/template-icon-1.svg",
+		"text": "Hey everyone \uD83D\uDC4B \nWelcoming all of you to <Facebook group name>\nDo share a small introduction about you which helps the members know you better \uD83D\uDE4C\n\nFeel free to ask any questions you have",
+		"images": [],
+		"videos": [],
+		"testId": "template-welcome-new-members"
+	},
+	{
+		"id": 2,
+		"heading": "Weekly Promotion Day post",
+		"description": "Use this post when you have the weekly promotion day in your group",
+		"thumbnail": "assets/images/group_admin/template-icon-2.svg",
+		"text": "Hey everyone \uD83D\uDC4B \n\nToday is our weekly promotion day \uD83C\uDFBA\n\nPlease feel free to share links of whatever businesses you are working on along with description and how it can benefit the group members \n\nAlso share if you have any special discounts for the community members",
+		"images": [],
+		"videos": [],
+		"testId": "template-weekly-promotion-day"
+	},
+	{
+		"id": 3,
+		"heading": "Weekly Jobs Day post",
+		"description": "Use this post when you have the weekly jobs day in your group",
+		"thumbnail": "assets/images/group_admin/template-icon-3.png",
+		"text": "Hey everyone \uD83D\uDC4B \n\nToday is our weekly jobs day \uD83D\uDC68\u200D\uD83D\uDCBB\n\nPlease feel free to share if you are hiring for any positions in your companies. Do share the link of the job posting and a small description of the role. These can be full time, remote, part-time, freelance or work from home roles.\n\nAlso share a small introduction about your company along with link so that the community members can get complete information",
+		"images": [],
+		"videos": [],
+		"testId": "template-weekly-jobs-day"
+	},
+	{
+		"id": 4,
+		"heading": "Group Guidelines post ",
+		"description": "Use this post every 3 months to share the latest group guidelines with the entire community ",
+		"thumbnail": "assets/images/group_admin/template-icon-4.svg",
+		"text": "Hey everyone \uD83D\uDC4B \n\nJust sharing the group guidelines with everyone. It would be great for everyone to just browse through them. We are an awesome and impactful community today because all of us follow the group guidelines religiously \uD83D\uDE4F \n\n< Paste group guidelines >",
+		"images": [],
+		"videos": [],
+		"testId": "template-group-guidlines-post"
+	},
+	{
+		"id": 5,
+		"heading": "Regular #Askforhelp post",
+		"description": "Do this regularly to enable your members to ask for any help if they need from the community ",
+		"thumbnail": "assets/images/group_admin/template-icon-5.png",
+		"text": "Hey everyone \uD83D\uDC4B \n\nTime for our regular #AskforHelp post. \n\nAll community members who need help from fellow community members can please share what help they need exactly and relevant community members can answer and solve.\n\nPlease be mindful any comment/conversation asking for money will be deleted and the member will get a stern warning.",
+		"images": [],
+		"videos": [],
+		"testId": "template-ask-for-help"
+	}
+]

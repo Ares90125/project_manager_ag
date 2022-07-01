@@ -1,0 +1,128 @@
+<div class="full-post-wrapper">
+	<div class="full-post-header">
+		<div class="post-identity">
+			<div class="post-header-left">
+				<figure class="user-pic"><img src="assets/images/user-2.jpg" alt="" /></figure>
+				<div class="user-name-wrap">
+					<figure><img src="assets/images/name-2.jpg" alt="" /></figure>
+					<span>7 hrs</span>
+				</div>
+			</div>
+			<div class="post-header-right">
+				<img src="assets/images/more-icon.png" width="20" alt="" />
+			</div>
+		</div>
+
+		<div class="post-body">
+			<!-- <div class="description">Kadhi k swimming pool main little rice birdy</div> -->
+
+			<!-- Post Type Text -->
+			<div class="post-type-text">
+				{{ data.postText }}
+			</div>
+
+			<div class="post-type-photo" *ngIf="postImagesLength > 0">
+				<div
+					class="photo-wrap"
+					[ngClass]="
+						postImagesLength === 1
+							? 'single-photo'
+							: postImagesLength === 2
+							? 'two-photos'
+							: postImagesLength === 3
+							? 'three-photos'
+							: 'multiple-photos'
+					"
+				>
+					<figure *ngFor="let image of data.imagePostLinks | slice: 0:3">
+						<img src="image" [src]="image" alt="" />
+						<span class="more-photos-count" *ngIf="postImagesLength > 3">+{{ postImagesLength - 3 }}</span>
+					</figure>
+				</div>
+			</div>
+
+			<div class="post-type-video" *ngIf="postVideoLength > 0">
+				<div
+					class="photo-wrap"
+					[ngClass]="
+						postVideoLength === 1
+							? 'single-photo'
+							: postVideoLength === 2
+							? 'two-photos'
+							: postVideoLength === 3
+							? 'three-photos'
+							: 'multiple-photos'
+					"
+				>
+					<figure *ngFor="let video of data.videoPostLinks | slice: 0:3">
+						<video>
+							<source src="{{ video }}" type="video/mp4" />
+						</video>
+						<div class="video-icon"><img src="assets/images/play-icon.png" alt="" /></div>
+						<span class="more-photos-count" *ngIf="postVideoLength > 3">+{{ postVideoLength - 3 }}</span>
+					</figure>
+				</div>
+			</div>
+
+			<div class="action-row">
+				<div>
+					<ul>
+						<li *ngIf="data.LIKE > 0"><img src="assets/images/icon-like.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.LOVE > 0"><img src="assets/images/icon-love.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.CARE > 0"><img src="assets/images/icon-care.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.HAHA > 0"><img src="assets/images/icon-haha.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.WOW > 0"><img src="assets/images/icon-wow.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.SAD > 0"><img src="assets/images/icon-sad.png" class="action-icon" alt="" /></li>
+						<li *ngIf="data.ANGRY > 0"><img src="assets/images/icon-angry.png" class="action-icon" alt="" /></li>
+						<li style="padding-left: 6px" *ngIf="data.numberOfLikes > 0">{{ numberOfLikes }}</li>
+					</ul>
+				</div>
+				<div>
+					<span>{{ data?.totalComments }} comments</span>
+					<span style="padding-left: 7px">{{ data?.sharesCount }} Shares</span>
+				</div>
+			</div>
+			<div class="action-row-img">
+				<ul class="list-unstyled">
+					<li><i class="like"></i><span>Like</span></li>
+					<li><i class="comment"></i><span>Comment</span></li>
+				</ul>
+			</div>
+
+			<div class="comments-row-wrapper">
+				<ul>
+					<li *ngIf="data.isCommentsFocused">
+						<div>
+							<figure>
+								<span class="user-img"><img src="assets/images/user-12.jpg" alt="" /></span>
+								<span style="background: #fff9d7" class="user-comment-wrap"
+									><img class="user-name" src="assets/images/name-12.jpg" alt="" />
+									<span>{{ data.focusedComment }}</span></span
+								>
+							</figure>
+						</div>
+						<div class="reply-options">
+							<span><a>Like</a></span>
+							<span><a>Reply</a></span>
+						</div>
+					</li>
+
+					<li *ngFor="let comment of data.comments; let i = index">
+						<div>
+							<figure>
+								<span class="user-img"><img src="assets/images/user-{{ i }}.jpg" alt="" /></span>
+								<span class="user-comment-wrap"
+									><img class="user-name" src="assets/images/name-{{ i }}.jpg" alt="" />{{ comment }}</span
+								>
+							</figure>
+						</div>
+						<div class="reply-options">
+							<span><a>Like</a></span>
+							<span><a>Reply</a></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

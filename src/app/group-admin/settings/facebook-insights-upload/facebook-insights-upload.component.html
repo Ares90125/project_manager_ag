@@ -1,0 +1,89 @@
+<div class="insights-upload-wrap">
+	<div class="headers">
+		<button [hidden]="renderedOn === 'Mobile'" class="back-btn" (click)="router.navigateByUrl('/group-admin/settings')">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M12.2582 5.59173C12.5832 5.91673 12.5832 6.44173 12.2582 6.76673L9.02487 10.0001L12.2582 13.2334C12.5832 13.5584 12.5832 14.0834 12.2582 14.4084C11.9332 14.7334 11.4082 14.7334 11.0832 14.4084L7.2582 10.5834C6.9332 10.2584 6.9332 9.73339 7.2582 9.40839L11.0832 5.58339C11.3999 5.26673 11.9332 5.26673 12.2582 5.59173Z"
+					fill="#828282"
+				/>
+			</svg>
+			<span>Settings home</span>
+		</button>
+		<h3 [hidden]="renderedOn === 'Mobile'">Facebook Group insights upload</h3>
+		<div class="back-btn-wrap" [hidden]="renderedOn === 'Desktop'">
+			<button class="back-btn" (click)="router.navigateByUrl('/group-admin/settings')">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M19 11H7.83001L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.71001 11.29C4.32001 11.68 4.32001 12.31 4.71001 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.83001 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+						fill="#33334F"
+					></path>
+				</svg>
+			</button>
+
+			<h5>Facebook Group insights upload</h5>
+		</div>
+		<h6>
+			Increase the chances of your group getting assigned a Convosight campaign by uploading the latest Facebook Group
+			insight data
+		</h6>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			<div class="video-wrapper">
+				<div class="video-wrap">
+					<button class="play-btn" (click)="playVideo()" data-target="#videoModal" data-toggle="modal">
+						<img src="./assets/images/play_icon.svg" alt="" />
+					</button>
+				</div>
+				<div class="video-info">
+					<h6>Uploading Facebook Group insights on Convosight</h6>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			<h6 class="card-title">Your groups eligible for Convosight campaigns</h6>
+			<div class="note">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M7.33331 4.66683H8.66665V6.00016H7.33331V4.66683ZM7.33331 7.3335H8.66665V11.3335H7.33331V7.3335ZM7.99998 1.3335C4.31998 1.3335 1.33331 4.32016 1.33331 8.00016C1.33331 11.6802 4.31998 14.6668 7.99998 14.6668C11.68 14.6668 14.6666 11.6802 14.6666 8.00016C14.6666 4.32016 11.68 1.3335 7.99998 1.3335ZM7.99998 13.3335C5.05998 13.3335 2.66665 10.9402 2.66665 8.00016C2.66665 5.06016 5.05998 2.66683 7.99998 2.66683C10.94 2.66683 13.3333 5.06016 13.3333 8.00016C13.3333 10.9402 10.94 13.3335 7.99998 13.3335Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<span>Upload insights data in a <strong>.xlsx </strong> file format. Max file size - 5MB</span>
+			</div>
+
+			<div *ngFor="let group of eligibleGroups" class="insights-upload-card">
+				<app-facebook-insights-upload-card [group]="group" [pageType]="pageType"></app-facebook-insights-upload-card>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Video Modal -->
+<div
+	class="modal fade video-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="videoModal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button class="close" data-dismiss="modal" (click)="closeModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body text-center p-0">
+				<iframe
+					[src]="videoLink | sanitizeUrl"
+					title="YouTube video player"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen
+				></iframe>
+			</div>
+		</div>
+	</div>
+</div>

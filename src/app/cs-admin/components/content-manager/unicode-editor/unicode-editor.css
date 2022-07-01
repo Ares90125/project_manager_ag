@@ -1,0 +1,19 @@
+body {
+	display: block;
+}
+
+.unicode-editor-block {
+	margin: 8px 0;
+	height: 296px;
+}
+
+.unicode-editor {
+	height: 250px !important;
+}
+
+.unicode-editor-actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}

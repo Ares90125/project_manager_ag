@@ -1,0 +1,5 @@
+[auth]
+token = 29ea8629f88b4b61b5500db26f5a34441d4805c23c824c5a8338ab2876a8187b
+[defaults]
+org = convosight
+project = convosight-webclient

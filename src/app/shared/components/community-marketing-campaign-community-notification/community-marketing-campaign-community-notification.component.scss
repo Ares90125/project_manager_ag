@@ -1,0 +1,261 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.notification-wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1040;
+	background: rgba(0, 0, 0, 0.54);
+	bottom: 0;
+	right: 0;
+	.notification-dialog {
+		position: absolute;
+		width: 600px;
+		background: #fff;
+		border-radius: 12px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		max-width: 96%;
+
+		.header {
+			border-bottom: 1px solid #d9d8e8;
+			padding: 16px;
+
+			.header-left {
+				display: flex;
+				align-items: center;
+
+				.back-btn {
+					border: none;
+					padding: 0;
+					background: none;
+					margin-right: 8px;
+				}
+			}
+
+			h4 {
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 19px;
+				color: #33334f;
+				margin: 0;
+			}
+
+			.close {
+				position: absolute;
+				top: 0;
+				right: 0;
+				background: none;
+				border: none;
+				padding: 0;
+				width: 40px;
+				height: 50px;
+				outline: none;
+				line-height: 50px;
+				text-align: center;
+				cursor: pointer;
+				opacity: 1;
+			}
+		}
+		.body {
+			padding: 16px;
+			p {
+				font-weight: normal;
+				font-size: 14px;
+				line-height: 20px;
+				color: #707084;
+			}
+			.action {
+				app-custom-dropdown {
+					width: 128px;
+					margin-top: 16px;
+
+					&.disabled {
+						opacity: 0.6;
+					}
+				}
+
+				mat-radio-group {
+					font-size: 14px;
+					line-height: 20px;
+					color: #33334f;
+
+					.mat-radio-button {
+						margin-bottom: 8px;
+						width: 100%;
+					}
+				}
+
+				.locked-state {
+					display: flex;
+					align-items: center;
+					margin-bottom: 16px;
+
+					.icon {
+						min-width: 20px;
+						margin-right: 12px;
+					}
+
+					.locked-content {
+						h6 {
+							@include font-paragraph-s;
+							margin-bottom: 0;
+						}
+
+						small {
+							color: $black-70;
+							@include font-label-xs;
+						}
+					}
+				}
+			}
+			button {
+				font-weight: 500;
+				font-size: 14px;
+				line-height: 16px;
+				text-align: center;
+				color: #ffffff;
+				width: 100%;
+				height: 40px;
+				background: #3654ff;
+				border-radius: 4px;
+				border: none;
+				outline: 0;
+
+				&:disabled {
+					background: $black-20;
+					color: $black-50;
+					border: none;
+				}
+
+				.bt-spinner {
+					border: 2px solid #f6f4f8;
+					border-top-color: #3654ff !important;
+					margin: 0px;
+					display: inline-block;
+				}
+			}
+
+			quill-editor {
+				margin: 0 0 16px 0;
+			}
+
+			label {
+				@include font-label-xs-md;
+				color: $black-70;
+
+				sup {
+					color: #f0441e;
+					font-style: 9px;
+				}
+			}
+
+			.message-input {
+				border: 1px solid $borders-grey;
+				padding: 16px;
+				background: #f7f7f8;
+				color: $black-50;
+				@include font-paragraph-s;
+				box-shadow: inset 0px 2px 2px rgba(221, 221, 249, 0.4);
+				border-radius: 3px;
+				margin-bottom: 12px;
+
+				strong {
+					font-weight: 500;
+				}
+			}
+
+			.id-row {
+				color: $emp-blue-1;
+				@include font-paragraph-xs;
+				margin-bottom: 16px;
+			}
+		}
+	}
+	.notification-sent-dialog {
+		padding: 48px 0;
+		button {
+			font-weight: 500;
+			font-size: 14px;
+			line-height: 16px;
+			text-align: center;
+			color: #ffffff;
+			width: 128px;
+			height: 40px;
+			background: #3654ff;
+			border-radius: 4px;
+			border: none;
+			outline: 0;
+			margin: 0 auto;
+			display: block;
+		}
+		h4 {
+			font-weight: 500;
+			font-size: 18px;
+			line-height: 24px;
+			text-align: center;
+			color: #33334f;
+			margin: 24px 0;
+		}
+		img {
+			margin: 0 auto;
+			display: block;
+		}
+	}
+}
+
+.invisible-input-cont {
+	height: 0;
+	overflow: hidden;
+
+	input {
+		width: 0px;
+		height: 0px;
+	}
+}
+
+.loading-image-wrapper {
+	font-size: 12px;
+	font-weight: 800;
+	padding-left: 20px;
+}
+
+.bt-spinner {
+	width: 16px;
+	border: 2px solid rgba(54, 84, 255, 0.15);
+	height: 16px;
+	margin: 0 auto;
+	animation: 1s spin linear infinite;
+	background-color: transparent;
+	border-top-color: $emp-blue-1;
+	-webkit-animation: 1s spin linear infinite;
+	@include border-radius(50%);
+	margin-left: 44px;
+
+	&.bt-spinner-admin {
+		display: none;
+	}
+
+	&:disabled {
+		background: $black-20;
+		color: $black-50;
+		border: none;
+	}
+}
+
+.btn-spinner-white {
+	width: 24px;
+	border: 2px solid rgba(54, 84, 255, 0.15);
+	height: 24px;
+	margin: 0 auto;
+	animation: 1s spin linear infinite;
+	background-color: transparent;
+	border-top-color: #fff !important;
+	-webkit-animation: 1s spin linear infinite;
+	@include border-radius(50%);
+	margin-left: 6px;
+	vertical-align: middle;
+	display: inline-block;
+}

@@ -1,0 +1,27 @@
+<div class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<button
+					(click)="closeOverlay($event)"
+					class="close"
+					data-cs-id="3aa9195e-d3e6-46eb-9008-4f62eadae6e5"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					&times;
+				</button>
+				<p class="m-0">
+					Looks like you do not have access to this campaign. The campaign is assigned to username
+					<strong>{{ userNameFromQueryString }}</strong> and you are logged in with the account
+					<strong>{{ userNameFromDB }}</strong
+					>. We request you to use a different browser to log into Facebook using the username
+					<strong>{{ userNameFromQueryString }}</strong
+					>. You will be able to see the campaign.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

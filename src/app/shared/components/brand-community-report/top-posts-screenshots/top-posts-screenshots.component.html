@@ -1,0 +1,46 @@
+<section class="container">
+	<div class="card-inner-wrapper">
+		<div class="flex-box">
+			<h3>Top Performing Posts</h3>
+			<p>Top posts with high level of engagement in the community</p>
+		</div>
+		<mat-slide-toggle id="screenshots-top-toggle" checked [(ngModel)]="isScreenshotsDataVisible"></mat-slide-toggle>
+	</div>
+	<div class="screenshots">
+		<div class="masonry">
+			<img class="item" *ngFor="let post of topPosts" [src]="post" />
+		</div>
+	</div>
+	<div class="screenshots-pdf">
+		<div class="masonry">
+			<img class="item" *ngFor="let post of topPosts.slice(0, 3)" [src]="post" />
+		</div>
+		<div class="masonry">
+			<img class="item" *ngFor="let post of topPosts.slice(3, 6)" [src]="post" />
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['screenshots']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['screenshots'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'screenshots')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['screenshots']">
+			<p>{{ supportingText['screenshots'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</section>

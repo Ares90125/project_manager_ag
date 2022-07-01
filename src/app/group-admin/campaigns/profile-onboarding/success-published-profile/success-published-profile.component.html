@@ -1,0 +1,701 @@
+<div class="onboarding-head">
+	<button
+		class="back-button"
+		data-cs-id="2f18ca17-6f48-4972-81af-219aa6100517"
+		data-cs-label="Prev page"
+		data-cs-source="page"
+		type="button"
+		[routerLink]="'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/'"
+	>
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M19.0005 11.0007H7.83047L12.7105 6.1207C13.1005 5.7307 13.1005 5.0907 12.7105 4.7007C12.3205 4.3107 11.6905 4.3107 11.3005 4.7007L4.71047 11.2907C4.32047 11.6807 4.32047 12.3107 4.71047 12.7007L11.3005 19.2907C11.6905 19.6807 12.3205 19.6807 12.7105 19.2907C13.1005 18.9007 13.1005 18.2707 12.7105 17.8807L7.83047 13.0007H19.0005C19.5505 13.0007 20.0005 12.5507 20.0005 12.0007C20.0005 11.4507 19.5505 11.0007 19.0005 11.0007Z"
+				fill="#707084"
+			/>
+		</svg>
+	</button>
+	<div *ngIf="profilePage" class="head-profile-data">
+		<div class="head-profile-image">
+			<img
+				[fbEntityId]="profilePage?.fbGroupId"
+				alt=""
+				class="banner-background"
+				src="{{ profilePage?.coverImageUrl }}"
+			/>
+		</div>
+		<div class="head-profile-description">
+			<h5 class="head-name-profile">
+				{{ profilePage?.name }}
+			</h5>
+			<span>{{ profilePage?.keyStats.totalMembers | shortNumber }} members </span>
+		</div>
+	</div>
+	<app-loading-shimmer *ngIf="!profilePage" [type]="4"></app-loading-shimmer>
+</div>
+
+<div class="success-published-page-wrap">
+	<div class="success-published-page">
+		<div *ngIf="profilePage" class="success-published-frame">
+			<div class="success-logo">
+				<ng-lottie
+					containerClass="lottie-animation"
+					height="120px"
+					width="120px"
+					[options]="successAnimationOption"
+				></ng-lottie>
+			</div>
+			<h3>
+				{{
+					isPitch
+						? 'Your brand pitch has been published successfully!'
+						: 'Your group profile has been published successfully!'
+				}}
+			</h3>
+			<p class="share-profile-description">
+				{{
+					isPitch
+						? 'Increase your chances to do paid campaigns by sharing this pitch with targeted brands.'
+						: 'Share it with your group members and start getting reviews and ratings for your group.'
+				}}
+			</p>
+			<div class="share-profile-frame">
+				<h5>
+					{{ isPitch ? 'Here’s your brand pitch URL' : 'Here’s your group profile URL' }}
+				</h5>
+				<p>
+					{{
+						isPitch
+							? 'Share this with targeted brands to receive campaigns from them:'
+							: 'Share this in your group and ask your group members to review your group profile:'
+					}}
+				</p>
+				<div class="share-link-wrap">
+					<div class="input-wrap">
+						<input
+							[value]="profilePage.profileUrl"
+							[(ngModel)]="profilePage.profileUrl"
+							data-cs-id="0615510f-5684-4b66-b127-5cd4f8d82ce5"
+							data-cs-label="Copy Field"
+							data-cs-source="dialog"
+							(delayedClick)="processCopyText($event)"
+							[debounceTime]="500"
+							appDelayClick
+							readonly
+						/>
+						<button
+							data-cs-id="160605d5-8406-41bd-bb14-7505ce1a041e"
+							data-cs-label="Copy"
+							data-cs-source="dialog"
+							(click)="
+								recordButtonClick(
+									$event,
+									null,
+									null,
+									{
+										onboarding_type: this.isPitch ? 'pitch' : 'profile',
+										copy_within_onboarding: true
+									},
+									profilePage
+								);
+								copyToClipboard(profilePage.profileUrl)
+							"
+						>
+							<ng-container *ngIf="!isCopied; else copied"> Copy </ng-container>
+							<ng-template #copied>Copied</ng-template>
+						</button>
+					</div>
+				</div>
+				<p>
+					{{ isPitch ? 'Share this brand pitch on social media:' : 'Share this group profile on social media:' }}
+				</p>
+				<ul class="social-media-icons">
+					<li
+						class="media-icons-item"
+						data-cs-id="6ac23fd4-cdd5-4025-9992-efa209ff6533"
+						data-cs-label="Facebook share"
+						data-cs-source="dialog"
+						(click)="shareUrl('facebook'); recordButtonClick($event, null, null, null, profilePage)"
+					>
+						<figure>
+							<img src="assets/images/facebook-social-icon.svg" />
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/whatspp-share-icon.svg"
+								data-cs-id="605b9507-eb0c-4375-935f-593d41b8dc05"
+								data-cs-label="Whatsapp share"
+								data-cs-source="dialog"
+								(click)="shareUrl('whatsapp'); recordButtonClick($event, null, null, null, profilePage)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/linkedin-social-icon.svg"
+								data-cs-id="95ca9f37-5711-43b4-a18c-301529a38ce2"
+								data-cs-label="LinkedIn share"
+								data-cs-source="dialog"
+								(click)="shareUrl('linkedIn'); recordButtonClick($event, null, null, null, profilePage)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/twitter-social-icon.svg"
+								data-cs-id="b5ff4254-88e7-4bf9-8ac7-e235966f0575"
+								data-cs-label="Twitter share"
+								data-cs-source="dialog"
+								(click)="shareUrl('twitter'); recordButtonClick($event, null, null, null, profilePage)"
+							/>
+						</figure>
+					</li>
+					<li class="media-icons-item">
+						<figure>
+							<img
+								src="assets/images/email-share-icon.svg"
+								data-cs-id="94c725b1-daeb-4041-ab9c-a2d58ff3fa16"
+								data-cs-label="Email share"
+								data-cs-source="dialog"
+								(click)="shareUrl('email'); recordButtonClick($event, null, null, null, profilePage)"
+							/>
+						</figure>
+					</li>
+				</ul>
+			</div>
+			<button
+				*ngIf="!isPitch"
+				(click)="whyShareModalOpen($event)"
+				class="convo-btn-primary convo-btn-normal"
+				data-cs-id="4e45ce60-44b0-44a3-b7a8-55b5ff3b070f"
+				data-cs-label="Why should I share my group profile?"
+				data-cs-source="page"
+			>
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M7.33203 12.0007H8.66536V10.6673H7.33203V12.0007ZM7.9987 1.33398C4.3187 1.33398 1.33203 4.32065 1.33203 8.00065C1.33203 11.6807 4.3187 14.6673 7.9987 14.6673C11.6787 14.6673 14.6654 11.6807 14.6654 8.00065C14.6654 4.32065 11.6787 1.33398 7.9987 1.33398ZM7.9987 13.334C5.0587 13.334 2.66536 10.9407 2.66536 8.00065C2.66536 5.06065 5.0587 2.66732 7.9987 2.66732C10.9387 2.66732 13.332 5.06065 13.332 8.00065C13.332 10.9407 10.9387 13.334 7.9987 13.334ZM7.9987 4.00065C6.52536 4.00065 5.33203 5.19398 5.33203 6.66732H6.66536C6.66536 5.93398 7.26536 5.33398 7.9987 5.33398C8.73203 5.33398 9.33203 5.93398 9.33203 6.66732C9.33203 8.00065 7.33203 7.83398 7.33203 10.0007H8.66536C8.66536 8.50065 10.6654 8.33398 10.6654 6.66732C10.6654 5.19398 9.47203 4.00065 7.9987 4.00065Z"
+						fill="#3654FF"
+					/>
+				</svg>
+				<span>Why should I share my group profile?</span>
+			</button>
+			<div
+				class="success-published-frame-footer"
+				[ngClass]="{
+					'success-published-pitch-footer': isPitch
+				}"
+			>
+				<button
+					*ngIf="isPitch"
+					(click)="openCreatePitchModal($event)"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="4c753993-83d3-41de-91e8-37b2e30deac1"
+					data-cs-label="Create another brand pitch"
+					data-cs-source="page"
+				>
+					<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M13.1654 8.66732H9.16536V12.6673H7.83203V8.66732H3.83203V7.33398H7.83203V3.33398H9.16536V7.33398H13.1654V8.66732Z"
+							fill="white"
+						/>
+					</svg>
+					<span>Create another brand pitch</span>
+				</button>
+				<button
+					class="convo-btn-outline convo-btn-normal"
+					data-cs-id="62e9187f-34a9-4083-b39b-596249403266"
+					data-cs-label="I’m done for now"
+					data-cs-source="page"
+					[routerLink]="'/group-admin/campaigns/' + profilePage?.groupId + '/profile-pages/'"
+				>
+					<span>I’m done for now</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert share-modal" *ngIf="showShareModal">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Why should you share your group profile with your group's members?</h5>
+				<button
+					type="button"
+					(click)="whyShareModalClose($event)"
+					data-cs-id="0823286a-f83a-414a-9cea-65f5c9d8949e"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				>
+					<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M9.77816 0.229428C9.48237 -0.0663631 9.00455 -0.0663631 8.70876 0.229428L5 3.9306L1.29124 0.221843C0.99545 -0.0739477 0.517634 -0.0739477 0.221843 0.221843C-0.0739477 0.517634 -0.0739477 0.99545 0.221843 1.29124L3.9306 5L0.221843 8.70876C-0.0739477 9.00455 -0.0739477 9.48237 0.221843 9.77816C0.517634 10.0739 0.99545 10.0739 1.29124 9.77816L5 6.0694L8.70876 9.77816C9.00455 10.0739 9.48237 10.0739 9.77816 9.77816C10.0739 9.48237 10.0739 9.00455 9.77816 8.70876L6.0694 5L9.77816 1.29124C10.0664 1.00303 10.0664 0.517634 9.77816 0.229428Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="share-modal-wrap">
+				<div class="share-modal-frame">
+					<div class="share-modal-profile-screen">
+						<img src="assets/images/group_admin/profile_example.png" />
+					</div>
+					<ul class="share-modal-iplement-steps unstyled-list">
+						<li class="share-modal-iplement-item">
+							<div class="share-modal-iplement-circle">
+								<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M24.6435 8.22245C25.5472 7.65763 25.8219 6.46715 25.2571 5.56343C24.6923 4.65972 23.5018 4.38499 22.5981 4.94981L7.19466 14.577C7.05945 14.6575 6.93305 14.7553 6.81906 14.8695C6.45194 15.2359 6.25439 15.7306 6.25391 16.2343C6.25365 16.5052 6.31044 16.7788 6.42855 17.0364C6.52265 17.2428 6.65375 17.4341 6.81932 17.5993C6.93323 17.7134 7.05952 17.811 7.19462 17.8915L22.5981 27.5187C23.5018 28.0835 24.6923 27.8088 25.2571 26.9051C25.8219 26.0014 25.5472 24.8109 24.6435 24.2461L11.8246 16.2343L24.6435 8.22245Z"
+										fill="url(#paint0_linear_12293_271877)"
+									/>
+									<g filter="url(#filter0_b_12293_271877)">
+										<path
+											d="M13.9762 16.24C13.9762 19.4371 11.3844 22.0289 8.18731 22.0289C4.9902 22.0289 2.39844 19.4371 2.39844 16.24C2.39844 13.0429 4.9902 10.4512 8.18731 10.4512C11.3844 10.4512 13.9762 13.0429 13.9762 16.24Z"
+											fill="#6AE092"
+											fill-opacity="0.6"
+										/>
+									</g>
+									<g filter="url(#filter1_b_12293_271877)">
+										<ellipse cx="23.6248" cy="6.58965" rx="5.78887" ry="5.78887" fill="#6AE092" fill-opacity="0.6" />
+									</g>
+									<g filter="url(#filter2_b_12293_271877)">
+										<ellipse cx="23.6248" cy="25.8904" rx="5.78887" ry="5.78887" fill="#6AE092" fill-opacity="0.6" />
+									</g>
+									<defs>
+										<filter
+											id="filter0_b_12293_271877"
+											x="-0.601562"
+											y="7.45117"
+											width="17.5781"
+											height="17.5781"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_271877" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_271877"
+												result="shape"
+											/>
+										</filter>
+										<filter
+											id="filter1_b_12293_271877"
+											x="14.8359"
+											y="-2.19922"
+											width="17.5781"
+											height="17.5781"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_271877" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_271877"
+												result="shape"
+											/>
+										</filter>
+										<filter
+											id="filter2_b_12293_271877"
+											x="14.8359"
+											y="17.1016"
+											width="17.5781"
+											height="17.5781"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_271877" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_271877"
+												result="shape"
+											/>
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_271877"
+											x1="10.5456"
+											y1="12.8845"
+											x2="31.9378"
+											y2="28.5374"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#75EDA1" />
+											<stop offset="1" stop-color="#349256" />
+										</linearGradient>
+									</defs>
+								</svg>
+								<svg
+									class="share-items-arrow"
+									width="23"
+									height="16"
+									viewBox="0 0 23 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M2.52087 7.86375C2.45544 7.50479 2.61024 7.07994 2.9356 6.89449C3.19922 6.73913 3.4737 6.70784 3.77311 6.72044C3.84796 6.72359 3.91977 6.73827 3.98454 6.76091C4.90428 6.71808 5.8249 6.62607 6.7455 6.5983C7.87141 6.56979 8.99384 6.54526 10.1215 6.54688C12.115 6.54285 14.1067 6.63719 16.0993 6.68235C15.6315 6.33952 15.1533 6.00867 14.665 5.69729C14.4186 5.56818 14.1766 5.45015 13.9307 5.32858C13.1898 4.97538 12.4427 4.64522 11.6922 4.31905C11.3093 4.15263 11.1143 3.68414 11.1886 3.28672C11.2781 2.8317 11.7104 2.49255 12.1718 2.52962C12.5469 2.56044 12.8813 2.72595 13.2253 2.86443C13.6458 3.03618 14.0594 3.21592 14.4664 3.41115C14.8545 3.60371 15.2252 3.81617 15.5897 4.0517C15.8592 4.19456 16.1323 4.33343 16.4058 4.47983C16.7948 4.68746 17.1707 4.92611 17.5536 5.15677L17.5497 5.15322C18.0481 5.44511 18.5333 5.76802 18.9805 6.1423C19.1804 6.30815 19.3711 6.5728 19.4817 6.80816C19.6058 7.0843 19.6972 7.37369 19.6738 7.6812C19.5648 9.03305 18.5297 10.0578 17.6292 10.9536C17.1062 11.4682 16.5355 11.9326 15.9722 12.3966C15.6227 12.6817 15.2724 12.9518 14.9386 13.2511C14.6342 13.6054 14.1022 13.7048 13.7018 13.4298C13.2862 13.1481 13.1544 12.5437 13.451 12.118C13.6302 11.858 13.8991 11.6646 14.1452 11.4649C14.3305 11.3104 14.5197 11.1594 14.705 11.0049C15.3181 10.5001 15.9313 9.99536 16.5003 9.43653C16.4968 9.44051 16.4933 9.4445 16.4933 9.4445C16.5003 9.43653 16.5073 9.42856 16.5143 9.42059C16.5248 9.40863 16.5353 9.39667 16.5498 9.38826C16.5428 9.39623 16.5358 9.4042 16.5248 9.40862C16.7859 9.14381 17.043 8.87547 17.28 8.58185L17.2835 8.57785C17.0261 8.58168 16.7722 8.58152 16.5144 8.5778C15.9576 8.56902 15.4003 8.5527 14.8427 8.52886C13.8626 8.49588 12.8829 8.47042 11.9037 8.4525C11.5149 8.44516 11.1337 8.43741 10.7524 8.42963C9.5315 8.42972 8.31499 8.44089 7.09627 8.47866C6.51843 8.49379 5.93443 8.53195 5.35746 8.56215C5.11932 8.57617 4.87375 8.59063 4.63561 8.60466C4.18558 8.63494 3.72591 8.69227 3.28076 8.61267C3.11838 8.58066 2.96828 8.50257 2.85016 8.39614C2.66683 8.25955 2.55532 8.07336 2.52087 7.86375Z"
+										fill="white"
+									/>
+								</svg>
+							</div>
+							<span>
+								<strong>Share</strong>
+								<br />
+								Profile
+							</span>
+						</li>
+						<li class="share-modal-iplement-item">
+							<div class="share-modal-iplement-circle">
+								<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<g clip-path="url(#clip0_12293_272192)">
+										<path
+											d="M25.1019 17.8777C24.67 18.1187 24.3881 18.5505 24.3473 19.0311L23.8816 25.6975C23.8417 26.2624 23.4635 26.7521 22.9143 26.9508C22.3714 27.1634 21.7512 27.0541 21.3184 26.6734L16.1577 22.2369C15.9788 22.0805 15.7644 21.9678 15.5314 21.9043L15.168 21.816C15.0372 21.8036 14.9037 21.8125 14.7756 21.8447L8.05314 23.4102C7.72241 23.4815 7.37672 23.4513 7.06401 23.3216C6.3079 22.9836 5.96827 22.124 6.29883 21.3844L9.15007 15.2973C9.35015 14.8512 9.31356 14.3394 9.05218 13.9245L5.38934 8.21203C5.0831 7.73391 5.09056 7.12942 5.40938 6.65981C5.7225 6.19019 6.27848 5.92699 6.85419 5.97725L13.7616 6.66141C14.2817 6.73397 14.8044 6.54399 15.1469 6.15867L19.5965 1.05235C19.6999 0.939671 19.8207 0.842249 19.9556 0.767532L20.0999 0.706115C20.1804 0.654024 20.2673 0.615878 20.3596 0.590055L20.5192 0.57371L20.7708 0.538349L21.3353 0.675462C21.8264 0.848469 22.1944 1.2479 22.3132 1.73974L23.7826 8.25609C23.887 8.73203 24.2275 9.12754 24.6904 9.31575L31.1119 11.8689C31.6549 12.0835 32.0279 12.5737 32.0795 13.1374C32.12 13.6998 31.8203 14.2333 31.3099 14.5075L25.1019 17.8777Z"
+											fill="url(#paint0_linear_12293_272192)"
+										/>
+										<g filter="url(#filter0_b_12293_272192)">
+											<path
+												d="M15.9501 21.7103C15.7994 22.0107 15.8114 22.3641 15.9812 22.6551L18.3947 26.6522C18.5989 26.9911 18.5789 27.4139 18.344 27.7342C18.1182 28.06 17.7187 28.2303 17.3174 28.1746L12.5747 27.5696C12.4092 27.5471 12.2409 27.563 12.0818 27.6141L11.838 27.7C11.758 27.742 11.6851 27.7973 11.6246 27.8639L8.39969 31.2868C8.23871 31.4519 8.02835 31.5644 7.79691 31.6075C7.2275 31.6978 6.68712 31.3325 6.57926 30.7842L5.76652 26.2231C5.70187 25.8922 5.47509 25.6125 5.15841 25.4728L0.761418 23.5735C0.39359 23.4144 0.15481 23.065 0.148781 22.676C0.139481 22.2891 0.352429 21.9294 0.702725 21.7419L4.93822 19.5394C5.26555 19.3856 5.48885 19.0804 5.53031 18.7308L6.02831 14.1316C6.0423 14.0281 6.07242 13.9269 6.11972 13.8333L6.17774 13.7439C6.20298 13.6838 6.23747 13.6293 6.27997 13.5798L6.36493 13.5105L6.49494 13.3957L6.87375 13.2623C7.22486 13.177 7.59648 13.2678 7.86234 13.5051L11.3249 16.6893C11.5762 16.923 11.9304 17.0218 12.2715 16.9559L16.9799 16.0075C17.3775 15.9265 17.7884 16.0675 18.0447 16.3713C18.2941 16.6785 18.3367 17.097 18.1543 17.446L15.9501 21.7103Z"
+												fill="#FFAC95"
+												fill-opacity="0.4"
+											/>
+											<path
+												d="M18.481 26.6026L18.481 26.6025L16.0683 22.6066C16.0681 22.6064 16.068 22.6062 16.0679 22.606C15.9156 22.3447 15.9046 22.0269 16.0403 21.7561C16.0403 21.7559 16.0404 21.7557 16.0405 21.7555L18.244 17.4926C18.4442 17.1096 18.3978 16.6487 18.1229 16.31L18.1229 16.31L18.1217 16.3086C17.8406 15.9753 17.3912 15.822 16.958 15.9102C16.958 15.9102 16.958 15.9102 16.958 15.9102L12.2505 16.8584C12.2504 16.8585 12.2503 16.8585 12.2502 16.8585C11.9402 16.9183 11.6197 16.8282 11.3934 16.6176L11.393 16.6172L7.93036 13.4331L7.93037 13.433L7.92925 13.432C7.63744 13.1715 7.23085 13.0729 6.84813 13.1658L6.848 13.1653L6.83847 13.1687L6.45966 13.3022C6.44763 13.3064 6.43657 13.3129 6.42707 13.3213L6.29849 13.4348L6.215 13.5029C6.21055 13.5065 6.20643 13.5106 6.20269 13.5149C6.15594 13.5693 6.11717 13.6296 6.08813 13.6964L6.03463 13.7788L6.03416 13.7785L6.02945 13.7878C5.97693 13.8917 5.94383 14.0034 5.92849 14.1168L5.92845 14.1168L5.92817 14.1194L5.43028 18.7176C5.43027 18.7178 5.43025 18.7179 5.43023 18.7181C5.39268 19.0333 5.19092 19.31 4.89368 19.4496L4.89364 19.4495L4.89008 19.4514L0.654588 21.6539L0.654585 21.6539L0.653553 21.6545C0.271657 21.8588 0.0380536 22.2518 0.0480976 22.6763C0.0549124 23.1052 0.318432 23.4897 0.722268 23.6643L0.722313 23.6643L5.11858 25.5633C5.1187 25.5634 5.11881 25.5634 5.11893 25.5635C5.40501 25.6898 5.60908 25.9419 5.66749 26.2396C5.66754 26.2398 5.66759 26.2401 5.66764 26.2403L6.48009 30.7998L6.48007 30.7998L6.48042 30.8016C6.59919 31.4053 7.19319 31.804 7.81451 31.7056L7.81452 31.7056L7.8172 31.7051C8.06891 31.6582 8.29771 31.5358 8.47284 31.3562L8.47285 31.3562L8.47399 31.355L11.6989 27.9321L11.6989 27.9321L11.7001 27.9308C11.7509 27.8748 11.8124 27.8276 11.8803 27.7911L12.1158 27.7082C12.2607 27.6618 12.4132 27.6476 12.5626 27.6679L12.5634 27.668L17.305 28.2729C17.3052 28.273 17.3054 28.273 17.3056 28.273C17.7434 28.3336 18.1794 28.1481 18.4267 27.7922C18.6837 27.4411 18.7062 26.9762 18.481 26.6026Z"
+												stroke="url(#paint1_linear_12293_272192)"
+												stroke-width="0.2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												fill="rgba(255, 172, 149, 0.4)"
+											/>
+										</g>
+									</g>
+									<defs>
+										<filter
+											id="filter0_b_12293_272192"
+											x="-7.05469"
+											y="6.0332"
+											width="32.793"
+											height="32.7871"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="3.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_272192" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_272192"
+												result="shape"
+											/>
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_272192"
+											x1="8.87276"
+											y1="4.8027"
+											x2="16.9496"
+											y2="41.7812"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#FFA78F" />
+											<stop offset="1" stop-color="#F23E2C" />
+										</linearGradient>
+										<linearGradient
+											id="paint1_linear_12293_272192"
+											x1="1.341"
+											y1="17.3925"
+											x2="16.9206"
+											y2="27.6555"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="white" stop-opacity="0.25" />
+											<stop offset="1" stop-color="white" stop-opacity="0" />
+										</linearGradient>
+										<clipPath id="clip0_12293_272192">
+											<rect width="32" height="32" fill="white" />
+										</clipPath>
+									</defs>
+								</svg>
+								<svg
+									class="share-items-arrow"
+									width="23"
+									height="16"
+									viewBox="0 0 23 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M2.52087 7.86375C2.45544 7.50479 2.61024 7.07994 2.9356 6.89449C3.19922 6.73913 3.4737 6.70784 3.77311 6.72044C3.84796 6.72359 3.91977 6.73827 3.98454 6.76091C4.90428 6.71808 5.8249 6.62607 6.7455 6.5983C7.87141 6.56979 8.99384 6.54526 10.1215 6.54688C12.115 6.54285 14.1067 6.63719 16.0993 6.68235C15.6315 6.33952 15.1533 6.00867 14.665 5.69729C14.4186 5.56818 14.1766 5.45015 13.9307 5.32858C13.1898 4.97538 12.4427 4.64522 11.6922 4.31905C11.3093 4.15263 11.1143 3.68414 11.1886 3.28672C11.2781 2.8317 11.7104 2.49255 12.1718 2.52962C12.5469 2.56044 12.8813 2.72595 13.2253 2.86443C13.6458 3.03618 14.0594 3.21592 14.4664 3.41115C14.8545 3.60371 15.2252 3.81617 15.5897 4.0517C15.8592 4.19456 16.1323 4.33343 16.4058 4.47983C16.7948 4.68746 17.1707 4.92611 17.5536 5.15677L17.5497 5.15322C18.0481 5.44511 18.5333 5.76802 18.9805 6.1423C19.1804 6.30815 19.3711 6.5728 19.4817 6.80816C19.6058 7.0843 19.6972 7.37369 19.6738 7.6812C19.5648 9.03305 18.5297 10.0578 17.6292 10.9536C17.1062 11.4682 16.5355 11.9326 15.9722 12.3966C15.6227 12.6817 15.2724 12.9518 14.9386 13.2511C14.6342 13.6054 14.1022 13.7048 13.7018 13.4298C13.2862 13.1481 13.1544 12.5437 13.451 12.118C13.6302 11.858 13.8991 11.6646 14.1452 11.4649C14.3305 11.3104 14.5197 11.1594 14.705 11.0049C15.3181 10.5001 15.9313 9.99536 16.5003 9.43653C16.4968 9.44051 16.4933 9.4445 16.4933 9.4445C16.5003 9.43653 16.5073 9.42856 16.5143 9.42059C16.5248 9.40863 16.5353 9.39667 16.5498 9.38826C16.5428 9.39623 16.5358 9.4042 16.5248 9.40862C16.7859 9.14381 17.043 8.87547 17.28 8.58185L17.2835 8.57785C17.0261 8.58168 16.7722 8.58152 16.5144 8.5778C15.9576 8.56902 15.4003 8.5527 14.8427 8.52886C13.8626 8.49588 12.8829 8.47042 11.9037 8.4525C11.5149 8.44516 11.1337 8.43741 10.7524 8.42963C9.5315 8.42972 8.31499 8.44089 7.09627 8.47866C6.51843 8.49379 5.93443 8.53195 5.35746 8.56215C5.11932 8.57617 4.87375 8.59063 4.63561 8.60466C4.18558 8.63494 3.72591 8.69227 3.28076 8.61267C3.11838 8.58066 2.96828 8.50257 2.85016 8.39614C2.66683 8.25955 2.55532 8.07336 2.52087 7.86375Z"
+										fill="white"
+									/>
+								</svg>
+							</div>
+							<span>
+								Get
+								<br />
+								<strong>Reviews</strong>
+							</span>
+						</li>
+						<li class="share-modal-iplement-item">
+							<div class="share-modal-iplement-circle">
+								<svg width="44" height="38" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<g filter="url(#filter0_d_12293_273091)">
+										<path
+											d="M8.86021 27.4647L6.20065 22.5017C6.02364 22.2412 5.96238 21.9157 6.03193 21.606C6.10125 21.2962 6.29505 21.0314 6.56515 20.8771C6.83524 20.7228 7.15615 20.6936 7.44824 20.7966C7.74036 20.8998 7.97645 21.1255 8.09767 21.4178L8.26945 21.7395L22.4423 5.45476L21.9954 4.61855C21.8284 4.26945 21.8489 3.85638 22.0494 3.52681C22.25 3.19701 22.6023 2.99778 22.9803 3.00002C23.3583 3.00226 23.7082 3.20575 23.905 3.53781L33.9057 22.193C34.0607 22.4546 34.1052 22.77 34.0287 23.0662C33.9519 23.3623 33.7612 23.6134 33.5002 23.7612C33.2393 23.9089 32.9311 23.9403 32.647 23.8483C32.3629 23.7561 32.1277 23.5485 31.9963 23.2737L31.443 22.2701L23.4486 23.6499C23.642 25.1152 23.1563 26.589 22.1367 27.6309C21.1169 28.6726 19.6814 29.1619 18.2592 28.9524C16.837 28.7426 15.5924 27.8584 14.8979 26.5639L14.1916 25.2485L10.5007 25.8917L10.7664 26.3902C10.9149 26.7364 10.8839 27.1362 10.684 27.4537C10.4843 27.7712 10.1425 27.9637 9.77498 27.9659C9.40744 27.9681 9.06362 27.7797 8.86021 27.4647ZM21.3019 24.023L16.4702 24.8561L16.8046 25.4993C17.1637 26.1782 17.8103 26.6453 18.5525 26.762C19.295 26.8789 20.0475 26.6316 20.5871 26.0941C21.1266 25.5565 21.391 24.7904 21.3019 24.023ZM11.6137 21.8199L24.1146 12.0322C24.3539 11.8395 24.4239 11.4974 24.2803 11.2216L23.0303 8.89619C22.9721 8.78738 22.8664 8.71423 22.7465 8.7001C22.6266 8.68619 22.5075 8.73285 22.4271 8.82529L11.3761 21.5496C11.324 21.6214 11.329 21.721 11.3877 21.787C11.4465 21.8532 11.5427 21.8669 11.6168 21.8197L11.6137 21.8199Z"
+											fill="url(#paint0_linear_12293_273091)"
+										/>
+										<path
+											opacity="0.4"
+											d="M29.7552 9.29215C29.8348 9.00115 30.0399 8.76401 30.3113 8.64892C30.5684 8.53719 30.8607 8.55267 31.1053 8.69065C31.8707 9.13107 32.5007 9.78325 32.9238 10.5735C33.347 11.3639 33.5462 12.2604 33.4992 13.1615C33.4817 13.4527 33.3339 13.7188 33.0991 13.8821L33.0054 13.9431C32.7833 14.0697 32.521 14.0997 32.2773 14.0268L32.2117 14.0075C32.0141 13.9438 31.8426 13.8146 31.7238 13.64C31.6052 13.4655 31.5459 13.2555 31.5553 13.0426C31.5777 12.525 31.4613 12.0112 31.2187 11.5573C30.9763 11.1035 30.6168 10.727 30.1802 10.4694C29.9964 10.366 29.8514 10.202 29.7688 10.0037C29.686 9.80557 29.6703 9.58435 29.7239 9.37591L29.7552 9.29215ZM32.0305 5.1624C31.7802 5.05336 31.4962 5.06166 31.2523 5.18483C31.0055 5.30913 30.8222 5.53618 30.7491 5.80876V5.84421C30.687 6.07103 30.7077 6.31334 30.8073 6.52534C30.907 6.73736 31.0785 6.90473 31.2898 6.99559C32.5742 7.55582 33.637 8.54613 34.306 9.80616C34.9748 11.0662 35.2102 12.5215 34.9744 13.9366C34.9386 14.1715 34.9883 14.4118 35.1141 14.6112C35.2399 14.8107 35.4326 14.9552 35.6556 15.0173H35.6931C35.936 15.0914 36.1973 15.0613 36.4182 14.9336L36.465 14.9047C36.6937 14.7575 36.8498 14.5161 36.8932 14.2422C37.1934 12.3867 36.877 10.4815 35.9952 8.83379C35.1134 7.1863 33.7176 5.89267 32.0336 5.16238L32.0305 5.1624Z"
+											fill="url(#paint1_linear_12293_273091)"
+										/>
+									</g>
+									<defs>
+										<filter
+											id="filter0_d_12293_273091"
+											x="-0.144531"
+											y="-3"
+											width="44"
+											height="44"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feColorMatrix
+												in="SourceAlpha"
+												type="matrix"
+												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+												result="hardAlpha"
+											/>
+											<feOffset dy="3" />
+											<feGaussianBlur stdDeviation="3" />
+											<feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.309804 0 0 0 0.1 0" />
+											<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_12293_273091" />
+											<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_12293_273091" result="shape" />
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_273091"
+											x1="14.0985"
+											y1="8.6875"
+											x2="35.2608"
+											y2="16.542"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#7FC0FB" />
+											<stop offset="1" stop-color="#20AFFF" />
+										</linearGradient>
+										<linearGradient
+											id="paint1_linear_12293_273091"
+											x1="26.2446"
+											y1="7.5719"
+											x2="38.4624"
+											y2="10.6116"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#7FC0FB" />
+											<stop offset="1" stop-color="#20AFFF" />
+										</linearGradient>
+									</defs>
+								</svg>
+								<svg
+									class="share-items-arrow"
+									width="23"
+									height="16"
+									viewBox="0 0 23 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M2.52087 7.86375C2.45544 7.50479 2.61024 7.07994 2.9356 6.89449C3.19922 6.73913 3.4737 6.70784 3.77311 6.72044C3.84796 6.72359 3.91977 6.73827 3.98454 6.76091C4.90428 6.71808 5.8249 6.62607 6.7455 6.5983C7.87141 6.56979 8.99384 6.54526 10.1215 6.54688C12.115 6.54285 14.1067 6.63719 16.0993 6.68235C15.6315 6.33952 15.1533 6.00867 14.665 5.69729C14.4186 5.56818 14.1766 5.45015 13.9307 5.32858C13.1898 4.97538 12.4427 4.64522 11.6922 4.31905C11.3093 4.15263 11.1143 3.68414 11.1886 3.28672C11.2781 2.8317 11.7104 2.49255 12.1718 2.52962C12.5469 2.56044 12.8813 2.72595 13.2253 2.86443C13.6458 3.03618 14.0594 3.21592 14.4664 3.41115C14.8545 3.60371 15.2252 3.81617 15.5897 4.0517C15.8592 4.19456 16.1323 4.33343 16.4058 4.47983C16.7948 4.68746 17.1707 4.92611 17.5536 5.15677L17.5497 5.15322C18.0481 5.44511 18.5333 5.76802 18.9805 6.1423C19.1804 6.30815 19.3711 6.5728 19.4817 6.80816C19.6058 7.0843 19.6972 7.37369 19.6738 7.6812C19.5648 9.03305 18.5297 10.0578 17.6292 10.9536C17.1062 11.4682 16.5355 11.9326 15.9722 12.3966C15.6227 12.6817 15.2724 12.9518 14.9386 13.2511C14.6342 13.6054 14.1022 13.7048 13.7018 13.4298C13.2862 13.1481 13.1544 12.5437 13.451 12.118C13.6302 11.858 13.8991 11.6646 14.1452 11.4649C14.3305 11.3104 14.5197 11.1594 14.705 11.0049C15.3181 10.5001 15.9313 9.99536 16.5003 9.43653C16.4968 9.44051 16.4933 9.4445 16.4933 9.4445C16.5003 9.43653 16.5073 9.42856 16.5143 9.42059C16.5248 9.40863 16.5353 9.39667 16.5498 9.38826C16.5428 9.39623 16.5358 9.4042 16.5248 9.40862C16.7859 9.14381 17.043 8.87547 17.28 8.58185L17.2835 8.57785C17.0261 8.58168 16.7722 8.58152 16.5144 8.5778C15.9576 8.56902 15.4003 8.5527 14.8427 8.52886C13.8626 8.49588 12.8829 8.47042 11.9037 8.4525C11.5149 8.44516 11.1337 8.43741 10.7524 8.42963C9.5315 8.42972 8.31499 8.44089 7.09627 8.47866C6.51843 8.49379 5.93443 8.53195 5.35746 8.56215C5.11932 8.57617 4.87375 8.59063 4.63561 8.60466C4.18558 8.63494 3.72591 8.69227 3.28076 8.61267C3.11838 8.58066 2.96828 8.50257 2.85016 8.39614C2.66683 8.25955 2.55532 8.07336 2.52087 7.86375Z"
+										fill="white"
+									/>
+								</svg>
+							</div>
+							<span>
+								Get
+								<br />
+								<strong>Camapigns</strong>
+							</span>
+						</li>
+						<li class="share-modal-iplement-item">
+							<div class="share-modal-iplement-circle">
+								<svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M17.9688 32.002C26.253 32.002 32.9688 25.2862 32.9688 17.002C32.9688 8.71768 26.253 2.00195 17.9688 2.00195C9.68448 2.00195 2.96875 8.71768 2.96875 17.002C2.96875 25.2862 9.68448 32.002 17.9688 32.002Z"
+										fill="url(#paint0_linear_12293_272446)"
+									/>
+									<path
+										d="M17.162 27.002V24.7914C15.5093 24.7214 13.907 24.3022 12.9688 23.7904L13.7095 21.0656C14.7459 21.6006 16.1998 22.0893 17.804 22.0893C19.2095 22.0893 20.1717 21.5775 20.1717 20.6465C20.1717 19.7612 19.3825 19.2019 17.5569 18.6194C14.9182 17.7816 13.1172 16.6173 13.1172 14.3592C13.1172 12.3096 14.6472 10.7035 17.2859 10.2143V8.00195H19.7019V10.0516C21.3546 10.1216 22.4651 10.4458 23.2783 10.8193L22.5632 13.4508C21.9224 13.1949 20.788 12.6581 19.0108 12.6581C17.4085 12.6581 16.8903 13.3101 16.8903 13.9626C16.8903 14.7303 17.7537 15.2196 19.8504 15.9647C22.784 16.9432 23.9688 18.2228 23.9688 20.3199C23.9688 22.3921 22.4142 24.1615 19.5787 24.6275V27.002H17.162Z"
+										fill="url(#paint1_linear_12293_272446)"
+										fill-opacity="0.9"
+									/>
+									<g filter="url(#filter0_b_12293_272446)">
+										<path
+											d="M7.46875 13.002C11.0586 13.002 13.9688 10.0918 13.9688 6.50195C13.9688 2.9121 11.0586 0.00195312 7.46875 0.00195312C3.8789 0.00195312 0.96875 2.9121 0.96875 6.50195C0.96875 10.0918 3.8789 13.002 7.46875 13.002Z"
+											fill="#F8B77B"
+											fill-opacity="0.6"
+										/>
+									</g>
+									<defs>
+										<filter
+											id="filter0_b_12293_272446"
+											x="-3.03125"
+											y="-3.99805"
+											width="21"
+											height="21"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="2" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_272446" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_272446"
+												result="shape"
+											/>
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_272446"
+											x1="11.6226"
+											y1="8.56445"
+											x2="34.6413"
+											y2="16.4804"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#FBA47F" />
+											<stop offset="1" stop-color="#DF6B00" />
+										</linearGradient>
+										<linearGradient
+											id="paint1_linear_12293_272446"
+											x1="14.6878"
+											y1="15.2462"
+											x2="32.0741"
+											y2="16.0959"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="white" />
+											<stop offset="1" stop-color="white" stop-opacity="0" />
+										</linearGradient>
+									</defs>
+								</svg>
+							</div>
+							<span>
+								Earn
+								<br />
+								<strong>Money</strong>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="share-modal-footer">
+				<div class="allow-staff-wrap">
+					<h5>Sharing your group profile with your group's members allows you to:</h5>
+					<ul class="allow-staff-list list-unstyled">
+						<li class="allow-staff-item">
+							<svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.3544 3.02784C4.57994 3.19237 2.93484 4.02745 1.7549 5.36286C0.57481 6.69827 -0.0515641 8.43357 0.0033252 10.2148C0.0583246 11.996 0.790379 13.6891 2.05057 14.9494C3.31076 16.2096 5.00396 16.9417 6.78521 16.9967C8.56656 17.0516 10.3018 16.4252 11.6371 15.2451C12.9725 14.065 13.8076 12.4201 13.9722 10.6456C14.0945 9.27694 13.8124 7.90244 13.1609 6.69262C12.5095 5.48267 11.5174 4.4905 10.3074 3.83912C9.09756 3.18762 7.72309 2.90556 6.35443 3.02787L6.3544 3.02784ZM10.7601 8.42687L6.61129 12.5325C6.48676 12.6537 6.3199 12.7216 6.14619 12.7216C5.97248 12.7216 5.80563 12.6537 5.68109 12.5325L3.23572 10.1973C3.06363 10.0319 2.99282 9.7874 3.04979 9.55579C3.10689 9.32405 3.28328 9.14046 3.51245 9.07405C3.74163 9.00754 3.98884 9.06847 4.16092 9.2337L6.13458 11.1273L9.82829 7.47858C9.99898 7.31812 10.2414 7.25905 10.4668 7.32289C10.6922 7.38684 10.8676 7.56439 10.9286 7.79055C10.9898 8.0167 10.9277 8.25833 10.7651 8.42704L10.7601 8.42687Z"
+									fill="#27AE60"
+								/>
+							</svg>
+							<span> Get reviews and ratings about your group from your members </span>
+						</li>
+						<li class="allow-staff-item">
+							<svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.3544 3.02784C4.57994 3.19237 2.93484 4.02745 1.7549 5.36286C0.57481 6.69827 -0.0515641 8.43357 0.0033252 10.2148C0.0583246 11.996 0.790379 13.6891 2.05057 14.9494C3.31076 16.2096 5.00396 16.9417 6.78521 16.9967C8.56656 17.0516 10.3018 16.4252 11.6371 15.2451C12.9725 14.065 13.8076 12.4201 13.9722 10.6456C14.0945 9.27694 13.8124 7.90244 13.1609 6.69262C12.5095 5.48267 11.5174 4.4905 10.3074 3.83912C9.09756 3.18762 7.72309 2.90556 6.35443 3.02787L6.3544 3.02784ZM10.7601 8.42687L6.61129 12.5325C6.48676 12.6537 6.3199 12.7216 6.14619 12.7216C5.97248 12.7216 5.80563 12.6537 5.68109 12.5325L3.23572 10.1973C3.06363 10.0319 2.99282 9.7874 3.04979 9.55579C3.10689 9.32405 3.28328 9.14046 3.51245 9.07405C3.74163 9.00754 3.98884 9.06847 4.16092 9.2337L6.13458 11.1273L9.82829 7.47858C9.99898 7.31812 10.2414 7.25905 10.4668 7.32289C10.6922 7.38684 10.8676 7.56439 10.9286 7.79055C10.9898 8.0167 10.9277 8.25833 10.7651 8.42704L10.7601 8.42687Z"
+									fill="#27AE60"
+								/>
+							</svg>
+							<span>
+								Make your group profile more trustworthy with these reviews and ratings and thus get more brand
+								campaigns.
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="isPitch && selectedProfilePageForDuplication" class="modal file-alert share-modal">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">New brand pitch</h5>
+				<button
+					#duplicateProfilePageModalCloseBtn
+					aria-label="Close"
+					(click)="
+						closeCreatePitchModal($event, group, null, null, selectedProfilePageForDuplication);
+						isPageNameExist = false;
+						isPageLimitExceeded = false;
+						closeCreatePitchModal()
+					"
+					data-cs-id="fc2f1643-93b1-4d7d-be24-540efe058ffa"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img src="assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="create-pitch-body">
+					<div class="input-wrap">
+						<label>What do you want to call the new brand pitch? <sup>*</sup></label>
+						<input
+							#brandPitchNameInput
+							[ngModel]="setProfileDuplicateName(selectedProfilePageForDuplication.name)"
+							class="convo-input"
+							placeholder="E.g. Brand pitch for Dettol"
+							type="text"
+							id="brandPitchName"
+							(input)="validateProfileName('brandPitchName')"
+							[class.invalid]="isPageNameExist || isPageLimitExceeded"
+						/>
+						<span class="error-msg" *ngIf="isPageNameExist">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name already exists!
+						</span>
+						<span class="error-msg" *ngIf="isPageLimitExceeded">
+							<img alt="" src="assets/images/error-info-icon.svg" />
+							Page name is limited to 75 characters!
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="
+						createBrandPitch(brandPitchNameInput.value, duplicateProfilePageModalCloseBtn);
+						recordButtonClick($event, group, null, null, selectedProfilePageForDuplication)
+					"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="7942d6c6-afd3-45dd-9eb5-597d852a9e5b"
+					data-cs-label="Create brand pitch"
+					data-cs-source="page"
+				>
+					<span *ngIf="isUpdateRequestInProgress" class="btn-spinner-white"></span>
+					{{ isUpdateRequestInProgress ? 'Creating...' : 'Create brand pitch' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

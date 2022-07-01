@@ -1,0 +1,50 @@
+{
+	"data": {
+		"getKeywordTrackerReport": [
+			{
+				"__typename": "KeywordTrackerReport",
+				"name": "Nangrow Brand Report",
+				"displayName": "Nangrow Brand Report",
+				"ownerId": "54192d11-d656-4cb4-9d0c-78c01c1fe7d3",
+				"id": "a4fa1c1c-b728-4a2e-9bb0-4699d9ea85d0",
+				"createdAtUTC": "2020-02-28T11:58:50.381Z",
+				"updatedAtUTC": "2021-03-26T07:16:50.768Z",
+				"keywords": "nangro|nan_gro|nangrow",
+				"numOfOccurances": 1938,
+				"numOfRemovedComments": 0,
+				"numOfActionRequired": 1927,
+				"numOfReported": 0,
+				"numOfTurnedOffCommenting": 0,
+				"numOfMutedMembers": 0,
+				"numOfHiddenComments": 0,
+				"numOfRemovedMembers": 0,
+				"numOfRemovedPost": 0,
+				"numOfBlockedUser": 0,
+				"numOfIgnored": 0,
+				"reportLevel": "Brand"
+			},
+			{
+				"__typename": "KeywordTrackerReport",
+				"name": "Nangrow Competitor Report",
+				"displayName": "Nangrow Competitor Report",
+				"ownerId": "54192d11-d656-4cb4-9d0c-78c01c1fe7d3",
+				"id": "2f68f074-d1ba-45f3-bceb-a1b42f0aa498",
+				"createdAtUTC": "2020-02-28T11:58:50.382Z",
+				"updatedAtUTC": "2021-03-26T07:16:39.275Z",
+				"keywords": "pediasure|pdsure|horlicks junior|horlics junior|bornvita little |bournvita little| bournvita little| bournvita lil| enfagrow|protinex|protinx|prntx|protinex",
+				"numOfOccurances": 14543,
+				"numOfRemovedComments": 0,
+				"numOfActionRequired": 14523,
+				"numOfReported": 0,
+				"numOfTurnedOffCommenting": 0,
+				"numOfMutedMembers": 0,
+				"numOfHiddenComments": 0,
+				"numOfRemovedMembers": 0,
+				"numOfRemovedPost": 0,
+				"numOfBlockedUser": 0,
+				"numOfIgnored": 0,
+				"reportLevel": "Brand"
+			}
+		]
+	}
+}

@@ -1,0 +1,183 @@
+<div class="create-brand-campaign-wrapper">
+	<div class="create-brand-campaign-header-wrapper">
+		<div class="brand-header">
+			<div class="header-left">
+				<a class="go-back" (click)="navigateToManageCampaign()">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#33334F" />
+					</svg>
+				</a>
+				<h3>Create a new campaign</h3>
+			</div>
+			<div class="header-center">
+				<div class="stepper-wrap">
+					<div
+						class="step-wrap"
+						[class.current-stage]="selectedTab === 'communities'"
+						(click)="goToSelectCommunitiesTab()"
+					>
+						<div class="selected-stage" *ngIf="selectedTab === 'communities'">
+							<span>1</span>
+							<h6>Select communities</h6>
+						</div>
+						<div class="completed-stage" *ngIf="selectedTab === 'campaignDetails'">
+							<span class="img-selected-tab"
+								><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M6.0001 10.7799L3.2201 7.9999L2.27344 8.9399L6.0001 12.6666L14.0001 4.66656L13.0601 3.72656L6.0001 10.7799Z"
+										fill="white"
+									/>
+								</svg>
+							</span>
+							<h6>
+								Selected {{ groupsSelectedForCampaignCreation?.length
+								}}<span *ngIf="groupsSelectedForCampaignCreation?.length === 1"> community</span
+								><span *ngIf="groupsSelectedForCampaignCreation?.length > 1"> communities</span>
+							</h6>
+						</div>
+					</div>
+
+					<div
+						[class.disabled]="selectedTab !== 'campaignDetails'"
+						class="step-wrap"
+						style="cursor: default"
+						[class.current-stage]="selectedTab === 'campaignDetails'"
+					>
+						<div class="selected-stage">
+							<span>2</span>
+							<h6>Add campaign details</h6>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="create-brand-campaign-body-wrapper">
+		<app-community-discovery
+			(groupsSelectedForCampaignCreation)="getGroupsSelectedForCampaignCreation($event)"
+			(disableActionOnConversationTrends)="disableActionOnConversationTrends($event)"
+			(hideCommunityListPopup)="hideCommunityListPopup($event)"
+			(areGroupsLoaded)="areGroupsLoaded($event)"
+			[hidden]="selectedTab !== 'communities'"
+			[(showCommunityListPopup)]="showCommunityListPopup"
+		>
+		</app-community-discovery>
+		<ng-container *ngIf="selectedTab === 'campaignDetails'">
+			<div class="campaign-details-wrapper">
+				<app-create-campaign-details
+					[campaignDetails]="campaignDetails"
+					[brandName]="selectedBrand?.name"
+					(formValue)="formSubmitValue($event)"
+					[campaignCreatedOn]="'brand'"
+					(isFormValid)="updateFormValidStatus($event)"
+					[groupsSelectedForCampaignCreation]="groupsSelectedForCampaignCreation"
+				></app-create-campaign-details>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="selectedTab === 'campaignTasks'">
+			<div class="campaign-details-wrapper">
+				<app-community-marketing-campaign-tasks
+					(closeAddNewTask)="showNewTaskTab()"
+					(closeTaskDetailsView)="campaignTasks = $event; closeTaskDetailsView($event)"
+					[defaultTitle]="campaignDetails['taskTitle']"
+					[defaultPeriod]="campaignDetails['campaignPeriod']"
+					[defaultTaskDate]="campaignDetails['defaultTaskDateTime']"
+					[(addNewTask)]="addNewTask"
+					[campaignTaskViewDetails]="campaignTasks"
+					[isCsAdmin]="isCsAdmin"
+					[taskName]="''"
+					[startDate]="campaignDetails['startDate']"
+					[endDate]="campaignDetails['endDate']"
+				>
+				</app-community-marketing-campaign-tasks>
+			</div>
+		</ng-container>
+	</div>
+</div>
+<div class="footer-create-campaign" *ngIf="selectedTab === 'communities' && groupsLoaded && showProceedToNextStep">
+	<span
+		class="not-selected-msg"
+		*ngIf="groupsSelectedForCampaignCreation?.length === 0 || !groupsSelectedForCampaignCreation"
+	>
+		Select atleast 1 community to proceed</span
+	>
+
+	<ul *ngIf="groupsSelectedForCampaignCreation?.length > 0">
+		<li class="bold-text">
+			Selected {{ groupsSelectedForCampaignCreation?.length }}
+			<span *ngIf="groupsSelectedForCampaignCreation?.length === 1"> community</span>
+			<span *ngIf="groupsSelectedForCampaignCreation?.length > 1"> communities</span>
+			(<a class="view-list-link" (click)="showCommunityListPopup = true">View List</a>)
+		</li>
+		<li>
+			<span>{{ memberSizeOfGroupsSelectedForCampaignCreation | shortNumber }} total members</span>
+		</li>
+	</ul>
+	<button
+		class="download-wrapper"
+		(click)="downloadCommunities(); recordButtonClick($event)"
+		[class.disabled]="groupsSelectedForCampaignCreation?.length === 0 || !groupsSelectedForCampaignCreation"
+		[disabled]="groupsSelectedForCampaignCreation?.length === 0 || !groupsSelectedForCampaignCreation"
+		data-cs-id="03d0580a-806c-445c-8e8e-67053933e076"
+		data-cs-label="Download as .xls"
+		data-cs-source="page"
+	>
+		Download as .xls
+	</button>
+	<button
+		(click)="proceedToCampaignCreation()"
+		[class.disabled]="groupsSelectedForCampaignCreation?.length === 0 || !groupsSelectedForCampaignCreation"
+		[disabled]="groupsSelectedForCampaignCreation?.length === 0 || !groupsSelectedForCampaignCreation"
+	>
+		Proceed to next step
+	</button>
+</div>
+
+<div class="footer-create-campaign" *ngIf="selectedTab === 'campaignDetails'">
+	<button
+		[hidden]="campaignCreationInProgress"
+		(click)="createBrandCampaign(); recordButtonClick($event)"
+		[class.disabled]="!campaignDetailFormValidStatus"
+		[disabled]="!campaignDetailFormValidStatus"
+		data-cs-id="3178d5db-8df9-4888-89e2-3dace5f0dc54"
+		data-cs-label="Create campaign"
+		data-cs-source="page"
+	>
+		Create campaign
+	</button>
+	<button disabled *ngIf="campaignCreationInProgress">
+		<span class="bt-spinner btn-spinner-white"></span>
+	</button>
+</div>
+
+<!-- Success Popup after brand creation -->
+<div class="success-campaign-wrapper" *ngIf="showCampaignSuccessPopup">
+	<div class="modal-body">
+		<div class="success-campaign">
+			<div></div>
+			<div class="success-campaign-body">
+				<div class="icon">
+					<img src="assets/images/green-tick.svg" alt="" />
+				</div>
+				<h3>Campaign created successfully!</h3>
+				<p>Campaign details saved successfully, please click on “continue” to view the campaign details.</p>
+				<button
+					type="button"
+					class="btn btn-primary submit-btn"
+					data-cs-id="1e6f9676-3414-404e-b060-123877ab65c0"
+					data-cs-label="Continue"
+					data-cs-source="page"
+					(click)="
+						goToBrandManageCampaign();
+						this.recordButtonClick($event, null, null, {
+							campaignId: this.selectedCampaignId,
+							selectedCommunities: selectedCommunitiesId
+						})
+					"
+				>
+					Continue
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

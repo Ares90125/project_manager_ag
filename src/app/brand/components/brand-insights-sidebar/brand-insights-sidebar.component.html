@@ -1,0 +1,45 @@
+<div class="communities-list-container">
+	<div class="head-wrapper">
+		<h5 class="font-weight-normal">
+			<img alt="" src="assets/images/insight-icon.svg" />
+			<span>Insights on</span>
+		</h5>
+		<h3 class="head-text">
+			Conversation volume for
+			<span class="font-weight-medium" *ngIf="keyword">‘{{ keyword | titlecase }}’</span>
+		</h3>
+		<button class="btn-close" type="button" (click)="close()">
+			<img alt="" src="assets/images/close-icon.svg" />
+		</button>
+		<div class="dropdown-wrapper"></div>
+	</div>
+
+	<!-- Main list wrapper -->
+	<div class="community-list-wrapper">
+		<div *ngIf="insights">
+			<div *ngFor="let key of getKeysOfInsights(insights); let i = index" class="communities-list">
+				<div *ngIf="key !== 'name'" class="insight-box">
+					<div class="insight-date">
+						{{ key | date: 'MMMM dd' }},
+						<span class="font-weight-normal">{{ key | date: 'yyyy' }}</span>
+					</div>
+					<div *ngFor="let insight of insights[key]" class="community-card-wrapper">
+						<p class="mb-1">{{ insight.message }}</p>
+						<p class="m-0">
+							<small class="text-secondary">{{ insight.updatedAt }}</small>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="!insights" class="no-results-wrapper">
+		<div class="no-results-found">
+			<figure>
+				<img alt="" src="assets/images/empty_state_icon.svg" />
+			</figure>
+			<h5>No insights available, yet</h5>
+			<div>Check back later</div>
+		</div>
+	</div>
+</div>

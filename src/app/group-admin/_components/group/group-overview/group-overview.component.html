@@ -1,0 +1,1347 @@
+<div class="wrapper-container container" *ngIf="!isLoading">
+	<h2 class="heading-overview" data-test-id="heading-overview">Overview</h2>
+	<ng-container *ngIf="group.isOverViewTabAvailable(); else preparingInsightsSection">
+		<div
+			*ngIf="group.percentageLast3DaysMetricsAvailable < 100 && !group.areMetricsAvailable"
+			class="grid-layout-wrapper overview-stats analysing"
+		>
+			<div class="heading-wrapper">
+				<h3 class="heading-overview">
+					<img alt="" src="assets/images/calendar-icon-2.svg" />
+					<span data-test-id="heading-yesterdayActivity-overview"> Yesterday’s activity</span>
+					<p class="sub-heading-overview">
+						Insights about <strong>New Members</strong>, <strong>New Posts</strong>, and
+						<strong>Reactions & Comments</strong>
+					</p>
+				</h3>
+				<div class="widget-analysing">
+					<app-analysis-state
+						[heading]="'Analysing Information'"
+						[subHeading]="'Please wait...'"
+						[value]="group?.percentageLast3DaysMetricsAvailable"
+						[inline]="true"
+						[diameter]="28"
+					></app-analysis-state>
+				</div>
+			</div>
+		</div>
+		<div
+			*ngIf="showYesterdaysOverview && (group.percentageLast3DaysMetricsAvailable === 100 || group.areMetricsAvailable)"
+			class="grid-layout-wrapper overview-stats"
+		>
+			<div class="heading-wrapper">
+				<h3 class="heading-overview">
+					<img alt="" src="assets/images/calendar-icon-2.svg" />
+					<span data-test-id="heading-yesterdayActivity-overview"> Yesterday’s activity</span>
+					<p class="sub-heading-overview" data-test-id="subheading-yesterdayActivity-overview">
+						<strong style="font-weight: 500">{{ yesterdaysDate }} </strong> vs daily averages
+					</p>
+				</h3>
+			</div>
+			<div class="matrics-top-container">
+				<div
+					class="yesterdays-metrics-null-text"
+					*ngIf="(yesterdaysMetrics || yesterdaysMetrics === null) && (group?.metricsForLast30Days | async) !== null"
+				>
+					<div *ngIf="yesterdaysMetrics === null">
+						<p data-test-id="heading-data-null">
+							<img alt="" src="assets/images/group-icons/icon-info.svg" /> We are still in the process of calculating
+							yesterday's activity in your group. Please check back in an hour.
+						</p>
+					</div>
+				</div>
+				<div class="group-summary-wrapper">
+					<div class="tile-overview">
+						<div class="tile-border" *ngIf="yesterdaysMetrics !== null"></div>
+						<ng-container
+							*ngIf="
+								(yesterdaysMetrics || yesterdaysMetrics === null) && (group?.metricsForLast30Days | async) !== null;
+								else loading
+							"
+						>
+							<h6 class="metric-name" *ngIf="yesterdaysMetrics !== null">Member growth</h6>
+							<div class="tile-overview-inner-wrapper" *ngIf="yesterdaysMetrics !== null">
+								<p class="metric-value" data-test-id="meteric-value-member-growth-yesterday-activity">
+									{{ yesterdaysMetrics !== null ? yesterdaysMetrics?.memberCount : 'N.A.' }}
+								</p>
+								<div
+									class="comparison-box"
+									*ngIf="
+										yesterdaysMetrics !== null &&
+										differenceInMemberCount(this.group?.metricsForLast30Days | async) !== 0 &&
+										differenceInMemberCount(this.group?.metricsForLast30Days | async)
+									"
+								>
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												yesterdaysMetrics?.memberCount <
+												differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div
+												class="metrics-content"
+												data-test-id="metric-content-percentage-lower-member-growth-overview"
+											>
+												<div class="value">
+													{{
+														(differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30 -
+															yesterdaysMetrics?.memberCount) /
+															(differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30) | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												yesterdaysMetrics?.memberCount >
+												differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="metric-content-percentage-higher-member-growth-overview">
+													{{
+														(yesterdaysMetrics?.memberCount -
+															differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30) /
+															absoluteValue(differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30)
+															| percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												yesterdaysMetrics?.memberCount ===
+												differenceInMemberCount(this.group?.metricsForLast30Days | async) / 30
+											"
+											class="equal"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+											<div
+												class="metrics-content"
+												data-test-id="metric-content-percentage-nochange-member-growth-overview"
+											>
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+					<div class="tile-overview">
+						<div class="tile-border" *ngIf="yesterdaysMetrics !== null"></div>
+						<ng-container
+							*ngIf="
+								(yesterdaysMetrics || yesterdaysMetrics === null) && (group?.metricsForLast30Days | async);
+								else loading
+							"
+						>
+							<h6 class="metric-name" data-test-id="meteric-title-newPosts-overview" *ngIf="yesterdaysMetrics !== null">
+								New posts
+							</h6>
+							<div class="tile-overview-inner-wrapper" *ngIf="yesterdaysMetrics !== null">
+								<p class="metric-value" data-test-id="meteric-value-new-posts-yesterday-activity">
+									{{ yesterdaysMetrics !== null ? yesterdaysMetrics?.totalPosts : 'N.A.' }}
+								</p>
+								<div class="comparison-box" *ngIf="yesterdaysMetrics !== null">
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												!yesterdaysMetrics?.positivePostsChange && yesterdaysMetrics?.changeInPostsPercentageCount !== 0
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-newpost-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div class="metrics-content" data-test-id="metric-content-percentage-lower-new-post-overview">
+												<div class="value">
+													{{ yesterdaysMetrics?.changeInPostsPercentageCount }}
+													%
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												yesterdaysMetrics?.positivePostsChange && yesterdaysMetrics?.changeInPostsPercentageCount !== 0
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-newpost-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div class="metrics-content" data-test-id="metric-content-percentage-higher-new-post-overview">
+												<div class="value">
+													{{ yesterdaysMetrics?.changeInPostsPercentageCount }}
+													%
+												</div>
+											</div>
+										</div>
+										<div *ngIf="yesterdaysMetrics?.changeInPostsPercentageCount === 0" class="equal">
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-newpost-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+											<div class="metrics-content" data-test-id="metric-content-percentage-nochange-new-post-overview">
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+					<div class="tile-overview">
+						<ng-container
+							*ngIf="
+								(yesterdaysMetrics || yesterdaysMetrics === null) && (group?.metricsForLast30Days | async);
+								else loading
+							"
+						>
+							<h6
+								class="metric-name"
+								data-test-id="meteric-title-reaction&comments-overview"
+								*ngIf="yesterdaysMetrics !== null"
+							>
+								Reactions & comments
+							</h6>
+							<div class="tile-overview-inner-wrapper" *ngIf="yesterdaysMetrics !== null">
+								<p class="metric-value" data-test-id="meteric-value-reactions-comments-yesterday-activity">
+									{{
+										yesterdaysMetrics !== null
+											? yesterdaysMetrics?.totalReactions + yesterdaysMetrics?.totalComments
+											: 'N.A.'
+									}}
+								</p>
+								<div class="comparison-box" *ngIf="yesterdaysMetrics !== null">
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												!yesterdaysMetrics?.positiveCommentsReactionsChange &&
+												yesterdaysMetrics?.changeInCommentsReactionsPercentageCount !== 0
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-comment&reaction-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div
+												class="metrics-content"
+												data-test-id="metric-content-percentage-lower-comment&reactions-overview"
+											>
+												<div class="value">
+													{{ yesterdaysMetrics?.changeInCommentsReactionsPercentageCount }}
+													%
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												yesterdaysMetrics?.positiveCommentsReactionsChange &&
+												yesterdaysMetrics?.changeInCommentsReactionsPercentageCount !== 0
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-comment&reaction-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div
+												class="metrics-content"
+												data-test-id="metric-content-percentage-higher-comment&reactions-overview"
+											>
+												<div class="value">
+													{{ yesterdaysMetrics?.changeInCommentsReactionsPercentageCount }}
+													%
+												</div>
+											</div>
+										</div>
+										<div *ngIf="yesterdaysMetrics?.changeInCommentsReactionsPercentageCount === 0" class="equal">
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-comment&reaction-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+											<div
+												class="metrics-content"
+												data-test-id="metric-content-percentage-nochange-comment&reactions-overview"
+											>
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div
+			class="grid-layout-wrapper overview-stats"
+			*ngIf="group.percentageLast28DaysMetricsAvailable < 100 && !group.areMetricsAvailable"
+		>
+			<div class="heading-wrapper">
+				<h3 class="heading-overview">
+					<span data-test-id="heading-yesterdayActivity-overview"> 💪 Past 30 days overview</span>
+					<p class="sub-heading-overview">
+						Insights about <strong>Member Growth</strong>, <strong>Engagement Rate</strong>, and
+						<strong>Activity Rate</strong>
+					</p>
+				</h3>
+				<div>
+					<app-analysis-state
+						[heading]="'Analysing Information'"
+						[subHeading]="'Please wait...'"
+						[value]="group?.percentageLast28DaysMetricsAvailable"
+						[inline]="true"
+						[diameter]="28"
+					></app-analysis-state>
+				</div>
+			</div>
+		</div>
+		<div
+			*ngIf="group.percentageLast28DaysMetricsAvailable === 100 || group.areMetricsAvailable"
+			class="grid-layout-wrapper overview-stats"
+		>
+			<div class="heading-wrapper">
+				<h3 class="heading-overview" data-test-id="heading-past30Days-overview">
+					💪 Past 30 days overview
+					<p class="sub-heading-overview">
+						<strong style="font-weight: 500">Past 30 days </strong>
+						vs {{ previousMonth }}
+					</p>
+				</h3>
+				<a
+					style="display: block"
+					id="viewGroupHealthDesktop"
+					(click)="triggerChangeInNavigation('statistics')"
+					class="btn-view-group-health"
+					data-test-id="button-view-group-health-overview"
+					>View Group Health <img alt="" src="assets/images/group-icons/chevron_right.svg"
+				/></a>
+			</div>
+			<div class="matrics-top-container">
+				<div class="group-summary-wrapper">
+					<div class="tile-overview">
+						<div class="tile-border"></div>
+						<ng-container
+							*ngIf="
+								(group?.metricsForLast31DaysTo60Days | async) && (group?.metricsForLast30Days | async);
+								else loading
+							"
+						>
+							<h6 class="metric-name" data-test-id="meteric-title-memberGrowth-overview">
+								<span data-test-id="past30days-meteric-title-memberGrowth-overview">Member growth</span>
+							</h6>
+							<div class="tile-overview-inner-wrapper">
+								<p class="metric-value" data-test-id="meteric-value-member-growth-past30Days">
+									{{
+										(group?.metricsForLast30Days | async).length === 0
+											? 'N.A.'
+											: (differenceInMemberCount(this.group.metricsForLast30Days | async) | shortNumber)
+									}}
+								</p>
+								<div
+									class="comparison-box"
+									*ngIf="
+										(group?.metricsForLast31DaysTo60Days | async) &&
+										differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) !== 0
+									"
+								>
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) >
+												differenceInMemberCount(this.group.metricsForLast30Days | async)
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-past30Days-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="past30Days-metric-content-percentage-lower-member-overview">
+													{{
+														(differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) -
+															differenceInMemberCount(this.group.metricsForLast30Days | async)) /
+															differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) <
+												differenceInMemberCount(this.group.metricsForLast30Days | async)
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-past30Days-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="past30Days-metric-content-percentage-higher-member-overview">
+													{{
+														(differenceInMemberCount(this.group.metricsForLast30Days | async) -
+															differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async)) /
+															absoluteValue(differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async))
+															| percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												differenceInMemberCount(this.group.metricsForLast31DaysTo60Days | async) ===
+												differenceInMemberCount(this.group.metricsForLast30Days | async)
+											"
+											class="equal"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-member-past30Days-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+											<div class="metrics-content">
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+					<div class="tile-overview">
+						<div class="tile-border"></div>
+						<ng-container
+							*ngIf="
+								(group?.summaryReportFor31To60Days | async) && (group?.summaryReportForLast30Days | async);
+								else loading
+							"
+						>
+							<h6 class="metric-name">
+								<span data-test-id="meteric-title-engagementRate-overview">Engagement Rate</span>
+							</h6>
+							<div class="tile-overview-inner-wrapper">
+								<p class="metric-value" data-test-id="meteric-value-engagment-rate-past30Days">
+									{{
+										(group?.summaryReportForLast30Days | async).totalEngagementRate === 0
+											? 'N.A.'
+											: ((group?.summaryReportForLast30Days | async).totalEngagementRate | number: '1.0-0') + '%'
+									}}
+								</p>
+								<div
+									class="comparison-box"
+									*ngIf="
+										(group?.summaryReportFor31To60Days | async) &&
+										(group?.summaryReportFor31To60Days | async).totalEngagementRate !== 0 &&
+										(group?.summaryReportForLast30Days | async)
+									"
+								>
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalEngagementRate >
+												(group?.summaryReportForLast30Days | async).totalEngagementRate
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-engagment-past30Days-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="past30Days-metric-content-percentage-lower-engagment-overview">
+													{{
+														((group?.summaryReportFor31To60Days | async).totalEngagementRate -
+															(group?.summaryReportForLast30Days | async).totalEngagementRate) /
+															(group?.summaryReportFor31To60Days | async).totalEngagementRate | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalEngagementRate <
+												(group?.summaryReportForLast30Days | async).totalEngagementRate
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-engagment-past30Days-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div
+													class="value"
+													data-test-id="past30Days-metric-content-percentage-higher-engagment-overview"
+												>
+													{{
+														((group?.summaryReportForLast30Days | async).totalEngagementRate -
+															(group?.summaryReportFor31To60Days | async).totalEngagementRate) /
+															(group?.summaryReportFor31To60Days | async).totalEngagementRate | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalEngagementRate ===
+												(group?.summaryReportForLast30Days | async).totalEngagementRate
+											"
+											class="equal"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-engagment-past30Days-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+											<div
+												class="metrics-content"
+												data-test-id="past30Days-metric-content-percentage-nochange-engagment-overview"
+											>
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+					<div class="tile-overview">
+						<ng-container
+							*ngIf="
+								(group?.summaryReportFor31To60Days | async) && (group?.summaryReportForLast30Days | async);
+								else loading
+							"
+						>
+							<h6 class="metric-name">
+								<span data-test-id="meteric-title-activityRate-overview">Activity Rate</span>
+							</h6>
+							<div class="tile-overview-inner-wrapper">
+								<p class="metric-value" data-test-id="meteric-value-activity-rate-past30Days">
+									{{ (group?.summaryReportForLast30Days | async).totalActivityRate }}
+								</p>
+								<div
+									class="comparison-box"
+									*ngIf="
+										(group?.summaryReportFor31To60Days | async) &&
+										(group?.summaryReportFor31To60Days | async).totalActivityRate !== 0
+									"
+								>
+									<div class="icon-higher-or-lower"></div>
+									<div class="">
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalActivityRate >
+												(group?.summaryReportForLast30Days | async).totalActivityRate
+											"
+											class="lower"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-activity-past30Days-icon-lower-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-decrease.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="past30Days-metric-content-percentage-lower-activity-overview">
+													{{
+														((group?.summaryReportFor31To60Days | async).totalActivityRate -
+															(group?.summaryReportForLast30Days | async).totalActivityRate) /
+															(group?.summaryReportFor31To60Days | async).totalActivityRate | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalActivityRate <
+												(group?.summaryReportForLast30Days | async).totalActivityRate
+											"
+											class="higher"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-activity-past30Days-icon-higher-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-increase.svg" />
+											</div>
+
+											<div class="metrics-content">
+												<div class="value" data-test-id="past30Days-metric-content-percentage-higher-activity-overview">
+													{{
+														((group?.summaryReportForLast30Days | async).totalActivityRate -
+															(group?.summaryReportFor31To60Days | async).totalActivityRate) /
+															(group?.summaryReportFor31To60Days | async).totalActivityRate | percent
+													}}
+												</div>
+											</div>
+										</div>
+										<div
+											*ngIf="
+												(group?.summaryReportFor31To60Days | async).totalActivityRate ===
+												(group?.summaryReportForLast30Days | async).totalActivityRate
+											"
+											class="equal"
+										>
+											<div
+												class="icon-higher-or-lower"
+												data-test-id="metric-content-percentage-activity-past30Days-icon-nochange-overview"
+											>
+												<img alt="" src="assets/images/group-icons/icon-no-change.svg" />
+											</div>
+
+											<div
+												class="metrics-content"
+												data-test-id="past30Days-metric-content-percentage-nochange-engagment-overview"
+											>
+												<div class="value">0%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-template #loading>
+							<div class="loader-shimmer">
+								<div class="loading-strip primary"></div>
+								<div class="loading-strip secondary"></div>
+							</div>
+						</ng-template>
+					</div>
+				</div>
+				<a
+					style="display: none"
+					id="viewGroupHealthMobile"
+					(click)="triggerChangeInNavigation('statistics')"
+					class="btn-view-group-health"
+					>View Group Health <img alt="" src="assets/images/group-icons/chevron_right.svg"
+				/></a>
+			</div>
+		</div>
+		<div class="grid-layout-wrapper">
+			<div class="heading-wrapper">
+				<h3 class="heading-overview suggestted-actions" data-test-id="heading-suggestedActions-overview">
+					🙌 Suggested actions for you
+				</h3>
+			</div>
+			<div class="grid-layout">
+				<div
+					*ngIf="group?.percentageLast3DaysMetricsAvailable < 100 && !group.areMetricsAvailable"
+					class="next-best-time card-overview card-overview-analysing"
+					style="order: 1"
+				>
+					<div>
+						<app-analysis-state
+							[value]="group?.percentageLast3DaysMetricsAvailable"
+							[iconSm]="'assets/images/group-icons/icon_unanswered_analysing.svg'"
+							[inline]="false"
+							[diameter]="28"
+						></app-analysis-state>
+					</div>
+					<div class="flex-box">
+						<p>
+							<strong>Getting all unanswered posts</strong>
+						</p>
+					</div>
+				</div>
+				<div *ngIf="group?.percentageLast3DaysMetricsAvailable === 100 || group.areMetricsAvailable">
+					<ng-container id="unanswered" *ngIf="group?.unansweredPostsForToday; else loadingUnanswered">
+						<div
+							*ngIf="group?.unansweredPostsForToday.length !== 0"
+							class="next-best-time card-overview"
+							style="order: 1"
+						>
+							<div class="desktop-icon">
+								<img alt="" src="assets/images/group-icons/icon_unanswered.svg" />
+							</div>
+							<div class="flex-box">
+								<p>
+									<img alt="" class="mobile-icon" src="assets/images/group-icons/icon_unanswered.svg" />
+									<strong data-test-id="unanswered-post-card-overview">Reply to unanswered posts</strong>
+								</p>
+								<a class="action">
+									<p>
+										<strong data-test-id="number-unanswered-post-overview"
+											>{{ group?.unansweredPostsForToday.length }} recent post<span
+												*ngIf="group?.unansweredPostsForToday.length > 1"
+												>s</span
+											></strong
+										>
+										<span> require<span *ngIf="group?.unansweredPostsForToday.length < 2">s</span> your attention</span>
+									</p>
+									<a
+										data-cs-id="b8c5a6f6-e14a-49f2-8a93-b12aa89b10f0"
+										data-cs-label="Redirect to unanswered Post"
+										data-cs-source="page"
+										(click)="redirectToUnansweredPost(); recordButtonClick($event)"
+										>View unanswered posts</a
+									>
+								</a>
+							</div>
+						</div>
+						<div
+							class="next-best-time card-overview done"
+							*ngIf="group?.unansweredPostsForToday.length === 0"
+							(click)="redirectToUnansweredPost()"
+							style="order: 8"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p data-test-id="no-unanswered-post-overview">Reply to unanswered posts</p>
+								<label data-test-id="subheading-no-unanswered-post-overview"
+									>You’re doing great! All recent posts in your group have received comments</label
+								>
+							</div>
+						</div>
+					</ng-container>
+					<ng-template #loadingUnanswered>
+						<div class="loader-shimmer-wrapper">
+							<div class="loading-header loading-strip primary"></div>
+							<div class="loading-body">
+								<div class="loading-body-left">
+									<div class="primary loading-strip mb-0"></div>
+								</div>
+								<div class="loading-body-right">
+									<div class="secondary loading-strip mr-5"></div>
+									<div class="tertiary loading-strip"></div>
+								</div>
+							</div>
+						</div>
+					</ng-template>
+				</div>
+				<div
+					*ngIf="!group?.areRecommendationsAvailable && !group.areMetricsAvailable"
+					class="next-best-time card-overview card-overview-analysing"
+					style="order: 3"
+				>
+					<div>
+						<app-analysis-state
+							[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+							[iconSm]="'assets/images/group-icons/icon_schedule_analysing.svg'"
+							[inline]="false"
+							[diameter]="28"
+						></app-analysis-state>
+					</div>
+					<div class="flex-box">
+						<p>
+							<strong>Schedule a post to boost engagement</strong>
+						</p>
+					</div>
+				</div>
+				<div *ngIf="group?.areRecommendationsAvailable || group.areMetricsAvailable">
+					<ng-container
+						id="schedule"
+						*ngIf="(group?._recommendationTimings | async) || isSchedulePostDoneForToday; else loadingSchedule"
+					>
+						<div
+							class="next-best-time card-overview"
+							*ngIf="!isSchedulePostDoneForToday && (group?._recommendationTimings | async).length !== 0"
+							style="order: 3"
+						>
+							<div class="desktop-icon">
+								<img alt="" src="assets/images/group-icons/icon_create.svg" />
+							</div>
+							<div class="flex-box">
+								<p>
+									<img alt="" class="mobile-icon" src="assets/images/group-icons/icon_create.svg" />
+									<strong data-test-id="heading-schedule-post-card-overview">Schedule a post </strong>&nbsp;to boost
+									engagement
+								</p>
+								<a
+									class="action"
+									data-cs-id="cfa1d513-27e0-49be-9a81-588e51cd214b"
+									data-cs-label="Redirect to Compose Post"
+									data-cs-source="page"
+								>
+									<div>
+										<p class="text-next-best-time" data-test-id="subheading-schedule-post-card-overview">
+											Next best time
+										</p>
+										<p class="flex-bottom">
+											<span class="recommended-time">{{ (group?._recommendationTimings | async)[0] }}</span>
+											<span class="timezone">{{ getUserTimeZone() }}</span>
+										</p>
+									</div>
+									<a (click)="redirectToComposePost()" data-test-id="button-schedule-post-card-overview"
+										>Schedule post</a
+									>
+								</a>
+							</div>
+						</div>
+
+						<a
+							class="next-best-time card-overview done desktop-done"
+							*ngIf="isSchedulePostDoneForToday"
+							data-cs-id="17c06509-97fd-4399-983e-5c6541d2d665"
+							data-cs-label="Redirect to Schedule Post"
+							data-cs-source="page"
+							(click)="redirectToSchedulePost()"
+							style="cursor: pointer; order: 5"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p>Schedule a post to boost engagement</p>
+								<label>Way to go! You’ve done this action for today.</label>
+							</div>
+							<a>Schedule more posts</a>
+						</a>
+
+						<a
+							class="next-best-time card-overview done mobile-done"
+							*ngIf="isSchedulePostDoneForToday"
+							data-cs-id="e9785b78-aecb-4aed-bb47-a338a4169947"
+							data-cs-label="Redirect to Schedule Post"
+							data-cs-source="page"
+							(click)="redirectToSchedulePost(); recordButtonClick($event)"
+							style="cursor: pointer; order: 5"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p>Schedule a post to boost engagement</p>
+								<label>Way to go! You’ve done this action for today.</label>
+								<a>Schedule more posts</a>
+							</div>
+						</a>
+					</ng-container>
+					<ng-template #loadingSchedule>
+						<div class="loader-shimmer-wrapper">
+							<div class="loading-header loading-strip primary"></div>
+							<div class="loading-body">
+								<div class="loading-body-left">
+									<div class="primary loading-strip mb-0"></div>
+								</div>
+								<div class="loading-body-right">
+									<div class="secondary loading-strip mr-5"></div>
+									<div class="tertiary loading-strip"></div>
+								</div>
+							</div>
+						</div>
+					</ng-template>
+				</div>
+				<div
+					*ngIf="group?.percentageLast3DaysMetricsAvailable < 100 && !group?.areMetricsAvailable"
+					class="next-best-time card-overview card-overview-analysing"
+					style="order: 2"
+				>
+					<div>
+						<app-analysis-state
+							[value]="group?.percentageLast3DaysMetricsAvailable"
+							[iconSm]="'assets/images/group-icons/icon_keyword_analysing.svg'"
+							[inline]="false"
+							[diameter]="28"
+						></app-analysis-state>
+					</div>
+					<div class="flex-box">
+						<p>
+							<strong>Finding keyword alerts</strong>
+						</p>
+					</div>
+				</div>
+				<div *ngIf="group?.percentageLast3DaysMetricsAvailable === 100 || group.areMetricsAvailable">
+					<ng-container
+						*ngIf="(group?.numOfActionRequired | async) !== null || isUrgentAlertDoneForToday; else loadingKeywords"
+						id="keyword"
+					>
+						<div
+							class="next-best-time card-overview"
+							*ngIf="!isUrgentAlertDoneForToday && (group?.numOfActionRequired | async) !== 0"
+							style="order: 2"
+						>
+							<div class="desktop-icon">
+								<img alt="" src="assets/images/group-icons/icon_keyword-alerts.svg" />
+							</div>
+							<div class="flex-box">
+								<p>
+									<img alt="" class="mobile-icon" src="assets/images/group-icons/icon_keyword-alerts.svg" />
+									<strong data-test-id="heading-keyword-alert-card-overview">Check keyword alerts</strong>
+								</p>
+								<a class="action">
+									<p>
+										<strong data-test-id="number-of-action-required-keywords-overview"
+											>{{ group?.numOfActionRequired | async }}+ alerts </strong
+										><span> require your attention</span>
+									</p>
+									<a
+										data-cs-id="705b417d-5eaa-4c96-9088-ac329b37d949"
+										data-cs-label="Redirect to Urgent Alerts"
+										data-cs-source="page"
+										(click)="redirectToUrgentAlerts(); recordButtonClick($event)"
+										>View keyword alerts</a
+									>
+								</a>
+							</div>
+						</div>
+						<div
+							class="next-best-time card-overview done"
+							*ngIf="isUrgentAlertDoneForToday || numOfActionRequired === 0"
+							(click)="redirectToUrgentAlerts()"
+							style="order: 7"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p data-test-id="review-all-keyword-alert-card-overview">Check keyword alerts</p>
+								<label data-test-id="subheading-reviewed-keyword-alert"
+									>Nicely done! You have reviewed all keyword alerts for now</label
+								>
+							</div>
+						</div>
+					</ng-container>
+					<ng-template #loadingKeywords>
+						<div class="loader-shimmer-wrapper">
+							<div class="loading-header loading-strip primary"></div>
+							<div class="loading-body">
+								<div class="loading-body-left">
+									<div class="primary loading-strip mb-0"></div>
+								</div>
+								<div class="loading-body-right">
+									<div class="secondary loading-strip mr-5"></div>
+									<div class="tertiary loading-strip"></div>
+								</div>
+							</div>
+						</div>
+					</ng-template>
+				</div>
+				<div
+					*ngIf="group?.percentageLast28DaysMetricsAvailable < 100 && !group?.areMetricsAvailable"
+					class="next-best-time card-overview card-overview-analysing"
+					style="order: 4"
+				>
+					<div>
+						<app-analysis-state
+							[value]="group?.percentageLast28DaysMetricsAvailable"
+							[iconSm]="'assets/images/group-icons/icon_reshare_analysing.svg'"
+							[inline]="false"
+							[diameter]="28"
+						></app-analysis-state>
+					</div>
+					<div class="flex-box">
+						<p>
+							<strong>Reshare a top post to boost engagement</strong>
+						</p>
+					</div>
+				</div>
+				<div *ngIf="group?.percentageLast28DaysMetricsAvailable === 100 || group.areMetricsAvailable">
+					<ng-container
+						id="reshare"
+						*ngIf="(group?.topPostsOfAllTypes | async) || isRepostPostDoneForToday; else loadingPosts"
+					>
+						<div
+							class="card-overview"
+							*ngIf="!isRepostPostDoneForToday && (group?.topPostsOfAllTypes | async).length !== 0"
+							style="order: 4"
+						>
+							<div class="desktop-icon">
+								<img alt="" src="assets/images/group-icons/icon_reshare.svg" />
+							</div>
+							<div class="flex-box">
+								<p>
+									<img alt="" class="mobile-icon" src="assets/images/group-icons/icon_reshare.svg" />
+									<strong>Reshare a top post</strong>&nbsp;to boost engagement
+								</p>
+								<div
+									class="post-box action"
+									data-cs-id="a1438ea5-5a96-4d91-bd1f-a50f0affb8b9"
+									data-cs-label="Redirect to Reshare Post"
+									data-cs-source="page"
+								>
+									<div>
+										<div class="post-box-body">
+											<ul class="list-unstyled m-0">
+												<li class="post-description">
+													<div class="post-description-inner">
+														<div class="text-secondary" data-test-id="reshare-post-card-overview">
+															Suggested post based on activity
+														</div>
+														<div class="d-flex">
+															<ng-container *ngIf="group?.topPostsOfAllTypes | async as topPostsOfAllTypes">
+																<figure class="video-wrapper" *ngIf="topPostsOfAllTypes[0].postType === 'Video'">
+																	<img
+																		alt=""
+																		*ngIf="!topPostsOfAllTypes[0].videothumbnailurl"
+																		src="assets/images/default_group_image.jpg"
+																	/>
+																	<img
+																		alt=""
+																		(error)="showUpdatedImageFromFacebook($event, topPostsOfAllTypes[0].id)"
+																		*ngIf="topPostsOfAllTypes[0].videothumbnailurl"
+																		[src]="topPostsOfAllTypes[0].videothumbnailurl"
+																	/>
+																</figure>
+																<figure *ngIf="topPostsOfAllTypes[0].postType === 'Photo'">
+																	<img
+																		alt=""
+																		*ngIf="!topPostsOfAllTypes[0].photourl"
+																		src="assets/images/default_group_image.jpg"
+																	/>
+
+																	<img
+																		alt=""
+																		(error)="showUpdatedImageFromFacebook($event, topPostsOfAllTypes[0].id)"
+																		*ngIf="topPostsOfAllTypes[0].photourl"
+																		[src]="topPostsOfAllTypes[0].photourl"
+																	/>
+																</figure>
+															</ng-container>
+															<div class="text-post-raw">
+																<ul class="list-unstyled m-0">
+																	<li>
+																		{{ (group?.topPostsOfAllTypes | async)[0].postCreatedAtUTC | date: 'dd MMM ‘yy' }}
+																		at
+																		{{ (group?.topPostsOfAllTypes | async)[0].postCreatedAtUTC | date: 'hh:mm a' }}
+																	</li>
+																</ul>
+																<figcaption>{{ (group?.topPostsOfAllTypes | async)[0].rawText }}</figcaption>
+																<ul class="list-unstyled m-0">
+																	<li>
+																		<svg
+																			width="16"
+																			height="16"
+																			viewBox="0 0 16 16"
+																			fill="none"
+																			xmlns="http://www.w3.org/2000/svg"
+																		>
+																			<path
+																				d="M0.666504 14H3.33317V5.99996H0.666504V14ZM15.3332 6.66663C15.3332 5.93329 14.7332 5.33329 13.9998 5.33329H9.79317L10.4265 2.28663L10.4465 2.07329C10.4465 1.79996 10.3332 1.54663 10.1532 1.36663L9.4465 0.666626L5.05984 5.05996C4.81317 5.29996 4.6665 5.63329 4.6665 5.99996V12.6666C4.6665 13.4 5.2665 14 5.99984 14H11.9998C12.5532 14 13.0265 13.6666 13.2265 13.1866L15.2398 8.48663C15.2998 8.33329 15.3332 8.17329 15.3332 7.99996V6.66663Z"
+																				fill="#9999A7"
+																			/>
+																		</svg>
+
+																		<span *ngIf="(group?.topPostsOfAllTypes | async)[0].reactions !== null"
+																			><strong>{{ (group?.topPostsOfAllTypes | async)[0].reactions }}</strong>
+																			<span> reactions</span></span
+																		><span
+																			*ngIf="(group?.topPostsOfAllTypes | async)[0].reactions === null"
+																			class="waiting"
+																			>Awaiting</span
+																		>
+																	</li>
+																	&nbsp;
+																	<li>
+																		<svg
+																			width="16"
+																			height="16"
+																			viewBox="0 0 16 16"
+																			fill="none"
+																			xmlns="http://www.w3.org/2000/svg"
+																		>
+																			<path
+																				d="M13.3335 1.33337H2.66683C1.9335 1.33337 1.3335 1.93337 1.3335 2.66671V14.6667L4.00016 12H13.3335C14.0668 12 14.6668 11.4 14.6668 10.6667V2.66671C14.6668 1.93337 14.0668 1.33337 13.3335 1.33337Z"
+																				fill="#9999A7"
+																			/>
+																		</svg>
+
+																		<span *ngIf="(group?.topPostsOfAllTypes | async)[0].commentCount !== null"
+																			><strong>{{ (group?.topPostsOfAllTypes | async)[0].commentCount }}</strong>
+																			<span> comments</span></span
+																		>
+																		<span
+																			*ngIf="(group?.topPostsOfAllTypes | async)[0].commentCount === null"
+																			class="waiting"
+																			>Awaiting</span
+																		>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<a (click)="redirectToResharePost()" data-test-id="button-redirect-to-post-overview"
+										>Reshare this post
+									</a>
+								</div>
+								<div>
+									<a class="link-btn" (click)="redirectToPostTrends()" data-test-id="link-redirect-to-reshare-posts"
+										>Find more posts to reshare</a
+									>
+								</div>
+							</div>
+						</div>
+						<div
+							class="next-best-time card-overview done desktop-done"
+							*ngIf="isRepostPostDoneForToday"
+							data-cs-id="a55dd36f-490e-4716-b925-a4bc1ec0d62f"
+							data-cs-label="Redirect to Post Trends"
+							data-cs-source="page"
+							(click)="redirectToPostTrends(); recordButtonClick($event)"
+							style="cursor: pointer; order: 6"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p>Reshare a top post to boost engagement</p>
+								<label>Great job! You’ve done this action for today</label>
+							</div>
+							<a (click)="redirectToPostTrends()">Find more posts to reshare</a>
+						</div>
+						<div
+							class="next-best-time card-overview done mobile-done"
+							*ngIf="isRepostPostDoneForToday"
+							data-cs-id="a55dd36f-490e-4716-b925-a4bc1ec0d62f"
+							data-cs-label="Redirect to Post Trends"
+							data-cs-source="page"
+							(click)="redirectToPostTrends(); recordButtonClick($event)"
+							style="cursor: pointer; order: 6"
+						>
+							<div>
+								<img alt="" src="assets/images/group-icons/check-green.svg" />
+							</div>
+							<div class="flex-box">
+								<p>Reshare a top post to boost engagement</p>
+								<label>Great job! You’ve done this action for today</label>
+								<a (click)="redirectToPostTrends()">Find more posts to reshare</a>
+							</div>
+						</div>
+					</ng-container>
+					<ng-template #loadingPosts>
+						<div class="loader-shimmer-wrapper">
+							<div class="loading-header loading-strip primary"></div>
+							<div class="loading-body">
+								<div class="loading-body-left">
+									<div class="primary loading-strip mb-0"></div>
+								</div>
+								<div class="loading-body-right">
+									<div class="secondary loading-strip mr-5"></div>
+									<div class="tertiary loading-strip"></div>
+								</div>
+							</div>
+						</div>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</div>
+
+<ng-template #preparingInsightsSection>
+	<div class="no-result-state">
+		<figure><img src="./assets/images/insight_icon.svg" alt="" /></figure>
+		<h5>We are preparing insights for your group</h5>
+		<h6>On average, it takes about 2 days from your date of install</h6>
+	</div>
+	<div class="suggested-steps-wrap">
+		<div class="card-head">
+			<h5>🙌 Suggested next steps for you</h5>
+		</div>
+		<div class="card-body">
+			<div class="video-wrapper">
+				<div class="video-wrap">
+					<button
+						class="play-btn"
+						data-cs-id="480a757e-3e00-4ed7-9e1f-8a396c91b0ba"
+						data-cs-label="Video"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); playVideo()"
+						data-target="#videoModal"
+						data-toggle="modal"
+					>
+						<img src="./assets/images/play_icon.svg" alt="" />
+					</button>
+				</div>
+				<div class="video-info">
+					<h6>What can you do after installing Convosight in your group?</h6>
+					<div>Watch this video to learn about the next steps to get the most out of Convosight</div>
+				</div>
+			</div>
+
+			<div class="prompt-card-wrapper">
+				<div class="prompt-card-row" *ngIf="showFacebookJoinCard">
+					<div class="prompt-card-left">
+						<figure>
+							<img src="./assets/images/facebook-icon.svg" alt="" width="42" height="42" />
+						</figure>
+						<div>
+							<h6 data-test-id="heading-join-fb">Join our Facebook Group 💪</h6>
+							<p data-test-id="subheading-join-fb">
+								Join our Facebook group, where Facebook community leaders like you are present
+							</p>
+						</div>
+					</div>
+					<div class="prompt-card-right">
+						<button
+							class="convo-btn-normal convo-btn-outline"
+							data-cs-id="c40a4205-9c3f-4f7d-a06c-b9c2df3d2111"
+							data-cs-label="Already joined"
+							data-cs-source="page"
+							(click)="recordButtonClick($event); closePromptCard('3')"
+						>
+							Already joined
+						</button>
+						<button
+							class="convo-btn-normal convo-btn-primary"
+							data-cs-id="c74026ae-3565-4cf1-8c25-b681d039b668"
+							data-cs-label="Join now"
+							data-cs-source="page"
+							(click)="recordButtonClick($event); OpenFacebookLink()"
+						>
+							Join now
+						</button>
+					</div>
+				</div>
+				<div class="prompt-card-row" *ngIf="showComposeCard">
+					<div class="prompt-card-left">
+						<figure>
+							<img src="./assets/images/create-post-icon.svg" alt="" />
+						</figure>
+						<div>
+							<h6>Try out our smart Post Composer</h6>
+							<p>Create and schedule post with smart time suggestions to boost engagement</p>
+						</div>
+					</div>
+					<div class="prompt-card-right">
+						<button
+							class="convo-btn-normal convo-btn-primary"
+							data-cs-id="0e650175-06dc-4161-b77d-4e8dd87c295c"
+							data-cs-label="Create a post"
+							data-cs-source="page"
+							(click)="recordButtonClick($event); redirectToDefaultComposePost(); closePromptCard('6')"
+						>
+							Create a post
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Video Modal -->
+<div
+	class="modal fade video-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="videoModal"
+	role="dialog"
+	tabindex="-1"
+	*ngIf="!isLoading"
+>
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				class="close"
+				data-dismiss="modal"
+				(click)="closeModal(); recordButtonClick($event)"
+				data-cs-id="48f0304d-037e-4e91-a899-8a44743aade4"
+				data-cs-label="Close video"
+				data-cs-source="page"
+			>
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body text-center p-0">
+				<iframe
+					[src]="videoLink | sanitizeUrl"
+					title="YouTube video player"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen
+				></iframe>
+			</div>
+		</div>
+	</div>
+</div>

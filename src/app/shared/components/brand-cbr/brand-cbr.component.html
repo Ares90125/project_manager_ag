@@ -1,0 +1,495 @@
+<div class="report-header">
+	<div class="breadcrumb">
+		<!--		<span class="breadcrumb-item" hidden>Brands</span>-->
+		<!--		<span class="breadcrumb-item"> {{ brand?.name }} </span-->
+		<!--		>-->
+		<span class="breadcrumb-item">Brand Communities</span><span class="breadcrumb-item"> {{ group?.name }} </span>
+	</div>
+	<h3>{{ group?.name }}</h3>
+	<div class="flex-box-wrapper">
+		<div class="upload-report-wrapper">
+			<p>
+				Data last updated on {{ brandCommunity?.lastUpdatedOn | date: 'dd MMM, YYYY'
+				}}<span hidden>
+					| Insights file uploaded on {{ brandCommunity?.lastUpdatedOn | date: 'dd MM, YYYY hh:mm' }}</span
+				>
+				<!--				<a hidden>(Download File)</a>-->
+				<!--				<a hidden>Upload New File</a>-->
+			</p>
+		</div>
+		<div class="view-report-time-period">
+			<p>Viewing report for</p>
+			<mat-form-field>
+				<mat-select (selectionChange)="changeTimePeriod()" [(ngModel)]="selectedTimePeriod" name="imePeriod">
+					<mat-option [value]="'fourWeeks'">Last 4 weeks</mat-option>
+					<mat-option [value]="'threeMonths'">Last 3 months</mat-option>
+					<mat-option [value]="'sixMonths'">Last 6 months</mat-option>
+					<mat-option [value]="'oneYear'">Last 1 year</mat-option>
+					<mat-option [value]="'lifetime'">Lifetime</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<input type="hidden" [value]="selectedTimePeriod" id="selectedTimePeriodCBR" />
+		</div>
+	</div>
+</div>
+<div class="preview-bg-blue" hidden>
+	The report is currently set to <b>Public Group Template.</b> <a>Preview Report</a>
+</div>
+<div class="overview-container">
+	<img [src]="brandCommunity?.coverImageUrl" alt="" class="banner-image" />
+	<section id="overview" class="container px-0">
+		<div *ngIf="brandCommunity?.privacy === 'OPEN'; else overviewForPrivate" class="overview-content">
+			<div class="overview-wrapper" *ngIf="jsonDataStringForCBR">
+				<h2>Overview</h2>
+				<h6 class="sub-title">A snapshot of the health of your community</h6>
+				<div class="row">
+					<div [ngClass]="overviewStyleClass" *ngIf="jsonDataStringForCBR['overview']?.isTotalMembersVisible">
+						<div class="overview-card" [ngStyle]="{height: overviewMaxHeight + 'px'}">
+							<div class="overview-card-inner-wrapper">
+								<div class="flex-box">
+									<h3>Total Members</h3>
+									<p>The total number of members of the brand community till date</p>
+								</div>
+							</div>
+							<div class="overview-value-wrapper">
+								<div
+									class="overview-value"
+									id="overview-total-members"
+									[attr.data-value]="overview?.totalMembers | shortNumber"
+								>
+									{{ overview?.totalMembers | shortNumber }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div [ngClass]="overviewStyleClass" *ngIf="overviewSecondCol > 0">
+						<div class="overview-card">
+							<div
+								class="overview-card-inner-wrapper"
+								[ngStyle]="{height: secondColHeight + 'px'}"
+								*ngIf="jsonDataStringForCBR['overview']?.isTotalEngagementVisible"
+							>
+								<div class="flex-box">
+									<h3>Total Engagement for selected period</h3>
+								</div>
+								<div
+									class="overview-value"
+									id="overview-total-engage"
+									[attr.data-value]="overview?.totalEngagement ? (overview?.totalEngagement | shortNumber) : '0'"
+								>
+									{{ overview?.totalEngagement ? (overview?.totalEngagement | shortNumber) : '0' }}
+								</div>
+							</div>
+							<div
+								class="overview-card-inner-wrapper"
+								[ngStyle]="{height: secondColHeight + 'px'}"
+								*ngIf="jsonDataStringForCBR['overview']?.isMemberToAdminPostRatioVisible"
+							>
+								<div class="flex-box">
+									<h3>Average Member/Admin Post ratio</h3>
+								</div>
+								<div
+									class="overview-value"
+									id="overview-avg-members"
+									[attr.data-value]="
+										overview?.memberToAdminPostRatio ? (overview?.memberToAdminPostRatio | shortNumber) : '0'
+									"
+								>
+									{{ overview?.memberToAdminPostRatio ? (overview?.memberToAdminPostRatio | shortNumber) : '0' }}%
+								</div>
+							</div>
+						</div>
+					</div>
+					<div [ngClass]="overviewStyleClass" *ngIf="overviewThirdCol > 0">
+						<div class="overview-card">
+							<div
+								class="overview-card-inner-wrapper"
+								[ngStyle]="{height: thirdColHeight + 'px'}"
+								*ngIf="jsonDataStringForCBR['overview']?.isTotalViewsVisible"
+							>
+								<div class="flex-box">
+									<h3>Total Views for Selected Period</h3>
+								</div>
+								<div
+									class="overview-value"
+									id="overview-total-views"
+									[attr.data-value]="overview?.totalViews ? (overview?.totalViews | shortNumber) : '0'"
+								>
+									{{ overview?.totalViews ? (overview?.totalViews | shortNumber) : '0' }}
+								</div>
+							</div>
+							<div
+								class="overview-card-inner-wrapper"
+								[ngStyle]="{height: thirdColHeight + 'px'}"
+								*ngIf="jsonDataStringForCBR['overview']?.isAverageMonthlyViewsVisible"
+							>
+								<div class="flex-box">
+									<h3>Average Monthly Views</h3>
+								</div>
+								<div
+									class="overview-value"
+									id="overview-average-monthly"
+									[attr.data-value]="
+										overview?.monthlyViewsAverage ? (overview?.monthlyViewsAverage | shortNumber) : '0'
+									"
+								>
+									{{ overview?.monthlyViewsAverage ? (overview?.monthlyViewsAverage | shortNumber) : '0' }}
+								</div>
+							</div>
+							<div
+								class="overview-card-inner-wrapper"
+								[ngStyle]="{height: thirdColHeight + 'px'}"
+								*ngIf="jsonDataStringForCBR['overview']?.isAverageDailyViews"
+							>
+								<div class="flex-box">
+									<h3>Average Daily Views</h3>
+								</div>
+								<div
+									class="overview-value"
+									id="overview-average-daily"
+									[attr.data-value]="overview?.dailyViewsAverage ? (overview?.dailyViewsAverage | shortNumber) : '0'"
+								>
+									{{ overview?.dailyViewsAverage ? (overview?.dailyViewsAverage | shortNumber) : '0' }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<ng-template #overviewForPrivate
+			><div class="overview-content">
+				<div class="overview-wrapper" *ngIf="jsonDataStringForCBR">
+					<h2>Overview</h2>
+					<h6 class="sub-title">A snapshot of the health of your community</h6>
+					<div class="row">
+						<div [ngClass]="overviewStyleClass" *ngIf="jsonDataStringForCBR['overview']?.isTotalMembersVisible">
+							<div class="overview-card" [ngStyle]="{height: overviewMaxHeight + 'px'}">
+								<div class="overview-card-inner-wrapper">
+									<div class="flex-box">
+										<h3>Total Members</h3>
+										<p>The total number of members of the brand community till date</p>
+									</div>
+								</div>
+								<div class="overview-value-wrapper">
+									<div
+										class="overview-value"
+										id="overview-total-members"
+										[attr.data-value]="overview?.totalMembers | shortNumber"
+									>
+										{{ overview?.totalMembers | shortNumber }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div [ngClass]="overviewStyleClass" *ngIf="overviewSecondCol > 0">
+							<div class="overview-card">
+								<div
+									class="overview-card-inner-wrapper"
+									[ngStyle]="{height: secondColHeight + 'px'}"
+									*ngIf="jsonDataStringForCBR['overview']?.isEngagementPercentageVisible"
+								>
+									<div class="flex-box">
+										<h3>Engagement Percentage for selected period</h3>
+									</div>
+									<div
+										class="overview-value"
+										id="overview-engagement-value"
+										[attr.data-value]="overview?.engagementPercentage ? overview?.engagementPercentage + '%' : '0%'"
+									>
+										{{ overview?.engagementPercentage ? overview?.engagementPercentage : '0' }}%
+									</div>
+								</div>
+								<div
+									class="overview-card-inner-wrapper"
+									[ngStyle]="{height: secondColHeight + 'px'}"
+									*ngIf="jsonDataStringForCBR['overview']?.isDAUMAURatioVisible"
+								>
+									<div class="flex-box">
+										<h3>DAU/MAU Ratio for Selected Period</h3>
+									</div>
+									<div
+										class="overview-value"
+										id="overview-dau-value"
+										[attr.data-value]="overview?.DAUMAURatio ? overview?.DAUMAURatio + '%' : '0%'"
+									>
+										{{ overview?.DAUMAURatio ? overview?.DAUMAURatio : '0' }}%
+									</div>
+								</div>
+								<div
+									class="overview-card-inner-wrapper"
+									[ngStyle]="{height: secondColHeight + 'px'}"
+									*ngIf="jsonDataStringForCBR['overview']?.isMemberToAdminPostRatioVisible"
+								>
+									<div class="flex-box">
+										<h3>Average Member/Admin Post ratio</h3>
+									</div>
+									<div
+										class="overview-value"
+										id="overview-average-value"
+										[attr.data-value]="overview?.memberToAdminPostRatio ? overview?.memberToAdminPostRatio + '%' : '0%'"
+									>
+										{{ overview?.memberToAdminPostRatio ? overview?.memberToAdminPostRatio : '0' }}%
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div></ng-template
+		>
+		<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['overview'] }}</p>
+	</section>
+</div>
+<section id="publish" hidden>
+	<div class="container publish-now">
+		<p>
+			There are unpublished changes in this report. Please publish the report to save these changes and update report on
+			brand side.
+		</p>
+		<button class="convo-btn-primary">Publish Now</button>
+	</div>
+</section>
+<ng-container *ngIf="isKPISectionHidden()">
+	<h2 class="container sub-heading px-0">KPIs</h2>
+	<h6 class="container sub-title px-0">A deep dive into every metric from different perspectives</h6>
+	<app-brand-CBR-kpis
+		*ngIf="showKpiComponent && jsonDataStringForCBR"
+		[selectedTimePeriod]="selectedTimePeriod"
+		[groupId]="groupId"
+		[group]="group"
+		(openEdit)="openEditDialog($event)"
+		[data]="jsonDataStringForCBR['kpi']"
+		[_brandCommunity]="brandCommunity"
+		[targets]="targets"
+		[showAllPDF]="showAllCharts"
+		[supportingText]="supportingText"
+	></app-brand-CBR-kpis>
+</ng-container>
+<ng-container *ngIf="isDemographicsSectionHidden()">
+	<h2 class="container sub-heading px-0">Community Demographics</h2>
+	<h6 class="container sub-title px-0">Monitoring the demographics of the members of your community</h6>
+	<app-brand-CBR-community-demographics
+		*ngIf="jsonDataStringForCBR"
+		[groupId]="groupId"
+		[group]="group"
+		[data]="jsonDataStringForCBR['demographics']"
+		[supportingText]="supportingText"
+	></app-brand-CBR-community-demographics>
+</ng-container>
+<ng-container *ngIf="isConversationsSectionHidden()">
+	<h2 class="container sub-heading px-0">Conversations</h2>
+	<h6 class="container sub-title px-0">Monitoring the voice of the members of your community</h6>
+	<app-brand-CBR-conversations-report
+		*ngIf="jsonDataStringForCBR"
+		[selectedTimePeriod]="selectedTimePeriod"
+		[groupId]="groupId"
+		[group]="group"
+		[brand]="brand"
+		[data]="jsonDataStringForCBR['conversations']"
+		[supportingText]="supportingText"
+	></app-brand-CBR-conversations-report>
+</ng-container>
+<br />
+<app-brand-CBR-word-cloud
+	*ngIf="jsonDataStringForCBR"
+	[data]="jsonDataStringForCBR['wordCloud']"
+	[selectedTimePeriod]="selectedTimePeriod"
+	[groupId]="groupId"
+	[group]="group"
+	[supportingText]="supportingText"
+></app-brand-CBR-word-cloud>
+<h2
+	class="container sub-heading px-0"
+	*ngIf="
+		jsonDataStringForCBR['customConversations'] &&
+		jsonDataStringForCBR['customConversations'].length > 0 &&
+		isCustomConversationsVisible()
+	"
+>
+	Custom Conversations
+</h2>
+<ng-container *ngFor="let conversation of jsonDataStringForCBR['customConversations']; let index = index">
+	<ng-container *ngIf="conversation.isConversationVisible">
+		<app-brand-CBR-custom-conversation
+			[conversation]="conversation"
+			[conversationId]="index"
+			(openEdit)="openEditCustomDialog($event)"
+			[supportingText]="supportingText"
+		>
+		</app-brand-CBR-custom-conversation>
+	</ng-container>
+</ng-container>
+<ng-container *ngIf="isScreenshotsSectionHidden()">
+	<h2 class="container sub-heading px-0">Screenshots</h2>
+	<h6 class="container sub-title px-0">Captures of the posts that drive high conversations in the community</h6>
+	<app-brand-CBR-top-posts-screenshots
+		*ngIf="jsonDataStringForCBR"
+		[data]="jsonDataStringForCBR['screenshots']"
+		[groupId]="groupId"
+		[supportingText]="supportingText"
+	></app-brand-CBR-top-posts-screenshots>
+</ng-container>
+
+<div style="padding-bottom: 200px"></div>
+<div hidden class="side-pane">
+	<div class="pane-header">
+		<h3>Upload New File</h3>
+		<img src="assets/images/close-icon-small.svg" />
+	</div>
+	<div class="pane-body">
+		<label>Upload File</label>
+		<div (fileDropped)="fileChange($event, true)" appDragAndDrop class="content-col custom-upload">
+			<figure><img alt="" src="./assets/images/add-photo-icon.svg" /></figure>
+			<h6>Upload File</h6>
+			<p>
+				Drag and drop or <span (click)="uploadFile.click()" class="text-primary">browse</span> a .xls or .xlsx file to
+				upload
+			</p>
+		</div>
+	</div>
+</div>
+<input #uploadFile (change)="fileChange($event)" accept=".xlsx" class="input-file" title="" type="file" />
+
+<div aria-hidden="true" class="modal modal-component modal-edit" tabindex="-1" *ngIf="showEditDialog">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content" *ngIf="editFormType === 'DAU & MAU'">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit: MAU & DAU</h5>
+				<button class="close" type="button" (click)="showEditDialog = false">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row header-row">
+					<div class="col-md-2 header-label">Weeks</div>
+					<div class="col-md-2 header-label">Monthly Active Users</div>
+					<div class="col-md-2 header-label">Daily Active Users</div>
+				</div>
+				<div class="mt-4"></div>
+				<div class="row form-row" *ngFor="let label of weekLabels">
+					<div class="col-md-2 label">{{ label.startFormatted }} - {{ label.endFormatted }}</div>
+					<div class="col-md-2">
+						<input
+							(change)="updateEditValues('MAU', $event)"
+							[attr.startDate]="label.start | date: 'YYYY-MM-dd'"
+							pattern="^[0-9]"
+							min="1"
+							step="1"
+							type="number"
+						/>
+					</div>
+
+					<div class="col-md-2">
+						<input
+							(change)="updateEditValues('DAU', $event)"
+							[attr.startDate]="label.start | date: 'YYYY-MM-dd'"
+							pattern="\d+"
+							type="number"
+						/>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button (click)="updateKPIs()" class="convo-btn-normal convo-btn-primary w-100" type="button">Save</button>
+				</div>
+			</div>
+		</div>
+		<div class="modal-content" *ngIf="editFormType === 'Impressions'">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit: Impressions (Views)</h5>
+				<button class="close" type="button" (click)="closeEditDialog()">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row header-row">
+					<div class="col-md-2 header-label">Weeks</div>
+					<div class="col-md-2 header-label">Values</div>
+				</div>
+				<div class="mt-4"></div>
+				<div class="row form-row" *ngFor="let label of weekLabels">
+					<div class="col-md-2 label">{{ label.startFormatted }} - {{ label.endFormatted }}</div>
+					<div class="col-md-2">
+						<input
+							(change)="updateEditValues('impressions', $event)"
+							[attr.startDate]="label.start | date: 'YYYY-MM-dd'"
+							pattern="^[0-9]"
+							min="1"
+							step="1"
+							type="number"
+						/>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button
+						[disabled]="updating"
+						(click)="updateKPIs()"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="modal-content" *ngIf="editFormType === 'Targets'">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit: Impressions (Views)</h5>
+				<button class="close" type="button" (click)="closeEditDialog()">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row header-row">
+					<div class="col-md-3 header-label">Section</div>
+					<div class="col-md-1 header-label">Visibility to Brand</div>
+					<div class="col-md-8">
+						<div class="input-flex-box">
+							<div *ngFor="let label of monthLabels">
+								<div class="col-md-1 header-label" style="width: 116px">{{ label.start | date: 'MMM, yyyy' }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-4"></div>
+				<div class="row form-row" *ngFor="let targetKey of targetKeys">
+					<div class="col-md-3 label">{{ getKeysOfObject(targetKey)[0].replace('_', ' ') }}</div>
+					<div class="col-md-1">
+						<mat-slide-toggle
+							(change)="updateEditValues('visibility', $event, targetKey[getKeysOfObject(targetKey)[0]])"
+						></mat-slide-toggle>
+					</div>
+					<div class="col-md-8">
+						<div class="input-flex-box">
+							<div *ngFor="let label of monthLabels">
+								<input
+									(change)="updateEditValues('targets', $event)"
+									[attr.startDate]="label.start | date: 'yyyy-MM'"
+									[attr.targetKey]="targetKey[getKeysOfObject(targetKey)[0]]"
+									pattern="^[0-9]"
+									min="1"
+									step="1"
+									type="number"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button
+						[disabled]="updating"
+						(click)="updateKPIs()"
+						class="convo-btn-normal convo-btn-primary w-100"
+						type="button"
+					>
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

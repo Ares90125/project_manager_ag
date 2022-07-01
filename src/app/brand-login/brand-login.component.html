@@ -1,0 +1,86 @@
+<div class="custom-container">
+	<img alt="" class="logo" src="assets/images/convosight_logo.svg" />
+	<img alt="" class="img-logo-illustration" src="assets/images/login_page_illustration.svg" />
+
+	<div class="mobile-full-width">
+		<div class="custom-wrapper">
+			<!-- Material form login -->
+			<mat-card class="custom-card login-card">
+				<mat-card-header class="text-center justify-content-center">
+					<mat-card-title>Welcome to Convosight!</mat-card-title>
+					<mat-card-subtitle>Login to your account</mat-card-subtitle>
+				</mat-card-header>
+				<mat-card-content>
+					<form (ngSubmit)="loginSubmit()" [formGroup]="loginForm" class="custom-form login-form">
+						<mat-form-field class="w-100">
+							<input class="custom-input" formControlName="email" matInput placeholder="Email" />
+							<svg class="info-icon" fill="none" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M13.0616 3.48626C12.4357 2.41385 11.5866 1.56475 10.5141 0.938805C9.44148 0.312892 8.27055 0 7.00044 0C5.73045 0 4.55917 0.312892 3.48672 0.938805C2.41422 1.56465 1.56512 2.41375 0.939145 3.48626C0.313137 4.55883 0.000244141 5.73011 0.000244141 7C0.000244141 8.26996 0.313232 9.44105 0.939049 10.5137C1.56499 11.5861 2.41409 12.4352 3.4866 13.0612C4.55917 13.6871 5.73035 14 7.00031 14C8.27027 14 9.44158 13.6871 10.5141 13.0612C11.5865 12.4354 12.4356 11.5861 13.0615 10.5137C13.6873 9.44114 14.0002 8.26989 14.0002 7C14.0002 5.72998 13.6873 4.55867 13.0616 3.48626ZM5.83372 1.74988C5.83372 1.66477 5.86102 1.59495 5.91577 1.5403C5.97042 1.48567 6.04037 1.45825 6.12542 1.45825H7.87552C7.9605 1.45825 8.03045 1.48567 8.08498 1.5403C8.1396 1.59495 8.16712 1.66477 8.16712 1.74988V3.20826C8.16712 3.2933 8.1396 3.36322 8.08498 3.41781C8.03045 3.47247 7.96054 3.49979 7.87552 3.49979H6.12542C6.04037 3.49979 5.97045 3.47247 5.91577 3.41781C5.86102 3.36325 5.83372 3.2933 5.83372 3.20826V1.74988ZM9.33367 11.375C9.33367 11.46 9.30612 11.5299 9.25163 11.5845C9.19723 11.6392 9.12728 11.6665 9.04211 11.6665H4.95867C4.87353 11.6665 4.80371 11.6392 4.74902 11.5845C4.69437 11.5299 4.66704 11.46 4.66704 11.3749V9.91653C4.66704 9.83129 4.69437 9.7616 4.74902 9.70688C4.80371 9.65236 4.87362 9.62484 4.95867 9.62484H5.83372V6.70827H4.95867C4.87353 6.70827 4.80374 6.68098 4.74902 6.62629C4.69437 6.57167 4.66704 6.50175 4.66704 6.41664V4.95836C4.66704 4.87325 4.69437 4.80343 4.74902 4.74871C4.80377 4.69403 4.87369 4.66673 4.95867 4.66673H7.87552C7.9605 4.66673 8.03045 4.69403 8.08498 4.74871C8.1396 4.80343 8.16712 4.87325 8.16712 4.95836V9.62506H9.04188C9.12709 9.62506 9.19701 9.65236 9.25163 9.70698C9.30603 9.76163 9.33355 9.83152 9.33355 9.91663V11.375H9.33367V11.375Z"
+								/>
+							</svg>
+							<div class="tooltip-text">Email should be in the format mail@domain.com</div>
+						</mat-form-field>
+						<div *ngIf="hasError('email', 'email')" class="error-txt">Enter a valid email</div>
+						<div *ngIf="usernameErrorMsg !== ''" class="error-txt">
+							{{ usernameErrorMsg }}
+						</div>
+						<mat-form-field class="w-100">
+							<input
+								[type]="isPasswordHidden ? 'password' : 'text'"
+								class="custom-input"
+								formControlName="password"
+								matInput
+								placeholder="Password"
+							/>
+							<button
+								(click)="isPasswordHidden = !isPasswordHidden"
+								[attr.aria-label]="'Hide password'"
+								[attr.aria-pressed]="isPasswordHidden"
+								mat-icon-button
+								matSuffix
+								type="button"
+							>
+								<img
+									alt=""
+									[hidden]="isPasswordHidden"
+									class="img-visibility-on"
+									src="assets/images/visibility-turn-on.svg"
+								/>
+								<img
+									alt=""
+									[hidden]="!isPasswordHidden"
+									class="img-visibility-off"
+									src="assets/images/visibility-turn-off.svg"
+								/>
+							</button>
+						</mat-form-field>
+						<div class="bottom-wrapper">
+							<button
+								*ngIf="!isFormSubmitted"
+								[disabled]="loginForm.invalid"
+								class="convo-btn-primary custom-btn"
+								type="submit"
+							>
+								Login
+								<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+									<path
+										clip-rule="evenodd"
+										d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+										fill-rule="evenodd"
+									/>
+								</svg>
+							</button>
+							<div *ngIf="isFormSubmitted" class="bt-spinner"></div>
+							<a class="link-forgot-password text-center" routerLink="/password-recovery/forgot-password"
+								>Forgot Password?</a
+							>
+						</div>
+					</form>
+				</mat-card-content>
+			</mat-card>
+			<!-- Material form login -->
+		</div>
+		<div class="request-access-wrapper">Don’t have an account? <a routerLink="/request-access">Request access</a></div>
+	</div>
+</div>

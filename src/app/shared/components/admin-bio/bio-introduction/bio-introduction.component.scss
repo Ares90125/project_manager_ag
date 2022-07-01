@@ -1,0 +1,251 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+.bio-card {
+	@media (max-width: 767px) {
+		flex-direction: column-reverse !important;
+		.card-left {
+			width: 100%;
+		}
+		.card-right {
+			padding: 0 0 20px !important;
+
+			.convo-btn-normal {
+				height: 40px !important;
+			}
+		}
+	}
+}
+
+.stats-wrap {
+	ul {
+		display: flex;
+		align-items: center;
+		margin: 0;
+		@media (max-width: 767px) {
+			justify-content: center;
+		}
+
+		li {
+			padding-right: 16px;
+			margin-right: 16px;
+			border-right: 1px solid $divider-grey;
+			text-align: center;
+			width: 100%;
+
+			&:last-child {
+				border: none;
+				margin-right: 0;
+				padding-right: 0;
+			}
+
+			&.clickable-item {
+				cursor: pointer;
+			}
+
+			.stat-title {
+				display: flex;
+				align-items: center;
+				color: $primary-1;
+				@include font-label-xs;
+				padding-bottom: 4px;
+				@media (max-width: 767px) {
+					justify-content: center;
+				}
+			}
+			.view-btn {
+				background: none;
+				height: 20px;
+				width: 40px;
+				color: $emp-blue-1;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0;
+				margin-left: 4px;
+				@include shadow-elevation-low;
+				border-radius: 3px;
+				border: 1px solid #f4f6f8;
+				@include font-paragraph-xs-md;
+				outline: none;
+				@media (max-width: 767px) {
+					width: 100%;
+					margin: 6px 0 0;
+					height: 24px;
+					border-color: $divider-grey;
+				}
+			}
+
+			.stat-value {
+				@include font-heading-xs-md;
+				color: $primary-1;
+				display: flex;
+				align-items: center;
+				@media (max-width: 767px) {
+					justify-content: center;
+				}
+				svg {
+					margin-right: 4px;
+				}
+			}
+		}
+	}
+}
+
+.hearted-bio-modal {
+	.modal-header {
+		padding: 16px;
+		align-items: center;
+
+		h5 {
+			@include font-label-m-md;
+		}
+
+		.close {
+			opacity: 1;
+			padding: 0;
+			margin: 0;
+
+			img {
+				display: block;
+			}
+		}
+	}
+	.no-result {
+		padding: 80px 0;
+		width: 300px;
+		max-width: 100%;
+		margin: 0px auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+
+		h6 {
+			@include font-paragraph-l-md;
+			margin: 0 0 8px;
+		}
+
+		p {
+			color: $black-70;
+			@include font-paragraph-s;
+		}
+
+		.share-btn {
+			margin-left: 8px;
+			height: 40px;
+			padding: 8px 12px;
+			display: flex;
+			align-items: center;
+
+			span {
+				padding-left: 6px;
+				white-space: nowrap;
+			}
+		}
+	}
+}
+.hearted-bio-modal {
+	.groups-list-wrap {
+		padding: 0 12px;
+
+		ul {
+			.user-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				.user-row-left {
+					display: flex;
+					align-items: center;
+					padding: 12px 0 6px;
+
+					figure {
+						margin: 0 8px 0 0;
+						width: 38px;
+						height: 38px;
+						min-width: 38px;
+
+						img {
+							width: 38px;
+							height: 38px;
+							min-width: 38px;
+							border-radius: 20px;
+						}
+					}
+
+					div {
+						display: flex;
+						flex-direction: column;
+					}
+
+					h6 {
+						@include font-paragraph-s-md;
+						color: $primary-1;
+						margin: 0 0 2px;
+					}
+
+					p {
+						margin: 0;
+						@include font-label-xs;
+						color: $black-50;
+					}
+				}
+
+				.user-row-right {
+					a {
+						text-decoration: none;
+						color: $emp-blue-1;
+						font-weight: 500;
+						font-size: 14px;
+						line-height: 16px;
+					}
+				}
+			}
+		}
+
+		.convo-btn-bordered {
+			margin-bottom: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.btn-spinner {
+				border: 2px solid $borders-grey;
+				border-top-color: #3654ff !important;
+				margin-right: 8px;
+				-webkit-animation: 1s spin linear infinite;
+				@include border-radius(50%);
+				width: 16px;
+				height: 16px;
+				min-width: 16px;
+				display: inline-block;
+			}
+		}
+	}
+}
+
+.modal-dialog {
+	@media (max-width: 767px) {
+		align-items: flex-end;
+		min-height: 100%;
+		max-height: 100%;
+		margin: 0;
+		justify-content: flex-end;
+		.modal-content {
+			border-radius: 0;
+			box-shadow: none;
+		}
+	}
+}
+.shimmer {
+	height: 12px;
+	animation: shimmer 10s infinite linear;
+	background: linear-gradient(
+		to right,
+		rgba(211, 142, 21, 0.15) 0%,
+		rgba(211, 142, 21, 0.1) 46.88%,
+		rgba(211, 142, 21, 0.15) 100%
+	);
+	max-width: 100%;
+	width: 130px;
+}

@@ -1,0 +1,567 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div class="files-wrap red-border" [class.expanded-state]="isExpanded" [class.not-completed]="noOfFiles() === 0">
+		<div class="completed-flag" *ngIf="showNoFilledBorder && noOfFiles() === 0">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="5e9459e3-362d-46f5-b6a7-3f6a89ed6ed2"
+			data-cs-label="Files"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header [expandedHeight]="renderedOn === 'Mobile' ? '86px' : '68px'" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M16.667 5.00004H10.0003L8.82533 3.82504C8.50866 3.50837 8.08366 3.33337 7.64199 3.33337H3.33366C2.41699 3.33337 1.67533 4.08337 1.67533 5.00004L1.66699 15C1.66699 15.9167 2.41699 16.6667 3.33366 16.6667H16.667C17.5837 16.6667 18.3337 15.9167 18.3337 15V6.66671C18.3337 5.75004 17.5837 5.00004 16.667 5.00004ZM15.8337 15H4.16699C3.70866 15 3.33366 14.625 3.33366 14.1667V7.50004C3.33366 7.04171 3.70866 6.66671 4.16699 6.66671H15.8337C16.292 6.66671 16.667 7.04171 16.667 7.50004V14.1667C16.667 14.625 16.292 15 15.8337 15Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Files</span>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span>You can attach supporting documents for your group profile here (max. 5 files).</span>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right section-icon-wrap">
+						<button
+							class="edit-row-btn"
+							(click)="
+								$event.stopPropagation();
+								openFilesModal = true;
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="c60798f7-2985-415c-b7b1-264f7c5ccdd0"
+							data-cs-label="Edit File Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+						<app-fixed-tooltip
+							*ngIf="viewToolTip"
+							[title]="welcomeTitle"
+							[content]="welcomeContent"
+						></app-fixed-tooltip>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div [ngClass]="{'corousel-head': isEditable === false}" class="profile-card-body">
+				<div
+					*ngIf="groupProfilePage?.filesDetails?.length > 0; else unavailable"
+					[class.disabled]="!groupProfilePage.showFiles"
+					class="files-body-wrap"
+				>
+					<div [ngClass]="{'corousel-wrap': isEditable === false}" class="file-details-wrap">
+						<div
+							*ngFor="let file of groupProfilePage.filesDetails; let i = index"
+							[ngClass]="{'corousel-row': isEditable === false}"
+							class="card-row"
+						>
+							<div
+								(click)="downloadFile(file); recordButtonClick($event, null, null, null, groupProfilePage)"
+								data-cs-id="7010bc94-ds34-43b2-s832-400a12fa5268"
+								data-cs-label="download file"
+								data-cs-source="page"
+								*ngIf="!file.fileThumbnailURL"
+								[ngClass]="{'event-avoider': file.isFileBeingDownloaded === true}"
+								class="card-row-left"
+							>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type1' && !defaultIconCheck[i]">
+									<img (error)="defaultIconCheck[i] = true" alt="" class="real-image" src="{{ file.fileURL }}" />
+								</figure>
+								<figure
+									*ngIf="getFileCategory(file.fileType) === 'type1' && defaultIconCheck[i]"
+									class="file-image-icon"
+								>
+									<img alt="" class="file-icon" src="./assets/images/file-image-icon.svg" />
+								</figure>
+								<video
+									(error)="defaultIconCheck[i] = true"
+									*ngIf="getFileCategory(file.fileType) === 'type2' && !defaultIconCheck[i]"
+									class="real-video"
+									src="{{ file.fileURL + '#t=0.001' }}"
+									type="video/mp4"
+								></video>
+								<figure
+									*ngIf="getFileCategory(file.fileType) === 'type2' && defaultIconCheck[i]"
+									class="file-video-icon"
+								>
+									<img alt="" class="file-icon" src="./assets/images/file-video-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type3'" class="file-xls-icon">
+									<img alt="" class="file-icon" src="assets/images/file-xls-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type4'" class="file-pdf-icon">
+									<img alt="" class="file-icon" src="assets/images/file-pdf-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type5'" class="file-ppt-icon">
+									<img alt="" class="file-icon" src="assets/images/file-ppt-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type6'" class="file-zip-icon">
+									<img alt="" class="file-icon" src="assets/images/file-zip-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type7'" class="file-music-icon">
+									<img alt="" class="file-icon" src="assets/images/file-music-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type8'" class="file-doc-icon">
+									<img alt="" class="file-icon" src="assets/images/file-doc-icon.svg" />
+								</figure>
+								<figure *ngIf="getFileCategory(file.fileType) === 'type9'" class="file-random-icon">
+									<img alt="" class="file-icon" src="assets/images/file-random-icon.svg" />
+								</figure>
+								<div class="file-infor-wrap">
+									<p class="fileTitle">{{ getFileName(file.fileName, file.fileType, file.fileThumbnailURL) }}</p>
+									<div class="file-info">
+										<span>{{ file.fileType | uppercase }}</span> ·
+										<span *ngIf="calculatedSize(file.fileSize)">{{ file.fileSize }}</span>
+										<span *ngIf="!calculatedSize(file.fileSize)">{{ file.fileSize | fileSize }}</span>
+									</div>
+									<div class="download-btn">
+										<button [disabled]="file.isFileBeingDownloaded" class="convo-btn-normal">
+											<svg
+												*ngIf="!file.isFileBeingDownloaded; else downloading"
+												fill="none"
+												height="20"
+												viewBox="0 0 21 20"
+												width="21"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M14.3253 7.5H13.0003V3.33333C13.0003 2.875 12.6253 2.5 12.167 2.5H8.83366C8.37533 2.5 8.00033 2.875 8.00033 3.33333V7.5H6.67533C5.93366 7.5 5.55866 8.4 6.08366 8.925L9.90866 12.75C10.2337 13.075 10.7587 13.075 11.0837 12.75L14.9087 8.925C15.4337 8.4 15.067 7.5 14.3253 7.5ZM4.66699 15.8333C4.66699 16.2917 5.04199 16.6667 5.50033 16.6667H15.5003C15.9587 16.6667 16.3337 16.2917 16.3337 15.8333C16.3337 15.375 15.9587 15 15.5003 15H5.50033C5.04199 15 4.66699 15.375 4.66699 15.8333Z"
+													fill="#090C18"
+												/>
+											</svg>
+											<ng-template #downloading><span class="bt-spinner"></span> </ng-template>
+											<span>{{ file.isFileBeingDownloaded ? 'Downloading...' : 'Download' }}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div
+								(click)="redirectToUrl(file?.fileURL); recordButtonClick($event, null, null, null, groupProfilePage)"
+								data-cs-id="2ab22232-d1e5-4c8c-b514-03619dc08628"
+								data-cs-label="View"
+								data-cs-source="page"
+								*ngIf="file.fileThumbnailURL"
+								class="card-row-left"
+							>
+								<ng-container *ngIf="file.fileThumbnailURL !== 'no-image'; else defaultMetaImage">
+									<figure>
+										<img
+											(error)="showDefaultFilePreview($event)"
+											[src]="file?.fileThumbnailURL"
+											alt=""
+											class="real-image"
+										/>
+									</figure>
+								</ng-container>
+								<ng-template #defaultMetaImage>
+									<figure>
+										<img alt="" class="real-image" src="assets/images/default_meta_image.png" />
+									</figure>
+								</ng-template>
+								<div class="file-infor-wrap">
+									<div *ngIf="!shrinkName(file?.fileName)" class="fakeTitle"></div>
+									<p *ngIf="shrinkName(file?.fileName)" class="fileTitle">{{ shrinkName(file?.fileName) }}</p>
+									<div class="file-info adjust-pad">
+										<span class="link" title="{{ file.fileURL }}">{{ file?.fileURL }}</span>
+									</div>
+									<div class="download-btn">
+										<button
+											class="convo-btn-normal"
+											data-cs-id="7010bc94-ds34-fg78-s832-400a12fa5268"
+											data-cs-label="download file"
+											data-cs-source="page"
+										>
+											<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M10.6254 10.2778H2.06988V1.72222H6.34766V0.5H2.06988C1.39155 0.5 0.847656 1.05 0.847656 1.72222V10.2778C0.847656 10.95 1.39155 11.5 2.06988 11.5H10.6254C11.2977 11.5 11.8477 10.95 11.8477 10.2778V6H10.6254V10.2778ZM7.56988 0.5V1.72222H9.76377L3.75655 7.72944L4.61821 8.59111L10.6254 2.58389V4.77778H11.8477V0.5H7.56988Z"
+													fill="#33334F"
+												/>
+											</svg>
+											<span>View</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="!groupProfilePage.showFiles" class="hidden-state">
+						<img alt="" src="./assets/images/visibility_off.svg" />
+						<span>This section is hidden</span>
+					</div>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="files-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M16.667 5.00004H10.0003L8.82533 3.82504C8.50866 3.50837 8.08366 3.33337 7.64199 3.33337H3.33366C2.41699 3.33337 1.67533 4.08337 1.67533 5.00004L1.66699 15C1.66699 15.9167 2.41699 16.6667 3.33366 16.6667H16.667C17.5837 16.6667 18.3337 15.9167 18.3337 15V6.66671C18.3337 5.75004 17.5837 5.00004 16.667 5.00004ZM15.8337 15H4.16699C3.70866 15 3.33366 14.625 3.33366 14.1667V7.50004C3.33366 7.04171 3.70866 6.66671 4.16699 6.66671H15.8337C16.292 6.66671 16.667 7.04171 16.667 7.50004V14.1667C16.667 14.625 16.292 15 15.8337 15Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Files</h5>
+			</div>
+		</div>
+		<div [ngClass]="{'corousel-head': isEditable === false}" class="profile-card-body preview">
+			<div
+				*ngIf="groupProfilePage?.filesDetails?.length > 0; else unavailable"
+				[class.disabled]="!groupProfilePage.showFiles"
+				class="files-body-wrap"
+			>
+				<div [ngClass]="{'corousel-wrap': isEditable === false}" class="file-details-wrap">
+					<div
+						*ngFor="let file of groupProfilePage.filesDetails; let i = index"
+						[ngClass]="{'corousel-row': isEditable === false}"
+						class="card-row"
+					>
+						<div
+							(click)="redirectToUrl(file?.fileURL); recordButtonClick($event, null, null, null, groupProfilePage)"
+							data-cs-id="7010bc94-ds34-43b2-s832-400a12fa5268"
+							data-cs-label="download file"
+							data-cs-source="page"
+							*ngIf="!file.fileThumbnailURL"
+							[ngClass]="{'event-avoider': file.isFileBeingDownloaded === true}"
+							class="card-row-left"
+						>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type1' && !defaultIconCheck[i]">
+								<img (error)="defaultIconCheck[i] = true" alt="" class="real-image" src="{{ file.fileURL }}" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type1' && defaultIconCheck[i]" class="file-image-icon">
+								<img alt="" class="file-icon" src="./assets/images/file-image-icon.svg" />
+							</figure>
+							<video
+								(error)="defaultIconCheck[i] = true"
+								*ngIf="getFileCategory(file.fileType) === 'type2' && !defaultIconCheck[i]"
+								class="real-video"
+								src="{{ file.fileURL + '#t=0.001' }}"
+								type="video/mp4"
+							></video>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type2' && defaultIconCheck[i]" class="file-video-icon">
+								<img alt="" class="file-icon" src="./assets/images/file-video-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type3'" class="file-xls-icon">
+								<img alt="" class="file-icon" src="assets/images/file-xls-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type4'" class="file-pdf-icon">
+								<img alt="" class="file-icon" src="assets/images/file-pdf-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type5'" class="file-ppt-icon">
+								<img alt="" class="file-icon" src="assets/images/file-ppt-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type6'" class="file-zip-icon">
+								<img alt="" class="file-icon" src="assets/images/file-zip-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type7'" class="file-music-icon">
+								<img alt="" class="file-icon" src="assets/images/file-music-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type8'" class="file-doc-icon">
+								<img alt="" class="file-icon" src="assets/images/file-doc-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type9'" class="file-random-icon">
+								<img alt="" class="file-icon" src="assets/images/file-random-icon.svg" />
+							</figure>
+							<div class="file-infor-wrap">
+								<p class="fileTitle">{{ getFileName(file.fileName, file.fileType, file.fileThumbnailURL) }}</p>
+								<div class="file-info">
+									<span>{{ file.fileType | uppercase }}</span> ·
+									<span *ngIf="calculatedSize(file.fileSize)">{{ file.fileSize }}</span>
+									<span *ngIf="!calculatedSize(file.fileSize)">{{ file.fileSize | fileSize }}</span>
+								</div>
+								<div class="download-btn">
+									<button [disabled]="file.isFileBeingDownloaded" class="convo-btn-normal">
+										<svg
+											*ngIf="!file.isFileBeingDownloaded; else downloading"
+											fill="none"
+											height="20"
+											viewBox="0 0 21 20"
+											width="21"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M14.3253 7.5H13.0003V3.33333C13.0003 2.875 12.6253 2.5 12.167 2.5H8.83366C8.37533 2.5 8.00033 2.875 8.00033 3.33333V7.5H6.67533C5.93366 7.5 5.55866 8.4 6.08366 8.925L9.90866 12.75C10.2337 13.075 10.7587 13.075 11.0837 12.75L14.9087 8.925C15.4337 8.4 15.067 7.5 14.3253 7.5ZM4.66699 15.8333C4.66699 16.2917 5.04199 16.6667 5.50033 16.6667H15.5003C15.9587 16.6667 16.3337 16.2917 16.3337 15.8333C16.3337 15.375 15.9587 15 15.5003 15H5.50033C5.04199 15 4.66699 15.375 4.66699 15.8333Z"
+												fill="#090C18"
+											/>
+										</svg>
+										<ng-template #downloading><span class="bt-spinner"></span> </ng-template>
+										<span>{{ file.isFileBeingDownloaded ? 'Downloading...' : 'Download' }}</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div
+							(click)="redirectToUrl(file?.fileURL); recordButtonClick($event, null, null, null, groupProfilePage)"
+							data-cs-id="2ab22232-d1e5-4c8c-b514-03619dc08628"
+							data-cs-label="View"
+							data-cs-source="page"
+							*ngIf="file.fileThumbnailURL"
+							class="card-row-left"
+						>
+							<ng-container *ngIf="file.fileThumbnailURL !== 'no-image'; else defaultMetaImage">
+								<figure>
+									<img
+										(error)="showDefaultFilePreview($event)"
+										[src]="file?.fileThumbnailURL"
+										alt=""
+										class="real-image"
+									/>
+								</figure>
+							</ng-container>
+							<ng-template #defaultMetaImage>
+								<figure>
+									<img alt="" class="real-image" src="assets/images/default_meta_image.png" />
+								</figure>
+							</ng-template>
+							<div class="file-infor-wrap">
+								<div *ngIf="!shrinkName(file?.fileName)" class="fakeTitle"></div>
+								<p *ngIf="shrinkName(file?.fileName)" class="fileTitle">{{ shrinkName(file?.fileName) }}</p>
+								<div class="file-info adjust-pad">
+									<span class="link" title="{{ file.fileURL }}">{{ file?.fileURL }}</span>
+								</div>
+								<div class="download-btn">
+									<button
+										class="convo-btn-normal"
+										data-cs-id="7010bc94-ds34-fg78-s832-400a12fa5268"
+										data-cs-label="download file"
+										data-cs-source="page"
+									>
+										<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M10.6254 10.2778H2.06988V1.72222H6.34766V0.5H2.06988C1.39155 0.5 0.847656 1.05 0.847656 1.72222V10.2778C0.847656 10.95 1.39155 11.5 2.06988 11.5H10.6254C11.2977 11.5 11.8477 10.95 11.8477 10.2778V6H10.6254V10.2778ZM7.56988 0.5V1.72222H9.76377L3.75655 7.72944L4.61821 8.59111L10.6254 2.58389V4.77778H11.8477V0.5H7.56988Z"
+												fill="#33334F"
+											/>
+										</svg>
+										<span>View</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!groupProfilePage.showFiles" class="hidden-state">
+					<img alt="" src="./assets/images/visibility_off.svg" />
+					<span>This section is hidden</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Start : Edit files Overlay -->
+<div class="modal file-alert editFilesModal" *ngIf="openFilesModal" [hidden]="openUploadDialog">
+	<div class="modal-dialog modal-dialog-centered" [ngClass]="{'no-cursor': isSaveInProgress}">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Files</h5>
+				<button
+					#closeButtonForEditFiles
+					aria-label="Close"
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); reset()"
+					data-cs-id="40581804-b3ef-4913-a322-cb95f6f79787"
+					data-cs-label="Close"
+					data-cs-source="page"
+					class="close-btn"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="files-settings-card">
+					<div *ngIf="filesDetails?.length === 0" class="files-row-0">
+						<p class="settings-field m-0">
+							<img alt="" class="info-icon" src="assets/images/influencer-info-icon.svg" />
+							You need to upload at least 1 file to show files section on your page.
+						</p>
+					</div>
+					<div class="files-row main-row">
+						<p class="settings-field m-0">Show files in the page</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="recordToggleClicked($event); updateFiles()"
+								[(ngModel)]="groupProfilePage.showFiles"
+								[attr.data-cs-toggle-status]="!(filesDetails.length > 0 ? groupProfilePage.showFiles : false)"
+								[checked]="filesDetails.length > 0 ? groupProfilePage.showFiles : false"
+								[disabled]="filesDetails.length === 0 || isSaveInProgress"
+								data-cs-id="59045e9a-ca63-4055-8e5b-20bcf3fb80ef"
+								data-cs-label="show group admins"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div class="files-wrapper">
+					<div *ngFor="let file of filesDetails; let i = index" class="card-row">
+						<div (click)="openUploadDialogWithFile(i)" *ngIf="!file.fileThumbnailURL" class="card-row-left">
+							<figure *ngIf="getFileCategory(file.fileType) === 'type1' && !defaultIconCheck[i]">
+								<img (error)="defaultIconCheck[i] = true" alt="" class="real-image" src="{{ file.fileURL }}" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type1' && defaultIconCheck[i]" class="file-image-icon">
+								<img alt="" class="file-icon" src="./assets/images/file-image-icon.svg" />
+							</figure>
+							<video
+								(error)="defaultIconCheck[i] = true"
+								*ngIf="getFileCategory(file.fileType) === 'type2' && !defaultIconCheck[i]"
+								class="real-video"
+								src="{{ file.fileURL + '#t=0.001' }}"
+								type="video/mp4"
+							></video>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type2' && defaultIconCheck[i]" class="file-video-icon">
+								<img alt="" class="file-icon" src="./assets/images/file-video-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type3'" class="file-xls-icon">
+								<img alt="" class="file-icon" src="assets/images/file-xls-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type4'" class="file-pdf-icon">
+								<img alt="" class="file-icon" src="assets/images/file-pdf-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type5'" class="file-ppt-icon">
+								<img alt="" class="file-icon" src="assets/images/file-ppt-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type6'" class="file-zip-icon">
+								<img alt="" class="file-icon" src="assets/images/file-zip-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type7'" class="file-music-icon">
+								<img alt="" class="file-icon" src="assets/images/file-music-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type8'" class="file-doc-icon">
+								<img alt="" class="file-icon" src="assets/images/file-doc-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(file.fileType) === 'type9'" class="file-random-icon">
+								<img alt="" class="file-icon" src="assets/images/file-random-icon.svg" />
+							</figure>
+							<div class="file-infor-wrap">
+								<p class="fileTitle">{{ file.updateToFileName }}</p>
+								<div class="file-info">
+									<span>{{ file.fileType | uppercase }}</span> ·
+									<span *ngIf="calculatedSize(file.fileSize)">{{ file.fileSize }}</span>
+									<span *ngIf="!calculatedSize(file.fileSize)">{{ file.fileSize | fileSize }}</span>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="!file.fileThumbnailURL" class="card-row-right">
+							<button
+								(click)="recordButtonClick($event, null, null, null, groupProfilePage); removeFile(i)"
+								class="remove-btn"
+								data-cs-id="6aef5be3-259a-84j2-83d7-23294533d0ff"
+								data-cs-label="remove"
+								data-cs-source="page"
+							>
+								<img alt="" src="./assets/images/remove-icon.svg" />
+							</button>
+						</div>
+						<div (click)="redirectToUrl(file?.fileURL)" *ngIf="file.fileThumbnailURL" class="card-row-left">
+							<ng-container *ngIf="file.fileThumbnailURL !== 'no-image'; else defaultMetaImage">
+								<figure>
+									<img
+										(error)="showDefaultFilePreview($event)"
+										[src]="file?.fileThumbnailURL"
+										alt=""
+										class="real-image"
+									/>
+								</figure>
+							</ng-container>
+							<ng-template #defaultMetaImage>
+								<figure>
+									<img alt="" class="real-image" src="assets/images/default_meta_image.png" />
+								</figure>
+							</ng-template>
+							<div class="file-infor-wrap">
+								<p class="fileTitle">{{ shrinkName(file?.fileName) }}</p>
+								<div class="file-info">
+									<span class="link" title="{{ file.fileURL }}">{{ file?.fileURL }}</span>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="file.fileThumbnailURL" class="card-row-right">
+							<button
+								(click)="recordButtonClick($event, null, null, null, groupProfilePage); removeFile(i)"
+								class="remove-btn"
+								data-cs-id="6aef5be3-259a-84j2-83d7-23294533d0ff"
+								data-cs-label="remove"
+								data-cs-source="page"
+							>
+								<img alt="" src="./assets/images/remove-icon.svg" />
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="add-file-section">
+					<button
+						(click)="recordButtonClick($event, null, null, null, groupProfilePage); openUploadDialog = true"
+						*ngIf="filesDetails.length < 5"
+						class="convo-btn-bordered convo-btn-normal convo-btn-big w-100"
+						data-cs-id="c26638c0-3c6d-fg56-a7d0-c618e2ff9ef2"
+						data-cs-label="add file"
+						data-cs-source="page"
+					>
+						<svg fill="none" height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M9.66634 5.66536H5.66634V9.66537H4.33301V5.66536H0.333008V4.33203H4.33301V0.332031H5.66634V4.33203H9.66634V5.66536Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>{{ filesDetails?.length === 0 ? 'Add file' : 'Add another file' }}</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="closeButtonForEditFiles.click(); recordButtonClick($event, null, null, null, groupProfilePage)"
+					[disabled]="isSaveInProgress || (filesDetails?.length === 0 && !isFilesRemoved)"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="8e65d3d5-d943-4931-a115-7ed3e4fa4f65"
+					data-cs-label="Save changes"
+					data-cs-source="page"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End :Edit files Overlay -->
+<app-shared-modal
+	(closePopup)="openUploadDialog = false; incomingFile = null"
+	(fileObject)="processTheFile($event)"
+	(updateToFileObject)="updateTheFileName($event)"
+	*ngIf="openUploadDialog"
+	[incomingFile]="incomingFile"
+	[ref]="ref"
+>
+</app-shared-modal>
+
+<ng-template #unavailable>
+	<div class="unavailable-state-wrap">
+		<strong>You can upload supporting files for your page here like media kit, group report etc.</strong>
+		<img alt="" class="overlay-image" src="./assets/images/files-dummy.png" />
+		<div class="unavailable-state">
+			<div class="overlay"></div>
+			<figure>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10.0003 1.66666C5.40033 1.66666 1.66699 5.39999 1.66699 9.99999C1.66699 14.6 5.40033 18.3333 10.0003 18.3333C14.6003 18.3333 18.3337 14.6 18.3337 9.99999C18.3337 5.39999 14.6003 1.66666 10.0003 1.66666ZM10.8337 14.1667H9.16699V12.5H10.8337V14.1667ZM10.8337 10.8333H9.16699V5.83332H10.8337V10.8333Z"
+						fill="#EB5757"
+					/>
+				</svg>
+			</figure>
+			<h6>This section is hidden because you haven’t uploaded any files yet.</h6>
+		</div>
+	</div>
+</ng-template>

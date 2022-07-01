@@ -1,0 +1,80 @@
+<div class="reports-wrapper">
+	<div class="reports-header-wrap">
+		<div class="container">
+			<div class="reports-header">
+				<div class="report-header-left">
+					<h5 data-test-id="heading-campaign-reports">Your reports</h5>
+					<h6 data-test-id="subheading-campaign-reports">
+						Create and share detailed reports for your self sourced campaigns with our new report generator
+					</h6>
+				</div>
+				<div class="report-header-right">
+					<button
+						(click)="navigateToCreateCampaignReport(); recordButtonClick($event)"
+						data-cs-id="87aa4c57-1699-4dea-be70-11f00eae38f9"
+						data-cs-label="Create new Report"
+						data-cs-source="page"
+						class="convo-btn-normal convo-btn-primary"
+					>
+						<img alt="" src="../../../../assets/images/add_icon.svg" /> <span>Create new Report</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="reports-body-wrap">
+		<div class="container">
+			<!-- Empty State-->
+			<div
+				class="empty-state"
+				*ngIf="!isCampaignReportsLoading && campaignReports?.length === 0"
+				data-test-id="empty-report-state"
+			>
+				<figure>
+					<img alt="" data-test-id="empty-report-state-img" src="../../../../assets/images/empty_state_icon.svg" />
+				</figure>
+				<h6 data-test-id="empty-report-state-heading">You have not created any reports yet</h6>
+			</div>
+
+			<div *ngIf="isCampaignReportsLoading" class="loading-wrapper">
+				<div class="bt-spinner"></div>
+			</div>
+
+			<!-- Report Cards -->
+
+			<div class="report-card-wrapper">
+				<div
+					class="report-card"
+					(click)="navigateToCreateReport(campaignReport); recordButtonClick($event)"
+					data-cs-id="7257c55b-6155-4943-b039-3c5cc5f9e2b6"
+					data-cs-label="Report card"
+					data-cs-source="page"
+					*ngFor="let campaignReport of campaignReports"
+				>
+					<div class="card-left">
+						<h5 data-test-id="report-name">{{ campaignReport.campaignName }}</h5>
+						<h6 data-test-id="report-date">
+							{{ campaignReport.startDateAtUTC | date: 'dd MMM YYYY' }} -
+							{{ campaignReport.endDateAtUTC | date: 'dd MMM YYYY' }}
+						</h6>
+					</div>
+					<div class="card-right" data-test-id="report-status">
+						<div class="status active" *ngIf="!campaignReport.isCompleted">ACTIVE</div>
+						<div class="status completed" *ngIf="campaignReport.isCompleted">COMPLETED</div>
+						<button>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<g opacity="0.3">
+									<path
+										d="M9.99984 6L8.58984 7.41L13.1698 12L8.58984 16.59L9.99984 18L15.9998 12L9.99984 6Z"
+										fill="#323232"
+									/>
+								</g>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

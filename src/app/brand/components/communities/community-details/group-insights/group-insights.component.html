@@ -1,0 +1,460 @@
+<div class="group-insight-container">
+	<div class="container">
+		<h3 class="head-text">Summary metrics for last 30 days</h3>
+		<div class="row">
+			<div class="col-sm-3 col-12">
+				<div class="metrics-wrapper">
+					<div></div>
+					<ng-container *ngIf="group.summaryReportForLast30Days | async; else loadingTotalPosts">
+						<h6 class="metric-name">Posts</h6>
+						<p class="metric-value">
+							{{ (group.summaryReportForLast30Days | async).totalPosts }}
+						</p>
+					</ng-container>
+					<ng-template #loadingTotalPosts>
+						<div class="loading-strip primary"></div>
+						<div class="loading-strip secondary"></div>
+					</ng-template>
+				</div>
+			</div>
+			<div class="col-sm-3 col-12">
+				<div class="metrics-wrapper">
+					<ng-container *ngIf="group.summaryReportForLast30Days | async; else loadingTotalConversations">
+						<h6 class="metric-name">Conversations</h6>
+						<p class="metric-value">
+							{{ (group.summaryReportForLast30Days | async).totalConversations }}
+						</p>
+					</ng-container>
+					<ng-template #loadingTotalConversations>
+						<div class="loading-strip primary"></div>
+						<div class="loading-strip secondary"></div>
+					</ng-template>
+				</div>
+			</div>
+			<div class="col-sm-3 col-12">
+				<div class="metrics-wrapper">
+					<ng-container *ngIf="group.summaryReportForLast30Days | async; else loadingTotalEngagementRate">
+						<div class="tooltip-wrapper">
+							<app-tooltip
+								setTooltipText="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+							>
+							</app-tooltip>
+						</div>
+						<h6 class="metric-name">Engagement Rate</h6>
+						<p class="metric-value">
+							{{
+								(group.summaryReportForLast30Days | async).totalEngagementRate === 0
+									? (group.summaryReportForLast30Days | async).totalEngagementRate + '%'
+									: 'N.A.'
+							}}
+						</p>
+					</ng-container>
+					<ng-template #loadingTotalEngagementRate>
+						<div class="loading-strip primary"></div>
+						<div class="loading-strip secondary"></div>
+					</ng-template>
+				</div>
+			</div>
+			<div class="col-sm-3 col-12">
+				<div class="metrics-wrapper">
+					<div class="tooltip-wrapper">
+						<app-tooltip
+							setTooltipText="Average number of actions (comments + reactions + shares) a post gets in your group"
+						>
+						</app-tooltip>
+					</div>
+					<ng-container *ngIf="group.summaryReportForLast30Days | async; else loadingTotalActivityRate">
+						<h6 class="metric-name">Activity Rate</h6>
+						<p class="metric-value">
+							{{ (group.summaryReportForLast30Days | async).totalActivityRate }}
+						</p>
+					</ng-container>
+					<ng-template #loadingTotalActivityRate>
+						<div class="loading-strip primary"></div>
+						<div class="loading-strip secondary"></div>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fixed-tabs">
+		<div class="container">
+			<ul class="nav nav-tabs graph-tabs" role="tablist">
+				<li class="nav-item">
+					<span class="description" href="javascript:void(0);">Trends for:</span>
+				</li>
+				<li class="nav-item">
+					<button
+						(click)="reportType = 'currentMonth'"
+						aria-controls="currentmonth"
+						aria-selected="true"
+						class="btn-month active"
+						data-toggle="tab"
+						href="#insightsTabContent"
+						id="currentMonthTab"
+						role="tab"
+					>
+						Current Month
+					</button>
+				</li>
+				<li class="nav-item">
+					<button
+						(click)="reportType = 'lastMonth'"
+						aria-controls="1month"
+						aria-selected="false"
+						class="btn-month"
+						data-toggle="tab"
+						href="#insightsTabContent"
+						id="oneMonthTab"
+						role="tab"
+					>
+						Last 1 month
+					</button>
+				</li>
+				<li class="nav-item">
+					<button
+						(click)="reportType = 'lastTwoMonths'"
+						aria-controls="2months"
+						aria-selected="false"
+						class="btn-month"
+						data-toggle="tab"
+						href="#insightsTabContent"
+						id="twoMonthsTab"
+						role="tab"
+					>
+						Last 2 months
+					</button>
+				</li>
+				<li class="nav-item">
+					<button
+						(click)="reportType = 'lastThreeMonths'"
+						aria-controls="3months"
+						aria-selected="false"
+						class="btn-month"
+						data-toggle="tab"
+						href="#insightsTabContent"
+						id="threeMonthsTab"
+						role="tab"
+					>
+						Last 3 months
+					</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="fixed-border"></div>
+	<div class="tab-content graph-tab-content">
+		<div aria-labelledby="oneMonthTab" class="tab-pane fade show active" id="insightsTabContent" role="tabpanel">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="graph-wrapper">
+							<div class="head-wrapper">
+								<h4 class="graph-name">Engagement metrics</h4>
+								<div class="legend-wrapper">
+									<div class="legend post">
+										<div class="legend-marker-box post-box"></div>
+										<span class="legend-text">Posts</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box comments-box"></div>
+										<span class="legend-text">Comments</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box reactions-box"></div>
+										<span class="legend-text">Reactions</span>
+									</div>
+								</div>
+							</div>
+							<div class="chart-dataLabels full-graph-container">
+								<div *ngIf="reportType === 'currentMonth'">
+									<app-chart [setChartObject]="group.engagementReportForCurrentMonth | async"></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastMonth'">
+									<app-chart [setChartObject]="group.engagementReportForLastMonth | async"></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastTwoMonths'">
+									<app-chart [setChartObject]="group.engagementReportForLastTwoMonths | async"></app-chart>
+								</div>
+								<div *ngIf="reportType === 'lastThreeMonths'">
+									<app-chart [setChartObject]="group.engagementReportForLastThreeMonths | async"></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'currentMonth'" class="row">
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Post type distribution</h4>
+							<app-chart [setChartObject]="group.postTypeDistributionReportForCurrentMonth | async"></app-chart>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Engagement per post type</h4>
+							<app-chart [setChartObject]="group.engagementPerPostTypeDistributionForCurrentMonth | async"></app-chart>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'lastMonth'" class="row">
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Post type distribution</h4>
+							<app-chart [setChartObject]="group.postTypeDistributionReportForLastMonth | async"></app-chart>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Engagement per post type</h4>
+							<app-chart [setChartObject]="group.engagementPerPostTypeDistributionForLastMonth | async"></app-chart>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'lastTwoMonths'" class="row">
+					<div class="col">
+						<div class="graph-wrapper">
+							<div class="head-wrapper">
+								<h4 class="graph-name">Post type distribution</h4>
+								<div class="legend-wrapper">
+									<div class="legend post">
+										<div class="legend-marker-box status-box"></div>
+										<span class="legend-text">Status</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box link-box"></div>
+										<span class="legend-text">Link</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box video-box"></div>
+										<span class="legend-text">Video</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box event-box"></div>
+										<span class="legend-text">Event</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box photo-box"></div>
+										<span class="legend-text">Photo</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-sm-6">
+									<app-chart
+										[setChartObject]="group.postTypeDistributionReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-6">
+									<app-chart
+										[setChartObject]="group.postTypeDistributionReportForLastMonth | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'lastThreeMonths'" class="row">
+					<div class="col">
+						<div class="graph-wrapper">
+							<div class="head-wrapper">
+								<h4 class="graph-name">Post type distribution</h4>
+								<div class="legend-wrapper">
+									<div class="legend post">
+										<div class="legend-marker-box status-box"></div>
+										<span class="legend-text">Status</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box link-box"></div>
+										<span class="legend-text">Link</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box video-box"></div>
+										<span class="legend-text">Video</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box event-box"></div>
+										<span class="legend-text">Event</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box photo-box"></div>
+										<span class="legend-text">Photo</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-sm-4">
+									<app-chart
+										[setChartObject]="group.postTypeDistributionReportForLastThreeMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-4">
+									<app-chart
+										[setChartObject]="group.postTypeDistributionReportForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-4">
+									<app-chart [setChartObject]="group.postTypeDistributionReportForLastMonth | async"></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'lastTwoMonths'" class="row">
+					<div class="col">
+						<div class="graph-wrapper">
+							<div class="head-wrapper">
+								<h4 class="graph-name">Engagement per post type</h4>
+								<div class="legend-wrapper">
+									<div class="legend post">
+										<div class="legend-marker-box status-box"></div>
+										<span class="legend-text">Status</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box link-box"></div>
+										<span class="legend-text">Link</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box video-box"></div>
+										<span class="legend-text">Video</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box event-box"></div>
+										<span class="legend-text">Event</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box photo-box"></div>
+										<span class="legend-text">Photo</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-sm-6">
+									<app-chart
+										[setChartObject]="group.engagementPerPostTypeDistributionForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-6">
+									<app-chart [setChartObject]="group.engagementPerPostTypeDistributionForLastMonth | async"></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="reportType === 'lastThreeMonths'" class="row">
+					<div class="col">
+						<div class="graph-wrapper">
+							<div class="head-wrapper">
+								<h4 class="graph-name">Engagement per post type</h4>
+								<div class="legend-wrapper">
+									<div class="legend post">
+										<div class="legend-marker-box status-box"></div>
+										<span class="legend-text">Status</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box link-box"></div>
+										<span class="legend-text">Link</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box video-box"></div>
+										<span class="legend-text">Video</span>
+									</div>
+									<div class="legend comments">
+										<div class="legend-marker-box event-box"></div>
+										<span class="legend-text">Event</span>
+									</div>
+									<div class="legend reactions">
+										<div class="legend-marker-box photo-box"></div>
+										<span class="legend-text">Photo</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-sm-4">
+									<app-chart
+										[setChartObject]="group.engagementPerPostTypeDistributionForLastThreeMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastThreeMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-4">
+									<app-chart
+										[setChartObject]="group.engagementPerPostTypeDistributionForLastTwoMonths | async"
+										[setChartOptionsKey]="'chartOptionsForLastTwoMonths'"
+									></app-chart>
+								</div>
+								<div class="col-12 col-sm-4">
+									<app-chart [setChartObject]="group.engagementPerPostTypeDistributionForLastMonth | async"></app-chart>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Comments per post</h4>
+							<div *ngIf="reportType === 'currentMonth'">
+								<app-chart
+									[setChartObject]="group.commentsPerPostReportForCurrentMonth | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastMonth'">
+								<app-chart
+									[setChartObject]="group.commentsPerPostReportForLastMonth | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastTwoMonths'">
+								<app-chart
+									[setChartObject]="group.commentsPerPostReportForLastTwoMonths | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastThreeMonths'">
+								<app-chart
+									[setChartObject]="group.commentsPerPostReportForLastThreeMonths | async"
+									[setChartOptionsKey]="'commentsChartOptions'"
+								></app-chart>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6">
+						<div class="graph-wrapper">
+							<h4 class="graph-name">Member Growth</h4>
+							<div *ngIf="reportType === 'currentMonth'">
+								<app-chart
+									[setChartObject]="group.memberGrowthReportForCurrentMonth | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastMonth'">
+								<app-chart
+									[setChartObject]="group.memberGrowthReportForLastMonth | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastTwoMonths'">
+								<app-chart
+									[setChartObject]="group.memberGrowthReportForLastTwoMonths | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+							<div *ngIf="reportType === 'lastThreeMonths'">
+								<app-chart
+									[setChartObject]="group.memberGrowthReportForLastThreeMonths | async"
+									[setChartOptionsKey]="'memberChartOptions'"
+								></app-chart>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

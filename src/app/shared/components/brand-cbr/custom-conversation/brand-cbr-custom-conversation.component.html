@@ -1,0 +1,43 @@
+<section class="container pb-0 mb-3" [id]="'custom-conversation-chart-' + conversationId">
+	<div class="members">
+		<div class="card-inner-wrapper">
+			<div class="flex-box">
+				<div class="d-flex align-items-center">
+					<h3 class="mb-0">
+						{{ conversation.title }}
+					</h3>
+				</div>
+				<p class="description">{{ conversation.description }}</p>
+			</div>
+		</div>
+	</div>
+	<div class="d-flex">
+		<div
+			class="control-panel d-flex flex-column justify-content-between"
+			[class]="'bucket-count-' + conversation.buckets.length"
+		>
+			<div
+				class="d-flex align-items-center justify-content-end"
+				*ngFor="let bucket of conversation.buckets; let index = index"
+			>
+				<div class="chart-y-text" *ngIf="bucket?.isBucketVisible">{{ bucket.name }}</div>
+			</div>
+		</div>
+		<div class="chart-panel">
+			<div [id]="'custom-conversation-preview-chat-' + conversationId" class="membersOnboardedChart"></div>
+			<div
+				class="label-panel d-flex flex-column justify-content-between"
+				[class]="'bucket-count-' + conversation.buckets.length"
+			>
+				<ng-container *ngFor="let bucket of conversation.buckets; let index = index">
+					<div class="d-flex align-items-center">
+						<div class="chart-label-text" [style]="{paddingLeft: getLabelTextPos(bucket.mentions)}">
+							{{ bucket.mentions }}
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+	<p *ngIf="supportingText" class="supporting-text-input-text"> {{ supportingText[conversation.title] }} </p>
+</section>

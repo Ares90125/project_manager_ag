@@ -1,0 +1,242 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+section {
+	background: #fff;
+	padding: 32px 24px;
+	border-radius: 4px;
+}
+.card-inner-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+
+	h3 {
+		@include font-label-l-md;
+		color: #33334f;
+	}
+
+	p {
+		@include font-label-xs;
+		color: $black-70;
+		margin-bottom: 32px;
+	}
+}
+.trapezoid-chart {
+	display: flex;
+	position: relative;
+	align-items: baseline;
+	margin-top: 70px;
+	div {
+		cursor: pointer;
+	}
+
+	p {
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 16px;
+		text-transform: uppercase;
+		color: #000000;
+		position: absolute;
+		top: -56px;
+		left: 16px;
+	}
+	h3 {
+		font-style: normal;
+		font-weight: 500;
+		font-size: 20px;
+		line-height: 28px;
+		color: #000000;
+		position: absolute;
+		top: -32px;
+		left: 16px;
+	}
+}
+.view-all {
+	background: rgba(54, 84, 255, 0.12);
+	box-sizing: border-box;
+	border-radius: 0px 0px 8px 8px;
+	padding: 0 2px;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	color: #3654ff;
+	text-align: center;
+	cursor: pointer;
+	display: block;
+	box-shadow: 0px -4px 4px rgb(51 51 79 / 24%);
+	.view-all-text {
+		padding: 16px;
+	}
+}
+.kpi-charts {
+	padding: 32px 24px 0 24px;
+	background: #ffffff;
+	border-radius: 8px;
+	margin: 0 auto;
+	.tabs-wrapper {
+		.tabs {
+			ul {
+				list-style: none;
+				display: flex;
+				padding: 0;
+				li {
+					border-radius: 4px;
+					padding: 8px 12px;
+					text-transform: uppercase;
+					font-weight: 500;
+					font-size: 14px;
+					line-height: 16px;
+					color: #33334f;
+					cursor: pointer;
+					&.active {
+						background: rgba(54, 84, 255, 0.16);
+					}
+				}
+			}
+		}
+	}
+	.col-md-6 {
+		display: inline-block;
+	}
+	p {
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 14px;
+		color: #707084;
+		text-align: left;
+	}
+	.membersOnboardedChart {
+		background: #f9fafb;
+		border-radius: 4px;
+		padding: 24px 12px;
+		margin: 0px 0px 32px 0px;
+	}
+	.flex-box {
+		display: flex;
+		justify-content: space-between;
+		background: #f9fafb;
+		border-radius: 4px 4px 0 0;
+		padding: 24px 12px;
+		h3 {
+			font-weight: 500;
+			font-size: 14px;
+			line-height: 16px;
+			color: #33334f;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			padding-bottom: 8px;
+		}
+
+		&.pdf-header {
+			display: block;
+			background-color: white;
+		}
+	}
+	.for-pdf-title {
+		display: none;
+		&.show {
+			display: block;
+		}
+	}
+}
+.btn-edit {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	color: #3654ff;
+	margin-left: 8px;
+	display: inline-flex;
+	align-items: center;
+	img {
+		margin-left: 4px;
+	}
+}
+.supporting-text {
+	font-weight: 500;
+	font-size: 16px;
+	color: #3654ff;
+	line-height: 64px;
+	cursor: pointer;
+	padding: 0 24px;
+	margin: 0 -24px;
+	display: block;
+	border-top: 1px solid #ebebed;
+	margin-top: 32px;
+	text-align: left;
+}
+.membership-chart-legend {
+	display: flex;
+	background: #f9fafb;
+	padding: 0 12px;
+	.legend-thumbnail {
+		height: 14px;
+		width: 14px;
+		border-radius: 2px;
+		margin-right: 4px;
+	}
+	.legend-item {
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 14px;
+		margin-right: 40px;
+		color: #33334f;
+	}
+}
+.edit-wrapper {
+	float: right;
+	margin-top: -40px;
+	height: 32px;
+	background: #f9fafb;
+	border: 1px solid #e0e0e5;
+	border-radius: 2px;
+	line-height: 32px;
+	padding: 0 16px;
+	p {
+		margin: 0;
+		line-height: 32px;
+		font-size: 14px;
+		color: #33334f;
+		a {
+			font-weight: 500;
+			font-size: 14px;
+			line-height: 16px;
+			color: #3654ff;
+			cursor: pointer;
+		}
+	}
+}
+.btn-edit-wrapper {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 24px;
+	color: #3654ff;
+	display: flex;
+	margin-left: 8px;
+}
+mat-slide-toggle {
+	display: none;
+}
+.chart-container {
+	text-align: left;
+	.col-md-6 {
+		display: inline-block;
+	}
+}
+.chart-wrapper {
+	text-align: left;
+}
+.supporting-text-input-text {
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: left;
+	color: #33334f;
+	padding: 16px 0;
+}
+.background-box {
+	background-color: #f9fafb;
+}

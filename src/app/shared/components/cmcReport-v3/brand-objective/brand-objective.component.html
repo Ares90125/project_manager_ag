@@ -1,0 +1,61 @@
+<h5 class="mb-3 header">
+	Brand Objective
+	<button
+		*ngIf="!isBrandLoggedIn"
+		class="convo-btn-normal outline editButton"
+		data-backdrop="static"
+		data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+		data-cs-label="Brand Objective"
+		data-keyboard="false"
+		data-target="#editBrandObjective"
+		data-toggle="modal"
+	>
+		<span>Edit</span>&nbsp;
+		<span class="material-icons"> edit </span>
+	</button>
+</h5>
+<div [innerHTML]="content || '-'" class="ql-editor"></div>
+
+<div class="modal fade report-keywords-modal" id="editBrandObjective" role="dialog">
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Brand Objective</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="phase-idea">
+				<div [ngClass]="form?.errors && isFormFirstTimeSubmitted ? 'error-control' : ''" class="form-group">
+					<div class="invisible-input-cont">
+						<input #brandObjectiveFile (change)="onSelectingImageInPhaseIdea($event)" type="file" />
+					</div>
+					<quill-editor
+						*ngIf="contentPopupControl"
+						[maxLength]="5000"
+						#brandObjectiveQuill
+						(onEditorCreated)="onPhaseIdeaEditorCreation($event)"
+						[formControl]="contentPopupControl"
+						[modules]="phaseIdeaQuillConfig"
+						placeholder="Please provide objective of the brand"
+					>
+					</quill-editor>
+				</div>
+
+				<div *ngIf="contentPopupControl?.errors?.maxLengthError as error" class="quill-error">
+					Maximum {{ error.maxLength }} characters are allowed.
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="contentPopupControl?.invalid || isPhaseIdeaImageLoading"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					{{ isPhaseIdeaImageLoading ? 'Loading Image...' : 'Save' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

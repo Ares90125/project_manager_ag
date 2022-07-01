@@ -1,0 +1,68 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.spinner-wrapper {
+	display: flex;
+	align-items: center;
+	@media (max-width: 767px) {
+		display: flex;
+		align-items: center;
+		flex-flow: row-reverse;
+		justify-content: flex-end;
+		text-align: left;
+		margin-right: 12px;
+	}
+
+	&.spinner-wrapper-block {
+		display: block !important;
+		text-align: unset;
+		margin-right: 0;
+
+		p {
+			text-align: center;
+			margin: 0;
+		}
+	}
+
+	p {
+		font-size: 12px;
+		line-height: 18px;
+		text-align: right;
+		color: #707084;
+		margin: 0 16px 0 0;
+		@media (max-width: 767px) {
+			text-align: left;
+			margin: 0 0 0 12px;
+		}
+	}
+
+	.progress-spinner-wrapper {
+		display: inline-block;
+		position: relative;
+
+		mat-progress-spinner {
+			display: block;
+
+			&.zero {
+				opacity: 0.15;
+			}
+
+			+ mat-progress-spinner {
+				position: absolute;
+				top: 0;
+			}
+		}
+
+		img {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			max-width: 100%;
+		}
+	}
+
+	.icon-lg {
+		margin-top: 10px;
+	}
+}

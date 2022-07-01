@@ -1,0 +1,43 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.visit-desktop-modal {
+	position: fixed;
+	top: 0;
+	z-index: 10000;
+	left: 0;
+	background: rgba(0, 0, 0, 0.6);
+	height: 100%;
+	width: 100%;
+
+	.modal-dialog {
+		position: absolute;
+		bottom: 20px;
+		width: calc(100% - 40px);
+		left: 50%;
+		@include transform(translateX(-50%));
+		margin: 0;
+	}
+
+	.visit-desktop-wrapper {
+		text-align: center;
+		padding: 0 0 20px;
+		color: #33334f;
+
+		figure {
+			margin-bottom: 23px;
+		}
+
+		h5 {
+			margin-bottom: 14px;
+		}
+
+		p {
+			opacity: 0.9;
+
+			a {
+				color: inherit;
+			}
+		}
+	}
+}

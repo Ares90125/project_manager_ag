@@ -1,0 +1,180 @@
+<div class="publish-time-select-wrapper">
+	<div>
+		<h6 data-test-id="heading-select-publish-time">SELECT TIME TO PUBLISH</h6>
+		<div class="best-times-wrap">
+			<mat-radio-group [(ngModel)]="selectedPostOption" (change)="triggerPostOptionChange()">
+				<ul class="list-unstyled">
+					<li>
+						<mat-radio-button value="Publish now" data-test-id="radio-button-publish-now">
+							<strong data-test-id="heading-publish-now">✌️ Publish Now</strong>
+							<div class="some-extra-info">
+								<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M7.33454 4.66659H8.66787V5.99992H7.33454V4.66659ZM7.33454 7.33325H8.66787V11.3333H7.33454V7.33325ZM8.0012 1.33325C4.3212 1.33325 1.33453 4.31992 1.33453 7.99992C1.33453 11.6799 4.3212 14.6666 8.0012 14.6666C11.6812 14.6666 14.6679 11.6799 14.6679 7.99992C14.6679 4.31992 11.6812 1.33325 8.0012 1.33325ZM8.0012 13.3333C5.0612 13.3333 2.66787 10.9399 2.66787 7.99992C2.66787 5.05992 5.0612 2.66659 8.0012 2.66659C10.9412 2.66659 13.3345 5.05992 13.3345 7.99992C13.3345 10.9399 10.9412 13.3333 8.0012 13.3333Z"
+										fill="#9999A7"
+									/>
+								</svg>
+								<span data-test-id="subheading-publish-now">Post will be published in the next 15 min</span>
+							</div>
+						</mat-radio-button>
+					</li>
+					<div *ngIf="group?.areRecommendationsAvailable || group?.areMetricsAvailable">
+						<li *ngIf="numOfGroupSelected > 1 && recommendation && recommendation !== null">
+							<mat-radio-button value="Auto-schedule">
+								<strong>⏰ Auto-schedule post</strong>
+							</mat-radio-button>
+						</li>
+						<div *ngIf="group && numOfGroupSelected && (recommendation || recommendation === null); else loadingTime">
+							<li *ngIf="recommendation !== null && numOfGroupSelected === 1 && recommendationTimings?.length > 0">
+								<mat-radio-button value="FirstScheduleTime" data-test-id="first-suggested-post-time">
+									<strong
+										>⏰ {{ recommendationTimings[0]?.day }} , {{ recommendationTimings[0]?.time }}
+										<!--                              <span class="badge badge-best">BEST TIME</span>-->
+									</strong>
+									<small>Popular time based on group activity</small>
+								</mat-radio-button>
+							</li>
+							<li *ngIf="recommendation !== null && numOfGroupSelected === 1 && recommendationTimings?.length > 1">
+								<mat-radio-button value="SecondScheduleTime" data-test-id="second-suggested-post-time">
+									<strong>⏰ {{ recommendationTimings[1]?.day }} , {{ recommendationTimings[1]?.time }}</strong>
+									<small>Popular time based on group activity</small>
+								</mat-radio-button>
+							</li>
+						</div>
+						<ng-template #loadingTime>
+							<div class="time-shimmers-wrap">
+								<ul class="list-unstyled">
+									<li>
+										<div class="circle-shimmer shimmer"></div>
+										<div class="shimmer-row">
+											<div class="shimmer shimmer-small"></div>
+											<div class="shimmer shimmer-large"></div>
+										</div>
+									</li>
+									<li>
+										<div class="circle-shimmer shimmer"></div>
+										<div class="shimmer-row">
+											<div class="shimmer shimmer-small"></div>
+											<div class="shimmer shimmer-large"></div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</ng-template>
+					</div>
+					<li>
+						<mat-radio-button value="Custom" data-test-id="mat-radio-button-custom-date-time">
+							<strong
+								><img alt="" src="assets/images/calendar-icon.svg" />
+								<span data-test-id="heading-publish-custom-time">Publish at a custom time</span></strong
+							>
+							<small data-test-id="subheading-publish-custom-time">Select a date and time to publish your post</small>
+						</mat-radio-button>
+						<div *ngIf="selectedPostOption === 'Custom'" class="custom-date-time-options">
+							<h6>Date</h6>
+							<div class="position-relative w-100">
+								<input
+									(click)="picker.open()"
+									[formControl]="recommendationDate"
+									[matDatepicker]="picker"
+									[max]="publishMaxDate"
+									[min]="publishMinDate"
+									data-cs-id="129e970f-89b4-41af-bb7f-27f5e14475b1"
+									data-cs-label="Date picker"
+									data-cs-source="page"
+									placeholder="Date"
+									readonly
+									required
+									type="text"
+									(change)="triggerPostOptionChange()"
+								/>
+								<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+								<mat-datepicker #picker></mat-datepicker>
+							</div>
+							<div class="input-group">
+								<h6>Time</h6>
+								<div class="custom-dropdown dropdown pills-dropdown">
+									<div
+										class="fake-input dropdown-toggle"
+										data-cs-id="56944b87-0759-4ffc-a555-f02cfb001801"
+										data-cs-label="Time picker"
+										data-cs-source="page"
+										data-toggle="dropdown"
+									>
+										<span class="placeholder" data-test-id="suggested-post-time">{{ publishTime }}</span>
+									</div>
+									<div class="dropdown-menu-wrapper dropdown-menu">
+										<div class="dropdown-container">
+											<div
+												(click)="publishTime = time; triggerPostOptionChange()"
+												*ngFor="let time of timeOptions"
+												class="form-check"
+											>
+												<div class="form-check-label">
+													{{ time }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</mat-radio-group>
+			<div
+				class="heading-wrapper"
+				*ngIf="group && !group?.areRecommendationsAvailable && !group?.areMetricsAvailable && numOfGroupSelected === 1"
+			>
+				<h3 class="heading-overview">
+					<span data-test-id="heading-yesterdayActivity-overview"> Publishing Suggestions</span>
+					<p class="sub-heading-overview">Analysing best times for the group...</p>
+				</h3>
+				<div>
+					<app-analysis-state
+						[value]="group?.areRecommendationsAvailable"
+						[inline]="true"
+						[diameter]="28"
+					></app-analysis-state>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button
+		(click)="triggerPostOptionChange(); recordButtonClick($event)"
+		*ngIf="renderedOn === 'Mobile'"
+		class="publish-btn"
+		data-cs-id="f55d8c7f-05b3-472b-926b-d1004e271261"
+		data-cs-label="Done"
+		data-cs-source="dialog"
+		data-dismiss="modal"
+	>
+		Done
+	</button>
+	<div *ngIf="renderedOn === 'Desktop'" class="info-msg-wrap">
+		<div class="info-msg">
+			<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M8.00016 1.3335C4.32016 1.3335 1.3335 4.32016 1.3335 8.00016C1.3335 11.6802 4.32016 14.6668 8.00016 14.6668C11.6802 14.6668 14.6668 11.6802 14.6668 8.00016C14.6668 4.32016 11.6802 1.3335 8.00016 1.3335ZM8.66683 11.3335H7.3335V7.3335H8.66683V11.3335ZM8.66683 6.00016H7.3335V4.66683H8.66683V6.00016Z"
+					fill="#707084"
+				/>
+			</svg>
+			<div class="info-msg-wrap-text" data-test-id="heading-publish-post-number-groups">
+				Publishing post in {{ numOfGroupSelected }} group<span *ngIf="numOfGroupSelected > 1">s</span>
+			</div>
+		</div>
+		<button
+			(click)="publishPostTrigger($event)"
+			*ngIf="!publishInProgress"
+			[attr.data-cs-label]="selectedPostOption"
+			[disabled]="!this.enablePublishPostButton"
+			class="publish-btn"
+			data-cs-parent-label="Compose post"
+			data-cs-source="page"
+		>
+			{{ selectedPostOption === 'Publish now' ? selectedPostOption : 'Schedule' }}
+		</button>
+		<button *ngIf="publishInProgress" class="publish-btn"><span class="bt-spinner btn-spinner-white"></span></button>
+	</div>
+</div>

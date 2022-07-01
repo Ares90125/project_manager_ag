@@ -1,0 +1,486 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Brand Share of Voice
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditBrandSOV"
+			data-toggle="modal"
+		>
+			<span>Edit </span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+			data-target="#camapaignStatsModal"
+			data-toggle="modal"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle
+				[checked]="visibleToBrand"
+				[formControl]="form?.controls?.visibleToBrand"
+				labelPosition="before"
+			>
+				<span> {{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }} </span>
+			</mat-slide-toggle>
+		</button>
+	</h5>
+	<small>The overall share of your brand mentions in comparison to other brands in audience conversations</small>
+</div>
+
+<app-stacked-bar-chart
+	(categoriesSelectionChange)="onChangingGraphBarSelection($event)"
+	(categoryBarClicked)="onClickingCategoryBar($event)"
+	*ngIf="
+		content && (!isBrandLoggedIn || showAfterCampaign || showpreCampaign || showduringCampaign || showNonHastag);
+		else noData
+	"
+	[brandName]="brandName"
+	[content]="content"
+	[disableToggle]="!visibleToBrand"
+	[isBrandLoggedIn]="isBrandLoggedIn"
+	[referenceConversations]="referenceConversations"
+	[showAfterCampaign]="showAfterCampaign"
+	[showNonHastag]="showNonHastag"
+	[showduringCampaign]="showduringCampaign"
+	[showpreCampaign]="showpreCampaign"
+	class="align-items-center"
+></app-stacked-bar-chart>
+
+<ng-template #noData>
+	<div class="no-data">No Data Available</div>
+</ng-template>
+
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div *ngIf="!editingSupportingText && form?.value?.supportingText" class="supprt-text pb-3 pt-1">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button
+					(click)="cancelEditingSupportingText()"
+					class="mt-1 cancel"
+					color="primary"
+					mat-stroked-button
+					type="button"
+				>
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="EditBrandSOV"
+	role="dialog"
+>
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Brand Share of Voice</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="kpi-popup-content">
+				<form *ngIf="form" [formGroup]="form" class="row section m-0 mt-4">
+					<div class="form-section">
+						<table>
+							<thead>
+								<th scope="col border-bottom"><span>Brand Name</span></th>
+								<th scope="col border-bottom">
+									<span
+										>Pre-Campaign
+										<mat-slide-toggle
+											[checked]="showpreCampaign"
+											[formControl]="form?.controls?.beforeSOV"
+											labelPosition="before"
+										></mat-slide-toggle
+									></span>
+								</th>
+								<th scope="col border-bottom">
+									<span
+										>During Campaign
+										<mat-slide-toggle
+											[checked]="showduringCampaign"
+											[formControl]="form?.controls?.duringSOV"
+											labelPosition="before"
+										></mat-slide-toggle
+									></span>
+								</th>
+								<th scope="col border-bottom">
+									<span
+										>Post Campaign
+										<mat-slide-toggle
+											[checked]="showAfterCampaign"
+											[formControl]="form?.controls?.afterSOV"
+											labelPosition="before"
+										></mat-slide-toggle
+									></span>
+								</th>
+								<th scope="col border-bottom">
+									<span
+										>Non Hashtag
+										<mat-slide-toggle
+											[checked]="showNonHastag"
+											[formControl]="form?.controls?.nonHashTag"
+											labelPosition="before"
+										></mat-slide-toggle
+									></span>
+								</th>
+								<th scope="col border-bottom"><span>Color</span></th>
+							</thead>
+							<tbody formGroupName="content">
+								<tr
+									*ngFor="
+										let brand of duringCampaignBrandNames | slice: 0:duringCampaignBrandNames?.length - 1;
+										let i = index
+									"
+								>
+									<td class="brand-name-container">
+										<ng-container *ngIf="brand === brandName || isMaunallyAddedBrand(brand); else changeableBrand"
+											><span class="brand-name">{{ brand }} </span></ng-container
+										>
+										<ng-container *ngIf="isMaunallyAddedBrand(brand)">
+											<div class="remove-brand">
+												<span (click)="onClickingRemoveBrandIcon(brand)" class="material-icons custom-delete">
+													remove_circle_outline
+												</span>
+											</div>
+										</ng-container>
+										<ng-template #changeableBrand>
+											<mat-form-field appearance="outline" class="dropdown">
+												<mat-select (selectionChange)="onSelectingNewBrand(brand, $event.value)" [value]="brand">
+													<ng-container *ngIf="keywords?.length; else noData">
+														<mat-option
+															*ngFor="let keyword of keywords"
+															[disabled]="isBrandSelected(keyword)"
+															[value]="keyword"
+														>
+															{{ keyword }}
+														</mat-option>
+													</ng-container>
+													<ng-template #noData>
+														<mat-option disabled value=""> No Data Available </mat-option>
+													</ng-template>
+
+													<!-- <ng-container *ngIf="!keywords?.length">
+                          <mat-option disabled> No Data Available </mat-option>
+                        </ng-container> -->
+													<!-- <ng-template #keywordsDropdownn>
+
+                        </ng-template> -->
+												</mat-select>
+											</mat-form-field>
+										</ng-template>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="beforeSOV">
+												<input
+													(delayedInput)="calculateOthersForCategory('beforeSOV')"
+													[formControlName]="brand"
+													appDelayedInput
+													formControlName="numAdminPostsBefore"
+													matInput
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls['beforeSOV']?.controls[brand]?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="duringSOV">
+												<input
+													(delayedInput)="calculateOthersForCategory('duringSOV')"
+													[formControlName]="brand"
+													appDelayedInput
+													formControlName="numAdminPostsBefore"
+													matInput
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls['duringSOV']?.controls[brand]?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="afterSOV">
+												<input
+													(delayedInput)="calculateOthersForCategory('afterSOV')"
+													[formControlName]="brand"
+													appDelayedInput
+													formControlName="numAdminPostsBefore"
+													matInput
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls['afterSOV']?.controls[brand]?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="nonHashTag">
+												<input
+													(delayedInput)="calculateOthersForCategory('nonHashTag')"
+													[formControlName]="brand"
+													appDelayedInput
+													formControlName="numAdminPostsBefore"
+													matInput
+													type="number" /></mat-form-field
+										></span>
+									</td>
+									<td>
+										<ng-container *ngIf="brand === 'Others'; else allOtherBrand">
+											<span [ngStyle]="{background: ChartColors[ChartColors.length - 1]}" class="color-box"> </span>
+										</ng-container>
+										<ng-template #allOtherBrand>
+											<span [ngStyle]="{background: ChartColors[i]}" class="color-box"> </span>
+										</ng-template>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+
+				<div class="row section m-0">
+					<div class="form-section mb-5">
+						<form #newTemporaryForm="ngForm" class="form">
+							<table *ngIf="newTemporaryBrandDetail">
+								<thead>
+									<th scope="col border-bottom"></th>
+									<th scope="col border-bottom"></th>
+									<th scope="col border-bottom"></th>
+									<th scope="col border-bottom"></th>
+									<th scope="col border-bottom"></th>
+									<th scope="col border-bottom"></th>
+								</thead>
+								<tbody>
+									<tr *ngFor="let item of newTemporaryBrandDetail; let i = index">
+										<td>
+											<div class="remove-brand">
+												<span (click)="removeTemporaryBrandAtIndex(i)" class="material-icons custom-delete">
+													remove_circle_outline
+												</span>
+											</div>
+											<span class="brand-name">
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input [(ngModel)]="item.brand" matInput type="text" /></mat-form-field
+											></span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input
+														(delayedInput)="calculateOthersForCategory('beforeSOV')"
+														[(ngModel)]="item.beforeSOV"
+														appDelayedInput
+														matInput
+														type="number"
+												/></mat-form-field>
+											</span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input
+														(delayedInput)="calculateOthersForCategory('duringSOV')"
+														[(ngModel)]="item.duringSOV"
+														appDelayedInput
+														matInput
+														type="number" /></mat-form-field
+											></span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input
+														(delayedInput)="calculateOthersForCategory('afterSOV')"
+														[(ngModel)]="item.afterSOV"
+														appDelayedInput
+														matInput
+														type="number" /></mat-form-field
+											></span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0">
+													<input
+														(delayedInput)="calculateOthersForCategory('nonHashTag')"
+														[(ngModel)]="item.nonHashTag"
+														appDelayedInput
+														matInput
+														type="number" /></mat-form-field
+											></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+						<div
+							*ngIf="(newTemporaryBrandDetail?.length || 0) + (duringCampaignBrandNames?.length || 0) < 16"
+							class="add-brand-row"
+						>
+							<div class="d-flex align-items-center">
+								<span (click)="addNewTemporaryBrandRow()" class="material-icons"> add_circle_outline </span>
+								<span (click)="addNewTemporaryBrandRow()" class="text">Add another brand</span>
+							</div>
+						</div>
+						<form [formGroup]="form">
+							<table class="others-table">
+								<thead>
+									<th scope="col"></th>
+									<th scope="col"></th>
+									<th scope="col"></th>
+									<th scope="col"></th>
+									<th scope="col"></th>
+									<th scope="col"></th>
+								</thead>
+								<tbody formGroupName="content">
+									<tr>
+										<td>
+											<span>Others</span>
+										</td>
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="beforeSOV">
+													<input formControlName="Others" matInput type="number" /></mat-form-field
+											></span>
+										</td>
+
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="duringSOV">
+													<input formControlName="Others" matInput type="number" /></mat-form-field
+											></span>
+										</td>
+
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="afterSOV">
+													<input formControlName="Others" matInput type="number" /></mat-form-field
+											></span>
+										</td>
+
+										<td>
+											<span>
+												<mat-form-field appearance="outline" class="col-11 pl-0" formGroupName="nonHashTag">
+													<input formControlName="Others" matInput type="number" /></mat-form-field
+											></span>
+										</td>
+										<td>
+											<span [ngStyle]="{background: ChartColors[ChartColors.length - 1]}" class="color-box"> </span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+				</div>
+
+				<div class="warnings-container mb-1">
+					<p *ngIf="form?.errors?.beforeSOVMoreThan100" class="warnings">
+						Total Percentage in Pre-Campaign is more than 100%.
+					</p>
+					<p *ngIf="form?.errors?.duringSOVMoreThan100" class="warnings">
+						Total Percentage in During Campaign is more than 100%.
+					</p>
+					<p *ngIf="form?.errors?.afterSOVMoreThan100" class="warnings">
+						Total Percentage in Post Campaign is more than 100%.
+					</p>
+					<p *ngIf="form?.errors?.nonHashTagMoreThan100" class="warnings">
+						Total Percentage in non HashTag is more than 100%.
+					</p>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="form?.invalid"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

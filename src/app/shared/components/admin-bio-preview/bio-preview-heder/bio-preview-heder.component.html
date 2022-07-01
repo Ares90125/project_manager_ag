@@ -1,0 +1,222 @@
+<div class="preview-profile-wrap">
+	<div class="container-sm">
+		<div class="preview-profile">
+			<div class="preview-profile-left">
+				<figure>
+					<img
+						[src]="
+							draftAdminBio
+								? draftAdminBio?.profilePictureUrl
+								: adminBio?.profilePictureUrl ?? 'assets/images/default_user.png'
+						"
+						alt=""
+						(error)="showDefaultUserImage($event)"
+					/>
+				</figure>
+				<div class="preview-profile-info">
+					<h6>{{ adminBio?.firstName }} {{ adminBio?.lastName }}</h6>
+					<div class="user-country">
+						<span class="country-row">
+							<span class="iti-flag {{ countryCode | lowercase }}"></span>
+							<span>{{ countryFullName }}</span>
+						</span>
+					</div>
+					<div class="user-actions">
+						<div
+							class="user-actions-left"
+							*ngIf="draftAdminBio ? draftAdminBio?.allowBrandsToContact : adminBio?.allowBrandsToContact"
+						>
+							<button
+								class="convo-btn-normal convo-btn-rounded convo-btn-primary"
+								[ngClass]="{'convo-contact-btn': isFromSettingPage}"
+								[disabled]="isFromSettingPage"
+								(click)="showContactMeFormPopup($event)"
+								data-cs-id="6abadcb8-6c79-4d1d-9651-11c963aa1cc3"
+								data-cs-label="Contact me"
+								data-cs-source="page"
+							>
+								<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M17.1666 1.66699H3.83329C2.91663 1.66699 2.16663 2.41699 2.16663 3.33366V18.3337L5.49996 15.0003H17.1666C18.0833 15.0003 18.8333 14.2503 18.8333 13.3337V3.33366C18.8333 2.41699 18.0833 1.66699 17.1666 1.66699ZM11.8083 9.64199L10.5 12.5003L9.19163 9.64199L6.33329 8.33366L9.19163 7.02533L10.5 4.16699L11.8083 7.02533L14.6666 8.33366L11.8083 9.64199Z"
+										fill="white"
+									/>
+								</svg>
+								<span>Message {{ adminBio?.firstName }} </span>
+							</button>
+						</div>
+
+						<div class="user-actions-right">
+							<button
+								class="convo-btn-normal convo-btn-rounded convo-btn-bordered kudos-btn"
+								(click)="toggleKudos($event)"
+								data-cs-id="06687e31-e93d-4512-aa72-7a9b80339c81"
+								data-cs-label="Hearts"
+								data-cs-source="page"
+								matTooltip="Show your appreciation. ❤ Send Hearts"
+								matTooltipPosition="below"
+								#tooltip="matTooltip"
+								data-cs-parent-label="Tooltip"
+								(mouseenter)="tooltipHovered($event)"
+								*ngIf="!isFromSettingPage && !adminBio?.isKudosGivenBySource"
+								matTooltipClass="kudos-tooltip"
+							>
+								<figure>
+									<div class="heart-animation-wrap">
+										<ng-container *ngIf="adminBio?.isKudosGivenBySource">
+											<ng-lottie
+												containerClass="lottie-animation"
+												height="16px"
+												width="16px"
+												[options]="heartAnimationOption"
+											></ng-lottie>
+										</ng-container>
+										<ng-container *ngIf="!adminBio?.isKudosGivenBySource">
+											<img src="assets/images/favorite-outline.svg" alt="" />
+										</ng-container>
+									</div>
+								</figure>
+								{{ adminBio?.kudos === 0 || adminBio?.kudos === 1 ? 'Heart' : 'Hearts' }}
+								<span class="badge">{{ adminBio?.kudos }}</span>
+							</button>
+							<button
+								class="convo-btn-normal convo-btn-rounded convo-btn-bordered kudos-btn kudos-btn-active"
+								(click)="toggleKudos($event)"
+								data-cs-id="06687e31-e93d-4512-aa72-7a9b80339c81"
+								data-cs-label="Hearts"
+								data-cs-source="page"
+								*ngIf="!isFromSettingPage && adminBio?.isKudosGivenBySource"
+							>
+								<figure>
+									<ng-container *ngIf="adminBio?.isKudosGivenBySource">
+										<ng-lottie
+											containerClass="lottie-animation"
+											height="16px"
+											width="16px"
+											[options]="heartAnimationOption"
+										></ng-lottie>
+									</ng-container>
+									<ng-container *ngIf="!adminBio?.isKudosGivenBySource">
+										<img src="assets/images/favorite-outline.svg" alt="" />
+									</ng-container>
+								</figure>
+								{{ adminBio?.kudos === 0 || adminBio?.kudos === 1 ? 'Heart' : 'Hearts' }}
+								<span class="badge">{{ adminBio?.kudos }}</span>
+							</button>
+							<button
+								class="convo-btn-normal convo-btn-rounded convo-btn-bordered kudos-btn no-cursor"
+								[class.kudos-btn-active]="adminBio?.isKudosGivenBySource"
+								(click)="recordButtonClick($event)"
+								data-cs-id="fa26ca53-9e87-4eb2-96bf-0a5c5ead30ff"
+								data-cs-label="not clickable kudos"
+								data-cs-source="page"
+								*ngIf="isFromSettingPage"
+							>
+								<figure>
+									<ng-container *ngIf="adminBio?.isKudosGivenBySource">
+										<ng-lottie
+											containerClass="lottie-animation"
+											height="16px"
+											width="16px"
+											[options]="heartAnimationOption"
+										></ng-lottie>
+									</ng-container>
+									<ng-container *ngIf="!adminBio?.isKudosGivenBySource">
+										<img src="assets/images/favorite-outline.svg" alt="" />
+									</ng-container>
+								</figure>
+								{{ adminBio?.kudos === 0 || adminBio?.kudos === 1 ? 'Heart' : 'Hearts' }}
+								<span class="badge">{{ adminBio?.kudos }}</span>
+							</button>
+							<button
+								class="convo-btn-bordered convo-btn-normal convo-btn-rounded btn-share-bio"
+								(click)="shareWidgetClicked(); recordButtonClick($event)"
+								data-cs-id="76742b3f-39e9-40b8-80b6-4a7564f84e5f"
+								data-cs-label="Share"
+								data-cs-source="page"
+							>
+								<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.7725 13.6982C15.1391 13.6982 14.5725 13.9482 14.1391 14.3398L8.19746 10.8815C8.23913 10.6898 8.27246 10.4982 8.27246 10.2982C8.27246 10.0982 8.23913 9.90651 8.19746 9.71484L14.0725 6.28984C14.5225 6.70651 15.1141 6.96484 15.7725 6.96484C17.1558 6.96484 18.2725 5.84818 18.2725 4.46484C18.2725 3.08151 17.1558 1.96484 15.7725 1.96484C14.3891 1.96484 13.2725 3.08151 13.2725 4.46484C13.2725 4.66484 13.3058 4.85651 13.3475 5.04818L7.47246 8.47318C7.02246 8.05651 6.43079 7.79818 5.77246 7.79818C4.38913 7.79818 3.27246 8.91484 3.27246 10.2982C3.27246 11.6815 4.38913 12.7982 5.77246 12.7982C6.43079 12.7982 7.02246 12.5398 7.47246 12.1232L13.4058 15.5898C13.3641 15.7648 13.3391 15.9482 13.3391 16.1315C13.3391 17.4732 14.4308 18.5648 15.7725 18.5648C17.1141 18.5648 18.2058 17.4732 18.2058 16.1315C18.2058 14.7898 17.1141 13.6982 15.7725 13.6982Z"
+										fill="#33334F"
+									/>
+								</svg>
+								<span>Share</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="preview-profile-right"></div> -->
+		</div>
+	</div>
+</div>
+
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		type="bio"
+		[copyUrl]="
+			adminBio?.profileUrlSlug
+				? environment.profileConvosightUrl + adminBio?.profileUrlSlug
+				: environment.profileConvosightUrl + adminBio?.userId
+		"
+		(closePopup)="closePopup($event)"
+	></app-share-widget>
+</ng-container>
+
+<ng-container *ngIf="showKudosPopup">
+	<div class="modal file-alert thank-you-modal">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<figure class="icon">
+						<ng-lottie containerClass="lottie-animation" height="200px" [options]="thankYouAnimationOption"></ng-lottie>
+					</figure>
+
+					<h6 style="margin-bottom: 24px">Thank you for sending ❤️ Hearts!</h6>
+
+					<button
+						class="convo-btn-primary convo-btn-normal convo-btn-big w-100 mt-2"
+						data-cs-id="b411184e-4bde-4121-be16-02774314c871"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+						(click)="showKudosPopup = false; recordButtonClick($event)"
+					>
+						Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="contactMeSuccess">
+	<div class="modal file-alert thank-you-modal">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="close-btn">
+					<button class="close" (click)="closeContactForm()">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M18.2998 5.70973C17.9098 5.31973 17.2798 5.31973 16.8898 5.70973L11.9998 10.5897L7.10979 5.69973C6.71979 5.30973 6.08979 5.30973 5.69979 5.69973C5.30979 6.08973 5.30979 6.71973 5.69979 7.10973L10.5898 11.9997L5.69979 16.8897C5.30979 17.2797 5.30979 17.9097 5.69979 18.2997C6.08979 18.6897 6.71979 18.6897 7.10979 18.2997L11.9998 13.4097L16.8898 18.2997C17.2798 18.6897 17.9098 18.6897 18.2998 18.2997C18.6898 17.9097 18.6898 17.2797 18.2998 16.8897L13.4098 11.9997L18.2998 7.10973C18.6798 6.72973 18.6798 6.08973 18.2998 5.70973Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<figure class="icon">
+						<ng-lottie containerClass="lottie-animation" height="120px" [options]="successAnimationOption"></ng-lottie>
+					</figure>
+
+					<h6>Submitted Successfully</h6>
+					<p>You will get a response soon.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="showContactMeForm">
+	<app-bio-contact-me [kudosData]="kudosData" (closeContactForm)="closeContactForm($event)"></app-bio-contact-me>
+</ng-container>
+

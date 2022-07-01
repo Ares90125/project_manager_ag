@@ -1,0 +1,397 @@
+@import '../../../../../../assets/scss/custom/variables';
+@import '../../../../../../assets/scss/custom/mixins';
+
+.tasks-dashboard-wrapper {
+	background: #fff;
+	padding-top: 20px;
+
+	.filters-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.custom-dropdown {
+			position: relative;
+			display: inline-block;
+
+			&.show {
+				.convo-btn-border {
+					border-color: $emp-blue-1;
+				}
+			}
+
+			.dropdown-toggle {
+				&:after {
+					margin-left: 8px;
+				}
+			}
+
+			.convo-dropdown-wrapper {
+				padding: 8px 0;
+				right: auto !important;
+				border: 1px solid $black-20;
+				box-shadow: 0px 3px 6px rgba(51, 51, 79, 0.1);
+				border-radius: 4px;
+
+				.dropdown-item {
+					padding: 8px 16px;
+					color: $primary-1;
+				}
+			}
+
+			.dropdown-menu-wrap {
+				width: 362px;
+				right: 0 !important;
+				left: auto !important;
+				padding: 8px;
+				transform: translate(0, 32px) !important;
+
+				&.show {
+					display: flex;
+				}
+
+				.dropdown-menu-left {
+					width: 160px;
+					min-width: 160px;
+					padding-right: 8px;
+
+					ul {
+						margin: 0;
+
+						li {
+							cursor: pointer;
+							padding: 8px 16px;
+							border-radius: 4px;
+							@include font-label-s;
+
+							&.active {
+								background: rgba(54, 84, 255, 0.15);
+								@include font-label-s-md;
+							}
+						}
+					}
+				}
+
+				.dropdown-menu-right {
+					flex: 1;
+					border-left: 1px solid $divider-grey;
+
+					ul {
+						margin: 0;
+
+						li {
+							padding: 8px 16px;
+						}
+					}
+				}
+			}
+		}
+
+		.filters-left {
+			display: flex;
+			align-items: center;
+
+			.convo-btn-normal {
+				margin-right: 8px;
+			}
+		}
+
+		.filters-right {
+			display: flex;
+			align-items: center;
+
+			.convo-btn-normal {
+				margin-left: 8px;
+			}
+		}
+
+		.convo-btn-primary {
+			&:disabled {
+				background: $black-20;
+				color: $black-50;
+				border: none;
+			}
+		}
+
+		.create-task-btn {
+			.lock-icon {
+				display: none;
+			}
+
+			&:disabled {
+				img {
+					display: none;
+				}
+
+				.lock-icon {
+					display: inline-flex;
+				}
+			}
+		}
+
+		.convo-btn-normal {
+			height: 32px;
+			padding: 4px 12px;
+			display: flex;
+			align-items: center;
+			box-shadow: none;
+			border-radius: 4px;
+			@include font-label-s-md;
+
+			img {
+				height: 16px;
+				width: 16px;
+				margin-right: 8px;
+			}
+
+			&.convo-btn-border {
+				border: 1px solid $divider-grey;
+				color: $primary-1;
+				background: #fff;
+
+				&:hover {
+					border-color: $emp-blue-1;
+				}
+			}
+		}
+	}
+
+	.task-dashboard-body-wrap {
+		overflow: auto;
+		padding-bottom: 40px;
+		min-height: 69vh;
+
+		.table-wrapper {
+			margin-top: 16px;
+			color: $primary-1;
+			min-width: 1270px;
+
+			table {
+				width: 100%;
+
+				th {
+					@include font-label-xs-md;
+					color: $black-70;
+					white-space: nowrap;
+					padding: 8px;
+
+					&:first-child {
+						text-align: left;
+						padding-left: 8px;
+					}
+
+					&:last-child {
+						padding-right: 0;
+					}
+
+					&.admin-col {
+						width: 200px;
+					}
+
+					&.poc-col {
+						width: 140px;
+					}
+
+					&.status-col {
+						width: 160px;
+					}
+
+					&.price-col {
+						width: 140px;
+					}
+				}
+
+				tr {
+					.link-icon {
+						opacity: 0;
+					}
+
+					&:hover {
+						.link-icon {
+							opacity: 1;
+						}
+					}
+				}
+
+				td {
+					@include font-label-s;
+					padding: 7px 8px;
+					height: 32px;
+					border-top: 1px solid $divider-grey;
+
+					&.group-name-wrap {
+						width: 230px;
+						max-width: 230px;
+
+						> div {
+							display: flex;
+							align-items: center;
+
+							.link-icon {
+								margin-right: 8px;
+							}
+
+							.group-name {
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;
+							}
+						}
+					}
+
+					&:last-child {
+						padding-right: 0;
+					}
+
+					.selcted-complete {
+						display: flex;
+						align-items: center;
+						cursor: pointer;
+
+						img {
+							margin-right: 8px;
+						}
+
+						span {
+							border-bottom: 1px dashed $emp-blue-1;
+						}
+					}
+
+					.selcted-incomplete {
+						color: $black-40;
+						@include font-label-s;
+						font-style: italic;
+						cursor: pointer;
+
+						span {
+							border-bottom: 1px dashed $emp-blue-1;
+						}
+					}
+
+					.not-selected-wrap {
+						display: flex;
+						align-items: center;
+
+						.not-selected-label {
+							color: $black-40;
+							@include font-label-s;
+							font-style: italic;
+							cursor: pointer;
+							border-bottom: 1px dashed $emp-blue-1;
+						}
+					}
+
+					.status {
+						@include font-label-xs-md;
+
+						&.status-empty,
+						&.status-denied,
+						&.status-deleted,
+						&.status-failed {
+							color: $error-red;
+						}
+
+						&.status-queued {
+							color: $black-50;
+						}
+
+						&.status-scheduled {
+							color: $black-70;
+						}
+
+						&.status-completed {
+							color: $confirmation-green;
+						}
+					}
+
+					.payment {
+						&.available {
+							svg {
+								path {
+									fill: #27ae60;
+								}
+							}
+						}
+
+						&.unavailable {
+							svg {
+								path {
+									fill: #d6d6dc;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+:host::ng-deep {
+	.custom-dropdown-wrapper {
+		margin: -8px;
+		width: calc(100% + 16px);
+		position: relative;
+
+		.dropdown-toggle {
+			height: 32px;
+			background: rgba(54, 84, 255, 0.1);
+			border: 1px solid #3654ff;
+			border-radius: 0;
+		}
+
+		.input {
+			width: 100%;
+			height: 32px;
+			background: rgba(54, 84, 255, 0.1);
+			border: 1px solid #3654ff;
+			outline: none;
+			padding: 4px 8px;
+			text-align: right;
+		}
+	}
+
+	.dropdown-menu {
+		mat-checkbox {
+			display: flex;
+			align-items: center;
+
+			label {
+				margin-bottom: 0;
+
+				.mat-checkbox-inner-container {
+					margin-right: 12px;
+				}
+			}
+
+			.mat-checkbox-label {
+				@include font-label-s;
+				color: $primary-1;
+			}
+		}
+	}
+
+	table {
+		mat-checkbox {
+			label {
+				margin-bottom: 0;
+
+				.mat-checkbox-inner-container {
+					height: 12px;
+					width: 12px;
+				}
+
+				.mat-checkbox-ripple {
+					left: calc(50% - 15px);
+					top: calc(50% - 15px);
+					height: 30px;
+					width: 30px;
+				}
+
+				.mat-checkbox-frame {
+					border-color: $black-70;
+				}
+			}
+		}
+	}
+}

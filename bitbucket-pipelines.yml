@@ -1,0 +1,438 @@
+image: convosight/e2eimage
+clone:
+  depth: full
+
+e2e-playwright-1: &e2e-playwright-1
+  name: 'Playwright UI Tests'
+  caches:
+    - node
+    - npm
+    - playwright
+  script:
+    - export DEBUG=pw:api
+    - export PLAYWRIGHT_COVERAGE=true
+    - export APP_TOKEN=$APP_TOKEN
+    - export CODECOV_TOKEN=$CODECOV_TOKEN
+    - npm run test-playwright-1
+    - npx nyc report --reporter=lcov --reporter=text || true
+    - bash <(curl -s https://codecov.io/bash) -F ui -v -B $BITBUCKET_BRANCH -b $BITBUCKET_BUILD_NUMBER || echo 'Codecov failed to upload'
+  artifacts:
+    - test-results/**
+e2e-playwright-2: &e2e-playwright-2
+  name: 'Playwright UI Tests'
+  caches:
+    - node
+    - npm
+    - playwright
+  script:
+    - export DEBUG=pw:api
+    - export PLAYWRIGHT_COVERAGE=true
+    - export APP_TOKEN=$APP_TOKEN
+    - export CODECOV_TOKEN=$CODECOV_TOKEN
+    - npm run test-playwright-2
+    - npx nyc report --reporter=lcov --reporter=text || true
+    - bash <(curl -s https://codecov.io/bash) -F ui -v -B $BITBUCKET_BRANCH -b $BITBUCKET_BUILD_NUMBER || echo 'Codecov failed to upload'
+  artifacts:
+    - test-results/**
+e2e-playwright-3: &e2e-playwright-3
+  name: 'Playwright UI Tests'
+  caches:
+    - node
+    - npm
+    - playwright
+  script:
+    - export DEBUG=pw:api
+    - export PLAYWRIGHT_COVERAGE=true
+    - export APP_TOKEN=$APP_TOKEN
+    - export CODECOV_TOKEN=$CODECOV_TOKEN
+    - npm run test-playwright-3
+    - npx nyc report --reporter=lcov --reporter=text || true
+    - bash <(curl -s https://codecov.io/bash) -F ui -v -B $BITBUCKET_BRANCH -b $BITBUCKET_BUILD_NUMBER || echo 'Codecov failed to upload'
+  artifacts:
+    - test-results/**
+
+generate-tokens: &generate-tokens
+  name: 'Generate access tokens'
+  caches:
+    - node
+    - npm
+    - playwright
+  script:
+    - npm run test-global-before
+    - cat cypress/fixtures/api-test/tokens.json
+    - cat cypress/fixtures/api-test/convosightWithNoGroups.json
+    - cat cypress/fixtures/api-test/convosightLoginWithGroups.json
+    - cat cypress/fixtures/api-test/convosightWithOneGroup.json
+    # - cat cypress/fixtures/api-test/convosightWithGroupsNotificationPath.json
+  artifacts:
+    - cypress/fixtures/api-test/tokens.json
+    - cypress/fixtures/api-test/convosightWithNoGroups.json
+    - cypress/fixtures/api-test/convosightLoginWithGroups.json
+    - cypress/fixtures/api-test/convosightWithOneGroup.json
+    # - cypress/fixtures/api-test/convosightWithGroupsNotificationPath.json
+
+e2e-cypress-api: &e2e-cypress-api
+  name: 'Cypress api tests'
+  caches:
+    - node
+    - cypress
+    - npm
+  script:
+    - npm run test:cypress-api
+  artifacts:
+    - cypress/reports/**
+    - cypress/videos/**
+    - cypress/logs/**
+    - coverage/**
+e2e-cypress-ui-regression: &e2e-cypress-ui-regression
+  name: 'Cypress ui regression tests'
+  caches:
+    - node
+    - cypress
+    - npm
+  script:
+    - export APP_TOKEN=$APP_TOKEN
+    - export CODECOV_TOKEN=$CODECOV_TOKEN
+    - npm run test:cypress-ui-regression
+    - npx nyc report --reporter=text || true
+    - bash <(curl -s https://codecov.io/bash) -F ui -v -B $BITBUCKET_BRANCH -b $BITBUCKET_BUILD_NUMBER || echo 'Codecov failed to upload'
+
+  artifacts:
+    - cypress/reports/**
+    - cypress/videos/**
+    - cypress/logs/**
+    - coverage/**
+
+install-dependencies: &install-dependencies
+  name: Install dependencies
+  caches:
+    - node
+    - cypress
+    - npm
+    - playwright
+  script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+    - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+    - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+    - npm ci
+    - print-env BITBUCKET
+
+pipelines:
+  custom:
+    QA-tests:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          <<: *generate-tokens
+          size: 2x
+      - parallel:
+          - step:
+              <<: *e2e-playwright-1
+              size: 2x
+          - step:
+              <<: *e2e-playwright-2
+              size: 2x
+          - step:
+              <<: *e2e-playwright-3
+              size: 2x
+          - step:
+              <<: *e2e-cypress-ui-regression
+              size: 2x
+          - step:
+              <<: *e2e-cypress-ui-regression
+              size: 2x
+          - step:
+              <<: *e2e-cypress-api
+              size: 2x
+      # - step:
+      #     name: Run SonarCloud Analysis
+      #     size: 2x
+      #     script:
+      #       - rm -rf dist/
+      #       - pipe: sonarsource/sonarcloud-scan:1.2.0
+      #         variables:
+      #           SONAR_TOKEN: ${SONAR_TOKEN}
+      #           EXTRA_ARGS: '-Dsonar.sources=src -Dsonar.projectName=convosight_webclient -Dsonar.projectKey=babydestination_convosight-webclient -Dsonar.scm.provider=git -Dsonar.tests=cypress -Dsonar.javascript.lcov.reportPath=coverage/lcov-report/lcov.info'
+      #       - pipe: sonarsource/sonarcloud-quality-gate:0.1.4
+  branches:
+    develop:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          caches:
+            - node
+            - npm
+          size: 4x
+          runs-on: self.hosted
+          script:
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - ./build.sh develop
+            - ./push-assets-info.sh develop $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Development'
+          deployment: development
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'develop.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://develop.app.convosight.com/ s3://develop.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $DEVELOP_DISTRIBUTION --paths "/*"
+    staging:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          runs-on: self.hosted
+          script:
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - ./build.sh staging
+            - ./push-assets-info.sh staging $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Staging'
+          deployment: staging
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'staging.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+                ACL: 'public-read'
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://staging.app.convosight.com/ s3://staging.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --acl public-read --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $STAGING_DISTRIBUTION --paths "/*"
+    master:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          runs-on: self.hosted
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          script:
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - ./build.sh production
+            - ./push-assets-info.sh production $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Production'
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+                ACL: 'public-read'
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://app.convosight.com/ s3://app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --acl public-read --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $PRODUCTION_DISTRIBUTION --paths "/*"
+    feature1:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          runs-on: self.hosted
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          script:
+            - node -v
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - apt-get update && apt-get install awscli -y
+            - ./build.sh feature1
+            - ./push-assets-info.sh feature1 $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Feature1'
+          deployment: feature1
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'feature1.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://feature1.app.convosight.com/ s3://feature1.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $FEATURE1_DISTRIBUTION --paths "/*"
+    feature2:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          runs-on: self.hosted
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          script:
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - ./build.sh feature2
+            - ./push-assets-info.sh feature2 $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Feature2'
+          deployment: feature2
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'feature2.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://feature2.app.convosight.com/ s3://feature2.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $FEATURE2_DISTRIBUTION --paths "/*"
+    feature3:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          runs-on: self.hosted
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          script:
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - ./build.sh feature3
+            - ./push-assets-info.sh feature3 $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Feature3'
+          deployment: feature3
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'feature3.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://feature3.app.convosight.com/ s3://feature3.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $FEATURE3_DISTRIBUTION --paths "/*"
+    feature4:
+      - step:
+          <<: *install-dependencies
+          size: 2x
+      - step:
+          name: 'Build'
+          runs-on: self.hosted
+          caches:
+            - node
+          size: 4x # Double resources available for this step.
+          script:
+            - node -v
+            - chmod +x ./build.sh
+            - chmod +x ./push-assets-info.sh
+            - apt-get update && apt-get install awscli -y
+            - ./build.sh feature4
+            - ./push-assets-info.sh feature4 $BITBUCKET_BUILD_NUMBER
+          artifacts:
+            - dist/convosight-web-client/**
+      - step:
+          name: 'Deploy to Feature4'
+          deployment: feature4
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.2
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'feature4.app.convosight.com'
+                LOCAL_PATH: 'dist/convosight-web-client'
+                DELETE_FLAG: 'true'
+                CACHE_CONTROL: max-age=31536000
+          after-script:
+            - apt-get update && apt-get install -y software-properties-common python3 python3-pip
+            - pip3 install awscli --upgrade
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+            - aws s3 cp s3://feature4.app.convosight.com/ s3://feature4.app.convosight.com/ --exclude "*" --include "*.html" --recursive --metadata-directive REPLACE --cache-control 'no-cache, no-store, must-revalidate'
+            - aws cloudfront create-invalidation --distribution-id $FEATURE4_DISTRIBUTION --paths "/*"
+    
+definitions:
+  caches:
+    npm: $HOME/.npm
+    cypress: $HOME/.cache/Cypress
+    playwright: ~/.cache/ms-playwright

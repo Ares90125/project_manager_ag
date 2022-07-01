@@ -1,0 +1,112 @@
+<div class="custom-modal-wrapper">
+	<div class="custom-modal-overlay"></div>
+	<div class="custom-modal-content">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Product Tour</h5>
+					<button
+						(click)="closeProductPage($event)"
+						class="close"
+						data-cs-id="2e8cca8d-fa65-429d-b656-6cd428ed3309"
+						data-cs-label="Close"
+						data-cs-source="dialog"
+						type="button"
+					>
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="product-tour-content">
+						<owl-carousel-o [options]="productTourSliderOptions" #productTour (changed)="getData($event)">
+							<ng-container>
+								<ng-template class="slide" carouselSlide id="slide-1">
+									<div class="tour-row">
+										<figure><img alt="" src="assets/images/product-tour-1.svg" /></figure>
+										<h5>Get Deeper Insights <br />to grow Engagement rate</h5>
+									</div>
+								</ng-template>
+								<ng-template class="slide" carouselSlide id="slide-2">
+									<div class="tour-row">
+										<figure><img alt="" src="assets/images/product-tour-2.svg" /></figure>
+										<h5>View Conversation Trends <br />for Ideas to post about</h5>
+									</div>
+								</ng-template>
+								<ng-template class="slide" carouselSlide id="slide-3">
+									<div class="tour-row">
+										<figure><img alt="" src="assets/images/product-tour-3.svg" /></figure>
+										<h5>Manage Multiple Groups <br />to make your life Easy</h5>
+									</div>
+								</ng-template>
+								<ng-template class="slide" carouselSlide id="slide-4">
+									<div class="tour-row">
+										<figure><img alt="" src="assets/images/product-tour-4.svg" /></figure>
+										<h5>Schedule Posts & Repost <br />to Save time & Reshare top posts</h5>
+									</div>
+								</ng-template>
+								<ng-template class="slide" carouselSlide id="slide-5">
+									<div class="tour-row">
+										<figure><img alt="" src="assets/images/product-tour-5.svg" /></figure>
+										<h5>Create Urgent Alerts <br />to be proactive & avoid Spam</h5>
+									</div>
+								</ng-template>
+							</ng-container>
+						</owl-carousel-o>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<ng-container *ngIf="!showFinalFooter; else finalFooter">
+						<button
+							(click)="productTour.to('slide-5'); recordButtonClick($event)"
+							class="convo-btn-default convo-btn-normal px-4"
+							data-cs-id="d30bc84b-9170-4fca-9cfe-e0b268f47b03"
+							data-cs-label="Skip"
+							data-cs-source="dialog"
+							type="button"
+						>
+							Skip
+						</button>
+						<button
+							(click)="productTour.next(); recordButtonClick($event)"
+							class="convo-btn-primary convo-btn-normal px-4"
+							data-cs-id="7db0339b-2900-40f9-aac1-b54ecf1d342a"
+							data-cs-label="Next"
+							data-cs-source="dialog"
+							type="button"
+						>
+							Next
+						</button>
+					</ng-container>
+					<ng-template #finalFooter>
+						<ng-container *ngIf="!showGotItButton; else gotItBtn">
+							<button
+								(click)="productTour.next(); addMoreGroup($event)"
+								data-cs-id="84ebb7b8-c0c7-46b4-901e-992f7c1b4bde"
+								data-cs-label="Add Groups"
+								type="button"
+								class="add-grops convo-btn-normal px-4"
+								data-cs-source="dialog"
+							>
+								<span class="bt-spinner" *ngIf="showSpinnerOnAddGroupBtn"></span>
+								Add Groups
+							</button>
+						</ng-container>
+
+						<ng-template #gotItBtn>
+							<button
+								(click)="productTour.next(); closeProductPage($event)"
+								data-cs-id="c3ca40ce-d45d-48bb-a118-10511719b200"
+								data-cs-label="Got it"
+								type="button"
+								class="add-grops convo-btn-normal px-4"
+								data-cs-source="dialog"
+							>
+								Got it
+							</button>
+						</ng-template>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

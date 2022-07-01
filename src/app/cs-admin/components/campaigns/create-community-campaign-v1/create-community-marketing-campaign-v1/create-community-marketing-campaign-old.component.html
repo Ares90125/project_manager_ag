@@ -1,0 +1,767 @@
+<div class="create-marketing-campaign-wrapper">
+	<div class="create-marketing-campaign-header">
+		<div class="container">
+			<div class="head-wrapper">
+				<div class="left-section">
+					<ul class="list-unstyled breadcrumb-nav">
+						<li (click)="navigateToBrands()"><a>Brands</a></li>
+						<li (click)="navigateToCampaigns()" *ngIf="brand">
+							<a>{{ brand.name }}</a>
+						</li>
+						<li (click)="navigateToCampaigns()"><a>Campaigns</a></li>
+						<li>{{ campaignName }}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="create-marketing-campaign-header-row">
+				<div class="create-marketing-campaign-header-left">
+					<small>Community Marketing solution</small>
+					<h5 class="campaign-name">
+						{{ campaignName }}
+					</h5>
+				</div>
+				<div class="create-marketing-campaign-header-right">
+					<button
+						(click)="sendCampaignDetails('draft')"
+						[ngClass]="stepsCompleted > 1 ? 'btn-active' : 'btn-secondary'"
+						[disabled]="
+							!(stepsCompleted > 1) ||
+							isSubmitting ||
+							isDraftSubmitting ||
+							invalidDefaultPublishDate ||
+							invalidTaskPublishDate
+						"
+						class="btn"
+					>
+						{{ isDraftSubmitting ? 'Saving...' : 'Save as Draft' }}
+					</button>
+					<button
+						[disabled]="isSubmitting || isDraftSubmitting || !isFinishEnabled"
+						[ngClass]="isFinishEnabled ? 'btn-active' : 'btn-secondary'"
+						class="btn"
+						data-target="#finish-campaign"
+						data-toggle="modal"
+					>
+						Finish
+					</button>
+					<div *ngIf="showFinishBtn" class="finished-popover">
+						<h6>You have completed all steps!</h6>
+						<p>Click "Finish" to save this campaign and return to campaign listing page.</p>
+						<div class="text-right">
+							<button (click)="showFinishBtn = !showFinishBtn" class="ok-btn">OK</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="create-marketing-campaign-body">
+		<div class="container">
+			<div class="marketing-campaign-body-box">
+				<div [ngClass]="{complete: selectedBrand}" class="marketing-campaign-row" hidden>
+					<div class="campaign-row-header">
+						<div class="count">
+							<span class="number">1</span>
+							<span class="check-icon"
+								><svg fill="none" height="11" viewBox="0 0 14 11" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										clip-rule="evenodd"
+										d="M13.27 2.31726L5.11415 10.4732L0.730469 6.09L2.05156 4.76876L5.11407 7.8309L11.9489 0.996094L13.27 2.31726Z"
+										fill="#00C389"
+										fill-rule="evenodd"
+									/>
+								</svg>
+							</span>
+						</div>
+
+						<div class="campaign-row-header-description">
+							<p>
+								<strong>Select brand <sup>*</sup></strong>
+							</p>
+							<p><small>Select the Brands for running campaign</small></p>
+						</div>
+						<div class="campaign-row-header-actions">
+							<button (click)="currentStep = 1" class="btn btn-row">Select brand</button>
+						</div>
+					</div>
+
+					<div *ngIf="currentStep === 1" class="campaign-row-body">
+						<div class="brand-list-wrapper">
+							<div *ngFor="let brand of brands" [ngClass]="{active: brand.id === selectedBrand.id}" class="brand-box">
+								<img
+									alt=""
+									*ngIf="brand.id === selectedBrand.id"
+									alt=""
+									class="selected-tick"
+									src="../../../../../../assets/images/selected-tick.svg"
+								/>
+								<figure><img alt="" src="{{ brand.iconUrl }}" /></figure>
+								<div class="brand-box-description">
+									<h5>{{ brand.name }}</h5>
+								</div>
+							</div>
+						</div>
+						<div class="box-actions">
+							<button
+								(click)="createCampaignDetails()"
+								class="convo-btn-primary convo-btn-normal"
+								datat-test-id="button-save-cmc"
+							>
+								Save
+							</button>
+							<button class="btn-cancel" hidden>Cancel</button>
+						</div>
+					</div>
+				</div>
+
+				<div [ngClass]="{complete: stepsCompleted > 1}" class="marketing-campaign-row">
+					<div class="campaign-row-header">
+						<div class="count">
+							<span class="number">1</span>
+							<span class="check-icon"
+								><svg fill="none" height="11" viewBox="0 0 14 11" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										clip-rule="evenodd"
+										d="M13.27 2.31726L5.11415 10.4732L0.730469 6.09L2.05156 4.76876L5.11407 7.8309L11.9489 0.996094L13.27 2.31726Z"
+										fill="#00C389"
+										fill-rule="evenodd"
+									/>
+								</svg>
+							</span>
+						</div>
+
+						<div class="campaign-row-header-description">
+							<p>
+								<strong>Add details <sup>*</sup></strong>
+							</p>
+							<p><small>Add campaign brief and objective</small></p>
+						</div>
+						<div class="campaign-row-header-actions">
+							<button
+								(click)="createCampaignDetails()"
+								[disabled]="stepsCompleted < 1"
+								[ngClass]="currentStep === 2 ? 'btn-row' : stepsCompleted > 1 ? 'btn-row' : 'btn-inactive'"
+								class="btn"
+							>
+								Add Details
+							</button>
+						</div>
+					</div>
+					<div *ngIf="currentStep === 2 && campaignDetailsForm" class="campaign-row-body">
+						<div [formGroup]="campaignDetailsForm" class="add-details-row">
+							<div class="row">
+								<div class="col-12">
+									<div class="form-group">
+										<label
+											><strong>Name</strong> for community marketing solution (this name will show in the
+											reports)</label
+										>
+										<input
+											formControlName="communityNameForReports"
+											placeholder="Leave blank to use campaign name instead"
+											class="form-control"
+											type="text"
+										/>
+									</div>
+								</div>
+							</div>
+
+							<div class="row date-time-message">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label><strong>Start</strong> Date <sup>*</sup></label>
+										<div class="datepicker-wrap">
+											<input
+												matInput
+												(click)="picker.open()"
+												[matDatepicker]="picker"
+												[min]="minStartDate"
+												formControlName="startDate"
+												placeholder="Date"
+												readonly
+												type="text"
+											/>
+											<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+											<mat-datepicker #picker></mat-datepicker>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label><strong>End</strong> Date <sup>*</sup></label>
+										<div class="datepicker-wrap">
+											<input
+												(click)="picker2.open()"
+												[matDatepicker]="picker2"
+												[min]="minDate"
+												formControlName="endDate"
+												placeholder="Date"
+												readonly
+												type="text"
+											/>
+											<mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
+											<mat-datepicker #picker2></mat-datepicker>
+										</div>
+									</div>
+								</div>
+								<div *ngIf="invalidTaskPublishDate" class="error-message">
+									You have tasks that are outside of the campaign start and end date which is not allowed. Delete the
+									task or edit the task start date to fall in the campaign dates
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Campaign <strong>brief</strong> <sup>*</sup></label>
+										<quill-editor [modules]="quillConfig" formControlName="brief" placeholder="Add Campaign brief">
+										</quill-editor>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Campaign <strong>objective</strong> <sup>*</sup></label>
+										<quill-editor
+											[modules]="quillConfig"
+											formControlName="objective"
+											placeholder="Add Campaign objective"
+										></quill-editor>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col">
+									<div class="add-keyword">
+										<small>Keywords tracked:</small>
+										<button
+											(click)="showKeywordEditor()"
+											class="convo-btn-normal convo-btn-tertiary"
+											data-target="#myModal"
+											data-toggle="modal"
+										>
+											<img alt="" src="../../../../../../assets/images/add_icon.svg" />
+											<span>Add keywords</span>
+										</button>
+									</div>
+									<div class="editable">
+										<div class="filter-tags-wrapper">
+											<ul class="list-unstyled">
+												<li *ngFor="let selectedReport of transformedKeywords | slice: 0:7; let i = index">
+													<strong>{{ selectedReport }}</strong>
+												</li>
+												<li *ngIf="transformedKeywords.length > 7" class="reportkeywords">
+													<strong> + {{ transformedKeywords.length - 7 }} more </strong>
+
+													<ul class="more-keywords-wrap">
+														<li *ngFor="let selectedReport of transformedKeywords | slice: 7">
+															<strong>{{ selectedReport }}</strong>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row category-dropdowns">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label><strong>Category</strong> <sup>*</sup></label>
+										<div class="custom-dropdown">
+											<app-custom-dropdown
+												(selectionChange)="getSubCategories($event)"
+												[items]="categories"
+												defaultText="Select Category"
+												formControlName="category"
+											></app-custom-dropdown>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label><strong>Sub-Category</strong> <sup>*</sup></label>
+										<div class="custom-dropdown" *ngIf="selectedItems.length > 0">
+											<app-custom-dropdown
+												(selectionChange)="getBrands($event, campaignDetailsForm.get('category').value)"
+												[items]="subCategories"
+												[isMultipleSelection]="'true'"
+												[selectedItems]="selectedItems"
+												[value]="selectedItems[0]"
+												defaultText="Select Sub Category"
+											></app-custom-dropdown>
+										</div>
+										<div class="custom-dropdown" *ngIf="selectedItems.length === 0">
+											<app-custom-dropdown
+												(selectionChange)="getBrands($event, campaignDetailsForm.get('category').value)"
+												[items]="subCategories"
+												[isMultipleSelection]="'true'"
+												[selectedItems]="selectedItems"
+												[value]="''"
+												defaultText="Select Sub Category"
+											></app-custom-dropdown>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label><strong>Brand</strong> <sup>*</sup></label>
+										<div class="custom-dropdown">
+											<app-custom-dropdown
+												[items]="subCategoryBrands"
+												defaultText="Select Brand"
+												formControlName="brand"
+											></app-custom-dropdown>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="form-group">
+										<label>Default task title</label>
+										<input formControlName="taskTitle" class="form-control" type="text" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="form-group">
+										<label>Default campaign period</label>
+										<input formControlName="campaignPeriod" class="form-control" type="text" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="flex-box">
+										<div class="form-group">
+											<label>Date & Time</label>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="">
+														<div class="datepicker-wrap">
+															<input
+																(click)="publishPicker.open()"
+																[matDatepicker]="publishPicker"
+																[min]="minDate"
+																formControlName="defaultTaskDate"
+																placeholder="Date"
+																readonly
+																type="text"
+																(dateChange)="validatePublishTime(publishTime); validatePublishDatesOnTasks()"
+															/>
+															<mat-datepicker-toggle [for]="publishPicker" matSuffix></mat-datepicker-toggle>
+															<mat-datepicker #publishPicker></mat-datepicker>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="custom-dropdown dropdown pills-dropdown timepicker-wrap">
+														<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+															<span class="placeholder">{{ publishTime }}</span>
+														</div>
+														<div class="dropdown-menu-wrapper dropdown-menu">
+															<div class="dropdown-container">
+																<div
+																	(click)="publishTime = time; validatePublishTime(time)"
+																	*ngFor="let time of timeOptions"
+																	class="form-check"
+																>
+																	<div class="form-check-label">
+																		{{ time }}
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div *ngIf="!isDateValid" class="error-message">
+													Please enter date between start date and end date of campaign
+												</div>
+												<div *ngIf="invalidDefaultPublishDate" class="error-message">
+													You have default date that is outside of the campaign start and end date which is not allowed.
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-6">
+									<div class="form-group">
+										<label>Time Zone</label>
+										<div
+											class="custom-dropdown dropdown pills-dropdown timepicker-wrap"
+											*ngIf="timeZoneList?.length > 0"
+										>
+											<app-searchable-dropdown
+												(optionSelected)="optionSelected($event)"
+												[mainDropDownOptions]="timeZoneList"
+												[placeholder]="timeZonePlaceholder"
+												[selectedValue]="timeZone"
+											></app-searchable-dropdown>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="box-actions">
+							<button
+								(click)="saveCampaignInfoDetails()"
+								[disabled]="!campaignDetailsForm.valid || selectedSubCategories.length === 0 || !isDateValid"
+								class="convo-btn-primary convo-btn-normal"
+								data-test-id="button-save-campaigninfo-details"
+							>
+								Save
+							</button>
+							<button (click)="createCampaignDetails(); cancelCurrentStepDetails(2)" class="btn-cancel">Cancel</button>
+						</div>
+					</div>
+				</div>
+
+				<div [ngClass]="{complete: stepsCompleted > 2}" class="marketing-campaign-row">
+					<div class="campaign-row-header">
+						<div class="count">
+							<span class="number">2</span>
+							<span class="check-icon"
+								><svg fill="none" height="11" viewBox="0 0 14 11" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										clip-rule="evenodd"
+										d="M13.27 2.31726L5.11415 10.4732L0.730469 6.09L2.05156 4.76876L5.11407 7.8309L11.9489 0.996094L13.27 2.31726Z"
+										fill="#00C389"
+										fill-rule="evenodd"
+									/>
+								</svg>
+							</span>
+						</div>
+
+						<div class="campaign-row-header-description">
+							<p>
+								<strong>Add tasks<sup>*</sup></strong>
+							</p>
+							<p><small>Add the tasks to be completed for this solution</small></p>
+						</div>
+						<div class="campaign-row-header-actions">
+							<button
+								[ngClass]="currentStep === 3 ? 'btn-row' : stepsCompleted > 2 ? 'btn-row' : 'btn-inactive'"
+								class="btn"
+								(click)="currentStep = 3"
+								*ngIf="currentStep !== 3"
+								[disabled]="stepsCompleted < 2"
+							>
+								<span>Add tasks</span>
+							</button>
+						</div>
+					</div>
+					<div *ngIf="currentStep === 3" class="campaign-row-body add-task-row-body">
+						<div *ngIf="!campaignTaskViewDetails && !isDataUploading" class="add-task-row">
+							<button
+								(click)="showNewTaskTab()"
+								class="convo-btn-tertiary convo-btn-normal"
+								data-test-id="button-add-task"
+							>
+								<img alt="" src="../../../../../../assets/images/add_icon.svg" /><span class="pl-1">Add task</span>
+							</button>
+						</div>
+
+						<div class="campaign-editor-wrapper">
+							<div *ngIf="isDataUploading || campaignTaskViewDetails" class="create-campaign-task-wrapper">
+								<table aria-describedby="">
+									<tbody>
+										<tr>
+											<td>
+												<div class="table-col">
+													<h6>{{ campaignTaskDetails.numberOfTasks }}</h6>
+													<span>Tasks</span>
+												</div>
+											</td>
+											<td>
+												<div class="table-col">
+													<h6>{{ campaignTaskDetails.numberOfGroups }}</h6>
+													<span>Group(s)</span>
+												</div>
+											</td>
+											<td>
+												<div class="table-col">
+													<h6>{{ campaignTaskDetails.numberOfAdmins }}</h6>
+													<span>Assignee(s)</span>
+												</div>
+											</td>
+											<td>
+												<div class="float-right">
+													<button (click)="showNewTaskTab()" class="convo-btn-tertiary convo-btn-normal">
+														<img alt="" src="../../../../../../assets/images/add_icon.svg" /><span class="pl-1"
+															>Add task</span
+														>
+													</button>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div *ngIf="campaignTaskViewDetails">
+								<app-community-marketing-campaign-tasks-old
+									(closeAddNewTask)="showNewTaskTab()"
+									(closeTaskDetailsView)="campaignTaskViewDetails = $event; closeTaskDetailsView($event)"
+									[defaultTitle]="finalCampaignTaskDetails.campaignInfo['taskTitle']"
+									[defaultPeriod]="finalCampaignTaskDetails.campaignInfo['campaignPeriod']"
+									[defaultTaskDate]="finalCampaignTaskDetails.campaignInfo['defaultTaskDate']"
+									[defaultPublishTime]="publishTime"
+									[defaultTimezoneName]="finalCampaignTaskDetails.campaignInfo['timezoneName']"
+									[(addNewTask)]="addNewTask"
+									[campaignTaskViewDetails]="campaignTaskViewDetails"
+									[isCsAdmin]="isCsAdmin"
+									[numberOfMissings]="campaignTaskDetails.numberOfMissings"
+									[taskName]="campaignTaskDetails.name"
+									[startDate]="finalCampaignTaskDetails.campaignInfo['startDate']"
+									[endDate]="finalCampaignTaskDetails.campaignInfo['endDate']"
+								>
+								</app-community-marketing-campaign-tasks-old>
+							</div>
+
+							<div
+								*ngIf="campaignTaskViewDetails && campaignTaskDetails.numberOfMissings > 0"
+								class="empty-fields-error"
+							>
+								<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="8" cy="7.99902" fill="white" r="8" />
+									<path
+										d="M8.01528 11.4896C7.22275 11.4896 6.55843 12.1199 6.55843 12.8718C6.55843 13.6238 7.22275 14.2541 8.01528 14.2541C8.77866 14.2541 9.47212 13.6238 9.43716 12.905C9.47212 12.1143 8.81363 11.4896 8.01528 11.4896Z"
+										fill="#FF7D37"
+									/>
+									<path
+										d="M7.65398 1.78609C6.96052 1.97408 6.5293 2.57122 6.5293 3.29552C6.56426 3.73232 6.5934 4.17464 6.62836 4.61143C6.72743 6.27567 6.82649 7.90674 6.92556 9.57098C6.96052 10.1349 7.42089 10.5441 8.01528 10.5441C8.60967 10.5441 9.07586 10.1073 9.105 9.53781C9.105 9.19501 9.105 8.87985 9.13996 8.53152C9.20406 7.46442 9.27399 6.39731 9.33809 5.33021C9.37306 4.63908 9.43716 3.94795 9.47212 3.25682C9.47212 3.00801 9.43716 2.78685 9.33809 2.56569C9.04089 1.94644 8.34744 1.63128 7.65398 1.78609Z"
+										fill="#FF7D37"
+									/>
+								</svg>
+								<span>Fill the missing data in the tasks table to save and move to next step.</span>
+							</div>
+
+							<div class="box-actions">
+								<button
+									(click)="saveCampaignTaskDetails()"
+									[disabled]="campaignTaskDetails.numberOfMissings > 0 || !campaignTaskViewDetails"
+									class="convo-btn-primary convo-btn-normal"
+									data-test-id="button-save-campaign-task-details"
+								>
+									Save
+								</button>
+								<button (click)="cancelUploadTaskDetails(); cancelCurrentStepDetails(3)" class="btn-cancel">
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div [ngClass]="{complete: stepsCompleted > 3}" class="marketing-campaign-row">
+					<div class="campaign-row-header">
+						<div class="count">
+							<span class="number">3</span>
+							<span class="check-icon"
+								><svg fill="none" height="11" viewBox="0 0 14 11" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										clip-rule="evenodd"
+										d="M13.27 2.31726L5.11415 10.4732L0.730469 6.09L2.05156 4.76876L5.11407 7.8309L11.9489 0.996094L13.27 2.31726Z"
+										fill="#00C389"
+										fill-rule="evenodd"
+									/>
+								</svg>
+							</span>
+						</div>
+
+						<div class="campaign-row-header-description">
+							<p>
+								<strong>Send proposal to brand <sup>*</sup></strong>
+							</p>
+							<p><small>Get the campaign solution accepted by the brand</small></p>
+						</div>
+						<div class="campaign-row-header-actions">
+							<button
+								(click)="showProposals()"
+								[disabled]="stepsCompleted < 3"
+								[ngClass]="currentStep === 4 ? 'btn-row' : stepsCompleted > 3 ? 'btn-row' : 'btn-inactive'"
+								class="btn"
+							>
+								Send proposal
+							</button>
+						</div>
+					</div>
+					<div *ngIf="currentStep === 4" class="campaign-row-body">
+						<div class="send-proposal-wrapper">
+							<h5 class="body-title">Proposal URL</h5>
+							<div class="url-box">
+								<span
+									>{{ proposalUrl }}
+									<input [value]="proposalUrl" id="copyProposalUrl" readonly />
+								</span>
+								<button (click)="copyProposalUrl()" class="copy-btn">Copy</button>
+							</div>
+
+							<h5 class="body-title mb-0">Enter email addresses <sup>*</sup></h5>
+							<p class="text-secondary"><small>You can enter multiple</small></p>
+							<div class="email-adderss-wrapper">
+								<div *ngFor="let key of getEmailAddressKeys()">
+									<div class="email-adderss-row">
+										<input
+											[(ngModel)]="brandEmailAddresses[key]"
+											[ngClass]="{'email-error': !validateEmailAddress(brandEmailAddresses[key])}"
+											type="text"
+										/>
+										<button (click)="removeEmailAddress(key)" class="close-btn">
+											<img alt="" src="assets/images/close-icon.svg" />
+										</button>
+									</div>
+								</div>
+								<button (click)="addEmailAddresses()" class="add-email">
+									<img alt="" src="assets/images/plus-icon.svg" />
+									<span>Add {{ getEmailAddressKeys().length > 0 ? 'another ' : '' }} email</span>
+								</button>
+							</div>
+							<div class="box-actions">
+								<button
+									(click)="saveEmailAddresses()"
+									[disabled]="!isEmailsAreValid"
+									class="convo-btn-primary convo-btn-normal"
+									data-test-id="button-cmc-save-add-brand-email"
+								>
+									Save
+								</button>
+								<button (click)="showProposals(); cancelCurrentStepDetails(4)" class="btn-cancel">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="myModal" role="dialog">
+	<div class="modal-dialog modal-dialog-centered">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Enter keywords to track.</h6>
+				<button (click)="enableScrolling()" class="close" data-dismiss="modal" type="button">&times;</button>
+			</div>
+			<div class="small textry p-3">
+				Enter keyword and their transformations in a new line (minimum 1 keyword is required)
+			</div>
+			<div class="modal-body mx-3 mb-3 p-0">
+				<div>
+					<div class="keywords-wrapper">
+						<div class="keywords-count">
+							<span *ngFor="let lineNum of lineNumbersForEditor">
+								{{ lineNum + 1 }}
+							</span>
+						</div>
+						<textarea
+							(ngModelChange)="keywordListEdited()"
+							[(ngModel)]="keywordForEditor"
+							id="KeywordEditor"
+							rows="{{ keywordList.length }}"
+							placeholder="Keyword 1_Transformation1a|Transformation1b"
+						></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="enableScrolling()" class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+				<button
+					(click)="saveKeywords()"
+					[disabled]="!isKeywordListEdited"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	aria-hidden="true"
+	aria-labelledby="selectMomModal"
+	class="modal fade select-mom-modal"
+	id="selectMomModal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Select mom ambassadors to this campaign</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="action-row">
+					<button class="convo-btn-tertiary convo-btn-normal">
+						<img alt="" src="../../../../../../assets/images/add_icon.svg" /><span>Add new mom</span>
+					</button>
+					<div class="search-input-wrapper"><input placeholder="Search" type="text" /></div>
+				</div>
+
+				<div class="table-wrapper">
+					<table aria-describedby="">
+						<thead>
+							<th scope="col">
+								<mat-checkbox></mat-checkbox>
+							</th>
+						</thead>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn-cancel" data-dismiss="modal" type="button">Cancel</button>
+				<button class="convo-btn-primary convo-btn-normal" type="button">Add selected</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade feedback-modal" id="finish-campaign" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<p class="m-0">
+					The campaign will be live and it will sent to brand for approval. If you think the campaign is not ready,
+					cancel the dialog and save it as a Draft
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancelCampaign" type="button">Cancel</button>
+				<button
+					class="convo-btn-primary convo-btn-normal px-4"
+					(click)="sendCampaignDetails('pendingApproval')"
+					type="button"
+					[disabled]="isSubmitting"
+				>
+					{{ isSubmitting ? 'Accepting...' : 'Accept' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-type-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Incorrect file format</h6>
+				<p class="m-0">Only files with .csv, .xls or .xlsx extension are allowed</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>

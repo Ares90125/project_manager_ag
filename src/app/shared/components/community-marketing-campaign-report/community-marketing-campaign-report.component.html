@@ -1,0 +1,2001 @@
+<div class="campaign-report-wrapper {{ isFromBrand ? 'pt-4 mt-2' : '' }}">
+	<div *ngIf="!isFromBrand" class="status-saved-bar">
+		<div class="container">
+			<div>
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<rect fill="#1F54E6" height="9" width="4.5" x="3.5" y="1.25" />
+					<path
+						d="M10.979 3.11371C10.4648 2.2328 9.76737 1.53533 8.88643 1.02116C8.00534 0.507019 7.0435 0.25 6.00018 0.25C4.95697 0.25 3.99484 0.507019 3.11391 1.02116C2.23292 1.53525 1.53544 2.23272 1.02124 3.11371C0.50702 3.99475 0.25 4.95687 0.25 6C0.25 7.04318 0.507099 8.00515 1.02116 8.88624C1.53534 9.76715 2.23281 10.4646 3.1138 10.9788C3.99485 11.493 4.95689 11.75 6.00008 11.75C7.04326 11.75 8.00542 11.493 8.88641 10.9788C9.76735 10.4648 10.4648 9.76715 10.9789 8.88624C11.493 8.00522 11.75 7.04313 11.75 6C11.75 4.95677 11.493 3.99462 10.979 3.11371ZM5.04181 1.6874C5.04181 1.61749 5.06423 1.56014 5.1092 1.51524C5.1541 1.47037 5.21155 1.44785 5.28141 1.44785H6.71901C6.78881 1.44785 6.84627 1.47037 6.89106 1.51524C6.93593 1.56014 6.95853 1.61749 6.95853 1.6874V2.88535C6.95853 2.95521 6.93593 3.01264 6.89106 3.05749C6.84627 3.10238 6.78884 3.12483 6.71901 3.12483H5.28141C5.21155 3.12483 5.15412 3.10238 5.1092 3.05749C5.06423 3.01267 5.04181 2.95521 5.04181 2.88535V1.6874ZM7.91678 9.59375C7.91678 9.66356 7.89415 9.72102 7.84938 9.76581C7.8047 9.81075 7.74724 9.8332 7.67728 9.8332H4.32301C4.25307 9.8332 4.19572 9.81075 4.1508 9.76581C4.1059 9.72102 4.08346 9.66359 4.08346 9.59367V8.39572C4.08346 8.3257 4.1059 8.26846 4.1508 8.22351C4.19572 8.17872 4.25315 8.15612 4.32301 8.15612H5.04181V5.76037H4.32301C4.25307 5.76037 4.19575 5.73795 4.1508 5.69303C4.1059 5.64816 4.08346 5.59073 4.08346 5.52081V4.32294C4.08346 4.25303 4.1059 4.19568 4.1508 4.15073C4.19577 4.10581 4.2532 4.08339 4.32301 4.08339H6.71901C6.78881 4.08339 6.84627 4.10581 6.89106 4.15073C6.93593 4.19568 6.95853 4.25303 6.95853 4.32294V8.1563H7.67709C7.74708 8.1563 7.80452 8.17872 7.84938 8.22359C7.89407 8.26848 7.91668 8.32589 7.91668 8.3958V9.59378H7.91678V9.59375Z"
+						fill="white"
+					/>
+				</svg>
+				<span
+					>You have made changes to this report. <strong>Publish the report to confirm these changes</strong> and update
+					this report on brand dashboard.</span
+				>
+			</div>
+			<div>
+				<button
+					(click)="uploadToS3(); recordButtonClick($event)"
+					[disabled]="isPublishing"
+					class="btn-publish"
+					data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c650"
+					data-cs-label="Publish now"
+					data-cs-source="page"
+				>
+					<p *ngIf="!isPublishing">
+						<svg fill="none" height="10" viewBox="0 0 13 10" width="13" xmlns="http://www.w3.org/2000/svg">
+							<path
+								clip-rule="evenodd"
+								d="M12.5396 1.32117L4.38368 9.47706L0 5.09391L1.32109 3.77267L4.3836 6.83481L11.2184 0L12.5396 1.32117Z"
+								fill="#1F54E6"
+								fill-rule="evenodd"
+							/>
+						</svg>
+						<span>Publish now</span>
+					</p>
+					<p *ngIf="isPublishing">
+						<span class="bt-spinner"></span>
+						<span>Publishing..</span>
+					</p>
+				</button>
+				<span data-target="#published-changes" data-toggle="modal" hidden id="published"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="section-wrap">
+			<div class="report-box">
+				<div class="report-box-header">
+					<h5>{{ campaign.cmcReportName ? campaign.cmcReportName : campaign.campaignName }}</h5>
+					<ul class="list-unstyled">
+						<li>
+							<strong>Start: </strong><span *ngIf="campaign">{{ campaign.startDateAtUTC | date: 'dd MMM, yyyy' }}</span>
+						</li>
+						<li>
+							<strong>End: </strong><span *ngIf="campaign">{{ campaign.endDateAtUTC | date: 'dd MMM, yyyy' }}</span>
+						</li>
+					</ul>
+				</div>
+				<hr />
+				<div class="report-box-body">
+					<div *ngIf="campaign" class="about-report">
+						<h6>Brief</h6>
+						<div [innerHtml]="campaign.details | sanitizeHtml"></div>
+						<hr />
+						<h6 *ngIf="campaign.objective">Objective</h6>
+						<div *ngIf="campaign.objective" [innerHtml]="campaign.objective | sanitizeHtml"></div>
+						<hr *ngIf="campaign.objective" />
+						<div class="col-view">
+							<div *ngIf="campaign.keywordBrand">
+								<h6>Brand</h6>
+								<p>{{ campaign.keywordBrand }}</p>
+							</div>
+							<div *ngIf="campaign.keywordCategory">
+								<h6>Category</h6>
+								<p>{{ campaign.keywordCategory }}</p>
+							</div>
+							<div *ngIf="campaign.keywordSubCategory">
+								<h6>Sub-category</h6>
+								<p>{{ campaign.keywordSubCategory }}</p>
+							</div>
+						</div>
+						<hr />
+						<h6>Keywords tracked</h6>
+						<div class="keywords-wrapper">
+							<span *ngFor="let keyword of transformedKeywords | slice: 0:7" class="badge">{{ keyword }}</span>
+							<span *ngIf="transformedKeywords.length > 7" class="badge">
+								<strong> + {{ transformedKeywords.length - 7 }} more </strong>
+
+								<span class="more-keywords-wrap">
+									<span *ngFor="let selectedReport of transformedKeywords | slice: 7">
+										<strong>{{ selectedReport }}</strong>
+									</span>
+								</span>
+							</span>
+						</div>
+						<hr />
+						<h6>Campaign summary</h6>
+						<div [innerHtml]="campaign.campaignSummary | sanitizeHtml"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				*ngIf="!isFromBrand"
+				(click)="setCampaignSummary()"
+				class="edit-btn"
+				data-target="#campaign-summary-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Campaign summary</h4>
+			<div class="report-box" *ngIf="campaign && campaign.campaignSummary">
+				<div class="report-box-body">
+					<div class="about-report">
+						<div [innerHtml]="campaign.campaignSummary | sanitizeHtml"></div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="campaign && !campaign.campaignSummary" class="position-relative">
+				<div *ngIf="!isFromBrand" class="shadow-box">
+					<button
+						(click)="setCampaignSummary()"
+						class="add-new-row-btn"
+						data-target="#campaign-summary-modal"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add Campaign Summary</span>
+					</button>
+				</div>
+				<div *ngIf="isFromBrand" class="position-relative">
+					<figure><img alt="" class="w-100" src="assets/images/no-campaign-state.png" /></figure>
+					<div class="no-items-message-wrapper">
+						<div class="no-items-message">
+							<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+									fill="#FF9C28"
+								/>
+							</svg>
+							<span>This section will get updated as soon as we gather the report</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="createCampaignStatsForm(overallSnapshot, 'overallSnapshot')"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#overall-snapshot-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Overall snapshot</h4>
+			<div *ngIf="!isFromBrand || (isCampaignHasS3Url && isFromBrand)" class="overall-snapshot-wrapper">
+				<div
+					*ngFor="let snapshot of overallSnapshot | slice: 0:4; let i = index"
+					[ngClass]="{'border-right-0': i === 3}"
+					class="metrics-wrapper"
+				>
+					<h6>{{ snapshot.name }}</h6>
+					<strong>{{ snapshot.statistics.value }}</strong>
+				</div>
+				<div
+					*ngFor="let snapshot of overallSnapshot | slice: 4:8; let i = index"
+					[ngClass]="{'border-right-0': i === 3}"
+					class="metrics-wrapper border-bottom-0 position-relative"
+				>
+					<h6>{{ snapshot.name }}</h6>
+					<strong [ngClass]="snapshot.name === 'Total sub-category conversations' ? 'sub-conv-wrapper' : ''">{{
+						snapshot.statistics.value
+					}}</strong>
+					<p
+						(click)="showSubCatConvCount = true"
+						*ngIf="snapshot.name === 'Total sub-category conversations' && subCatConvCountKeys?.length > 0"
+						class="view-breakup"
+					>
+						<a>View Breakup</a>
+					</p>
+				</div>
+			</div>
+
+			<div class="more-snapshots" *ngIf="showSubCatConvCount">
+				<button class="close-btn" (click)="showSubCatConvCount = false"></button>
+				<ul class="list-unstyled">
+					<li *ngFor="let key of subCatConvCountKeys | slice: 0:3; let i = index">
+						<div class="metrics-wrapper">
+							<h6>{{ key }}</h6>
+							<strong>{{ subCatConvCounts[key] }}</strong>
+						</div>
+					</li>
+				</ul>
+				<ul class="list-unstyled">
+					<li *ngFor="let key of subCatConvCountKeys | slice: 3:6; let i = index">
+						<div class="metrics-wrapper">
+							<h6>{{ key }}</h6>
+							<strong>{{ subCatConvCounts[key] }}</strong>
+						</div>
+					</li>
+				</ul>
+				<ul class="list-unstyled">
+					<li *ngFor="let key of subCatConvCountKeys | slice: 6:9; let i = index">
+						<div class="metrics-wrapper">
+							<h6>{{ key }}</h6>
+							<strong>{{ subCatConvCounts[key] }}</strong>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div *ngIf="isFromBrand && !isCampaignHasS3Url" class="position-relative">
+				<figure><img alt="" class="w-100" src="assets/images/no-overall-snapshot.png" /></figure>
+				<div class="no-items-message-wrapper">
+					<div class="no-items-message">
+						<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+								fill="#FF9C28"
+							/>
+						</svg>
+						<span>This section will get updated as soon as we gather the report</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="addNewCampaignStats()"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#campaign-stats-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Campaign stats</h4>
+			<div *ngIf="campaignStatsInfo && campaignStatsInfo.length > 0" class="stats-table">
+				<table aria-describedby="">
+					<thead>
+						<tr>
+							<th scope="col" class="bg-1 text-left">CAMPAIGN PERIOD</th>
+							<th scope="col" class="bg-2">REACTIONS</th>
+							<th scope="col" class="bg-2">COMMENTS</th>
+							<th scope="col" class="bg-2">ENGAGEMENT</th>
+							<th scope="col" class="bg-2">ENTRIES</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let stats of campaignStatsInfo">
+							<td class="bg-3 text-left">
+								<strong>{{ stats.name }}</strong>
+							</td>
+							<td class="bg-4">{{ stats.statistics.reactions }}</td>
+							<td class="bg-4">{{ stats.statistics.comments }}</td>
+							<td class="bg-4">{{ stats.statistics.engagement }}</td>
+							<td class="bg-4">{{ stats.statistics.entries }}</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td class="text-left">Total</td>
+							<td>
+								<strong>{{ totalCampaignStats.reactions }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalCampaignStats.comments }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalCampaignStats.engagement }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalCampaignStats.entries }}</strong>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div *ngIf="campaignStatsInfo && campaignStatsInfo.length === 0" class="position-relative">
+				<div *ngIf="!isFromBrand" class="shadow-box">
+					<button
+						(click)="addNewCampaignStats()"
+						*ngIf="!isFromBrand"
+						class="add-new-row-btn"
+						(click)="addNewCampaignStats()"
+						data-target="#campaign-stats-modal"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add new campaign stats</span>
+					</button>
+				</div>
+				<div *ngIf="isFromBrand" class="position-relative">
+					<figure><img alt="" class="w-100" src="assets/images/no-campaign-state.png" /></figure>
+					<div class="no-items-message-wrapper">
+						<div class="no-items-message">
+							<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+									fill="#FF9C28"
+								/>
+							</svg>
+							<span>This section will get updated as soon as we gather the report</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap" *ngIf="!hidePlatformData">
+			<button
+				(click)="createCampaignStatsForm(platFormSummaryInfo, 'platformSummary')"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#platform-summary-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Platform summary</h4>
+			<div *ngIf="!isFromBrand || (isCampaignHasS3Url && isFromBrand)" class="stats-table border-table">
+				<table aria-describedby="">
+					<thead>
+						<tr>
+							<th scope="col" class="text-left">PLATFORM</th>
+							<th scope="col">POSTS PLANNED</th>
+							<th scope="col">POSTS DONE</th>
+							<th scope="col">REACTIONS</th>
+							<th scope="col">COMMENTS</th>
+							<th scope="col">ENGAGEMENT</th>
+							<th scope="col">CONVERSATIONS</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let summary of platFormSummaryInfo" [hidden]="summary.statistics.isHidden">
+							<td class="text-left">
+								<div class="d-flex align-items-center">
+									<img
+										alt=""
+										*ngIf="summary.name === 'Facebook'"
+										alt=""
+										class="icon-14x14 mr-1"
+										src="assets/images/fb-small-icon.svg"
+									/>
+									<img
+										alt=""
+										*ngIf="summary.name === 'WhatsApp'"
+										alt=""
+										class="icon-14x14 mr-1"
+										src="assets/images/whatsapp_color.svg"
+									/>
+									<span>{{ summary.name }}</span>
+								</div>
+							</td>
+							<td>{{ summary.statistics.postsPlanned }}</td>
+							<td>{{ summary.statistics.postsDone }}</td>
+							<td [ngClass]="summary.statistics.reactions === 'NA' ? 'text-20' : ''">
+								{{ summary.statistics.reactions }}
+							</td>
+							<td [ngClass]="summary.statistics.comments === 'NA' ? 'text-20' : ''">
+								{{ summary.statistics.comments }}
+							</td>
+							<td [ngClass]="summary.statistics.engagement === 'NA' ? 'text-20' : ''">
+								{{ summary.statistics.engagement }}
+							</td>
+							<td>{{ summary.statistics.conversations }}</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td class="text-left">Total</td>
+							<td>
+								<strong>{{ totalPlatformSummary.postsPlanned }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalPlatformSummary.postsDone }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalPlatformSummary.reactions }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalPlatformSummary.comments }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalPlatformSummary.engagement }}</strong>
+							</td>
+							<td>
+								<strong>{{ totalPlatformSummary.conversations }}</strong>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div *ngIf="isFromBrand && !isCampaignHasS3Url" class="position-relative">
+				<figure><img alt="" class="w-100" src="assets/images/no-platform-summary.png" /></figure>
+				<div class="no-items-message-wrapper">
+					<div class="no-items-message">
+						<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+								fill="#FF9C28"
+							/>
+						</svg>
+						<span>This section will get updated as soon as we gather the report</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="addNewKeywordMentions()"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#keyword-mention-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Keyword mention volume</h4>
+			<div *ngIf="keywordMentionVolumeInfo && keywordMentionVolumeInfo.length > 0" class="stats-table border-table">
+				<table aria-describedby="">
+					<thead>
+						<tr>
+							<th scope="col" class="text-left">KEYWORD</th>
+							<th scope="col">BEFORE CAMPAIGN</th>
+							<th scope="col" class="text-left">DURING CAMPAIGN</th>
+							<th scope="col" class="text-left">POST CAMPAIGN</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let clean of keywordMentionVolumeInfo">
+							<td class="text-left">{{ clean.name }}</td>
+							<td [ngClass]="clean.statistics.beforeCampaign === 'NA' ? 'text-20' : ''">
+								{{ clean.statistics.beforeCampaign }}
+							</td>
+							<td class="text-left">
+								<div class="d-flex align-items-center">
+									<span [ngClass]="clean.statistics.duringCampaign === 'NA' ? 'text-20' : ''" class="mr-4">{{
+										clean.statistics.duringCampaign
+									}}</span>
+									<strong [ngClass]="clean.statistics.duringCampaignRate === 'NA' ? 'normal-color' : 'increased-color'"
+										><svg
+											*ngIf="clean.statistics.isDuringCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 9 12"
+											width="9"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+											/>
+										</svg>
+										<svg
+											*ngIf="!clean.statistics.isDuringCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+												fill="#E63B3B"
+											/>
+										</svg>
+										{{ clean.statistics.duringCampaignRate
+										}}<span *ngIf="clean.statistics.duringCampaignRate !== 'NA'">%</span></strong
+									>
+								</div>
+							</td>
+							<td class="text-left">
+								<div class="d-flex align-items-center">
+									<span [ngClass]="clean.statistics.postCampaign === 'NA' ? 'text-20' : ''" class="mr-4">{{
+										clean.statistics.postCampaign
+									}}</span>
+									<strong [ngClass]="clean.statistics.postCampaignRate === 'NA' ? 'normal-color' : 'increased-color'"
+										><svg
+											*ngIf="clean.statistics.isPostCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 9 12"
+											width="9"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+											/>
+										</svg>
+										<svg
+											*ngIf="!clean.statistics.isPostCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+												fill="#E63B3B"
+											/>
+										</svg>
+										{{ clean.statistics.postCampaignRate
+										}}<span *ngIf="clean.statistics.postCampaignRate !== 'NA'">%</span></strong
+									>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="keywordMentionVolumeInfo && keywordMentionVolumeInfo.length === 0" class="position-relative">
+				<div *ngIf="!isFromBrand" class="shadow-box">
+					<button
+						class="add-new-row-btn"
+						(click)="addNewKeywordMentions()"
+						data-target="#keyword-mention-modal"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add new keyword</span>
+					</button>
+				</div>
+				<div *ngIf="isFromBrand" class="position-relative">
+					<figure><img alt="" class="w-100" src="assets/images/no-keyword-mention.png" /></figure>
+					<div class="no-items-message-wrapper">
+						<div class="no-items-message">
+							<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+									fill="#FF9C28"
+								/>
+							</svg>
+							<span>This section will get updated as soon as we gather the report</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="createCampaignStatsForm(brandConversationsAndMentionsInfo, 'brandConversationsAndMentions')"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#brand-mentions-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Brand conversations & mentions</h4>
+			<div *ngIf="!isFromBrand || (isCampaignHasS3Url && isFromBrand)" class="stats-table">
+				<table aria-describedby="">
+					<thead>
+						<tr>
+							<th scope="col" class="text-left">METRIC</th>
+							<th scope="col" class="bg-1">BEFORE CAMPAIGN</th>
+							<th scope="col" class="bg-2">DURING CAMPAIGN</th>
+							<th scope="col" class="">IMPACT</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let brandConversations of brandConversationsAndMentionsInfo">
+							<td class="text-left grey-bg">{{ brandConversations.name }}</td>
+							<td [ngClass]="brandConversations.statistics.beforeCampaign === 'NA' ? 'text-20' : ''" class="bg-3">
+								{{ brandConversations.statistics.beforeCampaign }}
+							</td>
+							<td [ngClass]="brandConversations.statistics.duringCampaign === 'NA' ? 'text-20' : ''" class="bg-4">
+								{{ brandConversations.statistics.duringCampaign }}
+							</td>
+							<td class="grey-bg">
+								<div class="d-flex align-items-center justify-content-center">
+									<strong [ngClass]="brandConversations.statistics.impact === 'NA' ? 'normal-color' : 'increased-color'"
+										><svg
+											*ngIf="brandConversations.statistics.isDuringCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 9 12"
+											width="9"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+											/>
+										</svg>
+										<svg
+											*ngIf="!brandConversations.statistics.isDuringCampaignIncreased"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+												fill="#E63B3B"
+											/>
+										</svg>
+										{{ brandConversations.statistics.impact
+										}}<span *ngIf="brandConversations.statistics.impact !== 'NA'">x</span></strong
+									>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="isFromBrand && !isCampaignHasS3Url" class="position-relative">
+				<figure><img alt="" class="w-100" src="assets/images/no-brand-conversations.png" /></figure>
+				<div class="no-items-message-wrapper">
+					<div class="no-items-message">
+						<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+								fill="#FF9C28"
+							/>
+						</svg>
+						<span>This section will get updated as soon as we gather the report</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="addNewTopEngagingCommunity()"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#top-engaging-communities-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Top 15 Engaging Communities</h4>
+			<div>
+				<div
+					*ngIf="topEngagingCommunities && topEngagingCommunities.length > 0 && topKeywordsReportData"
+					class="shadow-box"
+				>
+					<app-chart [setChartObject]="topKeywordsReportData"></app-chart>
+				</div>
+				<div *ngIf="topEngagingCommunities && topEngagingCommunities.length === 0">
+					<div *ngIf="!isFromBrand" class="shadow-box">
+						<button
+							(click)="addNewTopEngagingCommunity()"
+							class="add-new-row-btn"
+							*ngIf="!isFromBrand"
+							class="add-new-row-btn"
+							data-target="#top-engaging-communities-modal"
+							data-toggle="modal"
+						>
+							<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add new community</span>
+						</button>
+					</div>
+
+					<div *ngIf="isFromBrand" class="position-relative">
+						<figure><img alt="" class="w-100" src="assets/images/no-top-engaging.png" /></figure>
+						<div class="no-items-message-wrapper">
+							<div class="no-items-message">
+								<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+										fill="#FF9C28"
+									/>
+								</svg>
+								<span>This section will get updated as soon as we gather the report</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap" *ngIf="topPostsScreenshotsInfo.length > 0">
+			<h4 class="row-title">
+				Top posts screenshots
+				<a *ngIf="isTopPostsLongPressingEnabled" (click)="changeSelectedPostsStatus(false, true)">Clear selection</a>
+				<a
+					*ngIf="isTopPostsLongPressingEnabled"
+					(click)="isRefreshingTopPosts ? '' : refreshPostScreenshotUrl(topPostsScreenshotsInfo, true)"
+					>{{ isRefreshingTopPosts ? 'Refreshing...' : 'Refresh data' }}</a
+				>
+			</h4>
+			<div class="shadow-box px-0 mb-3">
+				<div class="fb-posts-wrapper" (scroll)="scrollTopPostHandler($event)">
+					<div class="masonry-wrapper" *ngIf="!isAuthTokenExpired">
+						<ul class="grid effect-1" id="grid">
+							<li *ngFor="let postScreenshot of topPostsScreenshotsInfo" class="masonry-box">
+								<input
+									class="post-checkbox"
+									type="checkbox"
+									*ngIf="
+										isTopPostsLongPressingEnabled &&
+										(postScreenshot.statistics?.url || postScreenshot.statistics?.errorType)
+									"
+									[(ngModel)]="postScreenshot['isSelected']"
+									(input)="setNumberSelectedPosts(true)"
+									[readonly]="numberOfSelectedTopPosts === 20 && !postScreenshot['isSelected']"
+								/>
+								<a
+									*ngIf="postScreenshot.statistics?.url && !postScreenshot['isLoading']"
+									class="post-item"
+									appLongPress
+									(emitLongPress)="onLongPress(postScreenshot, true)"
+								>
+									<img
+										[src]="postScreenshot.statistics?.url"
+										alt=""
+										(click)="openTopPostsGallery(postScreenshot.statistics?.url)"
+										alt=""
+										src="{{ img?.src }}"
+									/>
+								</a>
+								<a
+									*ngIf="postScreenshot.statistics?.errorType && !postScreenshot['isLoading']"
+									class="post-item error-wrapper"
+									(click)="postScreenshot['isSelected'] = true; refreshPostScreenshotUrl(topPostsScreenshotsInfo, true)"
+									appLongPress
+									(emitLongPress)="onLongPress(postScreenshot, true)"
+								>
+									<svg width="20" height="20" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M12.4565 8.39218C13.0954 7.05067 13.1737 5.54052 12.6771 4.14013C11.6518 1.24986 8.46621 -0.267465 5.57508 0.757238C4.17575 1.25365 3.06472 2.25873 2.43196 3.56942L1.82009 1.84442C1.742 1.62491 1.50139 1.50988 1.28104 1.58777C1.06132 1.66565 0.946506 1.9071 1.02439 2.12682L2.00625 4.8951C2.0436 5.00063 2.12149 5.08674 2.22237 5.13508C2.27957 5.1623 2.34162 5.17602 2.40389 5.17602C2.45159 5.17602 2.49929 5.168 2.54509 5.15175L5.46744 4.11523C5.68716 4.03734 5.80198 3.79589 5.72409 3.57618C5.646 3.35667 5.40539 3.24164 5.18504 3.31952L3.13943 4.04515C3.66624 2.88052 4.63227 1.9873 5.85727 1.55273C8.30812 0.683367 11.0114 1.97042 11.8814 4.42253C12.3027 5.61039 12.2364 6.89111 11.6942 8.02894C11.152 9.16677 10.1994 10.0254 9.01138 10.4469C7.23677 11.0767 5.26039 10.5921 3.97714 9.213C3.81842 9.04182 3.55079 9.03296 3.38068 9.19147C3.20993 9.35018 3.20043 9.61739 3.35915 9.78793C4.43155 10.9407 5.91468 11.563 7.43306 11.563C8.0559 11.563 8.68508 11.4583 9.29357 11.2421C10.6944 10.7457 11.8174 9.73368 12.4565 8.39218Z"
+											fill="#3654ff"
+											stroke="#3654ff"
+											stroke-width="1.5"
+										/>
+									</svg>
+								</a>
+								<div
+									class="post-item error-wrapper"
+									*ngIf="
+										(postScreenshot.statistics?.url || postScreenshot.statistics?.errorType) &&
+										postScreenshot['isLoading']
+									"
+								>
+									<div class="loading-strip primary"></div>
+									<div class="loading-strip secondary"></div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="auth-message" *ngIf="isAuthTokenExpired">Session expired. Please login again</div>
+					<div *ngIf="isTopPostsLoading">
+						<div class="shadow-box pb-0 mb-3 empty-loading-wrapper" style="height: 200px">
+							<div class="loader-wrapper">
+								<div class="loader"></div>
+								<p class="loading-text">Loading data</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap">
+			<button
+				(click)="addNewEngagementScreenshot()"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#engagement-screenshots-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">Engagement screenshots</h4>
+			<div *ngIf="engagementScreenshotsInfo.length > 0" class="shadow-box pb-0">
+				<div class="engagement-screenshots-wrapper">
+					<div class="masonry-wrapper">
+						<div *ngFor="let engagement of engagementScreenshotsInfo" class="masonry-box">
+							<div class="post-item">
+								<img [src]="engagement.statistics.screenshot" alt="" />
+								<figcaption *ngIf="engagement.statistics.caption">{{ engagement.statistics.caption }}</figcaption>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="engagementScreenshotsInfo.length === 0" class="no-screenshots-wrapper">
+				<div *ngIf="!isFromBrand" class="shadow-box">
+					<ul class="list-unstyled m-0">
+						<li>
+							<figure><img alt="" src="assets/images/no-screenshot.svg" /></figure>
+						</li>
+						<li>
+							<figure><img alt="" src="assets/images/no-screenshot.svg" /></figure>
+						</li>
+						<li>
+							<figure><img alt="" src="assets/images/no-screenshot.svg" /></figure>
+						</li>
+					</ul>
+					<button
+						(click)="addNewEngagementScreenshot()"
+						*ngIf="!isFromBrand"
+						data-target="#engagement-screenshots-modal"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add screenshots</span>
+					</button>
+				</div>
+
+				<div *ngIf="isFromBrand" class="position-relative">
+					<figure><img alt="" class="w-100" src="assets/images/no-engagement-screenshots.png" /></figure>
+					<div class="no-items-message-wrapper">
+						<div class="no-items-message">
+							<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+									fill="#FF9C28"
+								/>
+							</svg>
+							<span>This section will get updated as soon as we gather the report</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap" [ngClass]="{'mb-5': allPosts?.length === 0}">
+			<button
+				(click)="addNewWordCloud()"
+				*ngIf="!isFromBrand"
+				class="edit-btn"
+				data-target="#word-cloud-modal"
+				data-toggle="modal"
+			>
+				<img alt="" src="assets/images/pencil-icon.svg" /> <span>Edit</span>
+			</button>
+			<h4 class="row-title">
+				Word cloud <span *ngIf="campaign['brandName']">for ‘{{ campaign['brandName'] }}’</span>
+			</h4>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card campaign-card without-campaign">
+						<div class="card-header">Before campaign</div>
+						<div class="card-body">
+							<img *ngIf="withOutCampaign" [src]="withOutCampaign" alt="" class="img-fluid" />
+							<button
+								(click)="addNewWordCloud()"
+								*ngIf="!withOutCampaign && !isFromBrand"
+								class="add-new-row-btn"
+								data-target="#word-cloud-modal"
+								data-toggle="modal"
+							>
+								<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add word cloud</span>
+							</button>
+							<div *ngIf="!withOutCampaign && isFromBrand" class="no-items-message-wrapper">
+								<div class="no-items-message">
+									<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+											fill="#FF9C28"
+										/>
+									</svg>
+									<span>This section will get updated as soon as we gather the report</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card campaign-card">
+						<div class="card-header">During campaign</div>
+						<div class="card-body">
+							<img *ngIf="withCampaign" [src]="withCampaign" alt="" class="img-fluid" />
+							<button
+								(click)="addNewWordCloud()"
+								*ngIf="!withCampaign && !isFromBrand"
+								class="add-new-row-btn"
+								data-target="#word-cloud-modal"
+								data-toggle="modal"
+							>
+								<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add word cloud</span>
+							</button>
+							<div *ngIf="!withCampaign && isFromBrand" class="no-items-message-wrapper">
+								<div class="no-items-message">
+									<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M7 0C3.14005 0 0 3.14005 0 7C0 10.86 3.14005 14 7 14C10.86 14 14 10.86 14 7C14 3.14005 10.86 0 7 0ZM10.3291 10.6207C10.2153 10.7345 10.066 10.7917 9.9167 10.7917C9.76738 10.7917 9.61795 10.7345 9.5043 10.6207L6.5876 7.7041C6.47791 7.59505 6.4167 7.44679 6.4167 7.2917V3.5C6.4167 3.17743 6.67796 2.9167 7 2.9167C7.32204 2.9167 7.5833 3.17743 7.5833 3.5V7.0502L10.3291 9.7959C10.5571 10.024 10.5571 10.3927 10.3291 10.6207Z"
+											fill="#FF9C28"
+										/>
+									</svg>
+									<span>This section will get updated as soon as we gather the report</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-wrap mb-5" *ngIf="allPosts?.length > 0">
+			<h4 class="row-title">
+				All Posts <a *ngIf="isLongPressingEnabled" (click)="changeSelectedPostsStatus(false, false)">Clear selection</a>
+				<a
+					*ngIf="isLongPressingEnabled"
+					(click)="isRefreshingAllPosts ? '' : refreshPostScreenshotUrl(allPosts, false)"
+					>{{ isRefreshingAllPosts ? 'Refreshing...' : 'Refresh data' }}</a
+				>
+			</h4>
+			<div>
+				<div *ngIf="allPosts?.length > 0" class="shadow-box px-0 mb-3">
+					<div class="fb-posts-wrapper" (scroll)="scrollAllPostHandler($event)">
+						<div class="masonry-wrapper" *ngIf="!isAuthTokenExpired">
+							<ul class="grid effect-1" id="grid">
+								<li *ngFor="let postScreenshot of allPosts" class="masonry-box">
+									<input
+										class="post-checkbox"
+										type="checkbox"
+										*ngIf="
+											isLongPressingEnabled && (postScreenshot.statistics?.url || postScreenshot.statistics?.errorType)
+										"
+										[(ngModel)]="postScreenshot['isSelected']"
+										(input)="setNumberSelectedPosts(false)"
+										[readonly]="numberOfSelectedPosts === 20 && !postScreenshot['isSelected']"
+									/>
+									<a
+										*ngIf="postScreenshot.statistics?.url && !postScreenshot['isLoading']"
+										class="post-item"
+										appLongPress
+										(emitLongPress)="onLongPress(postScreenshot, false)"
+									>
+										<img
+											[src]="postScreenshot.statistics?.url"
+											alt=""
+											(click)="openAllPostsGallery(postScreenshot.statistics?.url)"
+											src="{{ img?.src }}"
+										/>
+									</a>
+									<a
+										*ngIf="postScreenshot.statistics?.errorType && !postScreenshot['isLoading']"
+										class="post-item error-wrapper"
+										(click)="postScreenshot['isSelected'] = true; refreshPostScreenshotUrl(allPosts, false)"
+										appLongPress
+										(emitLongPress)="onLongPress(postScreenshot, false)"
+									>
+										<svg width="20" height="20" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M12.4565 8.39218C13.0954 7.05067 13.1737 5.54052 12.6771 4.14013C11.6518 1.24986 8.46621 -0.267465 5.57508 0.757238C4.17575 1.25365 3.06472 2.25873 2.43196 3.56942L1.82009 1.84442C1.742 1.62491 1.50139 1.50988 1.28104 1.58777C1.06132 1.66565 0.946506 1.9071 1.02439 2.12682L2.00625 4.8951C2.0436 5.00063 2.12149 5.08674 2.22237 5.13508C2.27957 5.1623 2.34162 5.17602 2.40389 5.17602C2.45159 5.17602 2.49929 5.168 2.54509 5.15175L5.46744 4.11523C5.68716 4.03734 5.80198 3.79589 5.72409 3.57618C5.646 3.35667 5.40539 3.24164 5.18504 3.31952L3.13943 4.04515C3.66624 2.88052 4.63227 1.9873 5.85727 1.55273C8.30812 0.683367 11.0114 1.97042 11.8814 4.42253C12.3027 5.61039 12.2364 6.89111 11.6942 8.02894C11.152 9.16677 10.1994 10.0254 9.01138 10.4469C7.23677 11.0767 5.26039 10.5921 3.97714 9.213C3.81842 9.04182 3.55079 9.03296 3.38068 9.19147C3.20993 9.35018 3.20043 9.61739 3.35915 9.78793C4.43155 10.9407 5.91468 11.563 7.43306 11.563C8.0559 11.563 8.68508 11.4583 9.29357 11.2421C10.6944 10.7457 11.8174 9.73368 12.4565 8.39218Z"
+												fill="#3654ff"
+												stroke="#3654ff"
+												stroke-width="1.5"
+											/>
+										</svg>
+									</a>
+									<div
+										class="post-item error-wrapper"
+										*ngIf="
+											(postScreenshot.statistics?.url || postScreenshot.statistics?.errorType) &&
+											postScreenshot['isLoading']
+										"
+									>
+										<div class="loading-strip primary"></div>
+										<div class="loading-strip secondary"></div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="auth-message" *ngIf="isAuthTokenExpired">Session expired. Please login again</div>
+						<div *ngIf="isAllPostsLoading">
+							<div class="shadow-box pb-0 mb-3 empty-loading-wrapper" style="height: 200px">
+								<div class="loader-wrapper">
+									<div class="loader"></div>
+									<p class="loading-text">Loading data</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	*ngIf="selectedReportModel === 'campaignSummary'"
+	class="modal fade campaign-stats-modal"
+	id="campaign-summary-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit campaign Summary</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<textarea [(ngModel)]="campaignSummary"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignSummary()"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Overall Snapshot Modal -->
+<div
+	*ngIf="selectedReportModel === 'overallSnapshot'"
+	class="modal fade overall-snapshot-modal"
+	id="overall-snapshot-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit overall snapshot</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div *ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index">
+					<div [formGroup]="campaignGroupForm" class="form-group input-group">
+						<label>{{ campaignGroupForm.get('name').value }}</label>
+						<input
+							formControlName="value"
+							*ngIf="campaignGroupForm.get('name').value === 'Total entries'"
+							(input)="setTotalEngagement()"
+							placeholder="NA"
+							type="text"
+						/>
+						<input
+							formControlName="value"
+							*ngIf="campaignGroupForm.get('name').value !== 'Total entries'"
+							placeholder="NA"
+							type="text"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Campaign Stats Modal -->
+<div
+	*ngIf="selectedReportModel === 'campaignStats'"
+	class="modal fade campaign-stats-modal"
+	id="campaign-stats-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit campaign stats</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-3"
+				>
+					<div [formGroup]="campaignGroupForm">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									>Campaign <strong>period {{ i + 1 }} name</strong>
+									<button
+										(click)="removeFormControlField(campaignReportForm, i); tooltip.toggle()"
+										*ngIf="i > 0"
+										class="remove-row-btn"
+										matTooltip="Delete"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Delete"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<img alt="" src="assets/images/icon-remove.svg" /></button
+								></label>
+								<input formControlName="name" placeholder="E.g. Launch, Pre-launch, Post launch" type="text" />
+							</div>
+						</div>
+
+						<div class="flex-box">
+							<div class="form-group">
+								<label>Reactions</label>
+								<input formControlName="reactions" placeholder="NA" type="text" />
+							</div>
+							<div class="form-group">
+								<label>Comments</label>
+								<input formControlName="comments" placeholder="NA" type="text" />
+							</div>
+							<div class="form-group">
+								<label>Engagement</label>
+								<input formControlName="engagement" placeholder="NA" type="text" />
+							</div>
+							<div class="form-group">
+								<label>Entries </label>
+								<input formControlName="entries" placeholder="NA" type="text" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+					<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another campaign period</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Platform Summary Modal -->
+<div
+	*ngIf="selectedReportModel === 'platformSummary'"
+	class="modal fade platform-summary-modal"
+	id="platform-summary-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit platform summary</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-4"
+				>
+					<div [formGroup]="campaignGroupForm" class="flex-box align-items-center">
+						<div>
+							<div class="platform-type-wrap">
+								<img
+									*ngIf="campaignGroupForm.get('name').value === 'Facebook'"
+									alt=""
+									class="icon-14x14 mr-1"
+									src="assets/images/fb-small-icon.svg"
+								/>
+								<img
+									*ngIf="campaignGroupForm.get('name').value === 'WhatsApp'"
+									alt=""
+									class="icon-14x14 mr-1"
+									src="assets/images/whatsapp_color.svg"
+								/>
+								<span>{{ campaignGroupForm.get('name').value }}</span>
+							</div>
+						</div>
+
+						<div>
+							<div class="d-flex">
+								<div class="form-group">
+									<label>Posts planned</label>
+									<input formControlName="postsPlanned" placeholder="NA" type="text" />
+								</div>
+								<div class="form-group">
+									<label>Posts done</label>
+									<input formControlName="postsDone" placeholder="NA" type="text" />
+								</div>
+								<div class="form-group">
+									<label>Reactions</label>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value === 'NA'"
+										class="text-20"
+										formControlName="reactions"
+										placeholder="NA"
+										readonly
+										type="text"
+									/>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value !== 'NA'"
+										formControlName="reactions"
+										placeholder="NA"
+										type="text"
+									/>
+								</div>
+							</div>
+							<div class="d-flex">
+								<div class="form-group">
+									<label>Comments</label>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value === 'NA'"
+										class="text-20"
+										formControlName="comments"
+										placeholder="NA"
+										readonly
+										type="text"
+									/>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value !== 'NA'"
+										formControlName="comments"
+										placeholder="NA"
+										type="text"
+									/>
+								</div>
+								<div class="form-group">
+									<label>Engagement</label>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value === 'NA'"
+										class="text-20"
+										formControlName="engagement"
+										placeholder="NA"
+										readonly
+										type="text"
+									/>
+									<input
+										*ngIf="campaignGroupForm.get('comments').value !== 'NA'"
+										formControlName="engagement"
+										placeholder="NA"
+										type="text"
+									/>
+								</div>
+								<div class="form-group">
+									<label>Conversations</label>
+									<input formControlName="conversations" placeholder="NA" type="text" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Keyword Mention Modal -->
+<div
+	*ngIf="selectedReportModel === 'keywordMentionVolume'"
+	class="modal fade keyword-mention-modal"
+	id="keyword-mention-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit keyword mention volume</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-3"
+				>
+					<div [formGroup]="campaignGroupForm">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									><strong>Keyword {{ i + 1 }}</strong>
+									<button
+										(click)="removeFormControlField(campaignReportForm, i); tooltip.toggle()"
+										*ngIf="i > 1"
+										class="remove-row-btn"
+										matTooltip="Delete"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Delete"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<img alt="" src="assets/images/icon-remove.svg" /></button
+								></label>
+								<input formControlName="name" placeholder="Enter keyword" type="text" />
+							</div>
+						</div>
+
+						<div class="flex-box">
+							<div class="form-group">
+								<label>Before</label>
+								<input
+									(input)="setPercentageForDuringKeywordMention(campaignGroupForm)"
+									*ngIf="campaignGroupForm.get('beforeCampaign').value === 'NA'"
+									class="text-20"
+									formControlName="beforeCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+								<input
+									(input)="setPercentageForDuringKeywordMention(campaignGroupForm)"
+									*ngIf="campaignGroupForm.get('beforeCampaign').value !== 'NA'"
+									formControlName="beforeCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="form-group">
+								<label>During</label>
+								<input
+									(input)="
+										setPercentageForDuringKeywordMention(campaignGroupForm);
+										setPercentageForPostKeywordMention(campaignGroupForm)
+									"
+									*ngIf="campaignGroupForm.get('duringCampaign').value === 'NA'"
+									class="text-20"
+									formControlName="duringCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+								<input
+									(input)="
+										setPercentageForDuringKeywordMention(campaignGroupForm);
+										setPercentageForPostKeywordMention(campaignGroupForm)
+									"
+									*ngIf="campaignGroupForm.get('duringCampaign').value !== 'NA'"
+									formControlName="duringCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="more-value-options">
+								<div class="d-inline-block custom-dropdown">
+									<button
+										class="btn btn-outline convo-dropdown convo-small-dropdown dropdown-toggle"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										<svg
+											*ngIf="campaignGroupForm.get('isDuringCampaignIncreased').value"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+												fill="#00C389"
+											/>
+										</svg>
+										<svg
+											*ngIf="!campaignGroupForm.get('isDuringCampaignIncreased').value"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+												fill="#E63B3B"
+											/>
+										</svg>
+									</button>
+									<div class="select-option-wrapper dropdown-menu">
+										<button
+											(click)="setFormControlFieldValue('isDuringCampaignIncreased', true, i)"
+											class="dropdown-item"
+										>
+											<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+													fill="#00C389"
+												/>
+											</svg>
+										</button>
+										<button
+											(click)="setFormControlFieldValue('isDuringCampaignIncreased', false, i)"
+											class="dropdown-item"
+										>
+											<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+													fill="#E63B3B"
+												/>
+											</svg>
+										</button>
+									</div>
+								</div>
+								<input
+									*ngIf="campaignGroupForm.get('duringCampaignRate').value === 'NA'"
+									class="text-20"
+									formControlName="duringCampaignRate"
+									placeholder="NA"
+									type="text"
+								/>
+								<input
+									*ngIf="campaignGroupForm.get('duringCampaignRate').value !== 'NA'"
+									formControlName="duringCampaignRate"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="form-group">
+								<label>Post</label>
+								<input
+									(input)="setPercentageForPostKeywordMention(campaignGroupForm)"
+									*ngIf="campaignGroupForm.get('postCampaign').value === 'NA'"
+									class="text-20"
+									formControlName="postCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+								<input
+									(input)="setPercentageForPostKeywordMention(campaignGroupForm)"
+									*ngIf="campaignGroupForm.get('postCampaign').value !== 'NA'"
+									formControlName="postCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="more-value-options">
+								<div class="d-inline-block custom-dropdown">
+									<button
+										class="btn btn-outline convo-dropdown convo-small-dropdown dropdown-toggle"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										<svg
+											*ngIf="campaignGroupForm.get('isPostCampaignIncreased').value"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+												fill="#00C389"
+											/>
+										</svg>
+										<svg
+											*ngIf="!campaignGroupForm.get('isPostCampaignIncreased').value"
+											fill="none"
+											height="12"
+											viewBox="0 0 10 12"
+											width="10"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+												fill="#E63B3B"
+											/>
+										</svg>
+									</button>
+									<div class="select-option-wrapper dropdown-menu">
+										<button
+											(click)="setFormControlFieldValue('isPostCampaignIncreased', true, i)"
+											class="dropdown-item"
+										>
+											<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+													fill="#00C389"
+												/>
+											</svg>
+										</button>
+										<button
+											(click)="setFormControlFieldValue('isPostCampaignIncreased', false, i)"
+											class="dropdown-item"
+										>
+											<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+													fill="#E63B3B"
+												/>
+											</svg>
+										</button>
+									</div>
+								</div>
+								<input
+									*ngIf="campaignGroupForm.get('postCampaignRate').value === 'NA'"
+									class="text-20"
+									formControlName="postCampaignRate"
+									placeholder="NA"
+									type="text"
+								/>
+								<input
+									*ngIf="campaignGroupForm.get('postCampaignRate').value !== 'NA'"
+									formControlName="postCampaignRate"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+					<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add new keyword</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Brand Mentions Modal -->
+<div
+	*ngIf="selectedReportModel === 'brandConversationsAndMentions'"
+	class="modal fade brand-mentions-modal"
+	id="brand-mentions-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit brand conversations & mentions</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-3"
+				>
+					<div [formGroup]="campaignGroupForm">
+						<h6>{{ campaignGroupForm.get('name').value }}</h6>
+
+						<div class="flex-box">
+							<div class="form-group">
+								<label>Before campaign</label>
+								<input
+									(input)="setImpactValue(campaignGroupForm)"
+									[ngClass]="campaignGroupForm.get('beforeCampaign').value === 'NA' ? 'text-20' : ''"
+									formControlName="beforeCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="form-group">
+								<label>After campaign</label>
+								<input
+									(input)="setImpactValue(campaignGroupForm)"
+									[ngClass]="campaignGroupForm.get('duringCampaign').value === 'NA' ? 'text-20' : ''"
+									formControlName="duringCampaign"
+									placeholder="NA"
+									type="text"
+								/>
+							</div>
+							<div class="form-group">
+								<label>Impact</label>
+								<div class="more-value-options">
+									<div class="d-inline-block custom-dropdown">
+										<button
+											class="btn btn-outline convo-dropdown convo-small-dropdown dropdown-toggle"
+											data-toggle="dropdown"
+											aria-haspopup="true"
+											aria-expanded="false"
+										>
+											<svg
+												*ngIf="campaignGroupForm.get('isDuringCampaignIncreased').value"
+												fill="none"
+												height="12"
+												viewBox="0 0 10 12"
+												width="10"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+													fill="#00C389"
+												/>
+											</svg>
+											<svg
+												*ngIf="!campaignGroupForm.get('isDuringCampaignIncreased').value"
+												fill="none"
+												height="12"
+												viewBox="0 0 10 12"
+												width="10"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+													fill="#E63B3B"
+												/>
+											</svg>
+										</button>
+										<div class="select-option-wrapper dropdown-menu">
+											<button
+												(click)="setFormControlFieldValue('isDuringCampaignIncreased', true, i)"
+												class="dropdown-item"
+											>
+												<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M0.0164938 5.43998C0.0499554 5.5202 0.128038 5.57254 0.214687 5.57254H2.56512V10.9349C2.56512 11.0533 2.66122 11.1494 2.77962 11.1494H6.21156C6.32996 11.1494 6.42606 11.0533 6.42606 10.9349V5.57252H8.7855C8.87215 5.57252 8.95023 5.52018 8.98369 5.44039C9.01673 5.36017 8.99872 5.26793 8.93736 5.20658L4.65818 0.913239C4.61786 0.872921 4.56337 0.850178 4.50632 0.850178C4.44927 0.850178 4.39477 0.872921 4.35445 0.912817L0.0628252 5.20616C0.00147247 5.26753 -0.0169668 5.35975 0.0164938 5.43998Z"
+														fill="#00C389"
+													/>
+												</svg>
+											</button>
+											<button
+												(click)="setFormControlFieldValue('isDuringCampaignIncreased', false, i)"
+												class="dropdown-item"
+											>
+												<svg fill="none" height="12" viewBox="0 0 10 12" width="10" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M0.0183268 6.34381C0.0555058 6.25468 0.142264 6.19653 0.238542 6.19653H2.85013V0.238336C2.85013 0.106778 2.95691 0 3.08847 0H6.90173C7.03329 0 7.14006 0.106778 7.14006 0.238336V6.19655H9.76167C9.85794 6.19655 9.9447 6.25471 9.98188 6.34337C10.0186 6.43249 9.99857 6.53498 9.9304 6.60315L5.17576 11.3735C5.13096 11.4183 5.07041 11.4436 5.00702 11.4436C4.94363 11.4436 4.88308 11.4183 4.83828 11.374L0.0698051 6.60362C0.00163651 6.53543 -0.0188522 6.43296 0.0183268 6.34381Z"
+														fill="#E63B3B"
+													/>
+												</svg>
+											</button>
+										</div>
+									</div>
+									<input
+										[ngClass]="campaignGroupForm.get('impact').value === 'NA' ? 'text-20' : ''"
+										formControlName="impact"
+										placeholder="NA"
+										type="text"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Top Engaging Communities Modal -->
+<div
+	*ngIf="selectedReportModel === 'topEngagingCommunities'"
+	class="modal fade top-engaging-communities-modal"
+	id="top-engaging-communities-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					Edit top
+					<span *ngIf="campaignReportForm && campaignReportForm.controls.report.controls.length > 0">{{
+						campaignReportForm.controls.report.controls.length
+					}}</span>
+					engaging communities
+				</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div *ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index">
+					<div [formGroup]="campaignGroupForm">
+						<div class="form-group">
+							<input
+								formControlName="name"
+								placeholder="Enter community name (leave blank to remove this entry)"
+								type="text"
+							/>
+							<input class="input-small" formControlName="value" type="number" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group" hidden>
+					<input placeholder="Enter community name (leave blank to remove this entry)" type="text" value="" />
+					<input class="input-small" placeholder="0" type="text" value="" />
+				</div>
+
+				<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+					<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another community</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Top Screenshots Modal -->
+<div
+	*ngIf="selectedReportModel === 'topPostsScreenshots'"
+	class="modal fade top-screenshots-modal"
+	id="top-screenshots-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit top posts screenshots</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-3"
+				>
+					<div [formGroup]="campaignGroupForm">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									><strong>Screenshot {{ i + 1 }}</strong>
+									<button
+										(click)="removeFormControlField(campaignReportForm, i); tooltip.toggle()"
+										class="remove-row-btn"
+										matTooltip="Delete"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Delete"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<img alt="" src="assets/images/icon-remove.svg" /></button
+								></label>
+								<input formControlName="screenshot" placeholder="Enter image URL" type="text" />
+							</div>
+						</div>
+
+						<div class="flex-box">
+							<div class="form-group">
+								<label>Image caption (optional)</label>
+								<input formControlName="caption" placeholder="Write image caption here" type="text" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+					<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another screenshot</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Engagement Screenshots Modal -->
+<div
+	*ngIf="selectedReportModel === 'engagementScreenshots'"
+	class="modal fade engagement-screenshots-modal"
+	id="engagement-screenshots-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit engagement screenshots</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm" class="modal-body">
+				<div
+					*ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index"
+					class="shadow-box mb-3"
+				>
+					<div [formGroup]="campaignGroupForm">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									><strong>Screenshot {{ i + 1 }}</strong>
+									<button
+										(click)="removeFormControlField(campaignReportForm, i); tooltip.toggle()"
+										class="remove-row-btn"
+										matTooltip="Delete"
+										matTooltipPosition="above"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Delete"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<img alt="" src="assets/images/icon-remove.svg" /></button
+								></label>
+								<input formControlName="screenshot" placeholder="Enter image URL" type="text" />
+							</div>
+						</div>
+
+						<div class="flex-box">
+							<div class="form-group">
+								<label>Image caption (optional)</label>
+								<input formControlName="caption" placeholder="Write image caption here" type="text" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+					<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another screenshot</span>
+				</button>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Word Cloud Modal -->
+<div
+	*ngIf="selectedReportModel === 'wordCloud'"
+	class="modal fade word-cloud-modal"
+	id="word-cloud-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit word cloud</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div *ngIf="campaignReportForm" [formGroup]="campaignReportForm">
+					<h6>Without campaign</h6>
+					<div *ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index">
+						<div [formGroup]="campaignGroupForm">
+							<div class="form-group">
+								<input
+									formControlName="name"
+									placeholder="Enter keyword name (leave blank to remove this entry)"
+									type="text"
+								/>
+								<input class="input-small" formControlName="value" type="number" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group" hidden>
+						<input placeholder="Enter community name (leave blank to remove this entry)" type="text" value="" />
+						<input class="input-small" placeholder="0" type="text" value="" />
+					</div>
+
+					<button (click)="addFormControl(campaignReportForm)" class="add-new-row-btn">
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another keyword</span>
+					</button>
+				</div>
+				<div *ngIf="campaignReport2Form" [formGroup]="campaignReport2Form">
+					<h6>With campaign</h6>
+					<div *ngFor="let campaignGroupForm of campaignReport2Form.controls.report.controls; let i = index">
+						<div [formGroup]="campaignGroupForm">
+							<div class="form-group">
+								<input
+									formControlName="name"
+									placeholder="Enter keyword name (leave blank to remove this entry)"
+									type="text"
+								/>
+								<input class="input-small" formControlName="value" type="number" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group" hidden>
+						<input placeholder="Enter community name (leave blank to remove this entry)" type="text" value="" />
+						<input class="input-small" placeholder="0" type="text" value="" />
+					</div>
+
+					<button (click)="addFormControl(campaignReport2Form)" class="add-new-row-btn">
+						<img alt="" src="assets/images/green-plus-icon.svg" /><span>Add another keyword</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="cancel-btn mr-3" data-dismiss="modal" id="cancel" type="button">Cancel</button>
+				<button
+					(click)="saveCampaignReportModel(selectedReportModel)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Changes Published Successfully Modal -->
+<div class="modal fade changes-published-modal" id="published-changes" role="dialog" tabindex="-1">
+	<div class="changes-published-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<figure><img alt="" src="assets/images/icon-success.svg" /></figure>
+				<h5>Changes published successfully</h5>
+				<p>Brand can now see the changes you made in the report</p>
+				<button class="convo-btn-primary convo-btn-normal" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Discard Changes modal -->
+<div class="modal fade changes-published-modal discard-changes-modal" id="discard-changes" role="dialog" tabindex="-1">
+	<div class="changes-published-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h5>Discard the changes?</h5>
+				<p class="m-0">
+					You’re trying to leave without publishing the changes to this report. Do you want to discard your changes?
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button (click)="uploadToS3()" [disabled]="isPublishing" class="btn btn-light" type="button">
+					{{ isPublishing ? 'Publishing...' : 'Let me publish' }}
+				</button>
+				<span data-dismiss="modal" data-target="#published-changes" data-toggle="modal" hidden id="published"></span>
+				<button class="btn btn-danger" data-dismiss="modal" id="cancel" type="button">Discard changes</button>
+			</div>
+		</div>
+	</div>
+</div>

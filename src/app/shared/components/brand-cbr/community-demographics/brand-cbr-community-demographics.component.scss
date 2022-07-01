@@ -1,0 +1,129 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+section {
+	background: #fff;
+	padding: 32px 24px;
+	border-radius: 4px;
+	padding: 32px 24px 0 24px;
+}
+.card-inner-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+
+	h3 {
+		@include font-label-l-md;
+		color: #33334f;
+	}
+
+	p {
+		@include font-label-xs;
+		color: $black-70;
+		margin-bottom: 32px;
+	}
+}
+
+.btn-edit {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	color: #3654ff;
+	margin-left: 8px;
+}
+.supporting-text {
+	font-weight: 500;
+	font-size: 16px;
+	color: #3654ff;
+	line-height: 64px;
+	cursor: pointer;
+	padding: 0 24px;
+	margin: 0 -24px;
+	display: block;
+	border-top: 1px solid #ebebed;
+	margin-top: 32px;
+	text-align: left;
+}
+.membership-chart-legend {
+	display: flex;
+	background: #f9fafb;
+	padding: 0 12px;
+	.legend-thumbnail {
+		height: 14px;
+		width: 14px;
+		border-radius: 2px;
+		margin-right: 4px;
+	}
+	.legend-item {
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 14px;
+		margin-right: 40px;
+		color: #33334f;
+	}
+}
+.btn-edit-wrapper {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 24px;
+	color: #3654ff;
+	display: flex;
+	margin-left: 8px;
+}
+.labels {
+	background: #f4f6f8;
+	border: 1px solid #d6d6dc;
+	box-sizing: border-box;
+	border-radius: 4px;
+	padding: 18px 20px;
+	height: 190px;
+	ul {
+		list-style: none;
+		padding: 0;
+		li {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			span {
+				font-weight: normal;
+				font-size: 14px;
+				color: #33334f;
+			}
+			.legend-icon {
+				width: 14px;
+				height: 14px;
+				border-radius: 2px;
+				margin-right: 8px;
+				display: inline-block;
+				&.legend-icon-women {
+					background: #c5b0d5;
+				}
+				&.legend-icon-men {
+					background: #9edae5;
+				}
+			}
+		}
+	}
+	p {
+		font-weight: normal;
+		font-size: 14px;
+		line-height: 16px;
+		color: #9999a7;
+	}
+}
+.section-border {
+	border-right: 1px solid #ebebed;
+	padding-right: 36px;
+}
+.supporting-text-input-text {
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: left;
+	color: #33334f;
+	padding: 16px 0;
+}
+.background-box {
+	background-color: #f9fafb;
+}

@@ -1,0 +1,139 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Phase Idea
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Phase Idea"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditPhaseIdeaPopup"
+			data-toggle="modal"
+		>
+			<span>Edit</span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn && form?.controls?.visibleToBrand"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle [formControl]="form?.controls?.visibleToBrand" labelPosition="before"
+				><span>
+					{{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }}
+				</span></mat-slide-toggle
+			>
+		</button>
+	</h5>
+	<small>The major focus areas and plan for the campaign</small>
+</div>
+
+<div [innerHTML]="content" class="text-content ql-editor"></div>
+<span *ngIf="!content" class="placeholder mb-2"> To add Phase Idea, please click on <strong>Edit</strong> </span>
+
+<!-- <div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		class="add-text pb-3 pt-1"
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div class="supprt-text pb-3 pt-1" *ngIf="!editingSupportingText && form?.value?.supportingText">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-toggle="modal"
+				data-target="#camapaignStatsModal"
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form class="d-flex flex-wrap" [formGroup]="form" (ngSubmit)="onSubmittingSuportingText()">
+			<mat-form-field class="col-11 pl-0" appearance="outline">
+				<textarea rows="3" formControlName="supportingText" matInput placeholder="Type Supporting Text"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					mat-flat-button
+					class="convo-btn-normal convo-btn-primary save"
+					[disabled]="form?.invalid"
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button mat-stroked-button color="primary" class="mt-1 cancel" (click)="resetForm()" type="button">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div> -->
+
+<div class="modal fade report-keywords-modal" id="EditPhaseIdeaPopup" role="dialog">
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Phase Idea</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="phase-idea">
+				<div
+					[ngClass]="form.get('content').errors && isFormFirstTimeSubmitted ? 'error-control' : ''"
+					class="form-group"
+				>
+					<div class="invisible-input-cont">
+						<input #phaseIdeaFile (change)="onSelectingImageInPhaseIdea($event)" type="file" />
+					</div>
+					<quill-editor
+						[maxLength]="5000"
+						#phaseIdeadQuill
+						(onEditorCreated)="onPhaseIdeaEditorCreation($event)"
+						[formControl]="contentPopupControl"
+						[modules]="phaseIdeaQuillConfig"
+						placeholder="Please provide the idea behind this phase"
+					>
+					</quill-editor>
+				</div>
+				<div *ngIf="contentPopupControl?.errors?.maxLengthError as error" class="quill-error">
+					Maximum {{ error.maxLength }} characters are allowed.
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="contentPopupControl?.invalid || isPhaseIdeaImageLoading"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					{{ isPhaseIdeaImageLoading ? 'Loading Image...' : 'Save' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

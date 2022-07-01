@@ -1,0 +1,388 @@
+<div class="task-details-component-wrapper">
+	<div class="head-section">
+		<div class="container">
+			<div class="header-info-wrapper">
+				<a
+					(click)="closeDetails(); recordButtonClick($event)"
+					class="link-go-back"
+					data-cs-id="fd80922b-64cc-4694-988d-64909d409114"
+					data-cs-label="View full brief"
+					data-cs-source="page"
+				>
+					<svg fill="none" height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M5.44187 1.06693C5.68595 0.822853 5.68595 0.42713 5.44187 0.183056C5.1978 -0.0610186 4.80207 -0.0610186 4.558 0.183056L0.183056 4.558C-0.0610186 4.80207 -0.0610186 5.1978 0.183056 5.44187L4.558 9.81681C4.80207 10.0609 5.1978 10.0609 5.44187 9.81681C5.68595 9.57274 5.68595 9.17702 5.44187 8.93294L2.13386 5.62493H9.37489C9.72006 5.62493 9.99988 5.34511 9.99988 4.99994C9.99988 4.65477 9.72006 4.37495 9.37489 4.37495H2.13385L5.44187 1.06693Z"
+							fill="#3654FF"
+						/>
+					</svg>
+					<span>Back</span>
+				</a>
+
+				<div class="campaign-details-wrapper">
+					<figure>
+						<img alt="" src="{{ selectedCampaign?.brandLogoURL }}" />
+					</figure>
+					<div class="campaign-details">
+						<h5 class="m-0">{{ selectedCampaign?.campaignName }}</h5>
+						<p
+							*ngIf="
+								selectedCampaign?.groupTaskStatus === 'CampaignBriefSent' ||
+								selectedCampaign?.groupTaskStatus === 'TaskRequestSent'
+							"
+							class="m-0"
+						>
+							<small
+								>{{ selectedCampaign?.groupName }} <span class="mx-2">.</span>
+								<img
+									*ngIf="
+										selectedCampaign?.groupTaskStatus === 'CampaignBriefSent' ||
+										selectedCampaign?.groupTaskStatus === 'TaskRequestSent'
+									"
+									alt=""
+									class="mr-1"
+									src="./assets/images/timelapse-icon.svg"
+								/>
+								<span
+									*ngIf="
+										selectedCampaign?.groupTaskStatus === 'CampaignBriefSent' ||
+										selectedCampaign?.groupTaskStatus === 'TaskRequestSent'
+									"
+									>Request expires on <strong>{{ selectedCampaign?.endDateAtUTC | date: 'd MMM, yyyy' }}</strong></span
+								></small
+							>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main-nav container">
+			<ul>
+				<li [class.active]="selectedTab === 'details'" (click)="selectedTab = 'details'">Campaign details</li>
+				<li
+					(click)="selectedTab = 'tasks'"
+					*ngIf="!isCampaignUpcomingOrAcceptedOrRejected(selectedCampaign?.groupTaskStatus)"
+					[class.active]="selectedTab === 'tasks'"
+					data-test-id="tasks-tab"
+				>
+					Tasks
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="campaign-details-body-section">
+		<div *ngIf="selectedTab === 'details'" class="campaign-details-body-row">
+			<div class="container">
+				<div class="campaign-details-body-row-inner">
+					<div class="modal-body">
+						<div class="modal-body-row">
+							<h6>📝 Campaign Brief</h6>
+							<div
+								*ngIf="selectedCampaign"
+								[innerHTML]="
+									selectedCampaign.campaignBriefForCommunityAdmin
+										? selectedCampaign.campaignBriefForCommunityAdmin
+										: selectedCampaign.details
+								"
+								class="campaign-brief"
+							></div>
+							<a *ngIf="selectedCampaign" [href]="selectedCampaign['typeformUrl']" target="_blank">
+								Proceed to share Copy
+							</a>
+						</div>
+
+						<div class="modal-body-row">
+							<h6>🎯 Campaign Objectives</h6>
+							<div
+								*ngIf="selectedCampaign"
+								[innerHTML]="selectedCampaign.primaryObjective"
+								class="campaign-objective"
+							></div>
+						</div>
+
+						<div class="modal-body-row">
+							<h6>📆 Campaign Duration</h6>
+							<p>
+								{{ selectedCampaign?.startDateAtUTC | date: 'd MMMM, yyyy' }} -
+								{{ selectedCampaign?.endDateAtUTC | date: 'd MMMM, yyyy' }}
+								<small>{{ daysCountOfCampaign }} days</small>
+							</p>
+						</div>
+						<div *ngIf="selectedCampaign?.pricing" class="modal-body-row">
+							<h6>💰 Pricing</h6>
+							<p>{{ currencySymbolFor(selectedCampaign?.currency) }} {{ selectedCampaign?.pricing }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="selectedTab === 'tasks'" class="campaign-details-body-row">
+			<div *ngIf="selectedCampaign?.campaignTasks && selectedCampaign?.campaignTasks.length > 0" class="container">
+				<div *ngFor="let task of selectedCampaign?.campaignTasks" class="tasks-wrapper">
+					<div class="task-wrap-body">
+						<div class="task-body-left">
+							<h6>{{ selectedCampaign?.campaignName }}</h6>
+							<div
+								*ngIf="
+									selectedCampaign?.groupTaskStatus === 'CampaignBriefSent' ||
+									selectedCampaign?.groupTaskStatus === 'TaskRequestSent'
+								"
+								class="expire-wrap"
+							>
+								<img alt="" src="./assets/images/timelapse-icon.svg" />
+								<span
+									>Request expires on
+									<strong> {{ selectedCampaign?.endDateAtUTC | date: 'dd MMM, YYYY' }} </strong></span
+								>
+							</div>
+							<span
+								[class]="statusToShow(selectedCampaign?.groupTaskStatus).class"
+								[hidden]="renderedOn === 'Mobile'"
+								class="statuselectedCampaigns status"
+							>
+								{{ statusToShow(selectedCampaign?.groupTaskStatus).status }}
+								&nbsp;<a
+									*ngIf="selectedCampaign?.groupTaskStatus === 'TaskCompleted'"
+									[href]="task.fbPermlink"
+									target="_blank"
+									><img src="assets/images/link-icon.svg"
+								/></a>
+							</span>
+						</div>
+
+						<div class="task-body-content">
+							<div class="task-body-center">
+								<figure>
+									<img
+										*ngIf="task.imageUrls?.length === 0 && task.videoUrls?.length === 0"
+										alt=""
+										src="./assets/images/default_group_image.jpg"
+									/>
+									<img *ngIf="task.imageUrls?.length > 0" [src]="task.imageUrls[0]" alt="" />
+									<img *ngIf="task.videoUrls?.length > 0" alt="" src="./assets/images/default_group_image.jpg" />
+								</figure>
+								<div>
+									<h6 [innerHTML]="task.text"></h6>
+									<p>
+										<img alt="" src="./assets/images/calendar-today.svg" /><span
+											>Post <span *ngIf="selectedCampaign?.groupTaskStatus !== 'TaskCompleted'">will be</span
+											><span *ngIf="selectedCampaign?.groupTaskStatus === 'TaskCompleted'">was</span> scheduled for
+											<strong>{{ task.toBePerformedByUTC | date: 'dd MMM, hh:mm a' }}</strong></span
+										>
+									</p>
+								</div>
+							</div>
+							<div *ngIf="selectedCampaign?.groupTaskStatus === 'TaskRequestSent'" class="schedule-wrap">
+								<img alt="" src="./assets/images/calendar-today.svg" /><span
+									>Post will be scheduled for
+									<strong> {{ task.toBePerformedByUTC | date: 'dd MMM, hh:mm a' }} </strong></span
+								>
+							</div>
+							<div [hidden]="renderedOn === 'Desktop'" class="status-wrap">
+								<span
+									*ngIf="selectedCampaign?.groupTaskStatus === 'TaskScheduled'"
+									[class]="statusToShow(selectedCampaign?.groupTaskStatus).class"
+									class="status status-1"
+								>
+									<img alt="" src="./assets/images/calendar-today.svg" />
+									<span>Post scheduled for {{ task.toBePerformedByUTC | date: 'dd MMM, hh:mm a' }}</span>
+								</span>
+								<span
+									*ngIf="selectedCampaign?.groupTaskStatus !== 'TaskScheduled'"
+									[class]="statusToShow(selectedCampaign?.groupTaskStatus).class"
+									class="status status-1"
+								>
+									{{ statusToShow(selectedCampaign?.groupTaskStatus).status }}
+									&nbsp;<a
+										*ngIf="selectedCampaign?.groupTaskStatus === 'TaskCompleted'"
+										[href]="task.fbPermlink"
+										target="_blank"
+										><img src="assets/images/link-icon.svg"
+									/></a>
+								</span>
+							</div>
+							<div *ngIf="selectedCampaign?.groupTaskStatus === 'TaskRequestSent'" class="task-body-right">
+								<button
+									(click)="campaignTaskRejectionConfirmation = true; recordButtonClick($event)"
+									[attr.data-test-id]="selectedCampaign?.campaignName + '-decline'"
+									[disabled]="isApprovalActionInProgress"
+									class="convo-btn-normal convo-btn-bordered"
+									data-cs-id="b9527d9d-48a8-4e2c-9db6-4a0592a307b5"
+									data-cs-label="Decline Task"
+									data-cs-source="page"
+								>
+									Decline Task
+								</button>
+								<button
+									(click)="markCampaignGroupStatus('TaskScheduled'); recordButtonClick($event)"
+									[attr.data-test-id]="selectedCampaign?.campaignName + '-accept'"
+									[disabled]="isApprovalActionInProgress"
+									class="convo-btn-normal convo-btn-primary"
+									data-cs-id="8e0bce78-9c1d-4180-a82a-82f659c5eef8"
+									data-cs-label="Accept Task"
+									data-cs-source="page"
+								>
+									Accept Task
+								</button>
+							</div>
+						</div>
+					</div>
+					<div
+						*ngIf="
+							selectedCampaign?.groupTaskStatus === 'CampaignBriefSent' ||
+							selectedCampaign?.groupTaskStatus === 'TaskRequestSent'
+						"
+						class="task-wrap-footer"
+					>
+						<img alt="" src="./assets/images/timelapse-icon.svg" />
+						<span
+							>Request expires on
+							<strong> {{ selectedCampaign?.endDateAtUTC | date: 'dd MMM YYYY, hh:mm a' }} </strong></span
+						>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="selectedCampaign?.campaignTasks && selectedCampaign?.campaignTasks.length === 0" class="container">
+				<p class="empty-task">This task will need to be posted manually</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Accept Campaign Modal -->
+<div
+	aria-hidden="true"
+	aria-labelledby="accept-campaign-modal"
+	class="modal fade"
+	id="accept-campaign-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pl-4">
+				<button
+					(click)="recordButtonClick($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="4cf2fa64-0e70-467e-86f6-fc7caadafa96"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					id="closeTask"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h5 class="pt-3 pb-2">Congratulations!</h5>
+				<p>The campaign tasks are added to Post Publisher.</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="navigateToSchedulePosts($event)"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="b072d4a2-af58-4140-b04d-3ce9c4d6211d"
+					data-cs-label="Visit Schedule Posts"
+					data-cs-source="dialog"
+					type="button"
+				>
+					Go to Post Publisher
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Reject Campaign Modal - Step-1 -->
+<div *ngIf="campaignRejectionConfirmation" class="modal modal-component" style="display: block">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pl-4">
+				<h5 class="pt-3 pb-2">Decline Campaign?</h5>
+				<p>Are you sure you want to decline the {{ selectedCampaign?.campaignName }} Campaign?</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="markCampaignGroupStatus('CampaignDeclined')"
+					[disabled]="isApprovalActionInProgress"
+					class="btn-cancel"
+					type="button"
+				>
+					Decline
+				</button>
+				<button
+					(click)="campaignRejectionConfirmation = false"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Don't Decline
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="campaignTaskRejectionConfirmation" class="modal modal-component" style="display: block">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pl-4">
+				<h5 class="pt-3 pb-2">Decline Task?</h5>
+				<p>Are you sure you want to decline the assigned task for {{ selectedCampaign?.campaignName }} Campaign?</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="markCampaignGroupStatus('TaskDeclined'); recordButtonClick($event)"
+					[disabled]="isApprovalActionInProgress"
+					class="btn-cancel"
+					type="button"
+					data-cs-id="0ac0f103-07af-4ef8-a70d-89b381f72037"
+					data-cs-label="Decline"
+					data-cs-source="dialog"
+				>
+					Decline
+				</button>
+				<button
+					(click)="campaignTaskRejectionConfirmation = false"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-dismiss="modal"
+					type="button"
+				>
+					Don't Decline
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Reject Campaign Modal - Step-2 -->
+<div
+	aria-hidden="true"
+	aria-labelledby="reject-campaign-modal"
+	class="modal fade"
+	id="reject-campaign-modal-step-2"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pl-4">
+				<h5 class="pt-3 pb-2">Campaign Rejected</h5>
+				<p>The Campaign has been successfully rejected.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Okay</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- permission required modal -->
+<ng-container *ngIf="showPermissionRequired">
+	<app-publish-permission-overlay (closeDialog)="cancelPublishPermission($event)"></app-publish-permission-overlay>
+</ng-container>

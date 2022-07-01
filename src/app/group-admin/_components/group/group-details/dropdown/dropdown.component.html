@@ -1,0 +1,62 @@
+<!-- Source : https://github.com/leovo2708/ngx-treeview/blob/master/src/lib/dropdown-treeview.component.html -->
+<div class="dropdown" ngxDropdown>
+	<div
+		aria-expanded="false"
+		aria-haspopup="true"
+		class="fake-input"
+		data-toggle="dropdown"
+		dropdown-toggle
+		id="dropdownMenuLink"
+	>
+		<div *ngIf="setSelectedList !== undefined && setSelectedList !== null">
+			<span *ngIf="setSelectedList.length === 0 || setSelectedList[0] === 'null'" class="placeholder">
+				{{ placeholder }}
+			</span>
+			<mat-chip-list *ngIf="setSelectedList[0] !== 'null'" [hidden]="renderedOn === 'Mobile'">
+				<mat-chip *ngFor="let row of setSelectedList | slice: 0:2; let i = index">
+					<span
+						>{{ row }}
+						<button (click)="removeSelectedItem(row, i)" class="close-btn" type="button">
+							<img alt="" src="assets/images/close-icon.svg" />
+						</button>
+					</span>
+				</mat-chip>
+				<mat-chip *ngIf="setSelectedList.length > 2" color="accent">
+					+ {{ setSelectedList.length - 2 }}
+					more
+				</mat-chip>
+			</mat-chip-list>
+			<mat-chip-list *ngIf="setSelectedList[0] !== 'null'" [hidden]="renderedOn === 'Desktop'">
+				<mat-chip *ngFor="let row of setSelectedList | slice: 0:1; let i = index">
+					<span
+						>{{ row }}
+						<button (click)="removeSelectedItem(row, i)" class="close-btn" type="button">
+							<img alt="" src="assets/images/close-icon.svg" />
+						</button>
+					</span>
+				</mat-chip>
+				<mat-chip *ngIf="setSelectedList.length > 1" color="accent">
+					+ {{ setSelectedList.length - 1 }}
+					more
+				</mat-chip>
+			</mat-chip-list>
+		</div>
+	</div>
+	<div
+		(click)="$event.stopPropagation()"
+		aria-labelledby="dropdownMenu"
+		aria-labelledby="dropdownMenuLink"
+		class="dropdown-menu-wrapper dropdown-menu"
+		ngxDropdownMenu
+	>
+		<div class="dropdown-container">
+			<ngx-treeview
+				(selectedChange)="onSelectedChange($event)"
+				[config]="config"
+				[items]="optionsList"
+				placeholder="Search"
+			>
+			</ngx-treeview>
+		</div>
+	</div>
+</div>

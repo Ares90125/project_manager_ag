@@ -1,0 +1,19 @@
+<div>
+	<ng-container
+		*ngIf="
+			user &&
+			(user.userType === 'BrandMember' || user.userType === 'CSAdmin') &&
+			(renderedOn === 'Desktop' || (renderedOn === 'Mobile' && showHeader))
+		"
+	>
+		<app-header [user]="user"></app-header>
+	</ng-container>
+	<ng-container
+		*ngIf="
+			user && user.userType === 'GroupMember' && (renderedOn === 'Desktop' || (renderedOn === 'Mobile' && showHeader))
+		"
+	>
+		<app-group-header [user]="user"></app-group-header>
+	</ng-container>
+	<router-outlet #outlet (activate)="onActivate($event, outlet)"></router-outlet>
+</div>

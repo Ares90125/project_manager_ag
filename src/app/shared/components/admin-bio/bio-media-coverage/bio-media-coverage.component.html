@@ -1,0 +1,142 @@
+<div class="bio-card">
+	<h5><img src="./assets/images/media-icon.png" alt="" /> Media coverage</h5>
+	<h6>
+		Share links to articles talking about you in blogs/websites that might interest brands
+		<strong>(max. 5 articles)</strong>.
+	</h6>
+	<div class="media-coverage-wrap">
+		<div class="card-row" *ngFor="let mediaData of mediaCoverageList; let i = index">
+			<div class="card-row-left">
+				<a
+					class="media-row"
+					href="javascript:void(0)"
+					data-cs-id="a6259504-6a1b-4486-8192-1269096e3a70"
+					data-cs-label="Media Coverage Link opened"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); redirectToUrl($event, mediaData?.url)"
+					target="_blank"
+				>
+					<div class="media-row-left">
+						<ng-container *ngIf="mediaData?.imageUrl; else defaultMetaImage">
+							<img [src]="mediaData?.imageUrl" alt="" />
+						</ng-container>
+						<ng-template #defaultMetaImage>
+							<img src="assets/images/default_meta_image.png" alt="" />
+						</ng-template>
+					</div>
+					<div class="media-row-right">
+						<h6>{{ mediaData.title }}</h6>
+						<p>{{ mediaData.description }}</p>
+						<span class="link">{{ mediaData.url }}</span>
+					</div>
+				</a>
+			</div>
+			<div class="card-row-right">
+				<button
+					data-cs-id="8efea131-fd37-4acb-8d41-c9f177be6ab8"
+					data-cs-label="Cross"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); removeMediaCoverage(i)"
+					class="remove-btn"
+				>
+					<img src="./assets/images/remove-icon.svg" alt="" />
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<button
+		*ngIf="mediaCoverageList?.length < 5"
+		class="convo-btn-normal convo-btn-bordered convo-btn-small"
+		data-cs-id="f3cdedde-7b26-4dc6-8132-1a6601dd0e0c"
+		data-cs-label="Add article"
+		data-cs-source="page"
+		(click)="recordButtonClick($event); showMediaCoveragePopup()"
+	>
+		<img src="./assets/images/icon_add_blue.svg" alt="" /> <span>Add article</span>
+	</button>
+</div>
+
+<div class="modal file-alert" *ngIf="showArticleForm">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add article</h5>
+				<button
+					type="button"
+					data-cs-id="281fedbd-18ad-49fe-8672-c637e8a330be"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeAddArticle"
+					(click)="recordButtonClick($event); closeMediaCoveragePopup()"
+					class="close-btn"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="add-media-body">
+					<form [formGroup]="articleForm">
+						<div class="input-wrap">
+							<label>Article URL <sup>*</sup></label>
+							<input
+								(delayedInput)="processMetaInfo($event)"
+								appDelayedInput
+								type="text"
+								name="article"
+								formControlName="article"
+								placeholder="Paste article URL here.."
+								class="convo-input"
+							/>
+							<ng-container *ngIf="showError">
+								<div class="error-message">
+									<img src="./assets/images/icon-error.svg" alt="" /> <span>Please enter a valid URL</span>
+								</div>
+							</ng-container>
+						</div>
+						<ng-container *ngIf="showMetaLoader">
+							<div class="media-coverage-loader">
+								<app-loading-shimmer [type]="3"></app-loading-shimmer>
+							</div>
+						</ng-container>
+					</form>
+					<div class="media-coverage-wrap" *ngIf="metaPreview && !showMetaLoader">
+						<a
+							class="media-row"
+							href="javascript:void(0)"
+							(click)="redirectToUrl($event, metaPreviewData?.url)"
+							target="_blank"
+						>
+							<div class="media-row-left">
+								<ng-container *ngIf="metaPreviewData?.imageUrl; else defaultMetaImage">
+									<img [src]="metaPreviewData?.imageUrl" alt="" />
+								</ng-container>
+								<ng-template #defaultMetaImage>
+									<img src="assets/images/default_meta_image.png" alt="" />
+								</ng-template>
+							</div>
+							<div class="media-row-right">
+								<h6>{{ metaPreviewData?.title }}</h6>
+								<p>{{ metaPreviewData?.description }}.</p>
+								<span class="link">{{ metaPreviewData?.url }}</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0">
+				<button
+					type="button"
+					[disabled]="!articleForm.valid || !metaPreview"
+					data-cs-id="814a20ad-9052-4595-a762-6dcbd3e776db"
+					data-cs-label="Done"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); addMediaCoverage()"
+					class="convo-btn-normal convo-btn-primary w-100 convo-btn-big"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

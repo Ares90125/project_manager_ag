@@ -1,0 +1,183 @@
+<div class="opt-in-card-container" data-test-id="opt-in-container">
+	<div class="opt-in-card-wrapper">
+		<ng-container *ngIf="optInCardOpen || renderedOn === 'Mobile'; else optInCardNotOpen">
+			<ng-container *ngFor="let card of promptCardForUI">
+				<div class="opt-in-card">
+					<div class="opt-in-conatiner">
+						<div class="data-wrapper">
+							<button
+								class="close-btn"
+								[attr.data-cs-id]="card.closeBtnCsId"
+								[attr.data-test-id]="card.closeTestId"
+								data-cs-label="Close"
+								data-cs-source="page"
+								(click)="card.closeMethod(promptCard, card); recordButtonClick($event)"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.25 4.75843C14.925 4.43343 14.4 4.43343 14.075 4.75843L10 8.8251L5.925 4.7501C5.6 4.4251 5.075 4.4251 4.75 4.7501C4.425 5.0751 4.425 5.6001 4.75 5.9251L8.825 10.0001L4.75 14.0751C4.425 14.4001 4.425 14.9251 4.75 15.2501C5.075 15.5751 5.6 15.5751 5.925 15.2501L10 11.1751L14.075 15.2501C14.4 15.5751 14.925 15.5751 15.25 15.2501C15.575 14.9251 15.575 14.4001 15.25 14.0751L11.175 10.0001L15.25 5.9251C15.5667 5.60843 15.5667 5.0751 15.25 4.75843Z"
+										fill="#9999A7"
+									/>
+								</svg>
+							</button>
+							<div class="data-wrapper-head" [attr.data-test-id]="card.testId">
+								<figure><img src="{{ card.icon }}" alt="" /></figure>
+								<div class="data-wrapper-head-right">
+									<h6 class="{{ card.tag }}">
+										{{ card.header }} <span>{{ card.tag }}</span>
+									</h6>
+									<p>{{ card.subHeader }}</p>
+								</div>
+							</div>
+							<div class="data-wrapper-foot" [class.double-btn]="card.button.length === 2">
+								<div *ngFor="let btn of card.button">
+									<ng-container *ngIf="btn.argument; else withoutArgument">
+										<button
+											class="{{ btn.class }}"
+											data-toggle="modal"
+											[attr.data-cs-id]="btn.csId"
+											[attr.data-cs-label]="btn.text"
+											data-cs-source="page"
+											data-target="#convosight-whatsapp-opt"
+											(click)="btn.clickEvent(btn.argument); recordButtonClick($event)"
+											[attr.data-test-id]="btn.testId"
+										>
+											{{ btn.text }}
+										</button>
+									</ng-container>
+									<ng-template #withoutArgument>
+										<button
+											class="{{ btn.class }}"
+											data-toggle="modal"
+											[attr.data-cs-id]="btn.csId"
+											[attr.data-cs-label]="btn.text"
+											data-cs-source="page"
+											data-target="#convosight-whatsapp-opt"
+											(click)="btn.clickEvent(); recordButtonClick($event)"
+											[attr.data-test-id]="btn.testId"
+										>
+											{{ btn.text }}
+										</button>
+									</ng-template>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+		</ng-container>
+		<ng-template #optInCardNotOpen>
+			<ng-container *ngIf="!loaderForCard && promptCardForUI.length > 0">
+				<div class="opt-in-card">
+					<div class="opt-in-conatiner">
+						<div class="data-wrapper">
+							<button
+								class="close-btn"
+								[attr.data-cs-id]="selectedCard.closeBtnCsId"
+								data-cs-label="Close"
+								data-cs-source="page"
+								(click)="selectedCard.closeMethod(); recordButtonClick($event)"
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M15.25 4.75843C14.925 4.43343 14.4 4.43343 14.075 4.75843L10 8.8251L5.925 4.7501C5.6 4.4251 5.075 4.4251 4.75 4.7501C4.425 5.0751 4.425 5.6001 4.75 5.9251L8.825 10.0001L4.75 14.0751C4.425 14.4001 4.425 14.9251 4.75 15.2501C5.075 15.5751 5.6 15.5751 5.925 15.2501L10 11.1751L14.075 15.2501C14.4 15.5751 14.925 15.5751 15.25 15.2501C15.575 14.9251 15.575 14.4001 15.25 14.0751L11.175 10.0001L15.25 5.9251C15.5667 5.60843 15.5667 5.0751 15.25 4.75843Z"
+										fill="#9999A7"
+									/>
+								</svg>
+							</button>
+							<div class="data-wrapper-head">
+								<figure><img src="{{ selectedCard.icon }}" alt="" /></figure>
+								<div class="data-wrapper-head-right">
+									<h6 class="{{ selectedCard.tag }}">
+										{{ selectedCard.header }} <span>{{ selectedCard.tag }}</span>
+									</h6>
+									<p>{{ selectedCard.subHeader }}</p>
+								</div>
+							</div>
+							<div class="data-wrapper-foot" [class.double-btn]="selectedCard.button.length === 2">
+								<div *ngFor="let btn of selectedCard.button">
+									<button
+										class="{{ btn.class }}"
+										data-toggle="modal"
+										[attr.data-cs-id]="btn.csId"
+										[attr.data-cs-label]="btn.text"
+										data-cs-source="page"
+										data-target="#convosight-whatsapp-opt"
+										(click)="btn.clickEvent(); recordButtonClick($event)"
+									>
+										{{ btn.text }}
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-shadow" *ngIf="promptCardForUI.length === 4"></div>
+				<div class="card-shadow" *ngIf="promptCardForUI.length >= 3"></div>
+				<div class="card-shadow" *ngIf="promptCardForUI.length >= 2"></div>
+			</ng-container>
+			<div class="opt-loader-wrapper" *ngIf="loaderForCard">
+				<div class="loading-strip primary"></div>
+				<div class="loading-strip secondary"></div>
+			</div>
+		</ng-template>
+		<div class="opt-in-card-footer-wrapper" *ngIf="renderedOn === 'Desktop' && promptCardForUI.length > 1">
+			<button
+				*ngIf="optInCardOpen"
+				class="opt-in-btn"
+				data-cs-id="6a19cd53-2eca-4da0-9461-e287054d420b"
+				data-cs-label="Show less"
+				data-cs-source="page"
+				(click)="showOneCard($event)"
+			>
+				<span>Show less</span>
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M4.47334 9.80671C4.73334 10.0667 5.15334 10.0667 5.41334 9.80671L8 7.22004L10.5867 9.80671C10.8467 10.0667 11.2667 10.0667 11.5267 9.80671C11.7867 9.54671 11.7867 9.12671 11.5267 8.86671L8.46667 5.80671C8.20667 5.54671 7.78667 5.54671 7.52667 5.80671L4.46667 8.86671C4.21334 9.12004 4.21334 9.54671 4.47334 9.80671Z"
+						fill="#707084"
+					/>
+				</svg>
+			</button>
+
+			<button
+				*ngIf="!optInCardOpen"
+				class="opt-in-btn"
+				data-cs-id="6a19cd53-2eca-4da0-9461-e287054d420b"
+				data-cs-label="Show more"
+				data-cs-source="page"
+				(click)="showAllCard($event)"
+			>
+				<span>Show more</span>
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M4.47331 6.19329C4.73331 5.93329 5.15331 5.93329 5.41331 6.19329L7.99997 8.77996L10.5866 6.19329C10.8466 5.93329 11.2666 5.93329 11.5266 6.19329C11.7866 6.45329 11.7866 6.87329 11.5266 7.13329L8.46664 10.1933C8.20664 10.4533 7.78664 10.4533 7.52664 10.1933L4.46664 7.13329C4.21331 6.87996 4.21331 6.45329 4.47331 6.19329Z"
+						fill="#707084"
+					/>
+				</svg>
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Whatsapp Optin Popup starts here -->
+<div
+	class="convosight-whatsapp-opt-in modal fade"
+	data-backdrop="static"
+	id="convosight-whatsapp-opt"
+	[class.show-did-not-modal]="showDidNotReceivedPopup"
+	*ngIf="showWhatsappOptInOverlay"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<app-whatsapp-opt-in
+				[showConfirmation]="showWAConfirmation"
+				(hideWhatsAppOverlay)="hideWhatsAppOverlay()"
+				(hideWAOptInCard)="hideWAOptInCard()"
+				(hideWAConfirmOptInCard)="hideWAConfirmOptInCard()"
+				(didNotReceiveCardStatus)="didNotReceiveCardStatus($event)"
+			>
+			</app-whatsapp-opt-in>
+		</div>
+	</div>
+</div>
+<!-- Whatsapp Optin Popup ends here -->

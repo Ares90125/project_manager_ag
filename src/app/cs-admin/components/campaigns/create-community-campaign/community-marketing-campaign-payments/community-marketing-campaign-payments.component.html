@@ -1,0 +1,236 @@
+<div class="tasks-dashboard-wrapper">
+	<div class="container">
+		<div class="filters-wrap">
+			<div class="filters-left">
+				<button class="convo-btn-normal convo-btn-border">
+					<img alt="" src="./assets/images/icon-file-download.svg" /><span>Download as ‘.xlsx’</span>
+				</button>
+			</div>
+			<div class="filters-right">
+				<div class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+						<span class="sort-icon"><img alt="" src="./assets/images/icon-sort-by-alpha.svg" /></span>
+						<span>Community Name</span>
+					</button>
+					<div class="convo-dropdown-wrapper dropdown-menu">
+						<button class="dropdown-item">Community Name</button>
+						<button class="dropdown-item">Community Manager</button>
+						<button class="dropdown-item">Task Status</button>
+						<button class="dropdown-item">Payment Status</button>
+					</div>
+				</div>
+
+				<div class="dropdown custom-dropdown">
+					<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+						<span class="sort-icon"><img alt="" src="./assets/images/icon-filter-list.svg" /></span>
+						<span>Filter</span>
+					</button>
+					<div (click)="$event.stopPropagation()" class="convo-dropdown-wrapper dropdown-menu dropdown-menu-wrap">
+						<div class="dropdown-menu-left">
+							<ul class="list-unstyled">
+								<li>Task Status</li>
+								<li>Community Manager</li>
+								<li>Communication Channel</li>
+								<li class="active">Payment Status</li>
+							</ul>
+						</div>
+						<div class="dropdown-menu-right">
+							<ul class="list-unstyled">
+								<li>
+									<mat-checkbox>On Hold</mat-checkbox>
+								</li>
+								<li>
+									<mat-checkbox>Ready for Payment</mat-checkbox>
+								</li>
+								<li>
+									<mat-checkbox>Done</mat-checkbox>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="task-dashboard-body-wrap">
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th class="community-checkbox">
+								<mat-checkbox></mat-checkbox>
+							</th>
+							<th class="p-0 link-icon-th"></th>
+							<th class="group-name-wrap">
+								<div>Community Name</div>
+							</th>
+							<th class="admin-col">
+								<div>Community Admin</div>
+							</th>
+							<th class="poc-col">
+								<div>POC</div>
+							</th>
+							<th class="price-col">
+								<div>Pricing (₹)</div>
+							</th>
+							<th class="status-col">
+								<div>Task Status</div>
+							</th>
+							<th>
+								<div>Payment Remarks</div>
+							</th>
+							<th>
+								<div>Payment Status</div>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<mat-checkbox></mat-checkbox>
+							</td>
+							<td class="p-0">
+								<a class="link-icon" href="javascript:"><img alt="" src="./assets/images/icon-outbond.svg" /></a>
+							</td>
+							<td class="group-name-wrap">
+								<div>
+									<span class="group-name">Kids parenting and nutrition</span>
+								</div>
+							</td>
+							<td>
+								<div class="selcted-complete">
+									<img alt="" src="./assets/images/icon-logo-whatsapp.svg" />
+									<span>Abhishek Sharma</span>
+								</div>
+
+								<div class="not-selected-wrap">
+									<span class="not-selected-label" hidden>pick a value</span>
+									<div class="custom-dropdown-wrapper" hidden>
+										<app-custom-dropdown></app-custom-dropdown>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="not-selected-wrap">
+									<span class="not-selected-label" hidden>pick a value</span>
+									<div class="custom-dropdown-wrapper" hidden>
+										<app-custom-dropdown></app-custom-dropdown>
+									</div>
+								</div>
+								<div class="selcted-complete">
+									<span>Piyush Chandra</span>
+								</div>
+							</td>
+							<td>
+								<div class="not-selected-wrap">
+									<span class="not-selected-label" hidden>pick a value</span>
+									<div class="custom-dropdown-wrapper" hidden>
+										<input class="input" type="text" />
+									</div>
+								</div>
+								<div class="selcted-complete"><span>15,500</span></div>
+							</td>
+							<td>
+								<div class="status status-empty">Empty</div>
+							</td>
+							<td>
+								<div class="not-selected-wrap">
+									<span class="not-selected-label">add remarks</span>
+								</div>
+								<div class="selcted-complete" hidden><span>₹1,000</span></div>
+							</td>
+							<td>
+								<div class="selcted-complete"><span>On Hold</span></div>
+							</td>
+							<td>
+								<div>
+									<ng-template #paymentDetailsTooltip>
+										<div class="text-secondary">Payment Details</div>
+										<strong>Unavailable</strong>
+									</ng-template>
+									<img
+										[popover]="paymentDetailsTooltip"
+										alt=""
+										hidden
+										placement="left"
+										src="./assets/images/dollar-green-icon.svg"
+										triggers="hover"
+									/>
+
+									<img
+										[popover]="paymentDetailsTooltip"
+										alt=""
+										placement="left"
+										src="./assets/images/dollar-gray-icon.svg"
+										triggers="hover"
+									/>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Payment Status Modal -->
+<div aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Payment Status</h5>
+				<button class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group m-0">
+					<h6>Select Payment Status</h6>
+					<app-custom-dropdown dafaultText="Select POC"></app-custom-dropdown>
+				</div>
+
+				<div class="action-row">
+					<button class="convo-btn-normal convo-btn-primary w-100" disabled type="button">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Price Modal -->
+<div aria-hidden="true" class="modal modal-component" tabindex="-1">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set specific amount</h5>
+				<button class="close" type="button">
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-4 col">
+						<div class="form-group">
+							<h6>Currency</h6>
+							<app-custom-dropdown></app-custom-dropdown>
+						</div>
+					</div>
+					<div class="col-8 col">
+						<div class="form-group m-0">
+							<h6>Price</h6>
+							<input class="form-control" placeholder="Enter price..." type="text" />
+						</div>
+					</div>
+				</div>
+
+				<div class="action-row">
+					<button class="convo-btn-normal convo-btn-primary w-100" disabled type="button">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

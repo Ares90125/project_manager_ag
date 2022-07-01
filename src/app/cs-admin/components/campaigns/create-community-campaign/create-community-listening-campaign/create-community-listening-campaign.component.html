@@ -1,0 +1,274 @@
+<div class="campaign-details-wrapper">
+	<div class="head-wrapper">
+		<div class="container">
+			<div class="left-section">
+				<ul class="list-unstyled breadcrumb-nav">
+					<li (click)="navigateToBrands()"><a>Brands</a></li>
+					<li (click)="navigateToCampaigns()" *ngIf="selectedBrand">
+						<a>{{ selectedBrand.name }}</a>
+					</li>
+					<li (click)="navigateToCampaigns()"><a>Campaigns</a></li>
+					<li *ngIf="campaignName">
+						<a>{{ campaignName }}</a>
+					</li>
+				</ul>
+				<h4 class="m-0">Community Listening</h4>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div
+			*ngIf="campaignDetailsForm"
+			class="marketing-campaign-row {{ isReportEdit ? 'marketing-campaign-modal' : '' }}"
+		>
+			<div class="campaign-row-header">
+				<div class="campaign-row-header-description">
+					<p>
+						<strong>Edit campaign details</strong>
+					</p>
+				</div>
+				<div *ngIf="!isReportEdit" class="campaign-row-header-actions">
+					<div class="box-actions">
+						<button (click)="createCampaignDetails(campaign)" class="btn-cancel">Cancel</button>
+						<button
+							(click)="sendCampaignDetails(); recordButtonClick($event)"
+							*ngIf="campaignDetailsForm"
+							[disabled]="!campaignDetailsForm.valid || groupIds.length === 0 || submittingCampaignDetails"
+							class="convo-btn-primary convo-btn-normal ml-2"
+							data-cs-id="1154efe2-8cd1-4b61-bbf0-0f44f61e44d9"
+							data-cs-label="Save Changes"
+							data-cs-source="page"
+						>
+							{{ submittingCampaignDetails ? 'Saving...' : 'Save Changes' }}
+						</button>
+					</div>
+				</div>
+				<button
+					data-target="#show-file-type-error-message"
+					data-toggle="modal"
+					hidden
+					id="showFileTypeMessage"
+				></button>
+				<button
+					data-target="#show-file-data-error-message"
+					data-toggle="modal"
+					hidden
+					id="showFileDataMessage"
+				></button>
+			</div>
+			<div class="campaign-row-body">
+				<div [formGroup]="campaignDetailsForm" class="add-details-row">
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<label><strong>Name</strong> for listening campaign</label>
+								<input
+									class="form-control"
+									formControlName="campaignName"
+									placeholder="Leave blank to use campaign name instead"
+									type="text"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label
+									><strong>Start</strong> Date
+									<sup data-test-id="text-asterisk-start-date-listening-campaign">*</sup></label
+								>
+								<div class="datepicker-wrap">
+									<input
+										(click)="picker.open()"
+										[matDatepicker]="picker"
+										formControlName="startDate"
+										placeholder="Date"
+										type="text"
+									/>
+									<mat-datepicker-toggle [for]="picker" matSuffix> </mat-datepicker-toggle>
+									<mat-datepicker #picker></mat-datepicker>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label
+									><strong>End</strong> Date
+									<sup data-test-id="text-asterisk-end-date-listening-campaign">*</sup></label
+								>
+								<div class="datepicker-wrap">
+									<input
+										(click)="picker2.open()"
+										[matDatepicker]="picker2"
+										[min]="minDate"
+										formControlName="endDate"
+										placeholder="Date"
+										type="text"
+									/>
+									<mat-datepicker-toggle [for]="picker2" matSuffix> </mat-datepicker-toggle>
+									<mat-datepicker #picker2></mat-datepicker>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Campaign <strong>brief</strong></label>
+								<quill-editor [modules]="quillConfig" formControlName="brief" placeholder="Add Campaign brief">
+								</quill-editor>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Campaign <strong>objective</strong></label>
+								<quill-editor [modules]="quillConfig" formControlName="objective" placeholder="Add Campaign objective">
+								</quill-editor>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label
+									><strong>Category</strong>
+									<sup data-test-id="text-asterisk-category-listening-campaign">*</sup></label
+								>
+								<div class="custom-dropdown" *ngIf="keywordCategories">
+									<div class="custom-dropdown">
+										<app-custom-dropdown
+											(selectionChange)="getSubCategories($event)"
+											[items]="keywordCategories"
+											defaultText="Select Category"
+											formControlName="category"
+											data-test-id="drop-down-category-listening-campaign"
+										></app-custom-dropdown>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label
+									><strong>Sub-Category</strong>
+									<sup data-test-id="text-asterisk-sub-category-listening-campaign">*</sup></label
+								>
+								<div class="custom-dropdown" *ngIf="selectedItems.length > 0">
+									<app-custom-dropdown
+										(selectionChange)="getBrands($event, campaignDetailsForm.get('category').value)"
+										[items]="keywordSubCategories"
+										[isMultipleSelection]="'true'"
+										[selectedItems]="selectedItems"
+										[value]="selectedItems[0]"
+										defaultText="Select Sub Category"
+										data-test-id="drop-down-sub-category-listening-campaign"
+									></app-custom-dropdown>
+								</div>
+								<div class="custom-dropdown" *ngIf="selectedItems.length === 0">
+									<app-custom-dropdown
+										(selectionChange)="getBrands($event, campaignDetailsForm.get('category').value)"
+										[items]="keywordSubCategories"
+										[isMultipleSelection]="'true'"
+										[selectedItems]="selectedItems"
+										[value]="''"
+										defaultText="Select Sub Category"
+										data-test-id="drop-down-sub-category-listening-campaign"
+									>
+									</app-custom-dropdown>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label><strong>Brand</strong> <sup data-test-id="text-asterisk-brand-listening-campaign">*</sup></label>
+								<div class="custom-dropdown">
+									<app-custom-dropdown
+										[items]="keywordBrand"
+										defaultText="Select Brand"
+										formControlName="brand"
+										data-test-id="drop-down-brand-listening-campaign"
+									>
+									</app-custom-dropdown>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<label><strong>Power BI</strong> dashboard url</label>
+								<input
+									class="form-control"
+									formControlName="powerBIDashboardUrl"
+									placeholder="PowerBI Dashboard Link"
+									type="text"
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label
+									><strong>Group IDs</strong>
+									<sup data-test-id="text-asterisk-group-id-listening-campaign">*</sup></label
+								>
+								<a class="download-button" (click)="downloadSheet(true)">Download Sample Sheet</a>
+								<div class="custom-upload-csv-wrap">
+									<input type="file" (change)="uploadGroupData($event)" accept=".csv, .xls, .xlsx" id="taskFile" />
+									<div class="custom-upload-csv">
+										<svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M19.35 6.04C18.67 2.59 15.64 0 12 0C9.11 0 6.6 1.64 5.35 4.04C2.34 4.36 0 6.91 0 10C0 13.31 2.69 16 6 16H19C21.76 16 24 13.76 24 11C24 8.36 21.95 6.22 19.35 6.04ZM14 9V13H10V9H7L12 4L17 9H14Z"
+												fill="#3654FF"
+											/>
+										</svg>
+										<span>Upload CSV of Group IDs</span>
+									</div>
+								</div>
+								<a
+									class="download-button"
+									style="padding-left: 0px"
+									*ngIf="groupIds.length > 0"
+									(click)="downloadSheet(false)"
+									>Download Sheet</a
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-type-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content" data-test-id="dialog-incorrect-file-listeing-campaign">
+			<div class="modal-body">
+				<h6>Incorrect file format</h6>
+				<p class="m-0">Only files with .csv, .xls or .xlsx extension are allowed</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade incorrect-fill-modal" id="show-file-data-error-message" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Incorrect file</h6>
+				<p class="m-0">Download sample template for reference</p>
+			</div>
+			<div class="modal-footer">
+				<button class="convo-btn-primary convo-btn-normal px-4" data-dismiss="modal" type="button">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>

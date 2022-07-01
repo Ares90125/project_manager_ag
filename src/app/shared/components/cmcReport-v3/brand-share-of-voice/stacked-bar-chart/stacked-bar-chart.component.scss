@@ -1,0 +1,122 @@
+:host {
+	::ng-deep {
+		.tooltip-container {
+			color: white;
+			text-align: center;
+			min-width: 250px;
+			z-index: 999;
+
+			* {
+				z-index: 9999;
+			}
+
+			span.arrow {
+				display: inline-block;
+				position: absolute;
+				width: 30px;
+				height: 30px;
+				background: #33334f;
+				top: 0px;
+				left: 50%;
+				z-index: 0;
+				transform: rotate(45deg) translate(-50%);
+			}
+
+			.row {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1%;
+
+				* {
+					margin: 1%;
+				}
+			}
+
+			.color {
+				fill: 'yellow';
+				border-radius: 3px;
+				width: 15px;
+				height: 15px;
+				display: inline-block;
+			}
+		}
+	}
+
+	display: flex;
+
+	::ng-deep {
+		highcharts-chart {
+			overflow: visible !important;
+
+			& * {
+				overflow: visible !important;
+			}
+
+			span[class^='sov-bar-column'] {
+				display: flex;
+				align-items: center;
+			}
+
+			.category-name {
+				font-size: 1.2em;
+				color: #9999a7;
+			}
+		}
+	}
+
+	.custom-stackbar-legends-container {
+		font-size: 0.95em;
+		background: #fbfcfd;
+		padding: 1%;
+		width: 23%;
+		height: fit-content;
+		margin-left: 2%;
+		display: inline-block;
+		border-radius: 5px;
+		border: 1px solid #ececec;
+
+		h2 {
+			color: #9999a7;
+			font-size: 1em;
+		}
+
+		ul {
+			max-height: 300px;
+			overflow: auto;
+			padding-left: 2%;
+
+			&.show-border {
+				border-bottom: 1px solid #d6d6dc;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background: #d6d6dc;
+			}
+
+			li {
+				padding: 2% 0px;
+				list-style-type: none;
+				color: #33334f;
+				cursor: default;
+				display: flex;
+				align-items: center;
+
+				.item-color {
+					height: 13px;
+					width: 13px;
+					border-radius: 2px;
+					display: inline-block;
+					margin-right: 3%;
+				}
+
+				.brand-name {
+					overflow: hidden;
+					display: inline-block;
+					text-overflow: ellipsis;
+					width: 170px;
+				}
+			}
+		}
+	}
+}

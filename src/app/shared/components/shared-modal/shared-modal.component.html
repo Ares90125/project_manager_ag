@@ -1,0 +1,209 @@
+<div class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div>
+					<button
+						(click)="navigate()"
+						class="back-btn"
+						data-cs-id="826b4c9b-4d0a-4ddd-b7e1-d42ea375af10"
+						data-cs-label="Overview"
+						data-cs-source="page"
+					>
+						<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19 11H7.82998L12.71 6.12C13.1 5.73 13.1 5.09 12.71 4.7C12.32 4.31 11.69 4.31 11.3 4.7L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+					<h5 class="modal-title">Add file</h5>
+				</div>
+				<button
+					#closePopUp
+					(click)="closeFileUploadPopup()"
+					class="close-btn"
+					data-cs-id="281fedbd-18ad-49fe-8672-c637e8a330be"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeAddArticle"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div *ngIf="!isFileUploading && !isFileUploaded && !isLinkUploading && !isLinkUploaded">
+					<div class="upload-label">
+						<p>Select a source to add file from:</p>
+					</div>
+					<div class="upload-types">
+						<div class="type-options type-1">
+							<input (change)="fileChange($event)" class="input-file" title="" type="file" />
+							<img alt="" src="./assets/images/icon-upload-blue.svg" />
+							<p class="type-text">Upload file</p>
+						</div>
+						<div (click)="enableURLLink()" class="type-options type-2">
+							<img alt="" src="./assets/images/icon_url_blue.svg" />
+							<p class="type-text">URL link</p>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="isFileUploading || isFileUploaded" class="files-wrapper">
+					<div class="card-row">
+						<div class="card-row-left">
+							<figure
+								*ngIf="
+									getFileCategory(filesDetails.fileType) === 'type1' &&
+									filesDetails.fileURL !== null &&
+									!defaultIconCheck
+								"
+							>
+								<img (error)="defaultIconCheck = true" alt="" class="real-image" src="{{ filesDetails.fileURL }}" />
+							</figure>
+							<figure
+								*ngIf="getFileCategory(filesDetails.fileType) === 'type1' && defaultIconCheck"
+								class="file-image-icon"
+							>
+								<img alt="" class="file-icon" src="./assets/images/file-image-icon.svg" />
+							</figure>
+
+							<video
+								(error)="defaultIconCheck = true"
+								*ngIf="
+									getFileCategory(filesDetails.fileType) === 'type2' &&
+									filesDetails.fileURL !== null &&
+									!defaultIconCheck
+								"
+								class="real-video"
+								src="{{ filesDetails.fileURL + '#t=0.001' }}"
+								type="video/mp4"
+							></video>
+							<figure
+								*ngIf="getFileCategory(filesDetails.fileType) === 'type2' && defaultIconCheck"
+								class="file-video-icon"
+							>
+								<img alt="" class="file-icon" src="./assets/images/file-video-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type3'" class="file-xls-icon">
+								<img alt="" class="file-icon" src="assets/images/file-xls-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type4'" class="file-pdf-icon">
+								<img alt="" class="file-icon" src="assets/images/file-pdf-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type5'" class="file-ppt-icon">
+								<img alt="" class="file-icon" src="assets/images/file-ppt-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type6'" class="file-zip-icon">
+								<img alt="" class="file-icon" src="assets/images/file-zip-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type7'" class="file-music-icon">
+								<img alt="" class="file-icon" src="assets/images/file-music-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type8'" class="file-doc-icon">
+								<img alt="" class="file-icon" src="assets/images/file-doc-icon.svg" />
+							</figure>
+							<figure *ngIf="getFileCategory(filesDetails.fileType) === 'type9'" class="file-random-icon">
+								<img alt="" class="file-icon" src="assets/images/file-random-icon.svg" />
+							</figure>
+							<div class="file-infor-wrap">
+								<div class="input-wrap">
+									<input
+										(focusout)="setToDefault()"
+										(input)="updateTitle()"
+										[disabled]="isFileUploading"
+										class="convo-input"
+										id="fileTitleInput"
+										maxlength="36"
+										type="text"
+										value="{{ initialFileName }}"
+									/>
+								</div>
+								<ng-container *ngIf="isFileUploaded">
+									<div class="file-info">
+										<span>{{ filesDetails.fileType | uppercase }}</span> ·
+										<span>{{ filesDetails.fileSize | fileSize }}</span>
+									</div>
+								</ng-container>
+								<div *ngIf="isFileUploading" class="doc-spinner">
+									<p class="spinner btn-spinner"></p>
+									<h6>Uploading...</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="isLinkUploading || isLinkUploaded" class="url-wrap">
+					<form [formGroup]="URLForm">
+						<div class="input-wrap">
+							<label>URL link <sup>*</sup></label>
+							<input
+								(delayedInput)="processMetaInfo($event)"
+								appDelayedInput
+								class="convo-input"
+								formControlName="URLLink"
+								id="URLTitleInput"
+								name="URLLink"
+								placeholder="Paste file URL here.."
+								type="text"
+							/>
+							<ng-container *ngIf="showError">
+								<div class="error-message">
+									<img alt="" src="./assets/images/icon-error.svg" /> <span>Please enter a valid URL</span>
+								</div>
+							</ng-container>
+						</div>
+						<ng-container *ngIf="showMetaLoader">
+							<div class="media-coverage-loader">
+								<app-loading-shimmer [type]="3"></app-loading-shimmer>
+							</div>
+						</ng-container>
+					</form>
+					<div *ngIf="metaPreview && !showMetaLoader" class="media-coverage-wrap">
+						<a
+							(click)="redirectToUrl($event, metaPreviewData?.url)"
+							class="media-row"
+							href="javascript:void(0)"
+							target="_blank"
+						>
+							<div class="media-row-left">
+								<ng-container *ngIf="metaPreviewData?.imageUrl; else defaultMetaImage">
+									<img (error)="showDefaultFilePreview($event)" [src]="metaPreviewData?.imageUrl" alt="" />
+								</ng-container>
+								<ng-template #defaultMetaImage>
+									<img alt="" src="assets/images/default_meta_image.png" />
+								</ng-template>
+							</div>
+							<div class="media-row-right">
+								<h6>{{ metaPreviewData?.title }}</h6>
+								<span class="link" title="{{ metaPreviewData.url }}">{{ metaPreviewData?.url }}</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="processTheFile()"
+					*ngIf="isFileUploading || isFileUploaded || isLinkUploading || isLinkUploaded"
+					[disabled]="isFileUploading || isLinkUploading"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="8e65d3d5-d943-4931-a115-7ed3e4fa4f65"
+					data-cs-label="Save changes"
+					data-cs-source="page"
+					type="button"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Error Modal -->
+<ng-container *ngIf="isFileLimitExceeded">
+	<app-error-overlay (closeErrorOverlay)="closeErrorOverlay('fileSizeError')">
+		<h5 class="modal-title" title>File size too large</h5>
+		<p body class="m-0">That file is too large to upload. The maximum file size allowed is <strong>300MB</strong>.</p>
+	</app-error-overlay>
+</ng-container>

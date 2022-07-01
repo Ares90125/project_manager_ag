@@ -1,0 +1,42 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.modal-body {
+	padding: 16px;
+	margin-top: 8px;
+
+	.header-modal {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		h5 {
+			font-size: 18px;
+			flex: 5;
+			text-align: center;
+		}
+
+		button {
+			flex: 0;
+			color: $black-70;
+			background: $cta-bg-grey;
+			border-radius: 100px;
+			border: none;
+		}
+	}
+
+	.video {
+		width: 100%;
+		display: block;
+		background-color: black;
+		border-radius: 6px;
+		min-height: 400px;
+		min-width: 400px;
+
+		@media (max-width: 767px) {
+			min-height: 328px;
+			min-width: 328px;
+		}
+	}
+}

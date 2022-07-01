@@ -1,0 +1,897 @@
+<div *ngIf="campaignAsset.items || !campaignAsset.items" class="campaign">
+	<div class="campaign-heading">
+		<div class="campaign-info-block">
+			<div class="campaign-info-block__inner-container">
+				<span class="campaign-info-block__title">{{ campaignAsset.brandName }}</span>
+				<span class="campaign-info-block__subtitle"
+					>{{ campaignAsset.campaignName }} • {{ campaignAsset.groupName }}</span
+				>
+			</div>
+		</div>
+
+		<div class="campaign-heading__actions-wrapper">
+			<button
+				class="create-task-button"
+				[ngClass]="{
+					disabled: createTaskLoading || campaignAsset.status === 'Done'
+				}"
+				[disabled]="createTaskLoading || campaignAsset.status === 'Done'"
+				(click)="handleRequireAssetModal()"
+			>
+				Require asset
+			</button>
+
+			<button
+				*ngIf="campaignAsset.status !== 'Done'"
+				[disabled]="createTaskLoading || campaignAsset.status !== 'PendingCopiesAssets'"
+				(click)="handleCreateTask()"
+				class="create-task-button"
+				[ngClass]="{disabled: createTaskLoading || campaignAsset.status !== 'PendingCopiesAssets'}"
+			>
+				<img src="./assets/images/plus-icon.svg" alt="" />
+				Create task
+			</button>
+			<button *ngIf="campaignAsset.status === 'Done'" disabled class="create-task-button disabled">Task created</button>
+
+			<button *ngIf="!campaignAsset.rating" class="create-task-button ml-2" (click)="rateFbAdminModal = true">
+				Rate fb admin
+			</button>
+
+			<div *ngIf="campaignAsset.rating" class="admin-rating-container ml-2">
+				<div class="star"></div>
+				<span class="admin-rating-container__rate">{{ campaignAsset.rating }}</span>
+				<span class="admin-rating-container__label">Fb admin rating</span>
+			</div>
+
+			<button *ngIf="selectedNotification.id" class="back-to-campaign-button" (click)="handleBackToPreviousCampaign()">
+				Previous campaign
+			</button>
+		</div>
+	</div>
+
+	<div class="campaign-assets-wrapper">
+		<ng-container *ngIf="campaignAsset.items">
+			<div *ngFor="let asset of campaignAsset.items" class="campaign-asset-block">
+				<ng-container
+					*ngIf="
+						selectedFilter === 'All' ||
+						selectedFilter === 'Approved' ||
+						selectedFilter === 'PendingApproval' ||
+						selectedFilter === 'Declined' ||
+						selectedFilter === 'NotSubmitted' ||
+						(selectedFilter === 'Edit' && asset.updatedByContentTeam) ||
+						(selectedFilter === 'Not edit' && !asset.updatedByContentTeam)
+					"
+				>
+					<!-- text asset -->
+					<div *ngIf="asset.type === 'text'" class="campaign-asset-container">
+						<div class="assets-actions-wrapper">
+							<div (click)="copyToClipboard(asset.value)" class="asset-action">
+								<img alt="copy" src="./assets/images/content-copy-icon.svg" />
+							</div>
+							<!-- <button
+							[ngClass]="{
+								'asset-action': campaignAsset.status,
+								disabled: campaignAsset.status === 'Done'
+							}"
+							[disabled]="campaignAsset.status === 'Done'"
+							(click)="handleUpdateText({asset})"
+						> -->
+							<button
+								[ngClass]="{
+									'asset-action': campaignAsset.status,
+									disabled: campaignAsset.status === 'Done'
+								}"
+								[disabled]="campaignAsset.status === 'Done'"
+								(click)="selectedAssetItem = asset; handleUpdateText()"
+							>
+								<img src="./assets/images/edit-content-icon.svg" alt="edit" />
+								<!-- <img *ngIf="!isEditingText" src="./assets/images/edit-content-icon.svg" alt="edit" /> -->
+								<!-- <img *ngIf="isEditingText" src="./assets/images/check.svg" alt="submit" /> -->
+							</button>
+
+							<div class="dropdown custom-dropdown">
+								<button
+									[disabled]="campaignAsset.status === 'Done'"
+									class="convo-btn-normal convo-btn-border dropdown-toggle"
+									data-toggle="dropdown"
+								>
+									<img alt="profile" src="./assets/images/person_search.svg" />
+									<span>{{
+										asset.assignedContentUserId
+											? getUserRoleById({
+													id: asset.assignedContentUserId,
+													type: 'copywriter'
+											  })
+											: 'Assign Copywriter'
+									}}</span>
+								</button>
+								<div class="convo-dropdown-wrapper dropdown-menu">
+									<button
+										(click)="handleAssignRoleModal({assetItem: asset, assignment: copywriter, role: 'copywriter'})"
+										*ngFor="let copywriter of copywriters"
+										class="dropdown-item"
+									>
+										{{ copywriter.fullname + ' ' + copywriter.username }}
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- <textarea
+						*ngIf="isEditingText"
+						[(ngModel)]="assetText"
+						(input)="changeAssetText($event)"
+						class="campaign-asset campaign-asset--text textarea"
+						name="text"
+						cols="30"
+						rows="10"
+						placeholder="Text asset..."
+						>{{ asset.value }}</textarea
+					> -->
+
+						<!-- <div *ngIf="!isEditingText" id="copyText" class="campaign-asset campaign-asset--text">
+						{{ asset.value }}
+					</div> -->
+
+						<!-- <div *ngIf="isEditingText">
+						<app-my-component [value]="assetText" (handleChange)="changeAssetText($event)"></app-my-component>
+					</div> -->
+
+						<!-- <div *ngIf="!isEditingText">
+						<app-my-component
+							(handleChange)="changeAssetText($event)"
+							[disabled]="true"
+							[value]="asset.value"
+						></app-my-component>
+					</div> -->
+
+						<div
+							id="copyText"
+							class="campaign-asset react-unicode-editor unicode-editor"
+							contenteditable="false"
+							role="textbox"
+							aria-label="textarea"
+							tabindex="0"
+							style="
+								line-height: 1.8;
+								border: 1px solid rgb(214, 214, 220);
+								border-radius: 8px;
+								min-height: 40px;
+								padding: 15px;
+								display: block;
+								white-space: pre-wrap;
+								width: 100%;
+								height: 296px;
+								background-color: white;
+								outline-color: rgb(214, 214, 220);
+								opacity: 0.9;
+								margin-bottom: 8px;
+								overflow-y: auto;
+							"
+						>
+							{{ asset.value }}
+						</div>
+
+						<div class="mb-2" style="height: 21px">
+							<div
+								*ngIf="asset.updatedAtInSeconds && !asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+							<div
+								*ngIf="asset.updatedAtInSeconds && asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated by content team {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+						</div>
+
+						<div class="campaign-actions-container">
+							<div
+								*ngIf="asset.status === 'PendingApproval' || asset.status === 'Empty'"
+								class="campaign-actions-wrapper"
+							>
+								<button
+									(click)="handleRejectionModal({assetItem: asset})"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="" src="./assets/images/close.svg" />
+									Reject
+								</button>
+								<button
+									(click)="
+										handleAssetStatus({
+											campaignId: campaignAsset.campaignId,
+											groupId: campaignAsset.groupId,
+											assetItem: asset,
+											status: 'Approved'
+										})
+									"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="check" src="./assets/images/check.svg" />
+									Approve
+								</button>
+							</div>
+
+							<div *ngIf="asset.status === 'Approved'" class="campaign-action approved">
+								<img alt="check" src="./assets/images/check.svg" />
+								Approved
+							</div>
+
+							<span *ngIf="asset.status === 'Declined'" class="rejected">
+								REJECTED • Notification was sent to Group Admin
+							</span>
+						</div>
+					</div>
+
+					<!-- image asset -->
+					<div *ngIf="asset.type === 'image'" class="campaign-asset-container">
+						<div class="assets-actions-wrapper">
+							<button (click)="onDownload(asset.value)" class="asset-action">
+								<img alt="upload" src="./assets/images/icon-file-download.svg" />
+							</button>
+							<button
+								(click)="uploader.click()"
+								[disabled]="campaignAsset.status === 'Done'"
+								[ngClass]="{
+									'asset-action': campaignAsset.status,
+									disabled: campaignAsset.status === 'Done'
+								}"
+							>
+								<img alt="upload" class="upload" src="./assets/images/icon-file-upload2.png" />
+								<input
+									#uploader
+									(change)="uploadFile({event: $event, asset, type: 'image'})"
+									accept="image/*"
+									hidden
+									type="file"
+								/>
+							</button>
+							<div class="dropdown custom-dropdown">
+								<button
+									[disabled]="campaignAsset.status === 'Done'"
+									class="convo-btn-normal convo-btn-border dropdown-toggle"
+									data-toggle="dropdown"
+								>
+									<img alt="profile" src="./assets/images/person_search.svg" />
+									<span>{{
+										asset.assignedContentUserId
+											? getUserRoleById({
+													id: asset.assignedContentUserId,
+													type: 'designer'
+											  })
+											: 'Assign Designer'
+									}}</span>
+								</button>
+								<div class="convo-dropdown-wrapper dropdown-menu">
+									<button
+										(click)="handleAssignRoleModal({assetItem: asset, assignment: designer, role: 'designer'})"
+										*ngFor="let designer of designers"
+										class="dropdown-item"
+									>
+										{{ designer.fullname + ' ' + designer.username }}
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="campaign-asset campaign-asset--image">
+							<img alt="{{ asset.value }}" src="{{ asset.value }}" />
+							<button
+								(click)="
+									deleteCampaignGroupAsset({
+										campaignId: campaignAsset.campaignId,
+										groupId: campaignAsset.groupId,
+										itemId: asset.id
+									})
+								"
+								*ngIf="campaignAsset.status !== 'Done'"
+								class="delete-asset"
+							>
+								<img alt="delete" src="./assets/images/delete-outline-icon.svg" />
+							</button>
+						</div>
+
+						<div class="mb-2" style="height: 21px">
+							<div
+								*ngIf="asset.updatedAtInSeconds && !asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+							<div
+								*ngIf="asset.updatedAtInSeconds && asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated by content team {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+						</div>
+
+						<div class="campaign-actions-container">
+							<div
+								*ngIf="asset.status === 'PendingApproval' || asset.status === 'Empty'"
+								class="campaign-actions-wrapper"
+							>
+								<button
+									(click)="handleRejectionModal({assetItem: asset})"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="reject" src="./assets/images/close.svg" />
+									Reject
+								</button>
+								<button
+									(click)="
+										handleAssetStatus({
+											campaignId: campaignAsset.campaignId,
+											groupId: campaignAsset.groupId,
+											assetItem: asset,
+											status: 'Approved'
+										})
+									"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="check" src="./assets/images/check.svg" />
+									Approve
+								</button>
+							</div>
+
+							<div *ngIf="asset.status === 'Approved'" class="campaign-action approved">
+								<img alt="check" src="./assets/images/check.svg" />
+								Approved
+							</div>
+
+							<span *ngIf="asset.status === 'Declined'" class="rejected">
+								REJECTED • Notification was sent to Group Admin
+							</span>
+						</div>
+					</div>
+
+					<!-- video asset -->
+					<div *ngIf="asset.type === 'video'" class="campaign-asset-container">
+						<div class="assets-actions-wrapper">
+							<button
+								(click)="uploader.click()"
+								[disabled]="campaignAsset.status === 'Done'"
+								[ngClass]="{
+									'asset-action': campaignAsset.status,
+									disabled: campaignAsset.status === 'Done'
+								}"
+							>
+								<img alt="upload" class="upload" src="./assets/images/icon-file-upload2.png" />
+								<input
+									#uploader
+									(change)="uploadFile({event: $event, asset, type: 'video'})"
+									accept="video/*"
+									hidden
+									type="file"
+								/>
+							</button>
+							<div class="dropdown custom-dropdown">
+								<button
+									[disabled]="campaignAsset.status === 'Done'"
+									class="convo-btn-normal convo-btn-border dropdown-toggle"
+									data-toggle="dropdown"
+								>
+									<img alt="profile" src="./assets/images/person_search.svg" />
+									<span>{{
+										asset.assignedContentUserId
+											? getUserRoleById({
+													id: asset.assignedContentUserId,
+													type: 'designer'
+											  })
+											: 'Assign Designer'
+									}}</span>
+								</button>
+								<div class="convo-dropdown-wrapper dropdown-menu">
+									<button
+										(click)="handleAssignRoleModal({assetItem: asset, assignment: designer, role: 'designer'})"
+										*ngFor="let designer of designers"
+										class="dropdown-item"
+									>
+										{{ designer.fullname + ' ' + designer.username }}
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="campaign-asset campaign-asset--video">
+							<video controls="controls" height="296" width="336">
+								<source src="{{ asset.value }}" />
+							</video>
+							<button
+								(click)="
+									deleteCampaignGroupAsset({
+										campaignId: campaignAsset.campaignId,
+										groupId: campaignAsset.groupId,
+										itemId: asset.id
+									})
+								"
+								*ngIf="campaignAsset.status !== 'Done'"
+								class="delete-asset"
+							>
+								<img alt="delete" src="./assets/images/delete-outline-icon.svg" />
+							</button>
+						</div>
+
+						<div class="mb-2" style="height: 21px">
+							<div
+								*ngIf="asset.updatedAtInSeconds && !asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+							<div
+								*ngIf="asset.updatedAtInSeconds && asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated by content team {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+						</div>
+
+						<div class="campaign-actions-container">
+							<div
+								*ngIf="asset.status === 'PendingApproval' || asset.status === 'Empty'"
+								class="campaign-actions-wrapper"
+							>
+								<button
+									(click)="handleRejectionModal({assetItem: asset})"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="reject" src="./assets/images/close.svg" />
+									Reject
+								</button>
+								<button
+									(click)="
+										handleAssetStatus({
+											campaignId: campaignAsset.campaignId,
+											groupId: campaignAsset.groupId,
+											assetItem: asset,
+											status: 'Approved'
+										})
+									"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="check" src="./assets/images/check.svg" />
+									Approve
+								</button>
+							</div>
+
+							<div *ngIf="asset.status === 'Approved'" class="campaign-action approved">
+								<img alt="check" src="./assets/images/check.svg" />
+								Approved
+							</div>
+
+							<span *ngIf="asset.status === 'Declined'" class="rejected">
+								REJECTED • Notification was sent to Group Admin
+							</span>
+						</div>
+					</div>
+
+					<!-- address asset -->
+					<div *ngIf="asset.type === 'address'" class="campaign-asset-container">
+						<div class="assets-actions-wrapper">
+							<button
+								(click)="handleUpdateAddress({asset})"
+								[disabled]="campaignAsset.status === 'Done'"
+								[ngClass]="{
+									'asset-action': campaignAsset.status,
+									disabled: campaignAsset.status === 'Done'
+								}"
+							>
+								<img *ngIf="!isEditingAddress" alt="edit" src="./assets/images/edit-content-icon.svg" />
+								<img *ngIf="isEditingAddress" alt="submit" src="./assets/images/check.svg" />
+							</button>
+						</div>
+
+						<div *ngIf="!isEditingAddress" class="campaign-asset campaign-asset--address">
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'name') }}</span>
+								<span>Name</span>
+							</div>
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'building') }}</span>
+								<span>Building</span>
+							</div>
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'street') }}</span>
+								<span>Street</span>
+							</div>
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'district') }}</span>
+								<span>District</span>
+							</div>
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'city_pin') }}</span>
+								<span>City+pin</span>
+							</div>
+							<div class="address-row">
+								<span>{{ extractFieldFromJsonByName(asset.value, 'country') }}</span>
+								<span>Country</span>
+							</div>
+						</div>
+						<div *ngIf="isEditingAddress" class="campaign-asset campaign-asset--address">
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'name'})"
+								[(ngModel)]="assetAddress.name"
+								class="address-field"
+								name="name"
+								type="text"
+								value="{{ assetAddress.name }}"
+							/>
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'building'})"
+								[(ngModel)]="assetAddress.building"
+								class="address-field"
+								name="building"
+								type="text"
+								value="{{ assetAddress.building }}"
+							/>
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'street'})"
+								[(ngModel)]="assetAddress.street"
+								class="address-field"
+								name="street"
+								type="text"
+								value="{{ assetAddress.street }}"
+							/>
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'district'})"
+								[(ngModel)]="assetAddress.district"
+								class="address-field"
+								name="district"
+								type="text"
+								value="{{ assetAddress.district }}"
+							/>
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'city_pin'})"
+								[(ngModel)]="assetAddress.city_pin"
+								class="address-field"
+								name="city_pin"
+								type="text"
+								value="{{ assetAddress.city_pin }}"
+							/>
+							<input
+								(input)="changeAssetAddress({value: $event.target.value, field: 'country'})"
+								[(ngModel)]="assetAddress.country"
+								class="address-field"
+								name="country"
+								type="text"
+								value="{{ assetAddress.country }}"
+							/>
+						</div>
+
+						<div class="mb-2" style="height: 21px">
+							<div
+								*ngIf="asset.updatedAtInSeconds && !asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+							<div
+								*ngIf="asset.updatedAtInSeconds && asset.updatedByContentTeam"
+								class="text-right"
+								style="font-size: 14px"
+							>
+								updated by content team {{ asset.updatedAtInSeconds * 1000 | date: 'dd MMM yyyy hh:mm:ss a' }}
+							</div>
+						</div>
+
+						<div class="campaign-actions-container">
+							<div
+								*ngIf="asset.status === 'PendingApproval' || asset.status === 'Empty'"
+								class="campaign-actions-wrapper"
+							>
+								<button
+									(click)="handleRejectionModal({assetItem: asset})"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="reject" src="./assets/images/close.svg" />
+									Reject
+								</button>
+								<button
+									(click)="
+										handleAssetStatus({
+											campaignId: campaignAsset.campaignId,
+											groupId: campaignAsset.groupId,
+											assetItem: asset,
+											status: 'Approved'
+										})
+									"
+									[disabled]="campaignAsset.status === 'Done'"
+									[ngClass]="{
+										'campaign-action': campaignAsset.status,
+										disabled: campaignAsset.status === 'Done'
+									}"
+								>
+									<img alt="check" src="./assets/images/check.svg" />
+									Approve
+								</button>
+							</div>
+
+							<div *ngIf="asset.status === 'Approved'" class="campaign-action approved">
+								<img alt="check" src="./assets/images/check.svg" />
+								Approved
+							</div>
+
+							<span *ngIf="asset.status === 'Declined'" class="rejected">
+								REJECTED • Notification was sent to Group Admin
+							</span>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</ng-container>
+
+		<!-- add text type asset -->
+		<div
+			(click)="handleCreateTextAssetModal()"
+			*ngIf="campaignAsset.status !== 'Done'"
+			class="campaign-asset-container"
+		>
+			<div class="campaign-asset campaign-asset--add-text">
+				<img alt="add asset" src="./assets/images/post-add-icon.svg" />
+				<span>Add text asset</span>
+			</div>
+		</div>
+
+		<!-- add image type asset -->
+		<div (click)="uploaderImage.click()" *ngIf="campaignAsset.status !== 'Done'" class="campaign-asset-container">
+			<div class="campaign-asset campaign-asset--add-text">
+				<img alt="add asset" src="./assets/images/add-photo-icon.svg" />
+				<span>Add image asset</span>
+				<input
+					#uploaderImage
+					(change)="uploadFile({event: $event, asset, type: 'image', isCreation: true})"
+					accept="image/*"
+					hidden
+					type="file"
+				/>
+			</div>
+		</div>
+
+		<!-- add video type asset -->
+		<div (click)="uploaderVideo.click()" *ngIf="campaignAsset.status !== 'Done'" class="campaign-asset-container">
+			<div class="campaign-asset campaign-asset--add-text">
+				<img alt="add asset" src="./assets/images/add-photo-icon.svg" />
+				<span>Add video asset</span>
+				<input
+					#uploaderVideo
+					(change)="uploadFile({event: $event, asset, type: 'video', isCreation: true})"
+					accept="video/*"
+					hidden
+					type="file"
+				/>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- asset rejection modal -->
+<div *ngIf="showRejectionModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Asset Rejection</h5>
+				<img src="./assets/images/close-icon.svg" alt="close" (click)="handleRejectionModal({assetItem: asset})" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please enter a comment which will be send to the group admin.</p>
+				<textarea
+					[(ngModel)]="rejectionReason"
+					(input)="changeRejectionReason($event)"
+					name="text"
+					cols="30"
+					rows="10"
+					placeholder="Enter your comment..."
+				></textarea>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="
+						handleAssetStatus({
+							campaignId: selectedAsset.campaignId,
+							groupId: selectedAsset.groupId,
+							assetItem: selectedAsset.items[0],
+							status: 'Declined'
+						})
+					"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					Send to the group admin
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- assign role modal -->
+<div *ngIf="showAssignRoleModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Assign Role</h5>
+				<img src="./assets/images/close-icon.svg" alt="close" (click)="handleAssignRoleModal({})" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please enter a comment which will be send to {{ showAssignRoleModal }}.</p>
+				<textarea
+					[(ngModel)]="rejectionReason"
+					(input)="changeRejectionReason($event)"
+					name="text"
+					cols="30"
+					rows="10"
+					placeholder="Enter your comment..."
+				></textarea>
+			</div>
+			<div class="modal-footer">
+				<button (click)="handleAssignRole()" class="px-4 full-btn convo-btn-normal convo-btn-primary" type="button">
+					Send to {{ showAssignRoleModal }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- require asset modal -->
+<div *ngIf="showRequireAssetModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Require asset</h5>
+				<img (click)="handleRequireAssetModal()" alt="close" src="./assets/images/close-icon.svg" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please enter a comment of asset requirement.</p>
+				<textarea
+					(input)="changeRequireAssetMessage($event)"
+					[(ngModel)]="requireAssetMessage"
+					cols="30"
+					name="text"
+					placeholder="Enter your comment..."
+					rows="10"
+				></textarea>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="
+						requireAssetReminder({
+							campaignId: campaignAsset.campaignId,
+							groupId: campaignAsset.groupId,
+							message: requireAssetMessage
+						})
+					"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					Require asset
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- add text asset modal -->
+<div *ngIf="showCreateTextAssetModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-text">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Create text asset</h5>
+				<img (click)="handleCreateTextAssetModal()" alt="close" src="./assets/images/close-icon.svg" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please enter a text.</p>
+				<app-my-component (handleChange)="changeAssetText($event)" [value]="assetText"></app-my-component>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="
+						handleCreateAsset({
+							campaignId: campaignAsset.campaignId,
+							groupId: campaignAsset.groupId,
+							value: assetText,
+							type: 'text'
+						});
+						handleCreateTextAssetModal()
+					"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					Add asset with this text
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- edit text asset modal -->
+<div *ngIf="isEditingText" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-text">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Update text asset</h5>
+				<img src="./assets/images/close-icon.svg" alt="close" (click)="handleEditTextAssetModal()" />
+			</div>
+			<div class="modal-body">
+				<p class="m-0">Please edit text.</p>
+				<app-my-component [value]="assetText" (handleChange)="changeAssetText($event)"></app-my-component>
+			</div>
+			<div class="modal-footer">
+				<!-- handleCreateAsset({
+					campaignId: campaignAsset.campaignId,
+					groupId: campaignAsset.groupId,
+					value: assetText,
+					type: 'text'
+				}); -->
+				<button
+					(click)="handleUpdateText(); handleEditTextAssetModal()"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					Update text
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- send cmc rating modal -->
+<div *ngIf="rateFbAdminModal" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-text">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>Send rating to facebook admin</h5>
+				<img src="./assets/images/close-icon.svg" alt="close" (click)="rateFbAdminModal = false" />
+			</div>
+			<div class="modal-body">
+				<span class="rating-label">Your rating</span>
+				<div class="star-rating-container">
+					<bar-rating [(rate)]="fbAdminRating" [max]="5" [theme]="'default'"></bar-rating>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button (click)="sendFbAdminRating()" class="px-4 full-btn convo-btn-normal convo-btn-primary" type="button">
+					Send rating
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,137 @@
+{
+	"data": {
+		"getNotifications": {
+			"__typename": "NotificationsConnection",
+			"items": [
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T10:09:55.034Z",
+					"createdAtUTCTick": 1617271829,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "9a2d5243-c916-4400-904a-202512f44b83",
+					"status": "Sent",
+					"inAppTitle": "Installation of Convosight completed in <b>Hello WOrld 10</b>",
+					"type": "InstallationOfAppCompletedV2",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":\"1\",\"is_large_group\":false,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_completed\",\"group_id\":\"048d474a-9723-45d7-ae8d-db082eeba36b\",\"group_name\":\"Hello WOrld 10\",\"user_name\":\"vsowwmzgsb_1617173823@tfbnw.net\",\"is_group_resumed\":true,\"group_posts_count\":\"2\",\"group_business_category\":\"Entertainment\"}"
+				},
+				{
+					"inAppTitle": "You have been added as a Moderator to <b>a new group</b> by <b> Mukta Gupta </b>",
+					"payload": "{\"senderId\":\"dca732cc-b70e-48f1-b32a-102235ac1eaa\",\"groupIds\":[\"dd467b67-185e-45b7-8e49-cf64a02bd09a\"],\"forUserName\":\"Devashish\",\"forUserMail\":\"vsowwmzgsb_1617173823@tfbnw.net\"}",
+					"channelsToSkip": ["Whatsapp"],
+					"createdAtUTC": "2021-04-01T07:46:40Z",
+					"createdAtUTCTick": 1617263200,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "06ba5a61-8d2d-48c7-a614-66a9dc30e8bb",
+					"status": null,
+					"type": "AddedAsModerator",
+					"viewedAtUTC": null
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T10:05:58.997Z",
+					"createdAtUTCTick": 1617271655,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "0237c6cf-0773-41d9-a627-fbba2877cea4",
+					"status": "Sent",
+					"inAppTitle": "Convosight App is added to your Facebook group <b>Hello World 8</b>",
+					"type": "CsAppAdded",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_started\",\"group_id\":\"6959e747-c1c0-497e-b766-21e9c3163f31\",\"group_name\":\"Hello World 8\",\"group_business_category\":null}"
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T10:05:08.455Z",
+					"createdAtUTCTick": 1617271563,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "394d2868-9f20-49a0-b336-709ce9778e2e",
+					"status": "Sent",
+					"inAppTitle": "Convosight App is added to your Facebook group <b>Hello World 9</b>",
+					"type": "CsAppAdded",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_started\",\"group_id\":\"8e69c570-5628-417f-a259-e2e676eeda82\",\"group_name\":\"Hello World 9\",\"group_business_category\":null}"
+				},
+				{
+					"inAppTitle": "Uninstall of Convosight complete in <b>Hello WOrld 4</b>",
+					"payload": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_uninstall\",\"group_id\":\"4aa27e04-67f9-4dc8-8eb3-ded978e5db67\",\"group_name\":\"Hello WOrld 4\",\"group_business_category\":null}",
+					"channelsToSkip": ["Whatsapp"],
+					"createdAtUTC": "2021-03-31T11:22:45.244Z",
+					"createdAtUTCTick": 1617189809,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "ce933911-0e1f-481d-9523-2729afebc595",
+					"status": "Sent",
+					"type": "UninstallationOfAppCompleted",
+					"viewedAtUTC": "2021-03-31T13:23:21.451Z"
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T10:05:44.601Z",
+					"createdAtUTCTick": 1617271545,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "8c27e7d2-a3b4-4107-83af-9f7782808bc2",
+					"status": "Sent",
+					"inAppTitle": "Installation of Convosight completed in <b>Hello World 9</b>",
+					"type": "InstallationOfAppCompletedV2",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":\"1\",\"is_large_group\":false,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_completed\",\"group_id\":\"8e69c570-5628-417f-a259-e2e676eeda82\",\"group_name\":\"Hello World 9\",\"user_name\":\"vsowwmzgsb_1617173823@tfbnw.net\",\"is_group_resumed\":true,\"group_posts_count\":\"1\",\"group_business_category\":\"Neighborhood/Local Groups\"}"
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-04T06:43:57.780Z",
+					"createdAtUTCTick": 1617518717,
+					"forUserId": "d4094598-db64-460f-adcf-59375ee3b549",
+					"id": "06ec0e5e-f759-4fb0-937e-dc4903dea02d",
+					"status": "Sent",
+					"inAppTitle": "Keep your group safe. Act upon the urgent alerts.",
+					"type": "UrgentAlerts",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"page_link\":\"https://www.develop.convosight.com/app/group-admin/group/548aa779-d1f3-4ef0-97aa-4666c30a9f93#urgentAlerts\",\"reports\":{\"Medicinal Recommendation\":317},\"group_cover_image_url\":\"https://scontent-iad3-1.xx.fbcdn.net/v/t1.6435-9/s720x720/31743598_1704140482984347_8709616634546880512_n.jpg?_nc_cat=108&ccb=1-3&_nc_sid=ca434c&_nc_ohc=ZG7JLZzkp8gAX8dSsvn&_nc_ht=scontent-iad3-1.xx&tp=7&oh=20b16d9c9b44f660e527c5e6e6a62b6b&oe=608FADD4\",\"track_event\":\"urgent_alerts_increased\",\"group_id\":\"548aa779-d1f3-4ef0-97aa-4666c30a9f93\",\"group_name\":\"Homemaking Tips\"}"
+				},
+				{
+					"inAppTitle": "<b>Welcome to Convosight</b>",
+					"payload": null,
+					"channelsToSkip": ["Email", "Whatsapp", "Web"],
+					"createdAtUTC": "2021-03-31T07:01:29.575Z",
+					"createdAtUTCTick": 1617174164,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "5f880a70-1c34-4110-ab6b-0df7b3951937",
+					"status": null,
+					"type": "WelcomeNote",
+					"viewedAtUTC": "2021-03-31T13:23:21.451Z"
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T09:54:49.897Z",
+					"createdAtUTCTick": 1617270986,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "fcbff488-bf69-48db-8afd-7ed8ff3d2cba",
+					"status": "Sent",
+					"inAppTitle": "Installation of Convosight completed in <b>Hello World 6</b>",
+					"type": "InstallationOfAppCompletedV2",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":\"1\",\"is_large_group\":false,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_completed\",\"group_id\":\"649baf2a-ab39-4521-97eb-ae46ee8fbc13\",\"group_name\":\"Hello World 6\",\"user_name\":\"vsowwmzgsb_1617173823@tfbnw.net\",\"is_group_resumed\":true,\"group_posts_count\":\"1\",\"group_business_category\":\"Entertainment\"}"
+				},
+				{
+					"__typename": "Notifications",
+					"createdAtUTC": "2021-04-01T09:54:10.986Z",
+					"createdAtUTCTick": 1617270937,
+					"forUserId": "d692779d-d41a-45c7-8a41-3f5fb7e160c0",
+					"id": "51c26650-5c11-415f-864c-cf033a1ad2c9",
+					"status": "Sent",
+					"inAppTitle": "Convosight App is added to your Facebook group <b>Hello World 6</b>",
+					"type": "CsAppAdded",
+					"viewedAtUTC": null,
+					"channelsToSkip": ["Whatsapp"],
+					"payload": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_started\",\"group_id\":\"649baf2a-ab39-4521-97eb-ae46ee8fbc13\",\"group_name\":\"Hello World 6\",\"group_business_category\":null}"
+				}
+			],
+			"nextToken": "eyJ2ZXJzaW9uIjoyLCJ0b2tlbiI6IkFRSUNBSGg5OUIvN3BjWU41eE96NDZJMW5GeGM4WUNGeG1acmFOMUpqajZLWkFDQ25BRW9nclliOUk2dllHNWNmWHpaUXlvdEFBQUN5akNDQXNZR0NTcUdTSWIzRFFFSEJxQ0NBcmN3Z2dLekFnRUFNSUlDckFZSktvWklodmNOQVFjQk1CNEdDV0NHU0FGbEF3UUJMakFSQkF5bjZ4Z0xKZk45TzJ6MGN3a0NBUkNBZ2dKOXlQK1ZneUVRaFNhc1dWNTF4bkdGWjVNNU5nR1J3cHJMUlUxeVR0cVkrVXl6QUZqUnpPU3NyODRXeDVtZFZuR2k2eWZHSXRSckN1KzRlWGRsellNb1NFeDJGektQQVYxOFY2aWlwSjRUUlRsRTYxeHJ0V1N6c3laZlhDVlJQVWxmQ3RkMFZzQm1KbDRoTUFwd1ZHOUNaMzduUE5rUnZHa1RXQ3Y3N3l1SWVzMFFtWmtYZ3FsVGN1cFpXVXI1VXEvMllqWWx2OWRkclo1U0d6K2FuQjFCQm1tTEZFd2ZPUmN2UzRyZDluN1dPa2s1OW1jSE41YXY5ZFlES0wwQjJRdFErSmJRTG1KKzlMUGpWZE1TTG1JcG5lSTJWMFpGajZTOXhiQzJnWlF3TC8vM3cwdTJwYWpiWVN0MGt0M0krcEMzbjZVaHM0WkhLZ1pzMXFHTnF3R3lSRmdYNUNhT0hUT0g2TkY3bTlLdmQ4QTJQeGhVVE5FMlJwNVJPQ0x6VVJRMXRrN0I5emE0azJGbDhaRUJHQ2YzL096Ynl3bW83Wi9RRFZOb0RTOHZlaW4yc0VFMDlRd21LM3ZRZkRtbTd0TVZZM2hqLzFsSjdYaW1WbVhla2xtZFQzZGlMbllKSTdnV2R0NVBUSXlidkZLdVlTVlRKblN0d3psNEdQQ0NKZGpDcDE0a0Y0dUdjcU0vM1ZaNWMyZE42Y1ZxOUI4ZG8wQm9XK3dnbGxPc1o3dXl6QXUweEhtWWRuMG1zaXVWQXpMTm1SME9haXlIamFFMlduNGgvbTBKUmhIVi9ZdDVFZ3FjMzlSN0V3YXg0c0VQUmJJOXhDOG5GSnQrcFZkdisyek9Takt0SWdXR2hUb09yckYxUVB0RzJBVnJnTlRINk4rNkVsNVFpVGd2OXNCVnNvWnppWTYvSDlNVHZPSkFuWHIxRytlTERUR2hsd29BOUZla1QrZjRoOEN0cHBzUW5FOC9zTEZvOVA3RE9hR3g0YUM3bGxKMTJ3Nk1vVCt3Q2haOTZ5NWthRWNzUmoxaEpwK3dTWnZSZ3VFckUyakFSNjY0aFpMOUl4dlhwcWJxYnp0cUZQUWFyOGFYaHZOWkoyYVV2Zis2TUducmRBdkpkeDVaUUE9PSJ9"
+		}
+	}
+}

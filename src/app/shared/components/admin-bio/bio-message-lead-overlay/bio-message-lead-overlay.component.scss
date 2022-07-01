@@ -1,0 +1,163 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.messages-modal {
+	.message-recieved-wrap {
+		background: #f4f6f8;
+		padding: 16px;
+		.message-recieved-box {
+			padding: 16px;
+			background: #fff;
+			@include shadow-elevation-medium;
+			border-radius: 8px;
+			margin-bottom: 8px;
+			.mr-header {
+				@include font-paragraph-xs;
+				background: #fef7ea;
+				border-radius: 6px;
+				padding: 10px;
+				display: flex;
+				align-items: center;
+				margin-bottom: 12px;
+				strong {
+					font-weight: 500;
+				}
+				svg {
+					margin-right: 6px;
+				}
+			}
+			.mr-body {
+				ul {
+					margin: 0 -6px;
+					display: flex;
+					flex-wrap: wrap;
+					li {
+						width: 50%;
+						padding: 0 6px 12px;
+						@media (max-width: 767px) {
+							width: 100%;
+						}
+						p {
+							margin: 0;
+							color: $black-70;
+							@include font-paragraph-xs;
+						}
+						h6 {
+							@include font-paragraph-s;
+							margin: 0;
+							color: $primary-1;
+							strong {
+								font-weight: 500;
+							}
+							a {
+								color: $emp-blue-1;
+							}
+						}
+					}
+				}
+			}
+			.mr-footer {
+				h6 {
+					margin: 0 0 10px;
+					@include font-paragraph-xs-md;
+					color: $primary-1;
+					padding-top: 12px;
+					border-top: 1px solid $borders-grey;
+				}
+				ul {
+					margin: 0;
+					li {
+						padding: 6px 0;
+						font-size: 14px;
+						display: flex;
+						align-items: center;
+						&:last-child {
+							padding-bottom: 0;
+						}
+						svg {
+							margin-right: 8px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.modal-header {
+		padding: 16px;
+		align-items: center;
+
+		h5 {
+			@include font-label-m-md;
+		}
+
+		.close {
+			opacity: 1;
+			padding: 0;
+			margin: 0;
+
+			img {
+				display: block;
+			}
+		}
+	}
+	.no-result {
+		padding: 80px 0;
+		width: 300px;
+		max-width: 100%;
+		margin: 0px auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+
+		h6 {
+			@include font-paragraph-l-md;
+			margin: 0 0 8px;
+		}
+
+		p {
+			color: $black-70;
+			@include font-paragraph-s;
+		}
+
+		.share-btn {
+			margin-left: 8px;
+			height: 40px;
+			padding: 8px 12px;
+			display: flex;
+			align-items: center;
+
+			span {
+				padding-left: 6px;
+				white-space: nowrap;
+			}
+		}
+	}
+}
+
+.modal-dialog {
+	@media (max-width: 767px) {
+		align-items: flex-end;
+		min-height: 100%;
+		max-height: 100%;
+		margin: 0;
+		justify-content: flex-end;
+		.modal-content {
+			border-radius: 0;
+			box-shadow: none;
+		}
+	}
+}
+.shimmer {
+	height: 12px;
+	animation: shimmer 10s infinite linear;
+	background: linear-gradient(
+		to right,
+		rgba(211, 142, 21, 0.15) 0%,
+		rgba(211, 142, 21, 0.1) 46.88%,
+		rgba(211, 142, 21, 0.15) 100%
+	);
+	max-width: 100%;
+	width: 130px;
+}

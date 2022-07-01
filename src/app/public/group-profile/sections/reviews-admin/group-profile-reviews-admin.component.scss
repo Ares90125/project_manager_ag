@@ -1,0 +1,251 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.review-wrap {
+	@media (max-width: 767px) {
+		margin-top: 8px;
+
+		&.expanded-state {
+			margin-top: 20px;
+		}
+	}
+
+	.review-body-wrap {
+		.review-body-wrap__reviews-heading {
+			display: flex;
+			margin-bottom: 16px;
+
+			.reviews-heading__rating {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				height: 40px;
+				background: #27ae60;
+				border-radius: 100px;
+				margin-right: 16px;
+
+				.star {
+					--percent: 100%;
+					display: inline-block;
+					@include font-paragraph-s-md;
+					color: $confirmation-green;
+
+					&::before {
+						content: '★';
+						font-size: 20px;
+						background: white;
+						-webkit-background-clip: text;
+						-webkit-text-fill-color: transparent;
+					}
+				}
+
+				span {
+					font-weight: 500;
+					font-size: 14px;
+					line-height: 20px;
+					color: #ffffff;
+					margin-left: 5px;
+				}
+			}
+
+			.reviews-heading__info {
+				display: flex;
+				flex-direction: column;
+
+				.title {
+					font-weight: 500;
+					font-size: 16px;
+					line-height: 22px;
+					color: #33334f;
+				}
+
+				.subtitle {
+					font-weight: normal;
+					font-size: 12px;
+					line-height: 16px;
+					color: #33334f;
+				}
+			}
+		}
+
+		.reviews-wrapper {
+			margin-top: 20px;
+			padding-top: 20px;
+			border-top: 1px solid #ebebed;
+		}
+	}
+
+	.review-body-wrap--empty {
+		.no-review-wrap {
+			text-align: center;
+
+			figure {
+				margin: 0 0 20px 0;
+			}
+
+			h5 {
+				margin: 0 0 8px 0;
+				@include font-label-m-md;
+			}
+
+			h6 {
+				margin: 0;
+				color: $black-70;
+				@include font-label-s;
+			}
+		}
+	}
+}
+
+.review-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	// padding: 16px 16px 12px;
+	background: #ffffff;
+	// box-shadow: 0px 1px 2px rgba(51, 51, 79, 0.1);
+	// border-radius: 4px;
+	margin-bottom: 20px;
+
+	.review-heading {
+		display: flex;
+		flex-direction: row;
+
+		img {
+			width: 38px;
+			height: 38px;
+			margin-right: 10px;
+			border-radius: 50%;
+		}
+
+		&.review-heading--bordered {
+			border-bottom: 1px solid #ebebed;
+			padding-bottom: 21px;
+			margin-bottom: 20px;
+		}
+	}
+
+	.review-text {
+		font-weight: normal;
+		font-size: 14px;
+		line-height: 20px;
+		color: #33334f;
+		margin-top: 12px;
+
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+}
+
+.reviewer-name {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	color: #33334f;
+}
+
+.convo-btn-normal {
+	height: 36px;
+	// padding: 0 20px;
+	background: #3654ff;
+	color: #fff;
+	border: none;
+	border-radius: 18px;
+	width: 100%;
+
+	&:disabled {
+		background: #adadb9;
+	}
+
+	img {
+		margin-right: 8px;
+	}
+}
+
+.convo-btn-outline {
+	height: 40px;
+	background: #fff;
+	color: #3654ff;
+	border: 1px solid #3654ff;
+	border-radius: 4px;
+	width: 100%;
+	font-size: 14px;
+
+	&:disabled {
+		background: #adadb9;
+	}
+
+	img {
+		margin-right: 8px;
+	}
+}
+
+.edit-row-btn {
+	background: none;
+	border: none;
+	padding: 0;
+	outline: none;
+}
+
+.stars {
+	--percent: calc(var(--rating) / 5 * 100%);
+	display: inline-block;
+	@include font-paragraph-s-md;
+	color: $confirmation-green;
+
+	span {
+		color: $primary-1;
+		@include font-paragraph-s;
+	}
+
+	&::before {
+		content: '★★★★★';
+		letter-spacing: 3px;
+		font-size: 18px;
+		background: linear-gradient(90deg, $confirmation-green var(--percent), $black-20 var(--percent));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
+
+.profile-card-body {
+	position: relative;
+}
+
+.unavailable-reviews-state {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	left: -2px;
+	right: -2px;
+	top: -2px;
+	bottom: -2px;
+	backdrop-filter: blur(2px);
+
+	.hidden-state {
+		justify-content: center;
+		display: flex;
+		align-items: center;
+		background: #fff;
+		box-shadow: 0px 2px 40px rgb(0 0 0 / 12%);
+		border-radius: 100px;
+		width: 161px;
+		height: 32px;
+
+		img {
+			margin-right: 5px;
+		}
+
+		span {
+			font-weight: normal;
+			font-size: 12px;
+			line-height: 16px;
+			color: #33334f;
+		}
+	}
+}

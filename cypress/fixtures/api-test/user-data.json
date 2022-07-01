@@ -1,0 +1,122 @@
+{
+	"addModeratorDetails": {
+		"email": "katyald1994@gmail.com",
+		"inviterName": "Ramu Maddipoti",
+		"inviterUserId": "c7f8d76d-0ae6-42be-86a7-f1508ac2926a",
+		"mobileNumber": "+91 9717584233",
+		"newModeratorName": "Devashish",
+		"moderatorGroupId": "c40d1bd5-4737-40b3-9e40-de78b64454df",
+		"groupName": "Cs Admin Test Group",
+		"inviterAdminName": "Ravi Kiran",
+		"inviterAdminId": "3a4930da-3da0-4dd2-9cbf-e9ca3860de66"
+	},
+	"groupDetails": {
+		"groupId": "9a0f9a0f-a7e0-41f0-99a0-2934f58efaf2",
+		"sourceIds": "622589378670635_673595976903308",
+		"groupName": "maddipoti",
+		"sourceIdsGroupName": "Cs Admin Test Group",
+		"copyKeywordsGroupId": "85478556-88c6-44c3-af49-9028fab66f74",
+		"keywords": "testing|channel|youtube|below link|join group|contact me|inbox me|ping me|subscribe|buy this|join my|follow me|instagram|check this article|whatsapp me|my page|DEFwqe"
+	},
+	"userDetails": {
+		"userId": "cf685543-657d-4efc-8581-c0eb0e70d388",
+		"invalidEmail": "kd123",
+		"cognitoId": "c2694265-7473-40a3-8e44-1e1afe45e520",
+		"invalidNo": "9197175842"
+	},
+	"campaignDetails": {
+		"campaignId": "84b7be06-7a34-471f-bf60-60f1ca0f7aa9",
+		"category": "Immunity",
+		"subcategory": "Cold & Cough",
+		"brand": "Vicks",
+		"viewName": "Nutrition",
+		"taskId": "7b8f3184-a8a4-4d56-9ea4-d973d5658e94",
+		"validCampaignId": "e75497d6-a03c-413b-9b90-99952789a3ce",
+		"validCampaignGroupId": "a8297041-ac88-4ec1-9ab0-5403b93765a3",
+		"updateCampaignId": "fa51853b-6ede-49c1-a616-ec98cbbedb2c",
+		"campaignTaskID": "00c6c0ce-41bb-4c43-b9df-5f91a479aa9e",
+		"groupId": "08250899-6cfd-497d-bfe3-60c805809ced",
+		"groupName": "convo-test-bd3",
+		"campaignTaskUserId": "21cee746-9358-4c1d-9899-685abb1e5e50",
+		"campaignTaskBrandId": "241934a1-4dbb-4895-9afd-2b444a19791d",
+		"userCampaignTask": "46255946-9137-42e9-b86c-acdb34f127ed"
+	},
+	"conversationDetails": {
+		"terms": ["pain killer", "painkiller", "crocin", "paracetamol"],
+		"conversationGroupName": "Kids Nutrition and Recipes 👶🍎🍜"
+	},
+	"postDetails": {
+		"contentType": "Text",
+		"text": "hello request",
+		"adminText": "Hello post made by admin",
+		"moderatorText": "Hello post made by moderator",
+		"createdByAdmin": "Ravi Kiran",
+		"createdByModerator": "Devashish Testuser",
+		"type": "Post",
+		"userId": "3a4930da-3da0-4dd2-9cbf-e9ca3860de66",
+		"moderatorUserId": "1101dd18-46c0-479b-ba38-7d9f76cce889",
+		"postStatus": "Queued",
+		"role": "Admin",
+		"moderatorRole": "Moderator",
+		"option": "Schedule"
+	},
+	"updateGroup": {
+		"id": "'08250899-6cfd-497d-bfe3-60c805809ced'",
+		"businessCategory": "Entertainment",
+		"createdByName": "convo-test-bd3"
+	},
+	"listInsightViewMetricsByInsightViewId": {
+		"insightViewId": "263606ff-22fb-4963-bea4-3e4fb640cf52"
+	},
+	"gRecommendationForDate": {
+		"id": "067d23d5-1e1a-4226-b3e9-87ce500b5322"
+	},
+	"brandDetails": {
+		"id": "457e9a39-9eb3-4f41-8ce2-109126e86734",
+		"logoUrl": "https://app.convosight.com/assets/images/brand-logo/Abbott-Pediasure.png",
+		"name": "Abbott",
+		"newCampaignName": "New Test Campaign",
+		"email": "parora216@gmail.com",
+		"babyDestinationUserId": "bdb5a7d9-55a8-47d7-ac7f-5d9ca7bfce34",
+		"babyDestinationBrandId": "2bad5887-6191-4797-acc3-ddeefc2673be",
+		"reportId": "d5bb157a-3eeb-49fe-a128-31464a947aa2",
+		"groupId": "c40d1bd5-4737-40b3-9e40-de78b64454df",
+		"updateGroupId": "85478556-88c6-44c3-af49-9028fab66f74",
+		"updateCampaignName": "Test Campaign",
+		"campaignId": "2628a8a3-3aec-42c7-af1f-327fcce57c2e"
+	},
+	"keywordsDetails": {
+		"payloadKeywords": "channel|youtube|below link|join group|contact me|inbox me|ping me|subscribe|buy this|join my|follow me|instagram|check this article|whatsapp me|my page|DEFwqe",
+		"keywordReportName": "Admin"
+	},
+	"createNotificationData": {
+		"installationChannelsToSkip": "Whatsapp",
+		"installationType": "InstallationOfAppCompletedV2",
+		"installationInAppTitle": "Installation of Convosight completed in <b>Cs Admin Test Group</b>",
+		"installationPayload": "{\"group_member_count\":\"1\",\"is_large_group\":false,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_completed\",\"group_id\":\"c40d1bd5-4737-40b3-9e40-de78b64454df\",\"group_name\":\"Cs Admin Test Group\",\"user_name\":\"ravi_wxjivxi_kiran@tfbnw.net\",\"is_group_resumed\":true,\"group_posts_count\":\"2\",\"group_business_category\":\"Entertainment\"}",
+		"notificationForGroupId": "c40d1bd5-4737-40b3-9e40-de78b64454df",
+		"appAddedPayLoad": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_analysis_started\",\"group_id\":\"c40d1bd5-4737-40b3-9e40-de78b64454df\",\"group_name\":\"Cs Admin Test Group\",\"group_business_category\":null}",
+		"appAddedType": "CsAppAdded",
+		"appAddedInAppTitle": "Convosight App is added to your Facebook group <b>Cs Admin Test Group</b>",
+		"uninstallationPayLoad": "{\"group_member_count\":1,\"group_cover_image_url\":null,\"track_event\":\"group_uninstall\",\"group_id\":\"c40d1bd5-4737-40b3-9e40-de78b64454df\",\"group_name\":\"Cs Admin Test Group\",\"group_business_category\":null}",
+		"uninstallationType": "UninstallationOfAppCompleted",
+		"uninstalltionInAppTitle": "Uninstall of Convosight complete in <b>Cs Admin Test Group</b>",
+		"urgentAlertPayload": "{\"page_link\":\"https://www.develop.convosight.com/app/group-admin/group/548aa779-d1f3-4ef0-97aa-4666c30a9f93#urgentAlerts\",\"reports\":{\"Medicinal Recommendation\":317},\"group_cover_image_url\":\"https://scontent-iad3-1.xx.fbcdn.net/v/t1.6435-9/s720x720/31743598_1704140482984347_8709616634546880512_n.jpg?_nc_cat=108&ccb=1-3&_nc_sid=ca434c&_nc_ohc=ZG7JLZzkp8gAX8dSsvn&_nc_ht=scontent-iad3-1.xx&tp=7&oh=20b16d9c9b44f660e527c5e6e6a62b6b&oe=608FADD4\",\"track_event\":\"urgent_alerts_increased\",\"group_id\":\"548aa779-d1f3-4ef0-97aa-4666c30a9f93\",\"group_name\":\"Homemaking Tips\"}",
+		"urgentAlertInAPPTitle": "Keep your group safe. Act upon the urgent alerts.",
+		"urgentAlertType": "UrgentAlerts",
+		"welcomeInAppTitle": "<b>Welcome to Convosight</b>",
+		"welcomeType": "WelcomeNote"
+	},
+	"createCMCCampaignGroups": {
+		"businessCategory": "Neighborhood/Local Groups",
+		"campaignId": "20beb25f-257e-4f5a-abe1-79d59e5dac88",
+		"groupId": "deb3bd32-938b-4ad9-a0f7-fd6a2fa17293",
+		"groupInstallationStartedAtUTC": "2020-06-29T08:49:04Z",
+		"groupName": "Convo_alert2",
+		"memberCount": 1,
+		"memberEngagementRateUTC": 6324,
+		"postEngagementRateUTC": 2544,
+		"state": "Uninstalled",
+		"weeklyConversationalVolume": "46208"
+	}
+}

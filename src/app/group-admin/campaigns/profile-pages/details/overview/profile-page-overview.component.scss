@@ -1,0 +1,67 @@
+@import '../../../../../../assets/scss/custom/variables';
+@import '../../../../../../assets/scss/custom/mixins';
+
+.profile-overview {
+	padding-top: 86px;
+
+	.row-headers {
+		margin-bottom: 20px;
+
+		.row-title {
+			@include font-label-l-md;
+			margin: 0 0 4px;
+		}
+
+		.row-description {
+			@include font-label-xs;
+			color: $black-50;
+			margin: 0;
+		}
+	}
+
+	.stats-wrap {
+		display: flex;
+		margin: 0 -4px;
+
+		.stats-box {
+			padding: 20px 12px 20px 24px;
+			flex: auto;
+			background: #fff;
+			@include shadow-elevation-low;
+			margin: 0 4px;
+			border-radius: 4px;
+
+			h6 {
+				display: flex;
+				align-items: center;
+				color: $black-70;
+				@include font-label-s;
+				margin: 0 0 4px;
+
+				span {
+					padding-right: 4px;
+				}
+			}
+
+			h4 {
+				@include font-heading-s-md;
+				margin: 0;
+				display: flex;
+				align-items: center;
+
+				span {
+					@include font-label-xs-md;
+					padding-left: 4px;
+
+					&.negative {
+						color: $error-red;
+					}
+
+					&.positive {
+						color: $confirmation-green;
+					}
+				}
+			}
+		}
+	}
+}

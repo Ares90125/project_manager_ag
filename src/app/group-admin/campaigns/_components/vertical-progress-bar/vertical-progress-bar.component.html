@@ -1,0 +1,31 @@
+<div class="onboarding-progress-wrap">
+	<ul class="list-unstyled onboarding-progress-bar">
+		<li *ngFor="let item of progressOptions; let i = index" class="progress-option">
+			<div class="progress-option-core">
+				<div class="progress-circle {{ item.status }}">
+					<svg
+						*ngIf="item.status === 'completed'"
+						width="18"
+						height="13"
+						viewBox="0 0 18 13"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M5.99965 10.1703L2.52965 6.70031C2.13965 6.31031 1.50965 6.31031 1.11965 6.70031C0.729648 7.09031 0.729648 7.72031 1.11965 8.11031L5.29965 12.2903C5.68965 12.6803 6.31965 12.6803 6.70965 12.2903L17.2896 1.71031C17.6796 1.32031 17.6796 0.690313 17.2896 0.300312C16.8997 -0.0896875 16.2696 -0.0896875 15.8796 0.300312L5.99965 10.1703Z"
+							fill="white"
+						/>
+					</svg>
+					{{ item.status !== 'completed' ? i + 1 : '' }}
+				</div>
+				<span>{{ item.title }}</span>
+			</div>
+			<div
+				[ngClass]="{
+					'progress-option-chain': i !== progressOptions.length - 1,
+					'chain-status-completed': item.status === 'completed'
+				}"
+			></div>
+		</li>
+	</ul>
+</div>

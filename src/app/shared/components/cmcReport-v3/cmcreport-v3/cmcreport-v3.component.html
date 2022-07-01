@@ -1,0 +1,870 @@
+<app-reference-conversation
+	(dataUpdated)="onGettingUpdatedReferenceConversationDetails($event)"
+	(resetModalData)="resetModalData()"
+	[campaignGroups]="campaignGroups"
+	[campaign]="campaign"
+	[data]="referenceConversationData"
+	[showReferenceConversationDialog]="showReferenceConversationDialog"
+></app-reference-conversation>
+
+<!-- NOTE: Remove it after developement -->
+<button data-target="#reference-conversation-modal" data-toggle="modal" id="openReferenceConversationButton">
+	Open reference conversation modal
+</button>
+
+<div *ngIf="!isFromBrand" class="template-wrapper d-flex justify-content-center">
+	<div class="di-flex">
+		<span class="text"
+			>The report is currently set to <strong>{{ templateTypeSelected }} Report Template.</strong>
+		</span>
+
+		<span class="btns">
+			<button
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Phase Idea"
+				data-cs-source="page"
+				data-target="#updateTemplate"
+				data-toggle="modal"
+			>
+				<span>Update Template</span>
+			</button>
+			<button
+				(click)="onClickingShowPreview()"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Phase Idea"
+				data-cs-source="page"
+				data-target="#previewReport"
+				data-toggle="modal"
+			>
+				<span>Preview Report</span>
+			</button>
+		</span>
+	</div>
+</div>
+
+<div (scroll)="scrollOnSections($event)" class="campaign-report-data-wrapper">
+	<div
+		*ngIf="
+			!isFromBrand &&
+			(userHasUpdatedData ||
+				!campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand ||
+				!campaignReportS3Data?.keyFindings?.visibleToBrand ||
+				!campaignReportS3Data?.results?.visibleToBrand ||
+				!campaignReportS3Data?.brandShareOfVoice?.visibleToBrand ||
+				!campaignReportS3Data?.brandSentiment?.visibleToBrand ||
+				!campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+				!campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+				!campaignReportS3Data?.wordCloud?.visibleToBrand)
+		"
+		class="status-saved-bar"
+	>
+		<div class="container">
+			<div>
+				<span>
+					There are unpublished changes in this report. Please publish the report to save these changes and update
+					report on brand side
+				</span>
+			</div>
+			<div>
+				<button
+					(click)="uploadToS3(); recordButtonClick($event)"
+					[disabled]="isPublishing"
+					class="btn-publish"
+					data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c650"
+					data-cs-label="Publish now"
+					data-cs-source="page"
+				>
+					<p *ngIf="!isPublishing">
+						<span>Publish now</span>
+					</p>
+					<p *ngIf="isPublishing">
+						<span class="bt-spinner"></span>
+						<span>Publishing..</span>
+					</p>
+				</button>
+				<span data-target="#published-changes" data-toggle="modal" hidden id="published"></span>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div *ngIf="!isFromBrand || campaignReportS3Data" class="data-wrapper-inner">
+			<div class="left-sidebar">
+				<div class="section">
+					<div class="title">OVERVIEW</div>
+					<ul class="list-unstyled">
+						<li (click)="scrollTo(overview, $event, 'center')" class="active">
+							<span *ngIf="!isFromBrand" class="visibility" hidden
+								><img alt="" src="./assets/images/eye-close-icon.svg"
+							/></span>
+							Campaign Overview
+						</li>
+					</ul>
+				</div>
+				<div
+					*ngIf="
+						!isFromBrand ||
+						campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand ||
+						(campaignReportS3Data?.keyFindings?.visibleToBrand && campaignReportS3Data?.keyFindings?.content) ||
+						campaignReportS3Data?.results?.visibleToBrand ||
+						campaignReportS3Data?.brandShareOfVoice?.visibleToBrand ||
+						campaignReportS3Data?.brandSentiment?.visibleToBrand
+					"
+					class="section"
+				>
+					<div class="title">CAMPAIGN SUMMARY</div>
+					<ul class="list-unstyled">
+						<li
+							(click)="scrollTo(phaseIdea, $event)"
+							*ngIf="!isFromBrand || campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand"
+						>
+							Phase Idea
+							<span *ngIf="!isFromBrand && !visibleCampaignReport.keyMetrics" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(KeyFindings, $event)"
+							*ngIf="
+								!isFromBrand ||
+								(campaignReportS3Data?.keyFindings?.visibleToBrand && campaignReportS3Data?.keyFindings?.content)
+							"
+						>
+							Key Findings
+							<span *ngIf="!isFromBrand && !visibleCampaignReport.keyMetrics" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.keyFindings?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.keyFindings?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(Results, $event)"
+							*ngIf="!isFromBrand || campaignReportS3Data?.results?.visibleToBrand"
+						>
+							Results
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.results?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img *ngIf="campaignReportS3Data?.results?.visibleToBrand" alt="" src="./assets/images/eye-icon.svg" />
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(KPIs, $event)"
+							[hidden]="
+								!(
+									isFromBrand &&
+									campaignReportS3Data?.kpiDetails?.visibleToBrand &&
+									!campaignReportS3Data?.results?.visibleToBrand
+								)
+							"
+						>
+							KPIs
+						</li>
+						<li
+							(click)="scrollTo(BrandSOV, $event)"
+							[hidden]="!(!isFromBrand || (isFromBrand && campaignReportS3Data?.brandShareOfVoice?.visibleToBrand))"
+						>
+							Brand Share of Voice
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.brandShareOfVoice?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.brandShareOfVoice?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(BrandSentiment, $event)"
+							[hidden]="!(!isFromBrand || (isFromBrand && campaignReportS3Data?.brandSentiment?.visibleToBrand))"
+						>
+							Brand Sentiment
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.brandSentiment?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.brandSentiment?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+					</ul>
+				</div>
+				<div
+					*ngIf="
+						!isFromBrand ||
+						campaignReportS3Data?.wordCloud?.visibleToBrand ||
+						campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+						campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+						campaignReportS3Data?.engagementInsight?.intentVisibleToBrand
+					"
+					class="section"
+				>
+					<div class="title">Engagement Insights</div>
+					<ul class="list-unstyled">
+						<li
+							(click)="scrollTo(Insights, $event)"
+							[hidden]="
+								!(!isFromBrand || (isFromBrand && campaignReportS3Data?.engagementInsight?.intentVisibleToBrand))
+							"
+						>
+							Intent
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.engagementInsight?.intentVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.engagementInsight?.intentVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(Insights, $event)"
+							[hidden]="
+								!(!isFromBrand || (isFromBrand && campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand))
+							"
+						>
+							Emotions
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(Insights, $event)"
+							[hidden]="
+								!(!isFromBrand || (isFromBrand && campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand))
+							"
+						>
+							Benefits
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+						<li
+							(click)="scrollTo(WordCloud, $event)"
+							[hidden]="!(!isFromBrand || (isFromBrand && campaignReportS3Data?.wordCloud?.visibleToBrand))"
+						>
+							WordCloud
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.wordCloud?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.wordCloud?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+					</ul>
+				</div>
+
+				<div *ngIf="!isFromBrand || campaignReportS3Data?.topPerformingPosts?.visibleToBrand" class="section">
+					<div class="title">Screenshots</div>
+					<ul class="list-unstyled">
+						<li
+							(click)="scrollTo(TopPerformingPost, $event)"
+							[hidden]="!(!isFromBrand || (isFromBrand && campaignReportS3Data?.topPerformingPosts?.visibleToBrand))"
+						>
+							Top Performing Posts
+							<span *ngIf="!isFromBrand" class="visibility">
+								<img
+									*ngIf="!campaignReportS3Data?.topPerformingPosts?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-close-icon.svg"
+								/>
+
+								<img
+									*ngIf="campaignReportS3Data?.topPerformingPosts?.visibleToBrand"
+									alt=""
+									src="./assets/images/eye-icon.svg"
+								/>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="data-content-wrap">
+				<h3 #overview class="row mb-4 overview-heading">Overview</h3>
+				<div class="campaign-details section mb-5">
+					<div class="mb-5 d-flex align-items-center">
+						<img [alt]="campaign?.brandName" [src]="campaign?.brandIconUrl" class="brand-logo" srcset="" />
+						<div class="d-inline-block">
+							<span class="mb-1 hashtag"
+								>{{ campaign.campaignName }} Report
+								<span *ngIf="campaign?.totalPhase && campaign?.currentPhase" class="phase ml-2"
+									>(Phase {{ campaign.currentPhase }} of {{ campaign?.totalPhase }} )</span
+								>
+							</span>
+							<br />
+							<div class="campagin-date">
+								{{ campaign?.startDateAtUTC | date: 'mediumDate' }}
+								-
+								{{ campaign?.endDateAtUTC | date: 'mediumDate' }}
+							</div>
+						</div>
+					</div>
+					<div class="d-flex">
+						<div *ngIf="previewImage" class="banner-wrap">
+							<figure><img [src]="previewImage" alt="" /></figure>
+							<div class="banner-actions">
+								<button *ngIf="!isFromBrand">
+									<img alt="" src="./assets/images/icon_replace.svg" /> <span>Replace Image</span>
+									<input
+										(change)="fileUpload($event)"
+										accept=".gif,.jpg,.jpeg,.png"
+										class="upload-file"
+										title=" "
+										type="file"
+									/>
+								</button>
+								<button (click)="isLogoRemoved = true; previewImage = null" *ngIf="!isFromBrand">
+									<img alt="" src="./assets/images/icon_delete.svg" /> <span>Remove Image</span>
+								</button>
+							</div>
+						</div>
+						<div *ngIf="!previewImage && !isFromBrand" class="upload-cover-wrap">
+							<div class="upload-cover-inner">
+								<figure><img alt="" src="./assets/images/icon_add_photo.svg" /></figure>
+								<h5>Upload Campaign Image</h5>
+								<h6>
+									Drag and drop or <span>browse</span> an <br />
+									image file to upload
+								</h6>
+								<input
+									(change)="fileUpload($event)"
+									accept=".gif,.jpg,.jpeg,.png"
+									class="upload-file"
+									title=" "
+									type="file"
+								/>
+							</div>
+						</div>
+						<ng-container *ngIf="campaignReportS3Data?.totalCommunities === undefined; else showCommunityData">
+							<app-loading-shimmer [type]="1"></app-loading-shimmer>
+						</ng-container>
+						<ng-template #showCommunityData>
+							<div [ngClass]="{'full-width': isFromBrand && !previewImage}" class="details">
+								<div class="community-participation">
+									<h5 class="mt-1 mb-3">Community Participation</h5>
+									<span
+										>TOTAL COMMUNITIES <br />
+										<span class="value"> {{ campaignReportS3Data?.totalCommunities }} </span>
+									</span>
+									<span
+										>TOTAL AUDIENCE <br />
+										<span class="value"> {{ campaignReportS3Data?.totalAudience | shortNumber }} </span>
+									</span>
+								</div>
+
+								<div [ngClass]="{'m-0 p-0': isFromBrand && !previewImage}" class="brand-objective">
+									<app-brand-objective
+										(updatedValue)="onUpdatingBrandObjective($event, true)"
+										[content]="campaignReportS3Data?.brandObjective"
+										[isBrandLoggedIn]="isFromBrand"
+									></app-brand-objective>
+								</div>
+							</div>
+						</ng-template>
+					</div>
+				</div>
+
+				<div #aboutCampaign class="campaign-row" id="row1">
+					<h3
+						*ngIf="
+							!isFromBrand ||
+							campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand ||
+							(campaignReportS3Data?.keyFindings?.visibleToBrand && campaignReportS3Data?.keyFindings?.content) ||
+							campaignReportS3Data?.results?.visibleToBrand ||
+							campaignReportS3Data?.brandShareOfVoice?.visibleToBrand ||
+							campaignReportS3Data?.brandSentiment?.visibleToBrand
+						"
+						class="row mb-4 overview-heading"
+					>
+						Campaign Summary
+					</h3>
+
+					<div
+						#phaseIdea
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand)"
+						class="section mb-5"
+					>
+						<app-phase-idea
+							(updatedValue)="onUpdatingPhaseIdeaDetails($event, true)"
+							[content]="campaignReportS3Data?.phaseIdeaDetails?.content"
+							[isBrandLoggedIn]="isFromBrand"
+							[supportingText]="campaignReportS3Data?.phaseIdeaDetails?.supportingText"
+							[visibleToBrand]="campaignReportS3Data?.phaseIdeaDetails?.visibleToBrand"
+						></app-phase-idea>
+					</div>
+
+					<div
+						#KeyFindings
+						[hidden]="
+							!(!isFromBrand || campaignReportS3Data?.keyFindings?.visibleToBrand) ||
+							(isFromBrand && !campaignReportS3Data?.keyFindings?.content)
+						"
+						class="section mb-5 phase-idea"
+					>
+						<app-key-findings
+							(updatedValue)="onUpdatingKeyFindingsDetails($event, true)"
+							[content]="campaignReportS3Data?.keyFindings?.content"
+							[isBrandLoggedIn]="isFromBrand"
+							[supportingText]="campaignReportS3Data?.keyFindings?.supportingText"
+							[visibleToBrand]="campaignReportS3Data?.keyFindings?.visibleToBrand"
+						></app-key-findings>
+					</div>
+
+					<div
+						#Results
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.results?.visibleToBrand)"
+						[ngClass]="{'mb-5': isFromBrand && !campaignReportS3Data?.kpiDetails?.visibleToBrand}"
+						class="section phase-idea"
+					>
+						<ng-container
+							*ngIf="!campaignReportS3Data?.results?.content?.numUGCPosts === undefined; else resultTemplate"
+						>
+							<div class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-template #resultTemplate>
+							<app-results
+								(updatedValue)="onUpdatingResultsDetails($event, true)"
+								[content]="campaignReportS3Data?.results?.content"
+								[isBrandLoggedIn]="isFromBrand"
+								[supportingText]="campaignReportS3Data?.results?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.results?.visibleToBrand"
+							></app-results>
+						</ng-template>
+					</div>
+					<div
+						*ngIf="
+							!isFromBrand ||
+							(campaignReportS3Data?.kpiDetails?.visibleToBrand && campaignReportS3Data?.results?.visibleToBrand)
+						"
+						[ngClass]="{expanded: showKPIsInExtendedMode}"
+						class="kpi-section-wrapper mb-5"
+						role="button"
+					>
+						<h6
+							(click)="showKPIsInExtendedMode = !showKPIsInExtendedMode"
+							class="d-flex w-100 justify-content-center align-items-center"
+						>
+							{{ showKPIsInExtendedMode ? 'Hide all KPI Charts' : 'View all KPI Charts' }}
+							<span *ngIf="showKPIsInExtendedMode" class="material-icons"> expand_less </span>
+							<span *ngIf="!showKPIsInExtendedMode" class="material-icons">expand_more</span>
+						</h6>
+						<div #KPIs [hidden]="!showKPIsInExtendedMode" class="section phase-idea">
+							<app-kpis
+								(updatedValue)="onUpdatingKPIDetails($event, true)"
+								[content]="campaignReportS3Data?.kpiDetails?.content"
+								[isBrandLoggedIn]="isFromBrand"
+								[supportingText]="campaignReportS3Data?.kpiDetails?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.kpiDetails?.visibleToBrand"
+							></app-kpis>
+						</div>
+						<h6
+							(click)="showKPIsInExtendedMode = false"
+							*ngIf="showKPIsInExtendedMode"
+							class="d-flex w-100 justify-content-center align-items-center bottom"
+						>
+							<span *ngIf="showKPIsInExtendedMode" class="material-icons"> expand_less </span>
+						</h6>
+					</div>
+
+					<div
+						#KPIs
+						[hidden]="
+							!(
+								isFromBrand &&
+								campaignReportS3Data?.kpiDetails?.visibleToBrand &&
+								!campaignReportS3Data?.results?.visibleToBrand
+							)
+						"
+						class="section mb-5 phase-idea"
+					>
+						<app-kpis
+							(updatedValue)="onUpdatingKPIDetails($event, true)"
+							*ngIf="campaignReportS3Data?.kpiDetails?.content"
+							[content]="campaignReportS3Data?.kpiDetails?.content"
+							[isBrandLoggedIn]="isFromBrand"
+							[supportingText]="campaignReportS3Data?.kpiDetails?.supportingText"
+							[visibleToBrand]="campaignReportS3Data?.kpiDetails?.visibleToBrand"
+						></app-kpis>
+					</div>
+
+					<div
+						#BrandSOV
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(campaignReportS3Data?.brandShareOfVoice?.visibleToBrand &&
+									campaignReportS3Data?.brandShareOfVoice?.content)
+							)
+						"
+						class="section mb-5 phase-idea"
+					>
+						<ng-container
+							*ngIf="!campaignReportS3Data?.brandShareOfVoice?.content === undefined; else brandSovTemplate"
+						>
+							<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-template #brandSovTemplate>
+							<app-brand-share-of-voice
+								(showReferenceConversation)="showReferenceConversation($event, 'SOV')"
+								(updatedValue)="onUpdatingBrandShareOfVoiceDetails($event)"
+								*ngIf="campaignReportS3Data?.brandShareOfVoice?.visibleToBrand || !isFromBrand"
+								[allSOVDetails]="originalSOVs"
+								[brandName]="campaign?.keywordBrand"
+								[content]="campaignReportS3Data?.brandShareOfVoice?.content"
+								[isBrandLoggedIn]="isFromBrand"
+								[keywords]="brandListForShareOfVoice"
+								[referenceConversations]="campaignReportS3Data?.brandShareOfVoice?.referenceConversation"
+								[showAfterCampaign]="campaignReportS3Data?.brandShareOfVoice?.afterSOV"
+								[showNonHastag]="campaignReportS3Data?.brandShareOfVoice?.nonHashTag"
+								[showduringCampaign]="campaignReportS3Data?.brandShareOfVoice?.duringSOV"
+								[showpreCampaign]="campaignReportS3Data?.brandShareOfVoice?.beforeSOV"
+								[supportingText]="campaignReportS3Data?.brandShareOfVoice?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.brandShareOfVoice?.visibleToBrand"
+							></app-brand-share-of-voice>
+						</ng-template>
+					</div>
+
+					<div
+						#BrandSentiment
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.brandSentiment?.visibleToBrand)"
+						class="section mb-5 phase-idea"
+					>
+						<ng-container
+							*ngIf="!campaignReportS3Data?.brandSentiment?.content === undefined; else brandSentimentTemplate"
+						>
+							<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-template #brandSentimentTemplate>
+							<app-brand-sentiments
+								(showReferenceConversation)="showReferenceConversation($event, 'sentiment')"
+								(updatedValue)="onUpdatingBrandSentiment($event, true)"
+								*ngIf="campaignReportS3Data?.brandSentiment?.visibleToBrand || !isFromBrand"
+								[content]="campaignReportS3Data?.brandSentiment?.content"
+								[isBrandLoggedIn]="isFromBrand"
+								[supportingText]="campaignReportS3Data?.brandSentiment?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.brandSentiment?.visibleToBrand"
+							></app-brand-sentiments>
+						</ng-template>
+					</div>
+
+					<h3
+						*ngIf="
+							!isFromBrand ||
+							campaignReportS3Data?.wordCloud?.visibleToBrand ||
+							campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+							campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+							campaignReportS3Data?.engagementInsight?.intentVisibleToBrand
+						"
+						class="row mb-4 overview-heading"
+					>
+						Engagement Insights
+					</h3>
+					<div
+						#Insights
+						[hidden]="
+							!(
+								!isFromBrand ||
+								campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+								campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+								campaignReportS3Data?.engagementInsight?.intentVisibleToBrand
+							)
+						"
+						class="section mb-5 phase-idea"
+						[ngClass]="{
+							'd-flex flex-wrap':
+								!isFromBrand ||
+								campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+								campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+								campaignReportS3Data?.engagementInsight?.intentVisibleToBrand
+						}"
+					>
+						<ng-container
+							*ngIf="!campaignReportS3Data?.engagementInsight?.content === undefined; else EngagementInsightsTemplate"
+						>
+							<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-template #EngagementInsightsTemplate>
+							<app-engagement-insight
+								(showReferenceConversation)="showReferenceConversation($event, 'insights')"
+								(updatedValue)="onUpdatingEngagementInsight($event, true)"
+								*ngIf="
+									campaignReportS3Data?.engagementInsight?.benefitsVisibleToBrand ||
+									campaignReportS3Data?.engagementInsight?.emotionsVisibleToBrand ||
+									campaignReportS3Data?.engagementInsight?.intentVisibleToBrand ||
+									!isFromBrand
+								"
+								[isBrandLoggedIn]="isFromBrand"
+								[sectionData]="campaignReportS3Data?.engagementInsight"
+							></app-engagement-insight>
+						</ng-template>
+					</div>
+
+					<div
+						#WordCloud
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.wordCloud?.visibleToBrand)"
+						class="section mb-5 phase-idea"
+					>
+						<ng-container *ngIf="!campaignReportS3Data?.wordCloud?.content?.duringCampaign">
+							<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-container *ngIf="campaignReportS3Data?.wordCloud?.content?.duringCampaign">
+							<app-wordcloud
+								(updatedValue)="onUpdatingWordCloud($event, true)"
+								*ngIf="
+									campaignReportS3Data?.wordCloud?.visibleToBrand ||
+									(!isFromBrand && campaignReportS3Data?.wordCloud?.content)
+								"
+								[content]="campaignReportS3Data?.wordCloud?.content"
+								[duringCamapingVisibleToBrand]="campaignReportS3Data?.wordCloud?.duringCamapingVisibleToBrand"
+								[isBrandLoggedIn]="isFromBrand"
+								[preCamapingVisibleToBrand]="campaignReportS3Data?.wordCloud?.preCamapingVisibleToBrand"
+								[supportingText]="campaignReportS3Data?.wordCloud?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.wordCloud?.visibleToBrand"
+							></app-wordcloud>
+						</ng-container>
+					</div>
+
+					<h3
+						*ngIf="!isFromBrand || campaignReportS3Data?.topPerformingPosts?.visibleToBrand"
+						class="row mb-4 overview-heading"
+					>
+						Screenshots
+					</h3>
+					<div
+						#TopPerformingPost
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.wordCloud?.visibleToBrand)"
+						class="section mb-5 phase-idea"
+					>
+						<ng-container
+							*ngIf="campaignReportS3Data?.topPerformingPosts?.posts === undefined; else topPerformingPostTemplate"
+						>
+							<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper">
+								<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+							</div>
+						</ng-container>
+						<ng-template #topPerformingPostTemplate>
+							<app-top-performing-post
+								(updatedValue)="onUpdatingTopPerformingPost($event, true)"
+								[campaignGroups]="campaignGroups"
+								[campaign]="campaign"
+								[isBrandLoggedIn]="isFromBrand"
+								[posts]="campaignReportS3Data?.topPerformingPosts?.posts"
+								[supportingText]="campaignReportS3Data?.topPerformingPosts?.supportingText"
+								[visibleToBrand]="campaignReportS3Data?.topPerformingPosts?.visibleToBrand"
+							></app-top-performing-post>
+						</ng-template>
+					</div>
+					<div
+						[hidden]="!(!isFromBrand || campaignReportS3Data?.allPosts?.visibleToBrand)"
+						class="section mb-5 phase-idea allPost"
+					>
+						<app-all-posts
+							(updatedValue)="onUpdatingAllPosts($event, true)"
+							*ngIf="campaignPosts"
+							[campaignGroups]="campaignGroups"
+							[campaign]="campaign"
+							[isBrandLoggedIn]="isFromBrand"
+							[posts]="campaignReportS3Data?.allPosts?.posts"
+							[supportingText]="campaignReportS3Data?.allPosts?.supportingText"
+							[visibleToBrand]="campaignReportS3Data?.allPosts?.visibleToBrand"
+						></app-all-posts>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<ng-container *ngIf="isFromBrand && !campaignReportS3Data">
+			<div *ngFor="let i of [].constructor(2)" class="flex-box-shimmar-wrapper complete-report-shimmer">
+				<app-loading-shimmer *ngFor="let i of [].constructor(3)" [type]="1"></app-loading-shimmer>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="updateTemplate" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title"><span>Update Template</span></h6>
+				<mat-icon (click)="resetTemplateSelection()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="content">
+				<h6 class="description">Select the most relevant report template for this campaign</h6>
+				<form *ngIf="templateForm" [formGroup]="templateForm">
+					<mat-radio-group formControlName="templateSelected">
+						<table>
+							<tbody>
+								<tr>
+									<td class="input-container">
+										<mat-radio-button
+											[checked]="templateTypeSelected === 'Advanced'"
+											disableRipple="true"
+											value="Advanced"
+										></mat-radio-button>
+									</td>
+									<td class="text-cotnainer">
+										<h5 class="title">Advanced Report Template</h5>
+										<span class="description">Contains all the result and insights of the campaign.</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="input-container">
+										<mat-radio-button [value]="'Basic'" disableRipple="true"></mat-radio-button>
+									</td>
+									<td class="text-cotnainer">
+										<h5 class="title">Basic Report Template</h5>
+										<span class="description">Contains only basic results and minor insights of the campaign</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="input-container">
+										<mat-radio-button [value]="'Unbranded'" disableRipple="true"></mat-radio-button>
+									</td>
+									<td class="text-cotnainer">
+										<h5 class="title">Unbranded Report Template</h5>
+										<span class="description"
+											>Contains only basic results excluding brand specific metrics of the campaign.</span
+										>
+									</td>
+								</tr>
+								<tr>
+									<td class="input-container">
+										<mat-radio-button [value]="'Custom'" disableRipple="true" disabled></mat-radio-button>
+									</td>
+									<td class="text-cotnainer disabled">
+										<h5 class="title">Custom Template</h5>
+										<span class="description"
+											>The report template will automatically get set as custom if any changes are made to the preset
+											templates.</span
+										>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</mat-radio-group>
+				</form>
+
+				<button
+					(click)="onSelectingNewTemplate(templateForm.value.templateSelected)"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Apply
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="previewReport" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title"><span>Report Preview</span></h6>
+				<mat-icon
+					(click)="showReportPreview = false"
+					class="closePopIcon"
+					data-dismiss="modal"
+					data-target="#previewReport"
+					>close
+				</mat-icon>
+			</div>
+
+			<div class="campaign-heading">
+				<span class="campaign row m-0">Campaigns</span>
+				<span class="campaign-name-small"> > {{ campaign?.campaignName }} </span>
+				<div class="row m-0 campaign-name-large">{{ campaign?.campaignName }}</div>
+			</div>
+
+			<div class="content">
+				<app-cmcreport-v3
+					*ngIf="campaignReportS3Data && !isFromBrand"
+					[campaignReportS3Data]="campaignReportS3Data"
+					[campaign]="campaign"
+					[isFromBrand]="true"
+					[previewImage]="previewImage"
+					id="previewReport"
+				></app-cmcreport-v3>
+			</div>
+		</div>
+	</div>
+</div>

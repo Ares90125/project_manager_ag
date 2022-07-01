@@ -1,0 +1,153 @@
+<div class="group-analysing-component-wrapper">
+	<div class="container">
+		<div class="shadow-box">
+			<h2 class="shadow-box-title">{{ title }}</h2>
+
+			<div class="shadow-box-actions">
+				<div class="box-actions-left">
+					<span class="bt-spinner"></span>
+					<span>It may take upto 24hrs</span>
+				</div>
+				<div *ngIf="showNotifyButton" class="box-actions-right">
+					<button
+						(click)="showNotificationPrompt($event)"
+						class="notify-btn"
+						data-cs-id="d5fc1dd0-e846-4ea3-8d10-2740b04a76ad"
+						data-cs-label="Notify me"
+						data-cs-source="page"
+					>
+						<img alt="" src="assets/images/icon-bell.svg" /> <span>Notify me when it's ready</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<h5 class="row-heading">In the meantime... we found some blogs for you</h5>
+
+		<div class="blog-row-wrapper" *ngIf="group?.memberCount > 0 && group?.memberCount <= 99">
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/how-to-create-a-facebook-group-in-5-minutes/?utm_source=App_Group_Manage_Non0Group_' +
+						type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="af65a3aa-d025-444f-aad5-70f3f9279a6b"
+					data-cs-label="Start your own Facebook Group in 5 Minutes!"
+					data-cs-source="page"
+				>
+					<h6>Start your own Facebook Group in 5 Minutes!</h6>
+				</a>
+			</div>
+
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/power-of-facebook-groups/?utm_source=App_Group_Manage_Non0Group_' + type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="5a659ad9-8f12-4367-a048-06fd4f568de1"
+					data-cs-label="Power of Facebook Groups"
+					data-cs-source="page"
+				>
+					<h6>Power of Facebook Groups</h6>
+				</a>
+			</div>
+		</div>
+
+		<div class="blog-row-wrapper" *ngIf="group?.memberCount >= 100 && group?.memberCount <= 1000">
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/best-ways-to-keep-your-facebook-group-engaged/?utm_source=App_Group_Manage_Non0Group_' +
+						type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="e01d56a5-ee67-4bb7-82df-d474eb5f4ea4"
+					data-cs-label="13 sureshot ways to keep your Facebook group Engaged!"
+					data-cs-source="page"
+				>
+					<h6>13 sureshot ways to keep your Facebook group Engaged!</h6>
+				</a>
+			</div>
+
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/power-of-facebook-groups/?utm_source=App_Group_Manage_Non0Group_' + type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="5a659ad9-8f12-4367-a048-06fd4f568de1"
+					data-cs-label="Power of Facebook Groups"
+					data-cs-source="page"
+				>
+					<h6>Power of Facebook Groups</h6>
+				</a>
+			</div>
+		</div>
+
+		<div class="blog-row-wrapper" *ngIf="group?.memberCount > 1000">
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/importance-of-building-an-online-community-for-brand-success/?utm_source=App_Group_Manage_Non0Group_' +
+						type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="2f914f47-a787-4fb7-93cb-033b272f1992"
+					data-cs-label="Building An Online Community For Brand Success: The WHY, HOW, And WHAT"
+					data-cs-source="page"
+				>
+					<h6>Building An Online Community For Brand Success: The WHY, HOW, And WHAT</h6>
+				</a>
+			</div>
+
+			<div class="blog-row">
+				<div><span class="blog-cat">Growth Hacks</span></div>
+				<a
+					[href]="
+						'https://www.convosight.com/blogs/facemash-to-facebook-the-journey-of-a-social-media-giant/?utm_source=App_Group_Manage_Non0Group_' +
+						type
+					"
+					target="_blank"
+					rel="noopener"
+					(click)="recordButtonClick($event, group)"
+					data-cs-id="34a2b253-11bd-43e7-a3a9-672f937a413c"
+					data-cs-label="From Facemash to Facebook – The Journey of a Social Media Giant"
+					data-cs-source="page"
+				>
+					<h6>From Facemash to Facebook – The Journey of a Social Media Giant</h6>
+				</a>
+			</div>
+		</div>
+
+		<div class="text-center">
+			<a
+				[href]="'https://convosight.com/blogs/?utm_source=App_Group_Manage_Non0Group_' + type"
+				target="_blank"
+				rel="noopener"
+				(click)="recordButtonClick($event, group)"
+				data-cs-id="0b622c99-da7f-4eff-9f7a-86d56dbec63c"
+				data-cs-label="see more"
+				data-cs-source="page"
+				class="see-more-link btn btn-link"
+				>see more</a
+			>
+		</div>
+	</div>
+</div>

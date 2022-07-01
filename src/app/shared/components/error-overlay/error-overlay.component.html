@@ -1,0 +1,35 @@
+<!-- Error Overlay modal -->
+<div class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<ng-content select="[title]"></ng-content>
+				<button
+					type="button"
+					data-cs-id="281fedbd-18ad-82fo-8672-c637e8a330be"
+					data-cs-label="Close"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); closeOverlay()"
+					class="close-btn"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<ng-content select="[body]"></ng-content>
+			</div>
+			<div class="modal-footer">
+				<button
+					data-cs-label="OK"
+					data-cs-id="281fedbd-9ae4-82fo-8672-c637e8a330be"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); closeOverlay()"
+					class="px-5 convo-btn-normal convo-btn-primary"
+					type="button"
+				>
+					OK
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,26 @@
+<div class="media-coverage-wrap">
+	<a
+		class="media-row"
+		href="javascript:void(0)"
+		target="_blank"
+		(click)="recordButtonClick($event); redirectToUrl($event, media?.url)"
+		data-cs-id="0e52ea7f-0e52-40c8-baad-1bbd88524ee8"
+		data-cs-label="Open media coverage link"
+		data-cs-source="page"
+		*ngFor="let media of mediaCoverages"
+	>
+		<div class="media-row-left">
+			<ng-container *ngIf="media?.imageUrl; else defaultMetaImage">
+				<img [src]="media?.imageUrl" alt="" (error)="showDefaultMediaCoverageImage($event)" />
+			</ng-container>
+			<ng-template #defaultMetaImage>
+				<img src="assets/images/default_meta_image.png" alt="" />
+			</ng-template>
+		</div>
+		<div class="media-row-right">
+			<h6>{{ media?.title }}</h6>
+			<p>{{ media?.description }}</p>
+			<span class="link">{{ media?.url }}</span>
+		</div>
+	</a>
+</div>

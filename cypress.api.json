@@ -1,0 +1,31 @@
+{
+	"integrationFolder": "cypress/tests/api",
+	"baseUrl": "https://iqbqjrqsrbdgrijmjdou34cm5i.appsync-api.us-east-1.amazonaws.com/graphql",
+	"defaultCommandTimeout": 10000,
+	"responseTimeout": 60000,
+	"chromeWebSecurity": false,
+	"projectId": "kooxvh",
+	"watchForFileChanges": false,
+	"numTestsKeptInMemory": 10,
+	"videoUploadOnPasses": false,
+	"retries": {
+		"runMode": 2,
+		"openMode": 0
+	},
+	"env": {
+		"browserPermissions": {
+			"notifications": "allow",
+			"images": "allow",
+			"javascript": "allow",
+			"popups": "allow",
+			"plugins": "allow",
+			"cookies": "allow"
+		},
+		"MAILOSAUR_API_KEY": "pTei1Musx2GPNFZ",
+		"developAppSyncUrl": "https://graph.develop.convosight.com/graphql",
+		"compressionUrl": "https://bd-convosight-dev-image-compressor-destination.s3.ap-south-1.amazonaws.com/public/imageCompressionSource/*",
+		"uploadUrl": "https://bd-cs-dev-media.s3.amazonaws.com/public/pics/*",
+		"developAPIKey": "da2-mgh5233rcvbyjgaag6mhtchpgm",
+		"valueCalculatorURL": "https://extension.convosight.com/group-value-dev/group-value-calculator"
+	}
+}

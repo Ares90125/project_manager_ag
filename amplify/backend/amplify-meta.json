@@ -1,0 +1,88 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-pkwebclient-develop-114511-authRole",
+			"UnauthRoleArn": "arn:aws:iam::068053939740:role/amplify-pkwebclient-develop-114511-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::068053939740:role/amplify-pkwebclient-develop-114511-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "amplify-pkwebclient-develop-114511-deployment",
+			"UnauthRoleName": "amplify-pkwebclient-develop-114511-unauthRole",
+			"StackName": "amplify-pkwebclient-develop-114511",
+			"StackId": "arn:aws:cloudformation:us-east-1:068053939740:stack/amplify-pkwebclient-develop-114511/2f8ed2f0-e11a-11ea-bd8e-12275bc6e1ef",
+			"AmplifyAppId": "d1gckv3gtlupfy"
+		}
+	},
+	"api": {
+		"Api-App-Sync-Dev": {
+			"service": "AppSync",
+			"output": {
+				"authConfig": {
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS"
+					},
+					"additionalAuthenticationProviders": [
+						{
+							"authenticationType": "API_KEY"
+						}
+					],
+					"userPoolConfig": {
+						"userPoolId": "us-east-1_sJUKzJDSZ",
+						"awsRegion": "us-east-1",
+						"defaultAction": "ALLOW",
+						"appIdClientRegex": null
+					}
+				},
+				"GraphQLAPIIdOutput": "524cbwffvrannixl7xiyfsiht4",
+				"GraphQLAPIEndpointOutput": "https://iqbqjrqsrbdgrijmjdou34cm5i.appsync-api.us-east-1.amazonaws.com/graphql",
+				"name": "Api-App-Sync-Dev",
+				"region": "us-east-1",
+				"GraphQLAPIKeyOutput": "da2-cwqbu2h46ne3fkqohbuuvzx57m"
+			},
+			"lastPushTimeStamp": "2020-08-18T06:24:53.081Z"
+		},
+		"Api-App-Sync-Feature1": {
+			"service": "AppSync",
+			"output": {
+				"authConfig": {
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS"
+					},
+					"additionalAuthenticationProviders": null,
+					"userPoolConfig": {
+						"userPoolId": "us-east-1_sJUKzJDSZ",
+						"awsRegion": "us-east-1",
+						"defaultAction": "ALLOW",
+						"appIdClientRegex": null
+					}
+				},
+				"GraphQLAPIIdOutput": "vhav2am4pzdxbfqtbpdzmrf3ga",
+				"GraphQLAPIEndpointOutput": "https://u2loiekp2jebbhna3kazrmm2pe.appsync-api.us-east-1.amazonaws.com/graphql",
+				"name": "Api-App-Sync-Feature1",
+				"region": "us-east-1"
+			},
+			"lastPushTimeStamp": "2020-08-18T15:21:06.308Z"
+		},
+		"Api-App-Sync-Feature2": {
+			"service": "AppSync",
+			"output": {
+				"authConfig": {
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS"
+					},
+					"additionalAuthenticationProviders": null,
+					"userPoolConfig": {
+						"userPoolId": "us-east-1_sJUKzJDSZ",
+						"awsRegion": "us-east-1",
+						"defaultAction": "ALLOW",
+						"appIdClientRegex": null
+					}
+				},
+				"GraphQLAPIIdOutput": "hu6mr4ersngnbmbwxegck7z4xa",
+				"GraphQLAPIEndpointOutput": "https://f5o4br73rvdrjd6cqjdvom2fva.appsync-api.us-east-1.amazonaws.com/graphql",
+				"name": "Api-App-Sync-Feature2",
+				"region": "us-east-1"
+			},
+			"lastPushTimeStamp": "2020-08-18T15:21:37.750Z"
+		}
+	}
+}

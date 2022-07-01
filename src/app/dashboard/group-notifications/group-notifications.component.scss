@@ -1,0 +1,233 @@
+@import '../../../assets/scss/custom/variables';
+@import '../../../assets/scss/custom/mixins';
+
+.notification-wrapper {
+	.head-section {
+		padding: 14px;
+		position: relative;
+		align-items: center;
+		border-bottom: 1px solid $primary-3;
+		justify-content: space-between;
+		cursor: default;
+		@include flex();
+
+		&::before {
+			top: -6px;
+			right: 43px;
+			width: 14px;
+			height: 14px;
+			content: '';
+			position: absolute;
+			background-color: $white;
+			@include transform(rotate(45deg));
+			@media (max-width: 767px) {
+				right: 80px;
+			}
+		}
+
+		.head-text {
+			color: rgba(51, 51, 79, 0.8);
+			margin: 0;
+			font-size: 13px;
+			font-weight: bold;
+			line-height: 15px;
+		}
+
+		.btn-mark-all-read {
+			color: rgba(54, 84, 255, 0.8);
+			border: none;
+			height: auto;
+			padding: 0;
+			font-size: 13px;
+			line-height: 15px;
+			background-color: transparent;
+
+			&:focus {
+				outline: none;
+			}
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+
+	.notification-list {
+		padding: 0;
+		max-height: 330px;
+		overflow-y: auto;
+		cursor: default;
+
+		.notification-list-item {
+			padding: 14px;
+			position: relative;
+			align-items: flex-start;
+			@include flex();
+
+			&:not(:last-of-type) {
+				border-bottom: 1px solid $primary-3;
+			}
+
+			&.unread-notification {
+				&:before {
+					left: 0;
+					width: 2px;
+					bottom: 1px;
+					height: 100%;
+					content: '';
+					position: absolute;
+					background-color: transparent;
+				}
+
+				&.success {
+					&::before {
+						background-color: #47b9bc;
+					}
+				}
+
+				&.down {
+					&::before {
+						background-color: #e63b3b;
+					}
+				}
+
+				&.info {
+					&::before {
+						background-color: #2f86eb;
+					}
+				}
+
+				&.warning {
+					&::before {
+						background-color: #ff9c28;
+					}
+				}
+			}
+
+			.img-wrapper {
+				margin-right: 8px;
+
+				.img-notification {
+					width: 24px;
+					height: 24px;
+				}
+			}
+
+			.content-wrapper {
+				.notification-text {
+					color: rgba(51, 51, 79, 0.8);
+					margin: 0 0 5px;
+					font-size: 13px;
+					line-height: 18px;
+
+					.bold-text {
+						font-weight: 700;
+					}
+
+					svg {
+						color: #007bff;
+						margin-left: 5px;
+						cursor: pointer;
+						position: relative;
+						top: -2px;
+					}
+				}
+
+				.notification-timestamp {
+					color: rgba(51, 51, 79, 0.5);
+					margin: 0;
+					font-size: 12px;
+					line-height: 17px;
+				}
+			}
+		}
+	}
+
+	.bottom-wrapper {
+		padding: 10px 0;
+		border-top: 1px solid $primary-3;
+		text-align: center;
+
+		.btn-view-all {
+			color: rgba(54, 84, 255, 0.8);
+			font-size: 13px;
+			line-height: 15px;
+		}
+	}
+
+	.no-notification-wrapper {
+		height: 300px;
+		position: relative;
+		cursor: initial;
+
+		.no-notification {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			@include transform(translate(-50%, -50%));
+			padding: 20px;
+			width: 100%;
+			text-align: center;
+
+			figure {
+				margin: 0 0 15px;
+			}
+
+			h5 {
+				text-align: center;
+				letter-spacing: 0.01em;
+				color: $primary-1;
+				font-weight: 500;
+				font-size: 18px;
+			}
+		}
+	}
+
+	&.mobile-view {
+		background-color: white;
+
+		.head-section {
+			padding: 16px;
+
+			&::before {
+				content: none;
+			}
+
+			.head-text {
+				color: unset;
+				font-weight: 500;
+				font-size: 16px;
+			}
+
+			.btn-mark-all-read {
+				font-size: 14px;
+				font-weight: 500;
+			}
+		}
+
+		.notification-list {
+			max-height: unset;
+
+			li {
+				&:last-child {
+					margin-bottom: 76px;
+				}
+			}
+
+			.notification-list-item {
+				.img-wrapper {
+					.img-notification {
+						width: 20px;
+						height: 20px;
+					}
+				}
+
+				.content-wrapper {
+					.notification-text {
+						font-size: 14px;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+export class CommunityDiscoveryFiltersModel {
+	id;
+	name;
+	description;
+	maxPostsEngagementRateLastNinetyDays;
+	country;
+	region;
+	state;
+	businessCategory;
+	memberCount;
+	groupId;
+	owner;
+	isMonetized;
+	isMonetizable;
+	privacy;
+	fbGroupId;
+	groupInstallationStartedAtUTC;
+	topTenCities;
+}

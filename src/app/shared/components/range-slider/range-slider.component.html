@@ -1,0 +1,18 @@
+<span class="multi-range">
+	<input
+		(change)="lowerSliderChange()"
+		type="range"
+		[min]="minLimit"
+		[max]="maxLimit"
+		[value]="minValueFromInput"
+		[id]="'lower' + id"
+	/>
+	<input
+		(change)="upperSliderChange()"
+		type="range"
+		[min]="minLimit"
+		[max]="maxLimit"
+		[value]="maxValueFromInput"
+		[id]="'upper' + id"
+	/>
+</span>

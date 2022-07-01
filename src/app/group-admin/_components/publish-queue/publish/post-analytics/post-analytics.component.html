@@ -1,0 +1,810 @@
+<div class="post-analytics-component">
+	<div class="container">
+		<ng-container *ngIf="!showEmptyPostScreen; else noPublishedPosts">
+			<div class="group-item-wrapper" *ngIf="false">
+				<div class="group-item-wrapper-content">
+					<ul class="list-unstyled">
+						<li>
+							<figure>
+								<app-fb-group-cover-image
+									[coverImageUrl]="selectedGroup.coverImageUrl"
+									[fbGroupId]="selectedGroup.fbGroupId"
+								></app-fb-group-cover-image>
+							</figure>
+							<h5>
+								<span>{{ selectedGroup?.name }}</span>
+								<a
+									class="link-new-tab"
+									href="https://www.facebook.com/groups/{{ selectedGroup?.fbGroupId }}"
+									style="display: inline-block"
+									target="_blank"
+									rel="noopener"
+								>
+									<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M11.2899 7.6494C10.9776 7.6494 10.7244 7.90257 10.7244 8.21492V12.5046C10.7244 12.9812 10.3366 13.3689 9.86002 13.3689H1.99565C1.51905 13.3689 1.13129 12.9812 1.13129 12.5046V4.64022C1.13129 4.16361 1.51905 3.77585 1.99565 3.77585H6.28531C6.59763 3.77585 6.85084 3.52265 6.85084 3.21033C6.85084 2.89801 6.59763 2.64481 6.28531 2.64481H1.99565C0.895396 2.64481 0.000244141 3.53996 0.000244141 4.64022V12.5046C0.000244141 13.6049 0.895396 14.5 1.99565 14.5H9.85999C10.9603 14.5 11.8554 13.6049 11.8555 12.5046V8.21492C11.8555 7.90257 11.6023 7.6494 11.2899 7.6494Z"
+										/>
+										<path
+											d="M13.4345 0.500031H9.14489C8.83254 0.500031 8.57936 0.753234 8.57936 1.06555C8.57936 1.37787 8.83254 1.63108 9.14489 1.63108H12.869V5.35521C12.869 5.66753 13.1222 5.92074 13.4345 5.92074C13.7469 5.92074 14.0001 5.66753 14.0001 5.35521V1.06555C14.0001 0.753234 13.7469 0.500031 13.4345 0.500031Z"
+										/>
+										<path
+											d="M13.8348 0.665621C13.6139 0.444793 13.2558 0.444793 13.035 0.665621L5.17062 8.52996C4.94976 8.75081 4.94976 9.10888 5.17062 9.32973C5.28103 9.44018 5.42579 9.49538 5.57052 9.49538C5.71528 9.49538 5.86001 9.44015 5.97042 9.32973L13.8348 1.4654C14.0556 1.24454 14.0556 0.886477 13.8348 0.665621Z"
+										/>
+									</svg>
+								</a>
+							</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="post-analytics-content-body" data-test-id="post-analytics-body">
+				<div class="page-headers" *ngIf="!showSubNav">
+					<h1 class="heading">Posts published via Convosight</h1>
+					<h6 data-test-id="subheading-post-analytics">
+						Check out how your posts are doing in the group. Analytics would be available after 30 minutes of posting
+					</h6>
+				</div>
+				<div *ngIf="showSubNav" style="margin-top: 20px"></div>
+				<div class="fixed-tabs">
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<ul class="nav nav-tabs graph-tabs" role="tablist">
+									<li class="nav-item">
+										<button
+											(click)="setTimePeriod('7_DAYS'); recordButtonClick($event, selectedGroup)"
+											[class.active]="timePeriod === '7_DAYS'"
+											aria-selected="true"
+											class="btn-month"
+											data-cs-id="18222a9f-fc31-456c-a787-6e4cf09b8734"
+											data-cs-label="7 days"
+											data-cs-source="page"
+											data-toggle="tab"
+											role="tab"
+										>
+											7 days
+										</button>
+									</li>
+									<li class="nav-item">
+										<button
+											(click)="setTimePeriod('14_DAYS'); recordButtonClick($event, selectedGroup)"
+											[class.active]="timePeriod === '14_DAYS'"
+											aria-selected="false"
+											class="btn-month"
+											data-cs-id="0bbf1677-6d41-43e7-9bc2-68802ece9dcf"
+											data-cs-label="14 days"
+											data-cs-source="page"
+											data-toggle="tab"
+											role="tab"
+										>
+											14 days
+										</button>
+									</li>
+									<li class="nav-item">
+										<button
+											(click)="setTimePeriod('LAST_30Days'); recordButtonClick($event, selectedGroup)"
+											[class.active]="timePeriod === 'LAST_30Days'"
+											aria-selected="false"
+											class="btn-month"
+											data-cs-id="976ca9a0-7e95-4fdd-b3f9-e8359ca22857"
+											data-cs-label="Last 30 days"
+											data-cs-source="page"
+											data-toggle="tab"
+											role="tab"
+										>
+											Last 30 days
+										</button>
+									</li>
+									<li class="nav-item">
+										<button
+											(click)="setTimePeriod('LAST_MONTH'); recordButtonClick($event, selectedGroup)"
+											[class.active]="timePeriod === 'LAST_MONTH'"
+											aria-selected="false"
+											class="btn-month"
+											data-cs-id="f36d67fb-f0fa-4f70-97a7-37b2dd66d6ff"
+											data-cs-label="Last month"
+											data-cs-source="page"
+											data-toggle="tab"
+											role="tab"
+										>
+											{{ selectedGroup?.getPillNameBasedOnReportType('lastMonth') }}
+										</button>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="post-analytics-stats">
+					<ul *ngIf="postAnalytics30Days" class="list-unstyled">
+						<li>
+							<div *ngIf="!isLoading; else loadPostStats">
+								<div class="tooltip-wrapper">
+									<app-tooltip
+										data-test-id="tooltip-number-posts"
+										setTooltipText="Total Posts published via Convosight in the given time period."
+									>
+									</app-tooltip>
+								</div>
+								<h6 data-test-id="heading-number-of-post">Number of posts</h6>
+								<h3 data-test-id="number-of-post">{{ postAnalytics30Days.convosightPosts }}</h3>
+								<div class="list-footer-row">
+									<h4 data-test-id="post-comparison">
+										{{ postAnalytics30Days?.convosightPostPercentage | percent }}
+										out of
+										<strong>{{ postAnalytics30Days.totalPosts }} posts</strong>
+										in the group
+									</h4>
+								</div>
+							</div>
+							<ng-template #loadPostStats>
+								<div>
+									<h6>Number of posts</h6>
+									<h3 class="loading-strip first"></h3>
+								</div>
+							</ng-template>
+						</li>
+						<li>
+							<div *ngIf="!isLoading; else loadActivityStats">
+								<div class="tooltip-wrapper">
+									<app-tooltip
+										data-test-id="tooltip-analytics"
+										setTooltipText="Average activity rate of posts published using Convosight"
+									>
+									</app-tooltip>
+								</div>
+								<h6 data-test-id="heading-analytics">Activity rate</h6>
+								<h3 data-test-id="activity-rate">
+									{{ postAnalytics30Days.convosightActivityRate ? postAnalytics30Days.convosightActivityRate : '0' }}
+								</h3>
+								<div *ngIf="postAnalytics30Days?.convosightActivityPercentage">
+									<div *ngIf="postAnalytics30Days?.convosightActivityColor === 'green'" class="list-footer-row green">
+										<h4 data-test-id="activity-rate-comparison">
+											<img alt="" src="assets/images/icon-arrow-green.svg" />
+											{{ postAnalytics30Days?.convosightActivityPercentage }}
+											higher than group average
+										</h4>
+									</div>
+									<div *ngIf="postAnalytics30Days?.convosightActivityColor === 'red'" class="list-footer-row red">
+										<h4>
+											<img alt="" src="assets/images/icon-arrow-red.svg" />
+											{{ postAnalytics30Days?.convosightActivityPercentage }}
+											lower than group average
+										</h4>
+									</div>
+
+									<div
+										*ngIf="
+											postAnalytics30Days?.convosightActivityColor !== 'red' &&
+											postAnalytics30Days?.convosightActivityColor !== 'green'
+										"
+										class="list-footer-row"
+									>
+										<h4>Same as the group average</h4>
+									</div>
+								</div>
+								<div *ngIf="postAnalytics30Days?.convosightActivityPercentage === null" class="list-footer-row">
+									<h4>vs 0</h4>
+								</div>
+							</div>
+							<ng-template #loadActivityStats>
+								<div>
+									<h6>Activity rate</h6>
+									<h3 class="loading-strip first"></h3>
+								</div>
+							</ng-template>
+						</li>
+
+						<li>
+							<div *ngIf="!isLoading; else loadImpactStats">
+								<div class="tooltip-wrapper">
+									<app-tooltip
+										data-test-id="tooltip-impact"
+										setTooltipText="Engagement gain by using Convosight's recommended time to post based on increase in activity rate."
+									>
+									</app-tooltip>
+								</div>
+								<h6 data-test-id="heading-impact">Impact</h6>
+								<h3 data-test-id="number-interaction">
+									{{ postAnalytics30Days.convosigtSuggestionImapactRate | shortNumber }}
+									<span>interactions</span>
+								</h3>
+								<div
+									*ngIf="postAnalytics30Days.convosigtSuggestionImapactRateDifference !== 0"
+									class="list-footer-row green"
+								>
+									<h4 data-test-id="impact-comparision">
+										<img alt="" src="assets/images/icon-arrow-green.svg" />{{
+											postAnalytics30Days.convosigtSuggestionImapactRateDifference
+										}}% higher than regular post
+									</h4>
+								</div>
+								<div *ngIf="postAnalytics30Days.convosigtSuggestionImapactRateDifference === 0" class="list-footer-row">
+									<h4>vs 0</h4>
+								</div>
+							</div>
+							<ng-template #loadImpactStats>
+								<div>
+									<h6>Impact</h6>
+									<h3 class="loading-strip first"></h3>
+								</div>
+							</ng-template>
+						</li>
+					</ul>
+				</div>
+				<div class="d-flex justify-content-between posts-filters-wrappper">
+					<h5 class="content-title" data-test-id="heading-post-analytics-scheduled-posts">
+						Your scheduled posts
+						<h6>{{ selectedGroup?.getPillNameBasedOnReportType(timePeriodForReport) }}</h6>
+					</h5>
+					<div class="d-flex align-center">
+						<div class="filters">
+							<span>Sort by</span>
+							<div class="d-inline-block custom-dropdown">
+								<button
+									class="convo-dropdown convo-small-dropdown dropdown-toggle"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									{{ selectedSortBy }}
+								</button>
+								<div class="convo-dropdown-wrapper dropdown-menu">
+									<button (click)="sortPosts('Last published')" class="dropdown-item">Last published</button>
+									<button (click)="sortPosts('Highest activity')" class="dropdown-item">Highest activity</button>
+									<button (click)="sortPosts('Most reactions')" class="dropdown-item">Most reactions</button>
+									<button (click)="sortPosts('Most comments')" class="dropdown-item">Most comments</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!isLoading; else InitialLoading" class="published-post-wrapper">
+					<div *ngIf="posts.length !== 0; else noPostsInTimePeriod">
+						<div class="published-post-header">
+							<ul class="list-unstyled">
+								<li class="post-description">
+									<div>POST</div>
+								</li>
+								<li>
+									<div>SUGGESTED TIMES</div>
+								</li>
+								<li>
+									<div>SUGGESTIONS MET</div>
+								</li>
+								<li>
+									<div class="info-wrapper d-flex">
+										ACTIVITY
+										<div class="tooltip-wrapper position-static ml-1">
+											<app-tooltip setTooltipText="Comments + Reactions"> </app-tooltip>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="published-post-body">
+							<div *ngFor="let post of posts" class="post-box">
+								<div class="post-box-head">
+									<figure class="m-0">
+										<img alt="" src="{{ post?.createdByImgUrl }}" />
+									</figure>
+									<strong>{{ post?.createdByName }}</strong>
+									<ul class="list-unstyled m-0">
+										<li>
+											<img alt="" src="assets/images/user-icon.svg" />
+											{{
+												post.createdByRole && post.createdByRole === 'Moderator' ? post.createdByRole : 'Administrator'
+											}}
+											· {{ post?.dateForUI }}
+										</li>
+										<li>
+											<a
+												matTooltip="View this post in Facebook"
+												matTooltipPosition="above"
+												class="view-post-link"
+												data-cs-id="d2522891-947d-4c70-b46e-68a67d6a157c"
+												data-cs-label="View Post"
+												data-cs-source="page"
+												href="{{ post.fbPermlink }}"
+												target="_blank"
+												rel="noopener"
+											>
+												<div>View Post</div>
+												<img src="assets/images/external_icon-blue.svg" alt="" />
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="post-box-body">
+									<ul class="list-unstyled m-0">
+										<li class="post-description">
+											<div class="post-description-inner" [ngSwitch]="post.contentType">
+												<ng-container *ngSwitchCase="'Text'"> </ng-container>
+												<ng-container *ngSwitchCase="'Photo'">
+													<figure>
+														<img
+															alt=""
+															(error)="showUpdatedImageFromFacebook($event, post.fbPostId)"
+															[src]="post.imageUrls[0]"
+														/>
+													</figure>
+												</ng-container>
+												<ng-container *ngSwitchCase="'Album'">
+													<figure>
+														<img
+															alt=""
+															(error)="showUpdatedImageFromFacebook($event, post.fbPostId)"
+															[src]="post.imageUrls[0]"
+														/>
+													</figure>
+												</ng-container>
+												<ng-container *ngSwitchCase="'Video'">
+													<figure class="video-wrapper">
+														<img
+															alt=""
+															(error)="showUpdatedImageFromFacebook($event, post.fbPostId)"
+															[src]="post.videoUrls[0]"
+														/>
+													</figure>
+												</ng-container>
+												<ng-container *ngSwitchCase="'Link'">
+													<figure *ngIf="post.imageUrls">
+														<img
+															alt=""
+															(error)="showUpdatedImageFromFacebook($event, post.fbPostId)"
+															[src]="post.imageUrls[0]"
+														/>
+													</figure>
+													<figure *ngIf="!post.imageUrls && post.videoUrls" class="video-wrapper">
+														<img
+															alt=""
+															(error)="showUpdatedImageFromFacebook($event, post.fbPostId)"
+															[src]="post.videoUrls[0]"
+														/>
+													</figure>
+												</ng-container>
+												<ng-container *ngSwitchDefault>
+													<figure>
+														<img alt="" src="assets/images/default_group_image.jpg" />
+													</figure>
+												</ng-container>
+
+												<figcaption>{{ post?.text }}</figcaption>
+											</div>
+										</li>
+										<li>
+											<ng-container
+												*ngIf="post?.isTimeSuggestionMet || post?.scheduleOption === 'Auto-schedule'; else timeNotMet"
+											>
+												<div>
+													<svg
+														fill="none"
+														height="11"
+														viewBox="0 0 14 11"
+														width="14"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path
+															clip-rule="evenodd"
+															d="M14 1.64886L4.89422 10.7546L0 5.861L1.47495 4.38588L4.89413 7.80466L12.525 0.173828L14 1.64886Z"
+															fill="#00B47E"
+															fill-rule="evenodd"
+														/>
+													</svg>
+												</div>
+												<span>Met</span>
+											</ng-container>
+											<ng-template #timeNotMet>
+												<div>
+													<svg
+														fill="none"
+														height="12"
+														viewBox="0 0 12 12"
+														width="12"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path
+															d="M7.85733 6.00006L11.9266 1.93073C12.0243 1.83304 12.0243 1.67469 11.9266 1.577L10.4233 0.0732966C10.3763 0.0263918 10.3126 0 10.2464 0C10.1801 0 10.1164 0.0263918 10.0695 0.0732966L6 4.14276L1.93048 0.0732966C1.83666 -0.020513 1.67056 -0.020513 1.57675 0.0732966L0.0732664 1.577C-0.0244222 1.67469 -0.0244222 1.83304 0.0732664 1.93073L4.14267 6.00006L0.0732664 10.0694C-0.0244222 10.1671 -0.0244222 10.3254 0.0732664 10.4231L1.57675 11.9267C1.62365 11.9736 1.68732 12 1.75361 12C1.8199 12 1.88357 11.9736 1.93048 11.9267L6 7.85724L10.0695 11.9267C10.1164 11.9736 10.1801 12 10.2464 12C10.3126 12 10.3763 11.9736 10.4233 11.9267L11.9267 10.4231C12.0244 10.3254 12.0244 10.167 11.9267 10.0694L7.85733 6.00006Z"
+															fill="#E63B3B"
+														/>
+													</svg>
+												</div>
+												<span>Not met</span>
+											</ng-template>
+										</li>
+										<li>
+											<ng-container *ngIf="post?.totalSuggestions; else suggestionNotMet">
+												<div class="response">
+													<div>
+														<strong>{{ post?.totalSuggestionMet }}/{{ post?.totalSuggestions }}</strong>
+													</div>
+													<span>suggested</span>
+												</div>
+											</ng-container>
+
+											<ng-template #suggestionNotMet>
+												<ng-container *ngIf="post?.recomObject === null">
+													<div class="response">--</div>
+												</ng-container>
+												<ng-container *ngIf="post?.recomObject !== null">
+													<div class="response waiting">
+														<span
+															(click)="tooltip.toggle()"
+															#tooltip="matTooltip"
+															matTooltip="It will take some time before data is available"
+															matTooltipPosition="above"
+															data-cs-parent-label="Tooltip"
+															data-cs-label="It will take some time before data is available"
+															data-cs-source="page"
+															(mouseenter)="tooltipHovered($event)"
+															>Awaiting</span
+														>
+													</div>
+												</ng-container>
+											</ng-template>
+										</li>
+										<li>
+											<ng-container *ngIf="post?.analytics && post?.analytics?.length !== 0; else awaiting">
+												<div class="response">
+													<div>
+														<strong>{{ post['analytics']['activityRate'] }}</strong>
+													</div>
+													<ng-container *ngIf="post?.activityPercentage">
+														<span *ngIf="post?.activityPercentage.color === 'green'">
+															<span class="green">
+																<svg
+																	width="7"
+																	height="10"
+																	viewBox="0 0 7 10"
+																	fill="none"
+																	xmlns="http://www.w3.org/2000/svg"
+																>
+																	<path
+																		d="M0.016036 4.45645C0.0485678 4.53434 0.124482 4.58516 0.208724 4.58516H2.49387V9.79173C2.49387 9.90669 2.5873 10 2.70241 10H4.03901C4.15412 10 4.24756 9.90669 4.24756 9.79173V4.58514H6.54146C6.6257 4.58514 6.70161 4.53432 6.73415 4.45684C6.76627 4.37896 6.74875 4.2894 6.6891 4.22983L3.52879 0.0612288C3.48959 0.0220814 3.43661 0 3.38114 0C3.32568 0 3.2727 0.0220814 3.2335 0.0608187L0.06108 4.22942C0.00143194 4.28901 -0.0164957 4.37855 0.016036 4.45645Z"
+																	/>
+																</svg>
+																{{ post?.activityPercentage.perf }}%
+															</span>
+															higher than avg.</span
+														>
+														<span *ngIf="post?.activityPercentage.color === 'red'">
+															<span class="red">
+																<svg
+																	width="7"
+																	height="10"
+																	viewBox="0 0 7 10"
+																	fill="none"
+																	xmlns="http://www.w3.org/2000/svg"
+																>
+																	<path
+																		d="M0.016036 4.45645C0.0485678 4.53434 0.124482 4.58516 0.208724 4.58516H2.49387V9.79173C2.49387 9.90669 2.5873 10 2.70241 10H4.03901C4.15412 10 4.24756 9.90669 4.24756 9.79173V4.58514H6.54146C6.6257 4.58514 6.70161 4.53432 6.73415 4.45684C6.76627 4.37896 6.74875 4.2894 6.6891 4.22983L3.52879 0.0612288C3.48959 0.0220814 3.43661 0 3.38114 0C3.32568 0 3.2727 0.0220814 3.2335 0.0608187L0.06108 4.22942C0.00143194 4.28901 -0.0164957 4.37855 0.016036 4.45645Z"
+																	/>
+																</svg>
+																{{ post?.activityPercentage.perf }}%
+															</span>
+															lower than avg.</span
+														>
+													</ng-container>
+												</div>
+											</ng-container>
+											<ng-template #awaiting>
+												<div class="response waiting">
+													<span
+														(click)="tooltip.toggle()"
+														#tooltip="matTooltip"
+														matTooltip="It will take some time before data is available"
+														matTooltipPosition="above"
+														data-cs-parent-label="Tooltip"
+														data-cs-label="It will take some time before data is available"
+														data-cs-source="page"
+														(mouseenter)="tooltipHovered($event)"
+														>Awaiting</span
+													>
+												</div>
+											</ng-template>
+										</li>
+									</ul>
+								</div>
+								<div class="post-box-foot">
+									<ul class="list-unstyled m-0">
+										<li>
+											<img alt="" src="assets/images/like-icon.svg" />
+											<ng-container *ngIf="post.analytics?.reactions; else awaiting">
+												<span
+													><strong>{{ post.analytics.reactions }}</strong> reactions</span
+												>
+											</ng-container>
+											<ng-template #awaiting>
+												<span
+													(click)="tooltip.toggle()"
+													#tooltip="matTooltip"
+													matTooltip="It will take some time before data is available"
+													matTooltipPosition="above"
+													data-cs-parent-label="Tooltip"
+													data-cs-label="It will take some time before data is available"
+													data-cs-source="page"
+													(mouseenter)="tooltipHovered($event)"
+													>Awaiting</span
+												>
+											</ng-template>
+										</li>
+										<li>
+											<img alt="" src="assets/images/comment-icon.svg" />
+											<ng-container *ngIf="post.analytics?.commentCount; else awaiting">
+												<span
+													><strong>{{ post.analytics.commentCount }}</strong> comments</span
+												>
+											</ng-container>
+											<ng-template #awaiting>
+												<span matTooltip="It will take some time before data is available" matTooltipPosition="above"
+													>Awaiting</span
+												>
+											</ng-template>
+										</li>
+									</ul>
+								</div>
+								<div class="post-box-mobile-stats">
+									<ul class="list-unstyled m-0">
+										<li>
+											<div class="label-wrap">SUGGESTED TIMES</div>
+											<div class="value-wrap">
+												<ng-container
+													*ngIf="post?.isTimeSuggestionMet || post?.scheduleOption === 'Auto-schedule'; else timeNotMet"
+												>
+													<div>
+														<svg
+															fill="none"
+															height="11"
+															viewBox="0 0 14 11"
+															width="14"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																clip-rule="evenodd"
+																d="M14 1.64886L4.89422 10.7546L0 5.861L1.47495 4.38588L4.89413 7.80466L12.525 0.173828L14 1.64886Z"
+																fill="#00B47E"
+																fill-rule="evenodd"
+															/>
+														</svg>
+													</div>
+													<span>Met</span>
+												</ng-container>
+												<ng-template #timeNotMet>
+													<div>
+														<svg
+															fill="none"
+															height="12"
+															viewBox="0 0 12 12"
+															width="12"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																d="M7.85733 6.00006L11.9266 1.93073C12.0243 1.83304 12.0243 1.67469 11.9266 1.577L10.4233 0.0732966C10.3763 0.0263918 10.3126 0 10.2464 0C10.1801 0 10.1164 0.0263918 10.0695 0.0732966L6 4.14276L1.93048 0.0732966C1.83666 -0.020513 1.67056 -0.020513 1.57675 0.0732966L0.0732664 1.577C-0.0244222 1.67469 -0.0244222 1.83304 0.0732664 1.93073L4.14267 6.00006L0.0732664 10.0694C-0.0244222 10.1671 -0.0244222 10.3254 0.0732664 10.4231L1.57675 11.9267C1.62365 11.9736 1.68732 12 1.75361 12C1.8199 12 1.88357 11.9736 1.93048 11.9267L6 7.85724L10.0695 11.9267C10.1164 11.9736 10.1801 12 10.2464 12C10.3126 12 10.3763 11.9736 10.4233 11.9267L11.9267 10.4231C12.0244 10.3254 12.0244 10.167 11.9267 10.0694L7.85733 6.00006Z"
+																fill="#E63B3B"
+															/>
+														</svg>
+													</div>
+													<span>Not met</span>
+												</ng-template>
+											</div>
+										</li>
+										<li>
+											<div class="label-wrap">SUGGESTIONS MET</div>
+											<div class="value-wrap">
+												<ng-container *ngIf="post?.totalSuggestions; else suggestionNotMet">
+													<div class="response">
+														<div>
+															<strong>{{ post?.totalSuggestionMet }}/{{ post?.totalSuggestions }}</strong>
+														</div>
+														<span>suggested</span>
+													</div>
+												</ng-container>
+
+												<ng-template #suggestionNotMet>
+													<ng-container *ngIf="post?.recomObject === null">
+														<div class="response">--</div>
+													</ng-container>
+													<ng-container *ngIf="post?.recomObject !== null">
+														<div class="response waiting">
+															<span
+																(click)="tooltip.toggle()"
+																#tooltip="matTooltip"
+																matTooltip="It will take some time before data is available"
+																matTooltipPosition="above"
+																data-cs-parent-label="Tooltip"
+																data-cs-label="It will take some time before data is available"
+																data-cs-source="page"
+																(mouseenter)="tooltipHovered($event)"
+																>Awaiting</span
+															>
+														</div>
+													</ng-container>
+												</ng-template>
+											</div>
+										</li>
+										<li>
+											<div class="label-wrap">ACTIVITY</div>
+											<div class="value-wrap">
+												<ng-container *ngIf="post?.analytics && post?.analytics?.length !== 0; else awaiting">
+													<div class="response">
+														<div>
+															<strong>{{ post['analytics']['activityRate'] }}</strong>
+														</div>
+														<ng-container *ngIf="post?.activityPercentage">
+															<span *ngIf="post?.activityPercentage.color === 'green'">
+																<span class="green">
+																	<svg
+																		width="7"
+																		height="10"
+																		viewBox="0 0 7 10"
+																		fill="none"
+																		xmlns="http://www.w3.org/2000/svg"
+																	>
+																		<path
+																			d="M0.016036 4.45645C0.0485678 4.53434 0.124482 4.58516 0.208724 4.58516H2.49387V9.79173C2.49387 9.90669 2.5873 10 2.70241 10H4.03901C4.15412 10 4.24756 9.90669 4.24756 9.79173V4.58514H6.54146C6.6257 4.58514 6.70161 4.53432 6.73415 4.45684C6.76627 4.37896 6.74875 4.2894 6.6891 4.22983L3.52879 0.0612288C3.48959 0.0220814 3.43661 0 3.38114 0C3.32568 0 3.2727 0.0220814 3.2335 0.0608187L0.06108 4.22942C0.00143194 4.28901 -0.0164957 4.37855 0.016036 4.45645Z"
+																		/>
+																	</svg>
+																	{{ post?.activityPercentage.perf }}% </span
+																>higher than avg.
+															</span>
+															<span *ngIf="post?.activityPercentage.color === 'red'">
+																<span class="red">
+																	<svg
+																		width="7"
+																		height="10"
+																		viewBox="0 0 7 10"
+																		fill="none"
+																		xmlns="http://www.w3.org/2000/svg"
+																	>
+																		<path
+																			d="M0.016036 4.45645C0.0485678 4.53434 0.124482 4.58516 0.208724 4.58516H2.49387V9.79173C2.49387 9.90669 2.5873 10 2.70241 10H4.03901C4.15412 10 4.24756 9.90669 4.24756 9.79173V4.58514H6.54146C6.6257 4.58514 6.70161 4.53432 6.73415 4.45684C6.76627 4.37896 6.74875 4.2894 6.6891 4.22983L3.52879 0.0612288C3.48959 0.0220814 3.43661 0 3.38114 0C3.32568 0 3.2727 0.0220814 3.2335 0.0608187L0.06108 4.22942C0.00143194 4.28901 -0.0164957 4.37855 0.016036 4.45645Z"
+																		/>
+																	</svg>
+																	{{ post?.activityPercentage.perf }}% </span
+																>lower than avg.
+															</span>
+														</ng-container>
+													</div>
+												</ng-container>
+												<ng-template #awaiting>
+													<div class="response waiting">
+														<span
+															(click)="tooltip.toggle()"
+															#tooltip="matTooltip"
+															matTooltip="It will take some time before data is available"
+															matTooltipPosition="above"
+															data-cs-parent-label="Tooltip"
+															data-cs-label="It will take some time before data is available"
+															data-cs-source="page"
+															(mouseenter)="tooltipHovered($event)"
+															>Awaiting</span
+														>
+													</div>
+												</ng-template>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<ng-template #noPostsInTimePeriod>
+						<div class="no-results-wrapper">
+							<div class="no-results-found">
+								<figure>
+									<img alt="" src="assets/images/empty_state_icon.svg" />
+								</figure>
+								<h5>No posts published in the selected time period</h5>
+								<p>Try selecting a different time period</p>
+							</div>
+						</div>
+					</ng-template>
+				</div>
+				<ng-template #InitialLoading>
+					<div class="published-post-wrapper">
+						<div class="published-post-header">
+							<ul class="list-unstyled">
+								<li class="post-description">
+									<div>POST</div>
+								</li>
+								<li>
+									<div>SUGGESTED TIMES</div>
+								</li>
+								<li>
+									<div>SUGGESTIONS MET</div>
+								</li>
+								<li>
+									<div class="info-wrapper d-flex">
+										ACTIVITY
+										<div class="tooltip-wrapper position-static ml-1">
+											<app-tooltip setTooltipText="Comments + Reactions"> </app-tooltip>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="published-post-body">
+							<!-- post-analytics-loading-strips start -->
+							<div class="post-analytics-loading-strips post-box">
+								<div class="post-box-head">
+									<div class="loading-strip circle"></div>
+									<div class="loading-strip third"></div>
+								</div>
+								<div class="post-box-body">
+									<ul class="list-unstyled m-0">
+										<li class="post-description">
+											<div class="loading-strip forth"></div>
+											<div class="loading-strip fifth"></div>
+											<div class="loading-strip fifth"></div>
+										</li>
+										<li>
+											<div class="loading-strip sixth"></div>
+											<div class="loading-strip seventh"></div>
+										</li>
+										<li>
+											<div class="loading-strip sixth"></div>
+											<div class="loading-strip seventh"></div>
+										</li>
+										<li>
+											<div class="loading-strip sixth"></div>
+											<div class="loading-strip seventh"></div>
+										</li>
+									</ul>
+								</div>
+								<div class="post-box-foot">
+									<ul class="list-unstyled m-0">
+										<li>
+											<img alt="" src="assets/images/like-icon.svg" />
+											<div class="loading-strip eighth"></div>
+										</li>
+										<li>
+											<img alt="" src="assets/images/comment-icon.svg" />
+											<div class="loading-strip eighth"></div>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<!-- post-analytics-loading-strips end -->
+						</div>
+					</div>
+				</ng-template>
+			</div>
+		</ng-container>
+		<ng-template #noPublishedPosts>
+			<div class="no-results-wrapper">
+				<div class="no-results-found">
+					<figure>
+						<img alt="" src="assets/images/icon_noData_analytics.svg" />
+					</figure>
+					<h5>You have not published any posts in this group</h5>
+					<p>Posts you publish from Convosight will appear here</p>
+					<div>
+						<button
+							(click)="goToComposePost(); recordButtonClick($event, selectedGroup)"
+							class="create-post-btn convo-btn-primary convo-btn-normal"
+							data-cs-id="ddd15486-7a0f-420b-8a8b-4c587320093c"
+							data-cs-label="Create new post"
+							data-cs-source="page"
+						>
+							<svg fill="none" height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+								<path
+									clip-rule="evenodd"
+									d="M5 0C5.36964 0 5.66929 0.299652 5.66929 0.669291V9.33071C5.66929 9.70035 5.36964 10 5 10C4.63036 10 4.33071 9.70035 4.33071 9.33071V0.669291C4.33071 0.299652 4.63036 0 5 0Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+								<path
+									clip-rule="evenodd"
+									d="M0 4.99996C-1.61575e-08 4.63032 0.299652 4.33067 0.669291 4.33067L9.33071 4.33067C9.70035 4.33067 10 4.63032 10 4.99996C10 5.3696 9.70035 5.66925 9.33071 5.66925L0.669291 5.66925C0.299652 5.66925 1.61575e-08 5.3696 0 4.99996Z"
+									fill="white"
+									fill-rule="evenodd"
+								/>
+							</svg>
+							<span>Create new post</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</ng-template>
+	</div>
+</div>

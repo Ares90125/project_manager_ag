@@ -1,0 +1,132 @@
+<div
+	*ngIf="showTemplates"
+	class="modal-dialog modal-dialog-centered modal-dialog-scrollable select-template"
+	role="document"
+>
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" data-test-id="heading-template-pop-up">Use a template</h5>
+			<button
+				(click)="recordButtonClick($event)"
+				aria-label="Close"
+				class="close"
+				data-cs-id="bbd2c254-d2ba-4e42-b049-7a5e06c65f93"
+				data-cs-label="Close"
+				data-cs-source="dialog"
+				data-dismiss="modal"
+				type="button"
+				data-test-id="button-close-template-pop-up"
+			>
+				<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M18.2997 5.70973C17.9097 5.31973 17.2797 5.31973 16.8897 5.70973L11.9997 10.5897L7.10973 5.69973C6.71973 5.30973 6.08973 5.30973 5.69973 5.69973C5.30973 6.08973 5.30973 6.71973 5.69973 7.10973L10.5897 11.9997L5.69973 16.8897C5.30973 17.2797 5.30973 17.9097 5.69973 18.2997C6.08973 18.6897 6.71973 18.6897 7.10973 18.2997L11.9997 13.4097L16.8897 18.2997C17.2797 18.6897 17.9097 18.6897 18.2997 18.2997C18.6897 17.9097 18.6897 17.2797 18.2997 16.8897L13.4097 11.9997L18.2997 7.10973C18.6797 6.72973 18.6797 6.08973 18.2997 5.70973Z"
+						fill="#707084"
+					/>
+				</svg>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="template-row" [attr.data-test-id]="template.testId" *ngFor="let template of templates; let i = index">
+				<div class="template-icon"><img alt="" [src]="template.thumbnail" /></div>
+				<div class="template-row-details">
+					<h6 data-test-id="heading-template-type">{{ template.heading }}</h6>
+					<p data-test-id="description-template">{{ template.description }}</p>
+					<div class="template-actions">
+						<button
+							(click)="selectedTemplate = template; showTemplates = false"
+							class="btn btn-view"
+							data-test-id="button-view-template"
+						>
+							<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7.00001 2.625C4.08334 2.625 1.59251 4.43917 0.583344 7C1.59251 9.56083 4.08334 11.375 7.00001 11.375C9.91668 11.375 12.4075 9.56083 13.4167 7C12.4075 4.43917 9.91668 2.625 7.00001 2.625ZM7.00001 9.91667C5.39001 9.91667 4.08334 8.61 4.08334 7C4.08334 5.39 5.39001 4.08333 7.00001 4.08333C8.61001 4.08333 9.91668 5.39 9.91668 7C9.91668 8.61 8.61001 9.91667 7.00001 9.91667ZM7.00001 5.25C6.03168 5.25 5.25001 6.03167 5.25001 7C5.25001 7.96833 6.03168 8.75 7.00001 8.75C7.96834 8.75 8.75001 7.96833 8.75001 7C8.75001 6.03167 7.96834 5.25 7.00001 5.25Z"
+									fill="#9999A7"
+								/>
+							</svg>
+							<span>View</span>
+						</button>
+						<button
+							(click)="selectedTemplate = template; triggerPostUpdate(); recordButtonClick($event)"
+							attr.data-cs-id="c0ea12ad-eed1-4785-8733-de20bb3ec9a{{ i }}"
+							data-cs-label="Use this template"
+							data-cs-source="dialog"
+							class="btn btn-template"
+							data-dismiss="modal"
+						>
+							<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M9.33335 1.3335H4.00002C3.26669 1.3335 2.67335 1.9335 2.67335 2.66683L2.66669 13.3335C2.66669 14.0668 3.26002 14.6668 3.99335 14.6668H12C12.7334 14.6668 13.3334 14.0668 13.3334 13.3335V5.3335L9.33335 1.3335ZM10.6667 10.6668H8.66669V12.6668H7.33335V10.6668H5.33335V9.3335H7.33335V7.3335H8.66669V9.3335H10.6667V10.6668ZM8.66669 6.00016V2.3335L12.3334 6.00016H8.66669Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							<span data-test-id="button-use-template">Use template</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	*ngIf="!showTemplates"
+	class="modal-dialog modal-dialog-centered modal-dialog-scrollable view-template"
+	role="document"
+>
+	<div class="modal-content" data-test-id="view-template-pop">
+		<div class="modal-header">
+			<button
+				(click)="showTemplates = true"
+				aria-label="Close"
+				class="close"
+				type="button"
+				data-test-id="button-close-use-template-pop-up"
+			>
+				<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#707084" />
+				</svg>
+			</button>
+			<h5 class="modal-title" data-test-id="view-template-heading">View template</h5>
+			<div></div>
+		</div>
+		<div class="modal-body">
+			<div class="template-name">
+				<img alt="" [src]="selectedTemplate.thumbnail" />
+				<h6 data-test-id="template-name-view-pop-up">{{ selectedTemplate.heading }}</h6>
+			</div>
+			<div class="template-description">
+				<p data-test-id="template-description">{{ selectedTemplate.text }}</p>
+				<div
+					class="template-images-wrap total-images-3"
+					[class.total-images-1]="selectedTemplate.images.length === 1"
+					[class.total-images-2]="selectedTemplate.images.length === 2"
+					[class.total-images-3]="selectedTemplate.images.length === 3"
+					[class.total-images-4]="selectedTemplate.images.length === 4"
+					[class.total-images-multiple]="selectedTemplate.images.length > 4"
+				>
+					<div class="image-wrap" *ngFor="let image of selectedTemplate.images">
+						<img alt="" [src]="image" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="btn-wrap">
+			<button
+				(click)="triggerPostUpdate(); recordButtonClick($event)"
+				data-cs-id="49d2fed5-556a-445f-a66d-75d6b7bc6b32"
+				data-cs-label="Use this template"
+				data-cs-source="dialog"
+				class="convo-btn-normal convo-btn-primary"
+				data-dismiss="modal"
+			>
+				<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M11.6666 1.6665H4.99992C4.08325 1.6665 3.34159 2.4165 3.34159 3.33317L3.33325 16.6665C3.33325 17.5832 4.07492 18.3332 4.99158 18.3332H14.9999C15.9166 18.3332 16.6666 17.5832 16.6666 16.6665V6.6665L11.6666 1.6665ZM13.3333 13.3332H10.8333V15.8332H9.16658V13.3332H6.66658V11.6665H9.16658V9.1665H10.8333V11.6665H13.3333V13.3332ZM10.8333 7.49984V2.9165L15.4166 7.49984H10.8333Z"
+						fill="white"
+					/>
+				</svg>
+				<span>Use this template</span>
+			</button>
+		</div>
+	</div>
+</div>

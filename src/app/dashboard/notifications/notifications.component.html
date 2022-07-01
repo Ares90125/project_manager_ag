@@ -1,0 +1,35 @@
+<div class="notification-dropdown-wrapper">
+	<ng-container *ngIf="notification$ | async; else notificationsLoading">
+		<div class="head-section">
+			<button (click)="closeNotification()" class="btn-mark-all-read" type="button">Back</button>
+			<h3 class="head-text">All Notifications</h3>
+		</div>
+		<ul class="notification-list" id="notification-list" (scroll)="scrollHandler.next($event)">
+			<ng-container *ngFor="let notification of notification$ | async">
+				<li
+					[ngClass]="{'unread-notification': !notification.viewedAtUTC}"
+					class="notification-list-item {{ notification.status | lowercase }}"
+				>
+					<div class="img-wrapper">
+						<img
+							alt=""
+							class="img-notification img-success"
+							src="assets/images/notification-icons/{{ notification.status | lowercase }}_icon.svg"
+						/>
+					</div>
+					<div class="content-wrapper">
+						<p class="notification-text">
+							<span [innerHTML]="notification.inAppTitle"></span>
+						</p>
+						<p class="notification-timestamp">{{ notification.timeFromX }}</p>
+					</div>
+				</li>
+			</ng-container>
+		</ul>
+	</ng-container>
+	<ng-template #notificationsLoading>
+		<div class="loader-wrapper">
+			<div class="loader"></div>
+		</div>
+	</ng-template>
+</div>

@@ -1,0 +1,128 @@
+@import '../../../../../assets/scss/custom/_variables.scss';
+@import '../../../../../assets/scss/custom/_mixins.scss';
+
+.modal-dialog-centered {
+	width: 100%;
+	justify-content: none;
+	bottom: 0;
+	.modal-body {
+		padding-top: 30px;
+	}
+	.modal-header {
+		padding-bottom: 0;
+		border-bottom: none;
+		display: flex;
+		align-items: center;
+		button {
+			padding: 7px;
+			border-radius: 50%;
+			height: 24px;
+			width: 24px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: none;
+			background-color: $cta-bg-grey;
+		}
+	}
+}
+
+.top-profiles-wrap {
+	width: 290px;
+	height: auto;
+	position: fixed;
+	border-radius: 8px;
+	padding: 16px;
+	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.12);
+	background-color: #fff;
+	overflow: hidden;
+}
+
+.profile-top-header {
+	display: flex;
+	align-items: flex-start;
+	svg {
+		margin-right: 8px;
+	}
+	span {
+		@include font-paragraph-s-md;
+		margin-right: 16px;
+	}
+}
+
+.profile-top-description {
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: 32px;
+	color: $primary-1;
+}
+
+.profile-top-list {
+	margin: 0;
+}
+
+.profile-top-item {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	border-bottom: 1px solid $cta-bg-grey;
+
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	cursor: pointer;
+	.profile-top-image {
+		height: 40px;
+		width: 40px;
+		border-radius: 4px;
+		overflow: hidden;
+		margin-right: 10px;
+		position: relative;
+		img {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+			object-position: top;
+		}
+		.pitch-example-image {
+			position: absolute;
+			width: 32px;
+			height: 32px;
+			top: 50%;
+			left: 50%;
+			margin-right: -50%;
+			transform: translate(-50%, -50%);
+			& ~ img {
+				background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6));
+			}
+		}
+	}
+	span {
+		font-size: 14px;
+		line-height: 20px;
+		max-width: 230px;
+		font-weight: 500;
+		margin-right: 16px;
+		&.pitch-list-link {
+			font-weight: 400;
+		}
+	}
+	.convo-btn-normal {
+		border-radius: 50%;
+		width: 36px;
+		height: 36px;
+		padding: 8px;
+		background-color: $light-blue-1;
+		border: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-color: transparent;
+	}
+	&:last-child {
+		border-bottom: none;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+	}
+}

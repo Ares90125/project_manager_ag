@@ -1,0 +1,903 @@
+<div>
+	<section class="container" *ngIf="group?.privacy !== 'OPEN'">
+		<div class="members">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>
+						Members
+						<a class="btn-edit" (click)="openEdit.emit('DAU & MAU')"
+							>Edit MAU & DAU&nbsp;<img src="assets/images/icon-edit-primary.svg"
+						/></a>
+					</h3>
+					<p>Flow of members based on activity in community</p>
+				</div>
+				<mat-slide-toggle
+					id="kpi-main-members-toggle"
+					checked
+					[(ngModel)]="isMemberTrapezoidChartVisible"
+				></mat-slide-toggle>
+			</div>
+			<div class="trapezoid-chart" id="kpi-main-members-chart">
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					[style]="
+						'width: 324px; background-color: #9EDAE5; position: relative;height: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px'
+					"
+				>
+					<p>Total Members</p>
+					<h3>{{ memberval1 }}</h3>
+				</div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 < memberval1"
+					[style]="
+						'position: absolute;left: 324px;border-left: 32px solid #C9F1F3;bottom: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;border-top: ' +
+						(memberval11 - (memberval2 * 220) / maxMemberNumber) +
+						'px solid transparent;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 >= memberval1"
+					[style]="
+						'position: absolute;left: 324px;border-left: 32px solid transparent;bottom: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px;border-bottom: ' +
+						((memberval2 * 220) / maxMemberNumber - memberval11) +
+						'px solid #C9F1F3;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 < memberval1"
+					[style]="
+						'position: absolute;left: 324px;background-color:#C9F1F3; bottom:0;width: 32px;height: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 >= memberval1"
+					[style]="
+						'position: absolute;left: 324px;background-color:#C9F1F3; bottom:0;width: 32px;height: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					[style]="
+						'margin-left:32px;height:' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;width: 324px;background-color: #8CE5CE;position: relative;'
+					"
+				>
+					<p>Monthly Active Users</p>
+					<h3>{{ memberval2 }}</h3>
+				</div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 < memberval2"
+					[style]="
+						'position: absolute;left: 680px;border-left: 32px solid #B7E0CB;bottom: ' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px;border-top: ' +
+						(memberval21 - (memberval3 * 220) / maxMemberNumber) +
+						'px solid transparent;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 >= memberval2"
+					[style]="
+						'position: absolute;left: 680px;border-left: 32px solid transparent;bottom: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;border-bottom: ' +
+						((memberval3 * 220) / maxMemberNumber - memberval21) +
+						'px solid #B7E0CB;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 < memberval2"
+					[style]="
+						'position: absolute;left: 680px;background-color:#B7E0CB; bottom:0;width: 32px;height: ' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 >= memberval2"
+					[style]="
+						'position: absolute;left: 680px;background-color:#B7E0CB; bottom:0;width: 32px;height: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(dauKpiChart)"
+					[style]="
+						'height:' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px;width: 324px;background-color: #98DF8A;margin-left: 32px;position: relative;'
+					"
+				>
+					<p>Daily Active Users</p>
+					<h3>{{ memberval3 }}</h3>
+				</div>
+			</div>
+			<div style="padding: 16px 0 16px 0">
+				<a
+					[hidden]="supportingText['members-trapezoid']"
+					class="supporting-text supporting-text-toggle show"
+					(click)="openSupportingTextArea($event)"
+					>+ Add supporting text</a
+				>
+				<div class="supporting-text-textarea">
+					<textarea maxlength="1000"> {{ supportingText['members-trapezoid'] }} </textarea>
+					<div class="action">
+						<button
+							class="convo-btn-primary"
+							(click)="saveSupportingText($event, 'members-trapezoid')"
+							[disabled]="editingSupportingText"
+						>
+							Save</button
+						><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+					</div>
+				</div>
+				<div class="supporting-text-text show" [hidden]="!supportingText['members-trapezoid']">
+					<p>{{ supportingText['members-trapezoid'] }}</p>
+					<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="container" style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 32px 24px 0 24px">
+		<div class="members">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>
+						User Engagement
+						<a class="btn-edit" (click)="openEdit.emit('Impressions')"
+							>Edit Impressions (Views)&nbsp;<img src="assets/images/icon-edit-primary.svg"
+						/></a>
+					</h3>
+					<p>Flow of user engagement on community content</p>
+				</div>
+				<mat-slide-toggle
+					id="kpi-main-engagement-toggle"
+					checked
+					[(ngModel)]="isUserEngagementTrapezoidChartVisible"
+				></mat-slide-toggle>
+			</div>
+			<div id="kpi-main-engagement-chart">
+				<div class="trapezoid-chart" [hidden]="engagementval1 === 0">
+					<div
+						[style]="
+							'width: 235px; background-color: #b23333; position: relative; height: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px'
+						"
+					>
+						<p>Impressions (Views)</p>
+						<h3>{{ engagementval1 }}</h3>
+					</div>
+					<div
+						*ngIf="engagementval2 < engagementval1"
+						[style]="
+							'position: absolute;left: 194px;border-left: 32px solid #BC8F97;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval11 - (engagementval2 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 >= engagementval1"
+						[style]="
+							'position: absolute;left: 194px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval2 * 220) / maxEngagementNumber - engagementval11) +
+							'px solid #BC8F97;width: 0;height: 0'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 < engagementval1"
+						[style]="
+							'position: absolute;left: 194px;background-color:#BC8F97; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 >= engagementval1"
+						[style]="
+							'position: absolute;left: 194px;background-color:#BC8F97; bottom:0;width: 32px;height: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						[style]="
+							'margin-left:32px;height:' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D5B0B0;position: relative;'
+						"
+					>
+						<p>Engagement</p>
+						<h3>{{ engagementval2 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 493px;border-left: 32px solid #FDE5E7;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval21 - (engagementval3 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 493px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval3 * 220) / maxEngagementNumber - engagementval21) +
+							'px solid #FDE5E7;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 493px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 493px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #E8AFC7;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Conversations</p>
+						<h3>{{ engagementval3 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 793px;border-left: 32px solid #FFE6FF;bottom: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval32 - (engagementval4 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 793px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval4 * 220) / maxEngagementNumber - engagementval32) +
+							'px solid #FFE6FF;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 793px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 793px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(postKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D3A8F5;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Posts</p>
+						<h3>{{ engagementval4 }}</h3>
+					</div>
+				</div>
+				<div class="trapezoid-chart" [hidden]="engagementval1 !== 0">
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D5B0B0;position: relative;'
+						"
+					>
+						<p>Engagement</p>
+						<h3>{{ engagementval2 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 324px;border-left: 32px solid #FDE5E7;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval21 - (engagementval3 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 324px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval3 * 220) / maxEngagementNumber - engagementval21) +
+							'px solid #FDE5E7;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 324px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 324px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #E8AFC7;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Conversations</p>
+						<h3>{{ engagementval3 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 680px;border-left: 32px solid #FFE6FF;bottom: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval32 - (engagementval4 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 680px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval4 * 220) / maxEngagementNumber - engagementval32) +
+							'px solid #FFE6FF;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 680px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 680px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(postKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D3A8F5;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Posts</p>
+						<h3>{{ engagementval4 }}</h3>
+					</div>
+				</div>
+			</div>
+			<div style="padding: 16px 0 16px 0">
+				<a
+					[hidden]="supportingText['engagement-trapezoid']"
+					class="supporting-text supporting-text-toggle show"
+					(click)="openSupportingTextArea($event)"
+					>+ Add supporting text</a
+				>
+				<div class="supporting-text-textarea">
+					<textarea maxlength="1000"> {{ supportingText['engagement-trapezoid'] }} </textarea>
+					<div class="action">
+						<button
+							class="convo-btn-primary"
+							(click)="saveSupportingText($event, 'engagement-trapezoid')"
+							[disabled]="editingSupportingText"
+						>
+							Save</button
+						><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+					</div>
+				</div>
+				<div class="supporting-text-text show" [hidden]="!supportingText['engagement-trapezoid']">
+					<p>{{ supportingText['engagement-trapezoid'] }}</p>
+					<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+<div class="view-all container">
+	<div
+		class="view-all-text"
+		*ngIf="showAllCharts === true"
+		(click)="showAllCharts = false; showKPIChartsAfterReload = false"
+	>
+		Hide All KPI charts
+	</div>
+	<div class="view-all-text" *ngIf="showAllCharts === false" (click)="showAllCharts = true; selectTab('Members')">
+		View All KPI charts
+	</div>
+	<div id="kpi-charts-hide-section" class="container kpi-charts" [hidden]="!showAllCharts && !showKPIChartsAfterReload">
+		<div class="tabs-wrapper">
+			<div class="tabs">
+				<ul>
+					<li [class.active]="tabSelected === 'Members'" (click)="selectTab('Members')">Members</li>
+					<li [class.active]="tabSelected === 'Activity'" (click)="selectTab('Activity')">Activity</li>
+					<li [class.active]="tabSelected === 'Insights'" (click)="selectTab('Insights')">Insights</li>
+				</ul>
+			</div>
+			<div class="edit-wrapper">
+				<p>
+					Target set for each KPI &nbsp; &nbsp;<a (click)="openEdit.emit('Targets')"
+						>Edit Targets &nbsp; &nbsp;<img src="assets/images/icon-edit-primary.svg"
+					/></a>
+				</p>
+			</div>
+		</div>
+		<p>The primary metrics about the members on the brand community</p>
+		<div [hidden]="!showAllPDF && tabSelected !== 'Members'">
+			<div class="row mx-0">
+				<div class="col-md-6" #memberKpiChart>
+					<div class="flex-box">
+						<h3>
+							Total Members Onboarded&nbsp;<a
+								*ngIf="group?.privacy === 'OPEN'"
+								class="btn-edit-wrapper"
+								(click)="openEdit.emit('Members')"
+								>Edit &nbsp;<img src="assets/images/icon-edit-primary.svg"
+							/></a>
+						</h3>
+						<mat-slide-toggle
+							id="kpi-total-members-toggle"
+							checked
+							[(ngModel)]="isTotalMembersOnboardedChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The total number of members who have joined the community</p>
+					<div id="membersOnboardedChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6" *ngIf="group?.privacy === 'OPEN'">
+					<div class="flex-box">
+						<h3>Total Views</h3>
+						<mat-slide-toggle
+							id="kpi-total-views-toggle"
+							checked
+							[(ngModel)]="isTotalViewsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The total number of views on conversations in the community for selected period
+					</p>
+					<div id="totalViewsChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6" *ngIf="group?.privacy === 'OPEN'">
+					<div class="flex-box">
+						<h3>Average Monthly Views</h3>
+						<mat-slide-toggle
+							id="kpi-avg-month-toggle"
+							checked
+							[(ngModel)]="isAverageMonthlyViewsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The average number of views per month on conversations in the community</p>
+					<div id="monthlyViewsChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6" *ngIf="group?.privacy === 'OPEN'">
+					<div class="flex-box">
+						<h3>Average Daily Views</h3>
+						<mat-slide-toggle
+							id="kpi-avg-day-toggle"
+							checked
+							[(ngModel)]="isAverageDailyViewsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The average number of views per day on conversations in the community</p>
+					<div id="dailyViewsChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6" #impressionKpiChart *ngIf="engagementval1 !== 0 && group?.privacy !== 'OPEN'">
+					<div class="flex-box">
+						<h3>Impressions (Views)</h3>
+						<mat-slide-toggle id="kpi-impressions-toggle" [(ngModel)]="isImpressionsChartVisible"></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The total views that all posts of community received in specified period
+					</p>
+					<div id="impressions" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6" *ngIf="group?.privacy !== 'OPEN'">
+					<div class="flex-box">
+						<h3>DAU/MAU Ratio</h3>
+						<mat-slide-toggle id="kpi-dau-ratio-toggle" checked [(ngModel)]="isDAUMAUChartVisible"></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The ratio of Daily Active Users to Monthly Active Users in the community
+					</p>
+					<div id="DauMauChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0" *ngIf="group?.privacy !== 'OPEN'">
+				<div class="col-md-6" #mauKpiChart>
+					<div class="flex-box">
+						<h3>
+							Monthly Active Users<a class="btn-edit-wrapper" (click)="openEdit.emit('Targets')"
+								>Edit &nbsp;<img src="assets/images/icon-edit-primary.svg"
+							/></a>
+						</h3>
+						<mat-slide-toggle
+							id="kpi-monthly-users-toggle"
+							checked
+							[(ngModel)]="isMonthlyActiveUsersChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The number of unique users active in the community in last one month</p>
+					<div id="MonthlyActiveUsersChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Monthly Active Users Percentage</h3>
+						<mat-slide-toggle
+							id="kpi-monthly-percent-toggle"
+							checked
+							[(ngModel)]="isMonthlyActiveUsersPercentageChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The percentage of MAU with respect to total members in community</p>
+					<div id="monthlyActiveUsersPercentageChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0" *ngIf="group?.privacy !== 'OPEN'">
+				<div class="col-md-6" #dauKpiChart>
+					<div class="flex-box">
+						<h3>
+							Daily Active Users<a class="btn-edit-wrapper" (click)="openEdit.emit('Targets')"
+								>Edit &nbsp;<img src="assets/images/icon-edit-primary.svg"
+							/></a>
+						</h3>
+						<mat-slide-toggle
+							id="kpi-daily-users-toggle"
+							checked
+							[(ngModel)]="isDailyActiveUsersChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The average number of unique users active in the community per day</p>
+					<div id="dailyActiveUsersChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Daily Active Users Percentage</h3>
+
+						<mat-slide-toggle
+							id="kpi-daily-percent-toggle"
+							checked
+							[(ngModel)]="isDailyActiveUsersPercentageChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The percentage of DAU with respect to total members in community</p>
+					<div id="dailyActiveUsersPercentageChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div style="padding: 16px 0 16px 0">
+				<a
+					[hidden]="supportingText['members']"
+					class="supporting-text supporting-text-toggle show"
+					(click)="openSupportingTextArea($event)"
+					>+ Add supporting text</a
+				>
+				<div class="supporting-text-textarea">
+					<textarea maxlength="1000" id="overviewSupportingtext"> {{ supportingText['members'] }} </textarea>
+					<div class="action">
+						<button
+							class="convo-btn-primary"
+							(click)="saveSupportingText($event, 'members')"
+							[disabled]="editingSupportingText"
+						>
+							Save</button
+						><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+					</div>
+				</div>
+				<div class="supporting-text-text show" [hidden]="!supportingText['members']">
+					<p>{{ supportingText['members'] }}</p>
+					<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+				</div>
+			</div>
+		</div>
+		<div class="row" [hidden]="!showAllPDF && tabSelected !== 'Activity'">
+			<div class="row mx-0" style="width: 100%">
+				<div class="col-md-6" #postKpiChart>
+					<div class="flex-box">
+						<h3>Posts</h3>
+						<mat-slide-toggle id="kpi-posts-toggle" checked [(ngModel)]="isPostsChartVisible"></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The number of posts made in the community in specified period</p>
+					<div id="postsChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Comments</h3>
+						<mat-slide-toggle id="kpi-comments-toggle" checked [(ngModel)]="isCommentsChartVisible"></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The number of comments made on posts in the community in specified period
+					</p>
+					<div id="commentsChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0" style="width: 100%">
+				<div class="col-md-6" #conversationKpiChart>
+					<div class="flex-box">
+						<h3>Conversations</h3>
+						<mat-slide-toggle
+							id="kpi-conversations-toggle"
+							checked
+							[(ngModel)]="isConversationsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The sum of posts and comments in the community in specified period</p>
+					<div id="conversationsChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Reactions</h3>
+						<mat-slide-toggle
+							id="kpi-reactions-toggle"
+							checked
+							[(ngModel)]="isReactionsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The number of reactions made on posts in the community in specified period
+					</p>
+					<div id="reactionsChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0" style="width: 100%">
+				<div class="col-md-12" #engagementKpiChart>
+					<div class="flex-box">
+						<h3>Total Engagement</h3>
+						<mat-slide-toggle
+							id="kpi-total-engagement-toggle"
+							checked
+							[(ngModel)]="isTotalEngagementChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The sum of conversations and reactions in the community in specified period
+					</p>
+					<div id="engagementChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0" style="width: 100%">
+				<div class="col-md-12 for-pdf-title">
+					<div class="flex-box pdf-header">
+						<h3>Activity (4/4)</h3>
+						<p>The primary metrics about the activity of the brand community</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Average Engagement Percentage</h3>
+						<mat-slide-toggle
+							id="kpi-average-percent-toggle"
+							checked
+							[(ngModel)]="isAverageEngagementPercentageChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The average engagement w.r.t to the total members in the community in specified period
+					</p>
+					<div id="percentageEngagementChart" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Average Engagement per Post</h3>
+						<mat-slide-toggle
+							id="kpi-average-engagement-toggle"
+							checked
+							[(ngModel)]="isAverageEngagementPerPosChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The average engagement per post in the community in specified period</p>
+					<div id="engagementPerPostChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div style="width: 100%; padding: 16px 0 16px 0">
+				<a
+					[hidden]="supportingText['activity']"
+					class="supporting-text supporting-text-toggle show"
+					(click)="openSupportingTextArea($event)"
+					>+ Add supporting text</a
+				>
+				<div class="supporting-text-textarea">
+					<textarea maxlength="1000"> {{ supportingText['activity'] }} </textarea>
+					<div class="action">
+						<button
+							class="convo-btn-primary"
+							(click)="saveSupportingText($event, 'activity')"
+							[disabled]="editingSupportingText"
+						>
+							Save</button
+						><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+					</div>
+				</div>
+				<div class="supporting-text-text show" [hidden]="!supportingText['activity']">
+					<p>{{ supportingText['activity'] }}</p>
+					<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" [hidden]="!showAllPDF && tabSelected !== 'Insights'">
+			<div class="row mx-0 w-100">
+				<div class="col-md-12 for-pdf-title">
+					<div class="flex-box pdf-header">
+						<h3>Insights (1/2)</h3>
+						<p>The primary metrics to derive insights on the brand community</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Average Member/Admin Post ratio</h3>
+						<mat-slide-toggle
+							id="kpi-average-post-toggle"
+							[(ngModel)]="isMemberAdminRatioChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">
+						The ratio of posts by non-admin members to posts by admins of community in specified period
+					</p>
+					<div id="memberAdminPostRatio" class="membersOnboardedChart"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="flex-box">
+						<h3>Surveys</h3>
+						<mat-slide-toggle id="kpi-surveys-toggle" [(ngModel)]="isSurveysChartVisible"></mat-slide-toggle>
+					</div>
+					<p class="section-description-kpi">The number of surveys completed in the community in specified period</p>
+					<div id="surveys" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div class="row mx-0 w-100">
+				<div class="col-md-12 for-pdf-title">
+					<div class="flex-box pdf-header">
+						<h3>Insights (2/2)</h3>
+						<p>The primary metrics to derive insights on the brand community</p>
+					</div>
+				</div>
+				<!--        <div class="col-md-6" *ngIf="engagementval1 !== 0">-->
+				<!--          <div class="flex-box">-->
+				<!--            <h3>Impressions (Views)</h3>-->
+				<!--            <mat-slide-toggle id="kpi-impressions-toggle" [(ngModel)]="isImpressionsChartVisible"></mat-slide-toggle>-->
+				<!--          </div>-->
+				<!--          <p class="section-description-kpi">The total views that all posts of community received in specified period</p>-->
+				<!--          <div id="impressions" class="membersOnboardedChart"></div>-->
+				<!--        </div>-->
+				<div class="col-md-6" *ngIf="group?.privacy !== 'OPEN'">
+					<div class="flex-box">
+						<h3>Membership Requests</h3>
+						<mat-slide-toggle
+							id="kpi-membership-toggle"
+							[(ngModel)]="isMembershipRequestsChartVisible"
+						></mat-slide-toggle>
+					</div>
+					<p class="description-kpi">The split of memberships acceptance for community in specified period</p>
+					<div class="membership-chart-legend pt-3">
+						<span class="legend-thumbnail" style="background: #98df8a"></span><span class="legend-item">Accepted</span>
+						<span class="legend-thumbnail" style="background: #e48686"></span><span class="legend-item">Declined</span>
+					</div>
+					<div id="membershipRequestsChart" class="membersOnboardedChart"></div>
+				</div>
+			</div>
+			<div style="width: 100%; padding: 16px 0 16px 0">
+				<a
+					[hidden]="supportingText['insights']"
+					class="supporting-text supporting-text-toggle show"
+					(click)="openSupportingTextArea($event)"
+					>+ Add supporting text</a
+				>
+				<div class="supporting-text-textarea">
+					<textarea maxlength="1000"> {{ supportingText['insights'] }} </textarea>
+					<div class="action">
+						<button
+							class="convo-btn-primary"
+							(click)="saveSupportingText($event, 'insights')"
+							[disabled]="editingSupportingText"
+						>
+							Save</button
+						><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+					</div>
+				</div>
+				<div class="supporting-text-text show" [hidden]="!supportingText['insights']">
+					<p>{{ supportingText['insights'] }}</p>
+					<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div
+		class="view-all-text"
+		*ngIf="showAllCharts === true"
+		(click)="showAllCharts = false; showKPIChartsAfterReload = false"
+	>
+		Hide All KPI charts
+	</div>
+</div>
+<a id="clickToScroll" style="visibility: hidden"></a>

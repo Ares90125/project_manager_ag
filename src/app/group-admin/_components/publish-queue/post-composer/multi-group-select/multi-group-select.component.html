@@ -1,0 +1,49 @@
+<div class="multi-group-select-wrap" *ngIf="group">
+	<div>
+		<h6 data-test-id="heading-multi-group-post-composer">SELECT GROUPS TO PUBLISH</h6>
+
+		<div *ngIf="installedGroups?.length > 1" class="select-multiple-group">
+			<mat-checkbox
+				[ngClass]="postToBeReShared || postToBeEdited ? 'disable-group-selection' : ''"
+				#selectAllGroups
+				(click)="toggleAllGroupSelection()"
+				data-test-id="checkbox-select-all-groups-post-composer"
+			>
+				<span class="checkbox-label" data-test-id="subheading-multi-group-post-composer"
+					>Select all {{ installedGroups?.length }} groups</span
+				>
+			</mat-checkbox>
+		</div>
+
+		<div class="more-groups-wrap">
+			<ul class="list-unstyled">
+				<li
+					(click)="toggleGroupSelection(group)"
+					*ngFor="let group of installedGroups"
+					[ngClass]="
+						(postToBeReShared || postToBeEdited) && initialGroupId !== group.id ? 'disable-group-selection' : ''
+					"
+					data-test-id="group-list-post-composer"
+				>
+					<mat-checkbox
+						[checked]="selectedGroups && selectedGroups[group.id] ? true : false"
+						[class.group-disabled]="initialGroupId === group.id"
+						[indeterminate]="false"
+						style="pointer-events: none"
+						data-test-id="checkbox-multiselec-group-post-composer"
+					>
+						<div class="group-row" data-test-id="multi-select-groups-row">
+							<figure>
+								<app-fb-group-cover-image
+									[coverImageUrl]="group.coverImageUrl"
+									[fbGroupId]="group.fbGroupId"
+								></app-fb-group-cover-image>
+							</figure>
+							<h5>{{ group.name }}</h5>
+						</div>
+					</mat-checkbox>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

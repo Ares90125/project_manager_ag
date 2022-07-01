@@ -1,0 +1,47 @@
+<ul class="social-links list-unstyled">
+	<li *ngFor="let socialProfile of socialProfiles">
+		<a
+			[href]="socialProfile?.profileLink"
+			target="_blank"
+			(click)="recordSocialMediaLink($event, socialProfile)"
+			data-cs-id="6e182d81-a0da-498f-813d-3369669915ef"
+			data-cs-label="Social Media link"
+			data-cs-source="page"
+		>
+			<figure>
+				<ng-container *ngIf="socialProfile?.platform === 'Facebook'">
+					<img src="./assets/images/facebook-social-icon.svg" alt="" />
+					<span>Facebook</span>
+				</ng-container>
+				<ng-container *ngIf="socialProfile?.platform === 'Twitter'">
+					<img src="./assets/images/twitter-social-icon.svg" alt="" />
+					<span>Twitter</span>
+				</ng-container>
+				<ng-container *ngIf="socialProfile?.platform === 'Instagram'">
+					<img src="./assets/images/instagram-social-icon.svg" alt="" />
+					<span>Instagram</span>
+				</ng-container>
+				<ng-container *ngIf="socialProfile?.platform === 'LinkedIn'">
+					<img src="./assets/images/linkedin-social-icon.svg" alt="" />
+					<span>LinkedIn</span>
+				</ng-container>
+				<ng-container *ngIf="socialProfile?.platform === 'YouTube'">
+					<img src="./assets/images/youtube-social-icon.svg" alt="" />
+					<span>YouTube</span>
+				</ng-container>
+				<ng-container *ngIf="socialProfile?.platform === 'Other'">
+					<img src="./assets/images/blog-social-icon.svg" alt="" />
+					<span>Website/Blog</span>
+				</ng-container>
+			</figure>
+
+			<svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect x="0.772461" y="0.296875" width="40" height="40" rx="20" fill="#F4F6F8" />
+				<path
+					d="M25.0502 24.5747H16.4947V16.0191H20.7725V14.7969H16.4947C15.8163 14.7969 15.2725 15.3469 15.2725 16.0191V24.5747C15.2725 25.2469 15.8163 25.7969 16.4947 25.7969H25.0502C25.7225 25.7969 26.2725 25.2469 26.2725 24.5747V20.2969H25.0502V24.5747ZM21.9947 14.7969V16.0191H24.1886L18.1813 22.0263L19.043 22.888L25.0502 16.8808V19.0747H26.2725V14.7969H21.9947Z"
+					fill="#33334F"
+				/>
+			</svg>
+		</a>
+	</li>
+</ul>

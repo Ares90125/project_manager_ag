@@ -1,0 +1,10 @@
+<ng-container *ngIf="group && user">
+	<app-queue
+		[queueData]="{
+			selectedGroup: group,
+			currentUser: user,
+			isNavRequired: false
+		}"
+	>
+	</app-queue>
+</ng-container>

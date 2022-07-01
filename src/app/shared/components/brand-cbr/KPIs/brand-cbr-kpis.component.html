@@ -1,0 +1,800 @@
+<div id="kpi-charts-show-section">
+	<section
+		class="container background-box"
+		*ngIf="data?.isMemberTrapezoidChartVisible && brandCommunity?.privacy !== 'OPEN'"
+	>
+		<div class="members">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>Members</h3>
+					<p>Flow of members based on activity in community</p>
+				</div>
+			</div>
+			<div class="trapezoid-chart" id="kpi-main-members-chart" *ngIf="kpiTrapezoidChartData">
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					[style]="
+						'width: 324px; background-color: #9EDAE5; position: relative;height: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px'
+					"
+				>
+					<p>Total Members</p>
+					<h3>{{ memberval1 }}</h3>
+				</div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 < memberval1"
+					[style]="
+						'position: absolute;left: 324px;border-left: 32px solid #C9F1F3;bottom: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;border-top: ' +
+						(memberval11 - (memberval2 * 220) / maxMemberNumber) +
+						'px solid transparent;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 >= memberval1"
+					[style]="
+						'position: absolute;left: 324px;border-left: 32px solid transparent;bottom: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px;border-bottom: ' +
+						((memberval2 * 220) / maxMemberNumber - memberval11) +
+						'px solid #C9F1F3;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 < memberval1"
+					[style]="
+						'position: absolute;left: 324px;background-color:#C9F1F3; bottom:0;width: 32px;height: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(memberKpiChart)"
+					*ngIf="memberval2 >= memberval1"
+					[style]="
+						'position: absolute;left: 324px;background-color:#C9F1F3; bottom:0;width: 32px;height: ' +
+						(memberval1 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					[style]="
+						'margin-left:32px;height:' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;width: 324px;background-color: #8CE5CE;position: relative;'
+					"
+				>
+					<p>Monthly Active Users</p>
+					<h3>{{ memberval2 }}</h3>
+				</div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 < memberval2"
+					[style]="
+						'position: absolute;left: 680px;border-left: 32px solid #B7E0CB;bottom: ' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px;border-top: ' +
+						(memberval21 - (memberval3 * 220) / maxMemberNumber) +
+						'px solid transparent;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 >= memberval2"
+					[style]="
+						'position: absolute;left: 680px;border-left: 32px solid transparent;bottom: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px;border-bottom: ' +
+						((memberval3 * 220) / maxMemberNumber - memberval21) +
+						'px solid #B7E0CB;width: 0;height: 0'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 < memberval2"
+					[style]="
+						'position: absolute;left: 680px;background-color:#B7E0CB; bottom:0;width: 32px;height: ' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+				<div
+					(click)="scrollToKPI(mauKpiChart)"
+					*ngIf="memberval3 >= memberval2"
+					[style]="
+						'position: absolute;left: 680px;background-color:#B7E0CB; bottom:0;width: 32px;height: ' +
+						(memberval2 * 220) / maxMemberNumber +
+						'px'
+					"
+				></div>
+
+				<div
+					(click)="scrollToKPI(dauKpiChart)"
+					[style]="
+						'height:' +
+						(memberval3 * 220) / maxMemberNumber +
+						'px;width: 324px;background-color: #98DF8A;margin-left: 32px;position: relative;'
+					"
+				>
+					<p>Daily Active Users</p>
+					<h3>{{ memberval3 }}</h3>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" id="kpi_members_text" class="supporting-text-input-text">
+			{{ supportingText['members-trapezoid'] }}
+		</p>
+	</section>
+	<section
+		class="container background-box"
+		style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 32px 24px 0 24px"
+		*ngIf="data?.isUserEngagementTrapezoidChartVisible"
+	>
+		<div class="members">
+			<div class="card-inner-wrapper">
+				<div class="flex-box">
+					<h3>User Engagement</h3>
+					<p>Flow of user engagement on community content</p>
+				</div>
+			</div>
+			<div id="kpi-main-engagement-chart">
+				<div class="trapezoid-chart" [hidden]="engagementval1 === 0">
+					<div
+						[style]="
+							'width: 235px; background-color: #b23333; position: relative; height: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px'
+						"
+					>
+						<p>Impressions (Views)</p>
+						<h3>{{ engagementval1 }}</h3>
+					</div>
+					<div
+						*ngIf="engagementval2 < engagementval1"
+						[style]="
+							'position: absolute;left: 194px;border-left: 32px solid #BC8F97;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval11 - (engagementval2 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 >= engagementval1"
+						[style]="
+							'position: absolute;left: 194px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval2 * 220) / maxEngagementNumber - engagementval11) +
+							'px solid #BC8F97;width: 0;height: 0'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 < engagementval1"
+						[style]="
+							'position: absolute;left: 194px;background-color:#BC8F97; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						*ngIf="engagementval2 >= engagementval1"
+						[style]="
+							'position: absolute;left: 194px;background-color:#BC8F97; bottom:0;width: 32px;height: ' +
+							(engagementval1 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						[style]="
+							'margin-left:32px;height:' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D5B0B0;position: relative;'
+						"
+					>
+						<p>Engagement</p>
+						<h3>{{ engagementval2 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 493px;border-left: 32px solid #FDE5E7;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval21 - (engagementval3 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 493px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval3 * 220) / maxEngagementNumber - engagementval21) +
+							'px solid #FDE5E7;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 493px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 493px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #E8AFC7;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Conversations</p>
+						<h3>{{ engagementval3 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 793px;border-left: 32px solid #FFE6FF;bottom: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval32 - (engagementval4 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 793px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval4 * 220) / maxEngagementNumber - engagementval32) +
+							'px solid #FFE6FF;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 793px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 793px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(postKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D3A8F5;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Posts</p>
+						<h3>{{ engagementval4 }}</h3>
+					</div>
+				</div>
+				<div class="trapezoid-chart" [hidden]="engagementval1 !== 0">
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D5B0B0;position: relative;'
+						"
+					>
+						<p>Engagement</p>
+						<h3>{{ engagementval2 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 324px;border-left: 32px solid #FDE5E7;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval21 - (engagementval3 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 324px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval3 * 220) / maxEngagementNumber - engagementval21) +
+							'px solid #FDE5E7;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 < engagementval2"
+						[style]="
+							'position: absolute;left: 324px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(engagementKpiChart, 'activity')"
+						*ngIf="engagementval3 >= engagementval2"
+						[style]="
+							'position: absolute;left: 324px;background-color:#FDE5E7; bottom:0;width: 32px;height: ' +
+							(engagementval2 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #E8AFC7;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Conversations</p>
+						<h3>{{ engagementval3 }}</h3>
+					</div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 680px;border-left: 32px solid #FFE6FF;bottom: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;border-top: ' +
+							(engagementval32 - (engagementval4 * 220) / maxEngagementNumber) +
+							'px solid transparent;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 680px;border-left: 32px solid transparent;bottom: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px;border-bottom: ' +
+							((engagementval4 * 220) / maxEngagementNumber - engagementval32) +
+							'px solid #FFE6FF;width: 0;height: 0'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 < engagementval3"
+						[style]="
+							'position: absolute;left: 680px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+					<div
+						(click)="scrollToKPI(conversationKpiChart, 'activity')"
+						*ngIf="engagementval4 >= engagementval3"
+						[style]="
+							'position: absolute;left: 680px;background-color:#FFE6FF; bottom:0;width: 32px;height: ' +
+							(engagementval3 * 220) / maxEngagementNumber +
+							'px'
+						"
+					></div>
+
+					<div
+						(click)="scrollToKPI(postKpiChart, 'activity')"
+						[style]="
+							'height:' +
+							(engagementval4 * 220) / maxEngagementNumber +
+							'px;width: 324px;background-color: #D3A8F5;margin-left: 32px;position: relative;'
+						"
+					>
+						<p>Posts</p>
+						<h3>{{ engagementval4 }}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" id="kpi_engagement_text" class="supporting-text-input-text">
+			{{ supportingText['engagement-trapezoid'] }}
+		</p>
+	</section>
+</div>
+<div class="view-all container">
+	<div class="view-all-text" *ngIf="showAllCharts === true" (click)="showAllCharts = false">Hide All KPI charts</div>
+	<div class="view-all-text" *ngIf="showAllCharts === false" (click)="showAllCharts = true; selectTab('Members')">
+		View All KPI charts
+	</div>
+	<div id="kpi-charts-hide-section" class="container kpi-charts" [hidden]="!showAllCharts">
+		<div class="tabs-wrapper">
+			<div class="tabs">
+				<ul>
+					<li [class.active]="tabSelected === 'Members'" (click)="selectTab('Members')">Members</li>
+					<li [class.active]="tabSelected === 'Activity'" (click)="selectTab('Activity')">Activity</li>
+					<li [class.active]="tabSelected === 'Insights'" (click)="selectTab('Insights')">Insights</li>
+				</ul>
+			</div>
+		</div>
+		<div class="chart-wrapper" [hidden]="!showAllPDF && tabSelected !== 'Members'">
+			<p class="container members-desc">The primary metrics about the member on the brand community</p>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-members-title-1">
+				<div class="flex-box pdf-header">
+					<h3>Members (1/3)</h3>
+					<p>The primary metrics about the members on the brand community</p>
+				</div>
+			</div>
+			<div class="col-md-6" id="kpi-total-members-chart" [hidden]="!data?.isTotalMembersOnboardedChartVisible">
+				<div class="flex-box" #memberKpiChart>
+					<div>
+						<h3>Total Members Onboarded</h3>
+						<p>The total number of members who have joined the community</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="membersOnboardedChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				class="col-md-6"
+				id="kpi-total-views-chart"
+				*ngIf="brandCommunity?.privacy === 'OPEN'"
+				[hidden]="!data?.isTotalViewsChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Total Views</h3>
+						<p class="section-description-kpi">
+							The total number of views on conversations in the community for selected period
+						</p>
+					</div>
+				</div>
+				<div id="totalViewsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				class="col-md-6"
+				id="kpi-avg-month-chart"
+				*ngIf="brandCommunity?.privacy === 'OPEN'"
+				[hidden]="!data?.isAverageMonthlyViewsChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Average Monthly Views</h3>
+						<p class="section-description-kpi">
+							The average number of views per month on conversations in the community
+						</p>
+					</div>
+				</div>
+				<div id="monthlyViewsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				class="col-md-6"
+				id="kpi-avg-day-chart"
+				*ngIf="brandCommunity?.privacy === 'OPEN'"
+				[hidden]="!data?.isAverageDailyViewsChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Average Daily Views</h3>
+						<p class="section-description-kpi">The average number of views per day on conversations in the community</p>
+					</div>
+				</div>
+				<div id="dailyViewsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				*ngIf="brandCommunity?.privacy !== 'OPEN'"
+				class="col-md-6"
+				id="kpi-impressions-chart"
+				[hidden]="engagementval1 === 0 || !data?.isImpressionsChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Impressions (Views)</h3>
+						<p>The total views that all posts of community received in specified period</p>
+					</div>
+					<mat-slide-toggle></mat-slide-toggle>
+				</div>
+				<div id="impressionsCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				*ngIf="brandCommunity?.privacy !== 'OPEN'"
+				class="col-md-6"
+				id="kpi-dau-ratio-chart"
+				[hidden]="!data?.isDAUMAUChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>DAU/MAU Ratio</h3>
+						<p>The ratio of Daily Active Users to Monthly Active Users in the community</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="DauMauChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-members-title-2">
+				<div class="flex-box pdf-header">
+					<h3>Members (2/3)</h3>
+					<p>The primary metrics about the members on the brand community</p>
+				</div>
+			</div>
+			<div
+				class="col-md-6"
+				#mauKpiChart
+				id="kpi-monthly-users-chart"
+				[hidden]="!data?.isMonthlyActiveUsersChartVisible || group?.privacy === 'OPEN'"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Monthly Active Users</h3>
+						<p>The number of unique users active in the community in last one month</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="MonthlyActiveUsersChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				*ngIf="brandCommunity?.privacy !== 'OPEN'"
+				class="col-md-6"
+				id="kpi-monthly-percent-chart"
+				[hidden]="!data?.isMonthlyActiveUsersPercentageChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Monthly Active Users Percentage</h3>
+						<p>The percentage of MAU with respect to total members in community</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="monthlyActiveUsersPercentageChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-members-title-3">
+				<div class="flex-box pdf-header">
+					<h3>Members (3/3)</h3>
+					<p>The primary metrics about the members on the brand community</p>
+				</div>
+			</div>
+			<div
+				[hidden]="!data?.isDailyActiveUsersChartVisible || group?.privacy === 'OPEN'"
+				class="col-md-6"
+				id="kpi-daily-users-chart"
+				#dauKpiChart
+			>
+				>
+				<div class="flex-box">
+					<div>
+						<h3>Daily Active Users</h3>
+						<p>The average number of unique users active in the community per day</p>
+					</div>
+
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="dailyActiveUsersChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div
+				*ngIf="brandCommunity?.privacy !== 'OPEN'"
+				class="col-md-6"
+				id="kpi-daily-percent-chart"
+				[hidden]="!data?.isDailyActiveUsersPercentageChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Daily Active Users Percentage</h3>
+						<p>The percentage of DAU with respect to total members in community</p>
+					</div>
+
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="dailyActiveUsersPercentageChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['members'] }}</p>
+		</div>
+		<div class="chart-wrapper" [hidden]="!showAllPDF && tabSelected !== 'Activity'">
+			<p class="container members-desc">The primary metrics about the activity on the brand community</p>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-activity-title-1">
+				<div class="flex-box pdf-header">
+					<h3>Activity (1/4)</h3>
+					<p>The primary metrics about the activity on the brand community</p>
+				</div>
+			</div>
+			<div class="col-md-6" id="kpi-posts-chart" #postKpiChart [hidden]="!data?.isPostsChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Posts</h3>
+						<p>The number of posts made in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="postsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-6" id="kpi-comments-chart" [hidden]="!data?.isCommentsChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Comments</h3>
+						<p>The number of comments made on posts in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="commentsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-activity-title-2">
+				<div class="flex-box pdf-header">
+					<h3>Activity (2/4)</h3>
+					<p>The primary metrics about the activity on the brand community</p>
+				</div>
+			</div>
+			<div
+				class="col-md-6"
+				id="kpi-conversations-chart"
+				#conversationKpiChart
+				[hidden]="!data?.isConversationsChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Conversations</h3>
+						<p>The sum of posts and comments in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="conversationsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-6" id="kpi-reactions-chart" [hidden]="!data?.isReactionsChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Reactions</h3>
+						<p>The number of reactions made on posts in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="reactionsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-activity-title-3">
+				<div class="flex-box pdf-header">
+					<h3>Activity (3/4)</h3>
+					<p>The primary metrics about the activity on the brand community</p>
+				</div>
+			</div>
+			<div
+				class="col-md-12"
+				id="kpi-total-engagement-chart"
+				#engagementKpiChart
+				[hidden]="!data?.isTotalEngagementChartVisible"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Total Engagement</h3>
+						<p>The sum of conversations and reactions in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="engagementChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-activity-title-4">
+				<div class="flex-box pdf-header">
+					<h3>Activity (4/4)</h3>
+					<p>The primary metrics about the activity of the brand community</p>
+				</div>
+			</div>
+			<div class="col-md-6" id="kpi-average-percent-chart" [hidden]="!data?.isAverageEngagementPercentageChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Average Engagement Percentage</h3>
+						<p>The average engagement w.r.t. to the total members in the community in specified period.</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="percentageEngagementChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-6" id="kpi-average-engagement-chart" [hidden]="!data?.isAverageEngagementPerPosChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Average Engagement per Post</h3>
+						<p>The average engagement per post in the community in specified period</p>
+					</div>
+					<mat-slide-toggle checked></mat-slide-toggle>
+				</div>
+				<div id="engagementPerPostChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['activity'] }}</p>
+		</div>
+		<div class="chart-wrapper" [hidden]="!showAllPDF && tabSelected !== 'Insights'">
+			<p class="container members-desc">The primary metrics to derive insights on the brand community</p>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-insight-title-1">
+				<div class="flex-box pdf-header">
+					<h3>Insights (1/2)</h3>
+					<p>The primary metrics to derive insights on the brand community</p>
+				</div>
+			</div>
+			<div class="col-md-6" id="kpi-average-post-chart" [hidden]="!data?.isMemberAdminRatioChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Average Member/Admin Post ratio</h3>
+						<p>The ratio of posts by non-admin members to posts by admins of community in specified period.</p>
+					</div>
+					<mat-slide-toggle></mat-slide-toggle>
+				</div>
+				<div id="memberAdminPostRatioCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-6" id="kpi-surveys-chart" [hidden]="!data?.isSurveysChartVisible">
+				<div class="flex-box">
+					<div>
+						<h3>Surveys</h3>
+						<p>The number of surveys completed in the community in specified period</p>
+					</div>
+					<mat-slide-toggle></mat-slide-toggle>
+				</div>
+				<div id="surveysCBR" class="membersOnboardedChart"></div>
+			</div>
+			<div class="col-md-12 for-pdf-title" id="kpi-chart-insight-title-2">
+				<div class="flex-box pdf-header">
+					<h3>Insights (2/2)</h3>
+					<p>The primary metrics to derive insights on the brand community</p>
+				</div>
+			</div>
+			<!--			<div-->
+			<!--				class="col-md-6"-->
+			<!--				id="kpi-impressions-chart"-->
+			<!--				[hidden]="engagementval1 === 0 || !data?.isImpressionsChartVisible"-->
+			<!--			>-->
+			<!--				<div class="flex-box">-->
+			<!--					<div>-->
+			<!--						<h3>Impressions (Views)</h3>-->
+			<!--						<p>The total views that all posts of community received in specified period</p>-->
+			<!--					</div>-->
+			<!--					<mat-slide-toggle></mat-slide-toggle>-->
+			<!--				</div>-->
+			<!--				<div id="impressionsCBR" class="membersOnboardedChart"></div>-->
+			<!--			</div>-->
+			<div
+				class="col-md-6"
+				id="kpi-membership-chart"
+				[hidden]="!data?.isMembershipRequestsChartVisible || brandCommunity?.privacy === 'OPEN'"
+			>
+				<div class="flex-box">
+					<div>
+						<h3>Membership Requests</h3>
+						<p>The split of memberships acceptance for community in specified period.</p>
+					</div>
+					<mat-slide-toggle></mat-slide-toggle>
+				</div>
+				<div class="membership-chart-legend pb-2">
+					<span class="legend-thumbnail" style="background: #8cc7fd"></span><span class="legend-item">Accepted</span>
+					<span class="legend-thumbnail" style="background: #f99999"></span><span class="legend-item">Declined</span>
+				</div>
+				<div id="membershipRequestsChartCBR" class="membersOnboardedChart"></div>
+			</div>
+			<p *ngIf="supportingText" id="kpi_insights_text" class="supporting-text-input-text">
+				{{ supportingText['insights'] }}
+			</p>
+		</div>
+	</div>
+	<div class="view-all-text" *ngIf="showAllCharts === true" (click)="showAllCharts = false">Hide All KPI charts</div>
+</div>

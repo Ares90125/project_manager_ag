@@ -1,0 +1,148 @@
+<div class="manage-brand-component-wrapper">
+	<div class="brand-header-wrapper">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="brand-header-left">
+						<h1 class="component-title">
+							<span>Brands</span>
+							<!-- <small *ngIf="brands" class="brands-count">{{ brands.length }}</small> -->
+						</h1>
+						<div class="text-secondary">Click on a brand below to manage its campaigns</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="brand-header-right">
+						<div class="input-group">
+							<input
+								autocomplete="off"
+								type="text"
+								name="search"
+								placeholder="Search..."
+								(input)="onSearchChange($event.target)"
+							/>
+							<div *ngIf="searchText && searchText !== ''" class="search-results">
+								<ul class="list-unstyled">
+									<li
+										*ngFor="let brand of searchResults"
+										(click)="selectBrand(brand)"
+										data-cs-id="ee67db03-4b92-4cd5-9f23-96a1ca40a7de"
+										[attr.data-cs-label]="brand.name"
+										data-cs-source="page"
+									>
+										{{ brand.name }}
+									</li>
+									<li
+										(click)="navigateToCreateBrand(); recordButtonClick($event, null, null, {brandName: searchText})"
+										class="add-new-item"
+										data-cs-id="ee67db03-4b92-4cd5-9f23-96a1ca40a7de"
+										data-cs-label="Create new brand"
+										data-cs-source="page"
+									>
+										+ Create new brand {{ searchText }}
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tabs-wrapper">
+				<div class="row">
+					<div class="col">
+						<ul class="nav nav-tabs group-info-tabs">
+							<li class="nav-item">
+								<a
+									[class.active]="selectedBrandType === 'CampaignBrands'"
+									(click)="selectedBrandType = 'CampaignBrands'"
+									class="nav-link"
+									>Campaign Brands <span class="badge">{{ campaignBrands ? campaignBrands.length : '0' }}</span></a
+								>
+							</li>
+							<li class="nav-item">
+								<a
+									[class.active]="selectedBrandType === 'DraftBrands'"
+									(click)="selectedBrandType = 'DraftBrands'"
+									class="nav-link"
+									>Draft Proposals
+									<span class="badge">{{ brandsInDraftState ? brandsInDraftState.length : '0' }}</span></a
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="brand-body-wrapper" *ngIf="selectedBrandType === 'DraftBrands'">
+		<div class="container">
+			<div class="brand-list-wrapper">
+				<div *ngFor="let brand of brandsInDraftState">
+					<div
+						(click)="
+							selectBrand(brand); recordButtonClick($event, null, null, {brandName: brand.name, brandId: brand.id})
+						"
+						class="brand-box"
+						*ngIf="!brand.hide"
+						data-cs-id="22f6050d-a9cc-4eba-8d92-6d754d1d3457"
+						[attr.data-cs-label]="brand.name"
+						data-cs-source="page"
+					>
+						<figure><img alt="" src="{{ brand.iconUrl }}" /></figure>
+						<div class="brand-box-description">
+							<h5>{{ brand.name }}</h5>
+						</div>
+					</div>
+				</div>
+				<div
+					class="no-brands-found"
+					*ngIf="(!brandsInDraftState || brandsInDraftState.length === 0) && (!searchText || searchText === '')"
+				>
+					<h3>No brands found in draft state</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="brand-body-wrapper" *ngIf="selectedBrandType === 'CampaignBrands'">
+		<div class="container">
+			<div class="brand-list-wrapper">
+				<div *ngFor="let brand of campaignBrands">
+					<div
+						(click)="
+							selectBrand(brand); recordButtonClick($event, null, null, {brandName: brand.name, brandId: brand.id})
+						"
+						class="brand-box"
+						*ngIf="!brand.hide"
+						data-cs-id="7db40bea-ab3b-4363-9b50-0ade2297c09e"
+						[attr.data-cs-label]="brand.name"
+						data-cs-source="page"
+					>
+						<figure><img alt="" src="{{ brand.iconUrl }}" /></figure>
+						<div class="brand-box-description">
+							<h5>{{ brand.name }}</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="no-brands-found" *ngIf="searchResults?.length === 0 && searchText && searchText !== ''">
+		<figure>
+			<img src="assets/images/star-emoji.svg" alt="" />
+		</figure>
+		<h3>No matches for “{{ searchText }}”</h3>
+		<h4>Would you like to create a new brand instead?</h4>
+		<button
+			(click)="navigateToCreateBrand(); recordButtonClick($event, null, null, {brandName: searchText})"
+			class="convo-btn-primary convo-btn-normal"
+			data-cs-id="44981a50-d236-4768-ae68-67e74e50d838"
+			data-cs-label="Create a brand"
+			data-cs-source="page"
+		>
+			Create a brand
+		</button>
+	</div>
+</div>

@@ -1,0 +1,257 @@
+<div class="whatsapp-form" *ngIf="!showConfirmation">
+	<div class="modal-header">
+		<h6 [hidden]="renderedOn === 'Mobile'" data-test-id="whatsapp-pop-up-heading">Subscribe to Whatsapp updates</h6>
+		<button
+			class="close-btn"
+			data-cs-id="7afc280a-d73e-4a2e-9767-023f0be3b2dd"
+			data-cs-label="Close"
+			data-cs-source="page"
+			data-test-id="button-close-whatsapp-pop"
+			(click)="recordButtonClick($event); closeWhatsAppOptIn()"
+		>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M15.25 4.75831C14.925 4.43331 14.4 4.43331 14.075 4.75831L9.99998 8.82498L5.92498 4.74998C5.59998 4.42498 5.07498 4.42498 4.74998 4.74998C4.42498 5.07498 4.42498 5.59998 4.74998 5.92498L8.82498 9.99998L4.74998 14.075C4.42498 14.4 4.42498 14.925 4.74998 15.25C5.07498 15.575 5.59998 15.575 5.92498 15.25L9.99998 11.175L14.075 15.25C14.4 15.575 14.925 15.575 15.25 15.25C15.575 14.925 15.575 14.4 15.25 14.075L11.175 9.99998L15.25 5.92498C15.5666 5.60831 15.5666 5.07498 15.25 4.75831Z"
+					fill="#9999A7"
+				/>
+			</svg>
+		</button>
+	</div>
+
+	<div class="modal-body">
+		<div class="data-wrapper-head">
+			<figure [hidden]="renderedOn === 'Desktop'"><img src="./assets/images/whatsapp-icon.svg" alt="" /></figure>
+			<div class="data-wrapper-head-right">
+				<h6 [hidden]="renderedOn === 'Desktop'" data-test-id="whatsapp-pop-up-heading">
+					Subscribe to Whatsapp updates
+				</h6>
+				<p data-test-id="subheading-whatsapp-pop-up">
+					Receive campaign updates and other notifications to monetise and manage your group better.
+				</p>
+			</div>
+		</div>
+		<form [formGroup]="whatsappForm" *ngIf="whatsappForm" (ngSubmit)="SubmitForm(whatsappForm, $event)">
+			<div
+				[class.phoneError]="whatsappForm.get('phoneNumber').errors !== null && whatsappForm.get('phoneNumber').value"
+			>
+				<!-- <mat-form-field class="w-100"> -->
+				<ngx-intl-tel-input
+					[enableAutoCountrySelect]="false"
+					[enablePlaceholder]="false"
+					[formControl]="whatsappForm.controls['phoneNumber']"
+					[maxLength]="15"
+					[phoneValidation]="true"
+					[preferredCountries]="preferredCountries"
+					[searchCountryFlag]="true"
+					[selectFirstCountry]="false"
+					[selectedCountryISO]="CountryISO.India"
+					[separateDialCode]="separateDialCode"
+					class="w-100"
+					name="phoneNumber"
+				>
+				</ngx-intl-tel-input>
+
+				<!-- </mat-form-field> -->
+			</div>
+			<!-- <span
+				class="phone-error"
+				*ngIf="whatsappForm.get('phoneNumber').errors !== null && whatsappForm.get('phoneNumber').value"
+				>Please enter valid phone number.</span
+			> -->
+
+			<div class="bottom-wrapper">
+				<button
+					type="submit"
+					data-cs-id="99210792-c234-4e65-a334-4634a3a9d8a3"
+					data-cs-label="Confirm"
+					data-cs-source="page"
+					(click)="recordButtonClick($event)"
+					[disabled]="whatsappForm.invalid"
+				>
+					<ng-container *ngIf="!isLoading"> Confirm</ng-container>
+					<ng-container *ngIf="isLoading">
+						<span class="bt-spinner">
+							<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle
+									opacity="0.5"
+									cx="13"
+									cy="13"
+									r="12"
+									stroke="white"
+									stroke-width="2"
+									stroke-miterlimit="2.41327"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-dasharray="2 4"
+								/>
+							</svg>
+						</span>
+					</ng-container>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="whatsapp-confirmation-wrapper" *ngIf="showConfirmation && !showDidNotRecievedPopup">
+	<div class="modal-header">
+		<h5>Confirm Whatsapp Subscription</h5>
+		<button
+			class="close-btn"
+			data-cs-id="7afc280a-d73e-4a2e-9767-023f0be3b2dd"
+			data-cs-label="Close"
+			data-cs-source="page"
+			data-dismiss="modal"
+			(click)="recordButtonClick($event); closeWhatsAppConfirmPopup()"
+		>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M15.25 4.75831C14.925 4.43331 14.4 4.43331 14.075 4.75831L9.99998 8.82498L5.92498 4.74998C5.59998 4.42498 5.07498 4.42498 4.74998 4.74998C4.42498 5.07498 4.42498 5.59998 4.74998 5.92498L8.82498 9.99998L4.74998 14.075C4.42498 14.4 4.42498 14.925 4.74998 15.25C5.07498 15.575 5.59998 15.575 5.92498 15.25L9.99998 11.175L14.075 15.25C14.4 15.575 14.925 15.575 15.25 15.25C15.575 14.925 15.575 14.4 15.25 14.075L11.175 9.99998L15.25 5.92498C15.5666 5.60831 15.5666 5.07498 15.25 4.75831Z"
+					fill="#9999A7"
+				/>
+			</svg>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="whatsapp-confirmation">
+			<div></div>
+			<div class="whatsapp-confirmation-body">
+				<div class="icon">
+					<img src="assets/images/whatsapp.svg" alt="" />
+				</div>
+				<ng-container *ngIf="!showSubscribedMsg">
+					<h3>Please check your Whatsapp</h3>
+					<p>
+						To confirm your Whatsapp subscription, please respond to the text message sent by Convosight Genie on your
+						Whatsapp number
+					</p>
+				</ng-container>
+
+				<ng-container *ngIf="showSubscribedMsg">
+					<h3>WhatsApp Subscription Successful</h3>
+					<br />
+				</ng-container>
+			</div>
+
+			<div class="whatsapp-confirmation-footer">
+				<!-- <div class="info-box">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7.99992 1.33334C4.31992 1.33334 1.33325 4.32001 1.33325 8.00001C1.33325 11.68 4.31992 14.6667 7.99992 14.6667C11.6799 14.6667 14.6666 11.68 14.6666 8.00001C14.6666 4.32001 11.6799 1.33334 7.99992 1.33334ZM7.99992 11.3333C7.63325 11.3333 7.33325 11.0333 7.33325 10.6667V8.00001C7.33325 7.63334 7.63325 7.33334 7.99992 7.33334C8.36659 7.33334 8.66659 7.63334 8.66659 8.00001V10.6667C8.66659 11.0333 8.36659 11.3333 7.99992 11.3333ZM8.66659 6.00001H7.33325V4.66668H8.66659V6.00001Z"
+							fill="#9999A7"
+						/>
+					</svg>
+					<h6>
+						You can update your Whatsapp settings from <br />
+						<span
+							>Profile settings
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M6.66675 11.3333L10.0001 8L6.66675 4.66667V11.3333Z" fill="#707084" />
+							</svg>
+							Whatsapp updates</span
+						>
+					</h6>
+				</div> -->
+
+				<div class="number-info-wrap">
+					<strong>+{{ currentUser?.mobileDialCode }}-{{ decryptPhoneNumber }}</strong>
+					<div>
+						<p
+							data-cs-id="b93ee455-82e8-431b-a015-c35e85bf8cd2"
+							data-cs-label="Incorrect number? Edit"
+							data-cs-source="dialog"
+							style="cursor: pointer"
+							(click)="editWANumber(); recordButtonClick($event)"
+						>
+							<span class="icon"
+								><svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M1.75 11.183V12.9564C1.75 13.1197 1.87833 13.248 2.04167 13.248H3.815C3.89083 13.248 3.96667 13.2189 4.01917 13.1605L10.3892 6.79638L8.20167 4.60888L1.8375 10.973C1.77917 11.0314 1.75 11.1014 1.75 11.183ZM12.0808 5.10471C12.3083 4.87721 12.3083 4.50971 12.0808 4.28221L10.7158 2.91721C10.4883 2.68971 10.1208 2.68971 9.89333 2.91721L8.82583 3.98471L11.0133 6.17221L12.0808 5.10471Z"
+										fill="#3654FF"
+									/>
+								</svg>
+							</span>
+							Incorrect number? Edit
+						</p>
+					</div>
+				</div>
+
+				<div class="info-box" *ngIf="renderedOn === 'Desktop'">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7.99992 1.33334C4.31992 1.33334 1.33325 4.32001 1.33325 8.00001C1.33325 11.68 4.31992 14.6667 7.99992 14.6667C11.6799 14.6667 14.6666 11.68 14.6666 8.00001C14.6666 4.32001 11.6799 1.33334 7.99992 1.33334ZM7.99992 11.3333C7.63325 11.3333 7.33325 11.0333 7.33325 10.6667V8.00001C7.33325 7.63334 7.63325 7.33334 7.99992 7.33334C8.36659 7.33334 8.66659 7.63334 8.66659 8.00001V10.6667C8.66659 11.0333 8.36659 11.3333 7.99992 11.3333ZM8.66659 6.00001H7.33325V4.66668H8.66659V6.00001Z"
+							fill="#9999A7"
+						/>
+					</svg>
+					<h6 style="text-align: left">
+						This modal will automatically close once you confirm your Whatsapp subscription
+					</h6>
+				</div>
+
+				<button
+					*ngIf="renderedOn === 'Mobile'"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="ce5dd5e9-70de-4101-be97-50e8f5389cad"
+					data-cs-label="Continue"
+					data-cs-source="dialog"
+					data-action="share/whatsapp/share"
+					(click)="recordButtonClick($event); openWhatsApp('http://wa.me/919560405292')"
+					title="Share on whatsapp"
+				>
+					Open WhatsApp
+				</button>
+
+				<button
+					class="text-msg-btn"
+					data-cs-id="9571bc5b-330d-4d64-b8e8-4746c145e228"
+					data-cs-label="Did not receive a message?"
+					data-cs-source="dialog"
+					(click)="openDidNotReceivePopup(); recordButtonClick($event)"
+				>
+					Did not receive a message?
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Whatsapp did not receive message popup -->
+<div class="convosight-whatsapp-did-not-receive" *ngIf="showDidNotRecievedPopup">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button
+				class="close-btn"
+				id="convosight-whatsapp-opt-close"
+				data-cs-id="fcc1dac4-7e19-4695-95da-ad297b764477"
+				data-cs-label="Close"
+				data-cs-source="page"
+				(click)="recordButtonClick($event); closeDidNotReceiveMsgPopup()"
+			>
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#707084" />
+				</svg>
+			</button>
+			<h5 data-test-id="heading-did-not-receive-msg">Did not receive a message?</h5>
+			<div></div>
+		</div>
+		<div class="modal-body">
+			<p data-test-id="description-not-rec">
+				No problem. Our team will manually verify your number. You may receive a verification phone call in the next 15
+				days.
+			</p>
+			<div class="button-body">
+				<button
+					class="convo-btn-primary convo-btn-normal btn-block"
+					data-cs-id="19298724-4920-4336-8740-56c17469fbc9"
+					data-cs-label="Continue"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="showToasterAndCloseCard()"
+				>
+					Continue
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Whatsapp did not receive message popup -->

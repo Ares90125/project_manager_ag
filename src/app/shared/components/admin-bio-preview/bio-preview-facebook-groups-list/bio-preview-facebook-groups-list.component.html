@@ -1,0 +1,83 @@
+<div class="preview-groups-wrap">
+	<ul class="list-unstyled">
+		<li
+			*ngFor="let grp of groups | slice: 0:5; let i = index"
+			(click)="recordButtonClick($event); openModalORGroupPage(grp)"
+			data-cs-id="1c7dd00e-625c-4437-b1c8-65ff34e30575"
+			data-cs-label="Group link"
+			data-cs-source="page"
+			style="cursor: pointer"
+		>
+			<figure>
+				<app-fb-group-cover-image
+					[coverImageUrl]="grp.profilePictureUrl"
+					[fbGroupId]="grp.fbGroupId"
+				></app-fb-group-cover-image>
+			</figure>
+			<div>
+				<h6>{{ grp.name | ellipsis: 35 }}</h6>
+				<small *ngIf="groupType !== 'support'">{{ grp.memberCount | shortNumber }} members</small>
+			</div>
+		</li>
+	</ul>
+	<button
+		class="more-groups-btn"
+		(click)="recordButtonClick($event); openGroupsOverlayPopup()"
+		*ngIf="groups?.length > 5"
+		data-cs-id="601d18b1-64e0-45ba-b225-d7c6a6a39ffa"
+		data-cs-label="plus more member group"
+		data-cs-source="page"
+	>
+		+{{ groups?.length - 5 }} more
+	</button>
+</div>
+
+<div class="modal file-alert group-modal-preview" *ngIf="openGroupsOverlay">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					{{ groups ? (groups?.length === 0 || groups.length === 1 ? 'Group' : 'Groups') : 'Group' }}
+					I {{ groupType }}
+				</h5>
+				<button
+					type="button"
+					class="close-btn"
+					data-cs-id="a9c65740-6d86-4c1b-8a44-6c2a31389d62"
+					data-cs-label="remove"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event); closeGroupOverlay()"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body" *ngIf="!showLoader; else dialogLoadState">
+				<div class="groups-list-body">
+					<div class="groups-list-content">
+						<ul class="list-unstyled mb-0">
+							<li
+								*ngFor="let group of groups; let i = index"
+								(click)="recordButtonClick($event); openGroupLink(group)"
+								data-cs-id="a382bca5-cc4e-4258-bdad-70bfd8311c2b"
+								data-cs-label="Group Link"
+								data-cs-source="page"
+								style="cursor: pointer"
+							>
+								<figure>
+									<app-fb-group-cover-image
+										[coverImageUrl]="group.profilePictureUrl"
+										[fbGroupId]="group.fbGroupId"
+									></app-fb-group-cover-image>
+								</figure>
+								<div>
+									<h6>{{ group.name | ellipsis: 50 }}</h6>
+									<small *ngIf="groupType !== 'support'">{{ group.memberCount | shortNumber }} members</small>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

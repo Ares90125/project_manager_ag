@@ -1,0 +1,271 @@
+<div
+	class="modal reference-conversation-modal modal-from-right"
+	data-backdrop="static"
+	id="reference-conversation-modal"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<ng-container *ngFor="let i of [].constructor(6)">
+				<app-loading-shimmer *ngIf="!data" [type]="3"></app-loading-shimmer>
+			</ng-container>
+			<div *ngIf="data">
+				<div *ngIf="!showCompletePost" class="modal-header">
+					<div class="modal-header-left">
+						<h6>Reference conversations</h6>
+						<h5>
+							<span>{{ data?.brandName }} - {{ data?.percentage }} </span>
+							<button [hidden]="isReportCBR" *ngIf="!data?.isBrandLoggedIn" data-target="#EditReferenceConversation" data-toggle="modal">
+								<span>Edit</span>
+								<svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M1.75 10.064V12.2515H3.9375L10.3892 5.79979L8.20167 3.61229L1.75 10.064ZM12.0808 4.10812C12.3083 3.88063 12.3083 3.51313 12.0808 3.28563L10.7158 1.92062C10.4883 1.69313 10.1208 1.69313 9.89333 1.92062L8.82583 2.98812L11.0133 5.17562L12.0808 4.10812Z"
+										fill="#3654FF"
+									/>
+								</svg>
+							</button>
+						</h5>
+						<div class="ref-info">
+							<span> {{ data?.section }} </span> <span class="left-separator"> {{ data?.stage }} </span>
+						</div>
+					</div>
+					<div class="modal-header-right">
+						<button
+							(click)="resetModalDataData()"
+							aria-label="Close"
+							class="modal-close"
+							data-dismiss="modal"
+							data-toggle="modal"
+							type="button"
+						>
+							<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M15.8337 5.34297L14.6587 4.16797L10.0003 8.8263L5.34199 4.16797L4.16699 5.34297L8.82533 10.0013L4.16699 14.6596L5.34199 15.8346L10.0003 11.1763L14.6587 15.8346L15.8337 14.6596L11.1753 10.0013L15.8337 5.34297Z"
+									fill="#33334F"
+								/>
+							</svg>
+						</button>
+						<button
+							aria-label="Close"
+							class="modal-close"
+							data-dismiss="modal"
+							hidden
+							id="closeReferenceConversationButton"
+							type="button"
+						>
+							x
+						</button>
+						<div>
+							<mat-slide-toggle [hidden]="isReportCBR"
+								(change)="onChaningVisiblity($event)"
+								*ngIf="!data?.isBrandLoggedIn"
+								[checked]="data.visibleToBrand"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div
+					*ngIf="!showCompletePost"
+					[ngClass]="{'d-flex align-items-center justify-content-center ': data && !data?.conversationList?.length}"
+					class="modal-body"
+				>
+					<div *ngFor="let post of data?.conversationList" class="card-box">
+						<div class="card-box-header">
+							<div class="card-header-left">
+								<h5>{{ post.groupname || post.groupName }}</h5>
+								<h6>
+									<span> {{ post.contenType || post.type }} </span>
+									<span class="left-separator">
+										{{ post.createdatutc || post.createdAtUTC | date: 'dd/MM/YYYY hh:mm a' }}
+									</span>
+								</h6>
+							</div>
+
+							<!-- <div class="card-header-right">
+                <a
+                  target="_blank"
+                  [href]="
+                    post.contenType === 'Post'
+                      ? 'https://facebook.com/groups/' + postData?.sourceId.replace('_', '/permalink/')
+                      : 'https://facebook.com/groups/' + postData?.parentSourceId.replace('_', '/permalink/')
+                  "
+                  ><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M15.8333 15.8333H4.16667V4.16667H10V2.5H4.16667C3.24167 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.24167 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V10H15.8333V15.8333ZM11.6667 2.5V4.16667H14.6583L6.46667 12.3583L7.64167 13.5333L15.8333 5.34167V8.33333H17.5V2.5H11.6667Z"
+                      fill="#33334F"
+                    />
+                  </svg>
+                </a>
+              </div> -->
+						</div>
+						<div *ngIf="post.rawText" class="card-box-body text-and-image">
+							<div *ngIf="post.photourl || post.s3Key" class="custom-post-wrap">
+								<img
+									(error)="showUpdatedImageFromFacebook($event, post?.parentSourceId.split('_')[1])"
+									[src]="post.photourl || post.s3Key"
+									alt=""
+								/>
+							</div>
+							<div *ngIf="post.videothumbnailurl" class="custom-post-wrap">
+								<img
+									(error)="$event.target['src'] = 'assets/images/default_group_image.jpg'"
+									[src]="post.videothumbnailurl"
+									alt=""
+								/>
+							</div>
+							<div
+								(click)="showCompletePost = true; postData = post"
+								[innerHTML]="post.rawText"
+								class="card-text"
+							></div>
+						</div>
+						<div *ngIf="!post.rawText || post.rawText === ''" class="card-box-body">
+							<div
+								(click)="showCompletePost = true; postData = post"
+								*ngIf="post.photourl || post.s3Key"
+								class="custom-post-wrap"
+							>
+								<img
+									(error)="showUpdatedImageFromFacebook($event, post?.parentSourceId.split('_')[1])"
+									[src]="post.photourl || post.s3Key"
+									alt=""
+								/>
+							</div>
+							<div *ngIf="post.videothumbnailurl" class="custom-post-wrap">
+								<img
+									(error)="$event.target['src'] = 'assets/images/default_group_image.jpg'"
+									[src]="post.videothumbnailurl"
+									alt=""
+								/>
+							</div>
+						</div>
+					</div>
+					<ng-container *ngIf="data && !data?.conversationList?.length">
+						<div class="text-center">No Conversation Found</div>
+					</ng-container>
+				</div>
+				<div *ngIf="showCompletePost" class="modal-header complete-post">
+					<div class="card-header-left">
+						<h5 class="justify-content-between">
+							<div class="d-flex">
+								<button (click)="showCompletePost = false" class="d-inline-block">
+									<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M15.8337 9.16563H6.52539L10.5921 5.09896C10.9171 4.77396 10.9171 4.24062 10.5921 3.91562C10.2671 3.59063 9.74206 3.59063 9.41706 3.91562L3.92539 9.40729C3.60039 9.73229 3.60039 10.2573 3.92539 10.5823L9.41706 16.074C9.74206 16.399 10.2671 16.399 10.5921 16.074C10.9171 15.749 10.9171 15.224 10.5921 14.899L6.52539 10.8323H15.8337C16.2921 10.8323 16.6671 10.4573 16.6671 9.99896C16.6671 9.54063 16.2921 9.16563 15.8337 9.16563Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</button>
+								<span> {{ postData?.groupname || postData?.groupName }} </span>
+							</div>
+
+							<ng-container *ngIf="postData['s3Key'] && postData['fbPermLink']; else autoGeenrated">
+								<a [href]="postData['fbPermLink']" target="_blank">
+									<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M15.8333 15.8333H4.16667V4.16667H10V2.5H4.16667C3.24167 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.24167 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V10H15.8333V15.8333ZM11.6667 2.5V4.16667H14.6583L6.46667 12.3583L7.64167 13.5333L15.8333 5.34167V8.33333H17.5V2.5H11.6667Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</a>
+							</ng-container>
+
+							<ng-template #autoGeenrated>
+								<a
+									*ngIf="postData?.sourceId && postData?.parentSourceId"
+									[href]="
+										postData?.contenType === 'Post'
+											? 'https://facebook.com/groups/' + postData?.sourceId?.replace('_', '/permalink/')
+											: 'https://facebook.com/groups/' + postData?.parentSourceId?.replace('_', '/permalink/')
+									"
+									target="_blank"
+								>
+									<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M15.8333 15.8333H4.16667V4.16667H10V2.5H4.16667C3.24167 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.24167 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V10H15.8333V15.8333ZM11.6667 2.5V4.16667H14.6583L6.46667 12.3583L7.64167 13.5333L15.8333 5.34167V8.33333H17.5V2.5H11.6667Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</a>
+							</ng-template>
+						</h5>
+						<div class="ref-info">
+							<h6>
+								<span> {{ postData?.contenType || postData?.type }} </span>
+								<span class="left-separator">
+									{{ postData?.createdatutc || postData?.createdAtUTC | date: 'dd/MM/YYYY hh:mm a' }}
+								</span>
+							</h6>
+						</div>
+					</div>
+					<div class="card-header-right"></div>
+				</div>
+				<div *ngIf="showCompletePost" class="modal-body">
+					<div class="card-box">
+						<div class="card-box-body">
+							<div *ngIf="postData.rawText" [innerHTML]="postData.rawText" class="card-text"></div>
+							<div *ngIf="postData?.photourl || postData['s3Key']" class="custom-post-wrap">
+								<img
+									(error)="showUpdatedImageFromFacebook($event, postData.parentSourceId.split('_')[1])"
+									*ngIf="postData.photourl"
+									[src]="postData.photourl"
+									alt=""
+								/>
+								<img *ngIf="postData['s3Key']" [src]="postData['s3Key']" alt="" />
+							</div>
+							<div *ngIf="postData?.videothumbnailurl" class="custom-post-wrap">
+								<img
+									(error)="$event.target['src'] = 'assets/images/default_group_image.jpg'"
+									[src]="postData?.videothumbnailurl"
+									alt=""
+								/>
+							</div>
+						</div>
+						<div *ngIf="!postData.rawText || postData.rawText === ''" class="card-box-body">
+							<div *ngIf="postData.photourl" class="custom-post-wrap">
+								<img
+									(error)="showUpdatedImageFromFacebook($event, postData.parentSourceId.split('_')[1])"
+									[src]="postData.photourl"
+									alt=""
+								/>
+							</div>
+							<div *ngIf="postData.videothumbnailurl" class="custom-post-wrap">
+								<img
+									(error)="$event.target['src'] = 'assets/images/default_group_image.jpg'"
+									[src]="postData.videothumbnailurl"
+									alt=""
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div [hidden]="isReportCBR" *ngIf="!data?.isBrandLoggedIn && !showCompletePost" class="modal-footer">
+					<button
+						class="convo-btn-normal convo-btn-big convo-btn-bordered w-100 m-0"
+						data-target="#reference-conversation-upload-screeenshot"
+						data-toggle="modal"
+						style="z-index: 99999"
+					>
+						Upload Screenshot
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-upload-screenshot
+	(newScreenshotAdded)="onNewScreenshotAdded($event)"
+	*ngIf="!data?.isBrandLoggedIn"
+	[campaignGroups]="campaignGroups"
+	[campaignId]="campaign?.campaignId"
+	[id]="'reference-conversation-upload-screeenshot'"
+	[order]="data?.conversationList?.length ? data?.conversationList?.length + 1 : 999999999"
+	[sectionName]="data?.uploadDataSectionName"
+></app-upload-screenshot>
+
+<app-edit-reference-conversations
+	(updatedValue)="onUpdatingPostOrderAndVisiblity($event)"
+	*ngIf="!data?.isBrandLoggedIn"
+	[isBrandLoggedIn]="data?.isBrandLoggedIn"
+	[posts]="data?.conversationList"
+></app-edit-reference-conversations>

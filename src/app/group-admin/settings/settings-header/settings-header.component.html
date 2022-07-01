@@ -1,0 +1,652 @@
+<div class="settings-header-container">
+	<div class="head-section">
+		<div class="container">
+			<div class="group-info-wrapper">
+				<div class="group-details-wrapper">
+					<div class="left-section">
+						<div class="img-wrapper">
+							<img *ngIf="userProfilePic" [src]="userProfilePic" alt="" class="user-img" />
+						</div>
+						<div class="name-wrapper">
+							<h3 *ngIf="user" class="user-name">
+								{{ user.fullname }}
+							</h3>
+						</div>
+						<div class="bottom-wrapper">Individual account</div>
+					</div>
+					<div class="right-section">
+						<!-- <button class="convo-btn-normal convo-btn-primary" routerLink="/group-admin/settings/bio/edit">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M2.5 14.55V17.0833C2.5 17.3167 2.68333 17.5 2.91667 17.5H5.45C5.55833 17.5 5.66667 17.4583 5.74167 17.375L14.8417 8.28333L11.7167 5.15833L2.625 14.25C2.54167 14.3333 2.5 14.4333 2.5 14.55ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
+									fill="white"
+								/>
+							</svg>
+
+							<span>Edit bio</span>
+						</button> -->
+						<button
+							class="convo-btn-normal convo-btn-primary"
+							data-cs-id="4ae59ee8-dca3-4017-8571-d86a7078e4b4"
+							data-cs-label="Edit bio"
+							data-cs-source="page"
+							(click)="goToSettingBioPage($event)"
+						>
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M2.5 14.55V17.0833C2.5 17.3167 2.68333 17.5 2.91667 17.5H5.45C5.55833 17.5 5.66667 17.4583 5.74167 17.375L14.8417 8.28333L11.7167 5.15833L2.625 14.25C2.54167 14.3333 2.5 14.4333 2.5 14.55ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
+									fill="white"
+								/>
+							</svg>
+
+							<span>Edit bio</span>
+						</button>
+						<button
+							(click)="signOut($event)"
+							class="logout-btn"
+							data-cs-id="2c18278b-7213-40a8-b5d3-2f6c6cbd0a9e"
+							data-cs-label="Log out"
+							data-cs-source="page"
+						>
+							Log out
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tab-content">
+		<div aria-labelledby="generalSettings-tab" class="tab-pane active" id="generalSettings" role="tabpanel">
+			<div class="general-settings-container">
+				<div class="general-settings-card">
+					<p class="settings-field">Name</p>
+					<p class="settings-value">{{ user.fullname }}</p>
+				</div>
+				<div class="general-settings-card">
+					<p class="settings-field">Facebook Username</p>
+					<p class="settings-value">{{ user.username }}</p>
+				</div>
+				<div class="general-settings-card">
+					<div class="grid-left">
+						<p class="settings-field editable">Email</p>
+						<p class="settings-value">{{ user.email ? user.email : '-' }}</p>
+					</div>
+					<div class="grid-right">
+						<a
+							(click)="this.isEditEmailClicked = true; recordButtonClick($event)"
+							class="edit-settings-field"
+							data-cs-id="c1da9b60-5f5d-41e6-841e-f646dadf5057"
+							data-cs-label="Edit"
+							data-cs-source="page"
+							data-test-id="edit-email"
+							><img alt="" src="assets/images/edit-icon-blue.svg"
+						/></a>
+					</div>
+				</div>
+				<div class="general-settings-card" data-test-id="general-settings-card-timezone">
+					<div *ngIf="!editingTimezoneInProgress">
+						<div class="grid-left">
+							<p class="settings-field editable">Time Zone</p>
+							<p class="settings-value" data-test-id="selected-value-timezone">{{ timeZone }}</p>
+						</div>
+						<div class="grid-right">
+							<a
+								(click)="editTimezone($event)"
+								class="edit-settings-field"
+								data-cs-id="3c650724-686e-4a22-a46d-4fbac581cff0"
+								data-cs-label="Edit"
+								data-cs-source="page"
+								data-test-id="edit-timezone"
+								><img alt="" src="assets/images/edit-icon-blue.svg"
+							/></a>
+						</div>
+					</div>
+					<div *ngIf="editingTimezoneInProgress">
+						<p class="edit-settings-field" data-test-id="heading-edit-timezone">Time Zone</p>
+						<p class="edit-settings-value" data-test-id="subheading-edit-timezone">Choose your preferred options:</p>
+						<form class="custom-form general-settings-form">
+							<div class="custom-dropdown-timezone-edit">
+								<app-searchable-dropdown
+									(optionSelected)="optionSelected($event)"
+									[mainDropDownOptions]="timeZoneList"
+									[placeholder]="timeZonePlaceholder"
+									[selectedValue]="timeZone"
+								></app-searchable-dropdown>
+							</div>
+							<div class="button-wrapper">
+								<button
+									(click)="editingTimezoneInProgress = false; recordButtonClick($event)"
+									class="convo-btn-cancel custom-btn justify-content-between"
+									data-cs-id="f03eb84f-34fb-4309-960b-e45dcdbe3a37"
+									data-cs-label="Cancel"
+									data-cs-source="page"
+									data-test-id="button-cancel-edit-timezone"
+								>
+									Cancel
+								</button>
+								<button
+									(click)="updateTimeZoneInfo($event); isEditing = true; recordButtonClick($event)"
+									[disabled]="isEditing"
+									class="convo-btn-primary custom-btn justify-content-between"
+									data-cs-id="13944591-bef0-4d87-87ff-9095615e3bed"
+									data-cs-label="Save"
+									data-cs-source="page"
+									data-test-id="button-save-edit-timezone"
+								>
+									Save
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="showWhatsAppCard" class="whatsapp-update-card-wrap">
+				<div class="setting-update-card">
+					<div *ngIf="!editingWhatsappOptIn">
+						<div class="grid-left">
+							<ng-container *ngIf="!user.whatsappSubscriptionStatus; else whatsappUnsubscribe">
+								<div class="subscribe-row">
+									<div>
+										<p class="settings-field" data-test-id="heading-whatsapp-setting">Whatsapp Updates</p>
+										<p class="settings-value" data-test-id="subheading-whatsapp-setting">
+											Subscribe to WhatsApp to stay updated on important information about your group.
+										</p>
+									</div>
+									<div>
+										<button
+											(click)="recordButtonClick($event); changeInteractionFlow(false)"
+											class="text-primary"
+											data-cs-id="51e0538a-78b6-42fd-bbef-56376b8987f4"
+											data-cs-label="Subscribe"
+											data-cs-source="page"
+											data-target="#convosight-whatsapp-opt"
+											data-test-id="button-whatsapp-subscribe"
+											data-toggle="modal"
+										>
+											Subscribe
+										</button>
+									</div>
+								</div>
+							</ng-container>
+							<ng-template #whatsappUnsubscribe>
+								<p class="settings-field">Whatsapp Updates</p>
+								<p class="settings-value number">+{{ user.mobileDialCode }} -{{ decryptPhoneNumber }}</p>
+								<button
+									(click)="openUnsubscribeOverlay($event); changeInteractionFlow(false)"
+									*ngIf="user.whatsappSubscriptionStatus === 'Confirmed'"
+									class="text-danger"
+									data-cs-id="f34df88e-1752-4447-b44b-0a04cf4bce99"
+									data-cs-label="Unsubscribe"
+									data-cs-source="page"
+									data-target="#unsubscribeOverlay"
+									data-toggle="modal"
+								>
+									Unsubscribe
+								</button>
+
+								<button
+									(click)="openSubscribeNowOverlay($event)"
+									*ngIf="user.whatsappSubscriptionStatus === 'Unsubscribed'"
+									class="text-danger"
+									data-cs-id="b12b7221-4cd8-40ef-aacc-84d7efb0623c"
+									data-cs-label="Subscribe Now"
+									data-cs-source="page"
+									data-target="#SubscribeNowOverlay"
+									data-toggle="modal"
+								>
+									Subscribe Now
+								</button>
+
+								<button
+									(click)="recordButtonClick($event)"
+									*ngIf="user.whatsappSubscriptionStatus === 'PendingConfirmation'"
+									class="text-danger"
+									data-cs-id="9d324f15-425f-4df4-9c3b-a7d15e7d730f"
+									data-cs-label="Pending"
+									data-cs-source="page"
+									data-test-id="button-pending-verification"
+									style="cursor: auto"
+								>
+									Pending Verification
+								</button>
+							</ng-template>
+						</div>
+						<div *ngIf="user.whatsappSubscriptionStatus" class="grid-right">
+							<a
+								(click)="recordButtonClick($event)"
+								class="edit-settings-field"
+								data-cs-id="5c9cf463-ab23-4f21-8374-d764a0ae3811"
+								data-cs-label="Edit"
+								data-cs-source="page"
+								data-target="#convosight-whatsapp-opt"
+								data-test-id="whatsapp-edit"
+								data-toggle="modal"
+								><img alt="" src="assets/images/edit-icon-blue.svg"
+							/></a>
+						</div>
+					</div>
+
+					<div *ngIf="editingWhatsappOptIn">
+						<p class="settings-field">Whatsapp Updates</p>
+						<!-- <p class="edit-settings-value">Choose your preferred options:</p> -->
+						<form (ngSubmit)="updateWhatsAppInNumber(whatsappForm)" [formGroup]="whatsappForm">
+							<div>
+								<div
+									[class.phoneError]="
+										whatsappForm.get('phoneNumber').errors !== null && whatsappForm.get('phoneNumber').value
+									"
+								>
+									<!-- <mat-form-field class="w-100"> -->
+									<ngx-intl-tel-input
+										[enableAutoCountrySelect]="false"
+										[enablePlaceholder]="false"
+										[formControl]="whatsappForm.controls['phoneNumber']"
+										[maxLength]="15"
+										[phoneValidation]="true"
+										[preferredCountries]="preferredCountries"
+										[searchCountryFlag]="true"
+										[selectFirstCountry]="false"
+										[selectedCountryISO]="countryCode"
+										[separateDialCode]="separateDialCode"
+										class="w-100"
+										name="phoneNumber"
+									>
+									</ngx-intl-tel-input>
+
+									<!-- </mat-form-field> -->
+									<!-- <div class="placeholder">Whatsapp phone number</div> -->
+								</div>
+								<!-- <span
+                      class="phone-error"
+                      *ngIf="whatsappForm.get('phoneNumber').errors !== null && whatsappForm.get('phoneNumber').value"
+                      >Please enter valid phone number.</span
+                    > -->
+							</div>
+							<div class="bottom-wrapper">
+								<button
+									(click)="editingWhatsappOptIn = false; recordButtonClick($event)"
+									class="btn-cancel"
+									data-cs-id="75236bc1-8d5d-4f36-a9fd-a4589901563d"
+									data-cs-label="Cancel"
+									data-cs-source="page"
+									type="button"
+								>
+									Cancel
+								</button>
+								<button
+									(click)="recordButtonClick($event)"
+									[disabled]="whatsappForm.invalid"
+									class="convo-btn-primary"
+									data-cs-id="545f6053-2997-45ab-9da0-f704e799b913"
+									data-cs-label="Save"
+									data-cs-source="page"
+									type="submit"
+								>
+									<ng-container *ngIf="!isLoading"> Save</ng-container>
+									<ng-container *ngIf="isLoading">
+										<span class="bt-spinner">
+											<svg fill="none" height="26" viewBox="0 0 26 26" width="26" xmlns="http://www.w3.org/2000/svg">
+												<circle
+													cx="13"
+													cy="13"
+													opacity="0.5"
+													r="12"
+													stroke="white"
+													stroke-dasharray="2 4"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-miterlimit="2.41327"
+													stroke-width="2"
+												/>
+											</svg>
+										</span>
+									</ng-container>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Interaction WhatsApp updates block begins -->
+			<!-- <div class="setting-update-card">
+				<div class="whatsapp-update-card">
+					<div>
+						<div class="grid-left">
+							<ng-container *ngIf="!user.landbotInteractionCustomerId; else interactionWhatsappUnsubscribe">
+								<div class="subscribe-row">
+									<div>
+										<p class="settings-field" data-test-id="heading-whatsapp-setting">Interaction WhatsApp Updates</p>
+										<p class="settings-value" data-test-id="subheading-whatsapp-setting">
+											Subscribe to WhatsApp to stay updated on important information about your group.
+										</p>
+									</div>
+									<div>
+										<button
+											class="text-primary"
+											data-cs-id="51e0538a-78b6-42fd-bbef-56376b8987f4"
+											data-cs-label="Subscribe"
+											(click)="recordButtonClick($event); changeInteractionFlow(true)"
+											data-cs-source="page"
+											data-toggle="modal"
+											data-target="#convosight-whatsapp-opt"
+											data-test-id="button-whatsapp-subscribe"
+										>
+											Subscribe
+										</button>
+									</div>
+								</div>
+							</ng-container>
+							<ng-template #interactionWhatsappUnsubscribe>
+								<p class="settings-field">Whatsapp Updates</p>
+								<p class="settings-value" data-test-id="subheading-whatsapp-setting">
+									Unsubscribe from WhatsApp landbot.
+								</p>
+
+								<button
+									*ngIf="user.landbotInteractionCustomerId"
+									class="text-danger"
+									data-cs-id="f34df88e-1752-4447-b44b-0a04cf4bce99"
+									data-cs-label="Unsubscribe"
+									data-cs-source="page"
+									data-toggle="modal"
+									data-target="#unsubscribeOverlay"
+									(click)="openUnsubscribeOverlay($event); changeInteractionFlow(true)"
+								>
+									Unsubscribe
+								</button>
+							</ng-template>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<!-- Whatsapp Updates block ends -->
+		</div>
+
+		<div class="campaign-update-card-wrap">
+			<div class="setting-update-card">
+				<div class="grid-left">
+					<div class="subscribe-row">
+						<div>
+							<p class="settings-field">Campaign Updates</p>
+							<p class="settings-value">Receive notifications when new paid campaigns are available for you.</p>
+						</div>
+						<div>
+							<button
+								*ngIf="!user?.campaignUpdatesSubscribed"
+								class="text-primary"
+								data-cs-id="ab0600f7-1143-469e-ad70-6591c5c894fe"
+								data-cs-label="Subscribe"
+								(click)="recordButtonClick($event); subscribeCampaignUpdates()"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#campaign-update"
+							>
+								Subscribe
+							</button>
+							<button
+								*ngIf="user?.campaignUpdatesSubscribed"
+								class="text-danger"
+								data-cs-id="29433dd5-60dc-4211-aaa6-58a158335266"
+								data-cs-label="Unsubscribe"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#unsubscribeCampaignOverlay"
+								(click)="openUnsubscribeCampaignOverlay($event)"
+							>
+								Unsubscribe
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="general-settings-container mt-0">
+			<div class="general-settings-card">
+				<div class="notification-row">
+					<p class="settings-field m-0">Receive Notifications</p>
+					<div class="slide-toggle-wrapper">
+						<mat-slide-toggle
+							(change)="togglePreferenceForUser()"
+							(click)="recordToggleClicked($event)"
+							[attr.data-cs-toggle-status]="!user.receiveNotifications"
+							[checked]="user.receiveNotifications"
+							data-cs-id="dabbf0ed-3429-44d1-8018-38cc99771b70"
+							data-cs-label="Receive Notifications"
+							data-cs-source="page"
+						></mat-slide-toggle>
+					</div>
+				</div>
+			</div>
+			<div
+				(click)="router.navigateByUrl('group-admin/settings/preferences')"
+				*ngIf="user.receiveNotifications"
+				class="general-settings-card"
+			>
+				<div class="notification-row">
+					<div class="grid-left">
+						<p class="settings-value m-0 dark-color">Notification Preferences</p>
+					</div>
+					<div class="grid-right">
+						<button
+							(click)="recordButtonClick($event)"
+							class="btn p-0"
+							data-cs-id="de74273c-5046-4ca8-9c4a-2d49c0710757"
+							data-cs-label="Notification Preferences"
+							data-cs-source="page"
+						>
+							<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M9.29006 6.71002C8.90006 7.10002 8.90006 7.73002 9.29006 8.12002L13.1701 12L9.29006 15.88C8.90006 16.27 8.90006 16.9 9.29006 17.29C9.68006 17.68 10.3101 17.68 10.7001 17.29L15.2901 12.7C15.6801 12.31 15.6801 11.68 15.2901 11.29L10.7001 6.70002C10.3201 6.32002 9.68006 6.32002 9.29006 6.71002Z"
+									fill="#828282"
+								/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="doesUserHaveGroupsEligibleForInsightsUpload" class="general-settings-container mt-2">
+			<div
+				(click)="router.navigateByUrl('group-admin/settings/facebook-insights-upload')"
+				class="general-settings-card"
+			>
+				<div class="notification-row">
+					<div class="grid-left">
+						<p class="settings-field m-0">Facebook Groups insights upload</p>
+					</div>
+					<div class="grid-right">
+						<button class="btn p-0">
+							<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M9.29006 6.71002C8.90006 7.10002 8.90006 7.73002 9.29006 8.12002L13.1701 12L9.29006 15.88C8.90006 16.27 8.90006 16.9 9.29006 17.29C9.68006 17.68 10.3101 17.68 10.7001 17.29L15.2901 12.7C15.6801 12.31 15.6801 11.68 15.2901 11.29L10.7001 6.70002C10.3201 6.32002 9.68006 6.32002 9.29006 6.71002Z"
+									fill="#828282"
+								/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Unsubscribe Overlay starts here -->
+		<!-- <div class="modal fade unsubscribe-modal" id="unsubscribeOverlay" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body">
+							<h6>Are you sure you want to unsubscribe your Whatsapp updates?</h6>
+						</div>
+						<div class="modal-footer border-0">
+							<button
+								type="button"
+								class="btn btn-cancel"
+								data-dismiss="modal"
+								data-cs-id="5dd08c5f-b600-44ab-b5dc-2da018308413"
+								data-cs-label="No"
+								data-cs-source="dialog"
+								(click)="unsubcribeOverlay = false; recordButtonClick($event)"
+							>
+								No
+							</button>
+							<button
+								type="button"
+								class="btn convo-btn-danger"
+								data-cs-id="d4bb1701-c008-4767-86a0-34d8540afd94"
+								data-cs-label="Yes"
+								data-cs-source="dialog"
+								(click)="whatsappUnsubscribe($event)"
+								data-dismiss="modal"
+							>
+								Yes
+							</button>
+						</div>
+					</div> -->
+
+		<app-email-verification
+			(emitUserAction)="editEmailClicked($event)"
+			*ngIf="isEditEmailClicked"
+			[isEditEmailClicked]="isEditEmailClicked"
+			[user]="user"
+		></app-email-verification>
+
+		<!-- Whatsapp Optin Popup starts here -->
+		<div
+			[class.show-did-not-modal]="showDidNotRecievedPopup"
+			class="convosight-whatsapp-opt-in modal fade"
+			data-backdrop="static"
+			id="convosight-whatsapp-opt"
+		>
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<!-- <app-whatsapp-opt-in
+						(didNotReceiveCardStatus)="didNotReceiveCardStatus($event)"
+						(hideWAConfirmOptInCard)="hideWAConfirmOptInCard()"
+						(hideWhatsAppOverlay)="hideWhatsAppOverlay()"
+						[closeConfirmation]="'true'"
+						[isInteractionFlow]="isInteractionFlow"
+						[showConfirmation]="showConfirmation"
+					></app-whatsapp-opt-in> -->
+					<app-whatsapp-opt-in
+						(didNotReceiveCardStatus)="didNotReceiveCardStatus($event)"
+						(hideWAConfirmOptInCard)="hideWAConfirmOptInCard()"
+						(hideWhatsAppOverlay)="hideWhatsAppOverlay()"
+						[closeConfirmation]="'true'"
+						[showConfirmation]="showConfirmation"
+					></app-whatsapp-opt-in>
+				</div>
+			</div>
+		</div>
+		<!-- Whatsapp Optin Popup ends here -->
+		<!-- Unsubscribe Overlay starts here -->
+
+		<div class="modal fade unsubscribe-modal" id="unsubscribeOverlay" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body">
+						<h6>Are you sure you want to unsubscribe from Whatsapp updates?</h6>
+					</div>
+					<div class="modal-footer border-0">
+						<button
+							type="button"
+							class="btn btn-cancel"
+							data-dismiss="modal"
+							data-cs-id="5dd08c5f-b600-44ab-b5dc-2da018308413"
+							data-cs-label="No"
+							data-cs-source="dialog"
+							(click)="unsubcribeOverlay = false; recordButtonClick($event)"
+						>
+							No
+						</button>
+						<button
+							type="button"
+							class="btn convo-btn-danger"
+							data-cs-id="d4bb1701-c008-4767-86a0-34d8540afd94"
+							data-cs-label="Yes"
+							data-cs-source="dialog"
+							(click)="whatsappUnsubscribe($event)"
+							data-dismiss="modal"
+						>
+							Yes
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Unsubscribe Overlay ends here -->
+	</div>
+</div>
+
+<!-- Campaign Updates dialog box -->
+<div class="modal fade proposal-modal" id="campaign-update" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		<div class="modal-content">
+			<button
+				(click)="recordButtonClick($event)"
+				class="close"
+				data-cs-id="891f9616-3018-49e8-85ab-d5550f3ecacc"
+				data-cs-label="Close"
+				data-cs-source="dialog"
+				data-dismiss="modal"
+				type="button"
+			>
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body text-center">
+				<figure><img alt="" src="assets/images/success-update.svg" /></figure>
+				<h6>You are now subscribed to new campaigns.</h6>
+				<p class="blank-70">You can check if new campaigns are available for you.</p>
+				<button
+					class="convo-btn-primary convo-btn-normal convo-btn-big w-100"
+					data-cs-id="b75b19e0-4e79-436d-93d1-b2bca81928f9"
+					data-cs-label="Take me to campaigns"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					(click)="goToCampaignPage($event)"
+				>
+					Take me to campaigns
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Unsubscribe campaign starts here -->
+
+<div class="modal fade unsubscribe-modal" id="unsubscribeCampaignOverlay" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>Are you sure you want to unsubscribe from Campaign updates?</h6>
+			</div>
+			<div class="modal-footer border-0">
+				<button
+					type="button"
+					class="btn btn-cancel"
+					data-dismiss="modal"
+					data-cs-id="e86b16dc-c89f-4fc9-90f4-e12d93ab0745"
+					data-cs-label="No"
+					data-cs-source="dialog"
+					(click)="unsubscribeCampaignOverlay = false; recordButtonClick($event)"
+				>
+					No
+				</button>
+				<button
+					type="button"
+					class="btn convo-btn-danger"
+					data-cs-id="c2fd7ecd-6a52-43ca-a898-283e3fd96570"
+					data-cs-label="Yes"
+					data-cs-source="dialog"
+					(click)="unsubscribeCampaignUpdate($event); recordButtonClick($event)"
+					data-dismiss="modal"
+				>
+					Yes
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- </div> -->

@@ -1,0 +1,36 @@
+<div class="admin-bio-wrapper unsaved-changes-card">
+	<div class="bio-card small-card">
+		<div class="card-left">
+			<p *ngIf="isPublishInitiated"><img alt="" src="./assets/images/icon-error.svg" /> You have unsaved changes!</p>
+			<div *ngIf="isSaveInProgress && !isPublishInitiated" class="draft-spinner">
+				<p class="spinner btn-spinner"></p>
+				<p>Saving draft...</p>
+			</div>
+
+			<p *ngIf="!isSaveInProgress" class="draft-saved">
+				<ng-lottie
+					[options]="draftSavedAnimationOption"
+					containerClass="lottie-animation"
+					height="24px"
+					width="24px"
+				></ng-lottie>
+				The changes you made is saved as a draft. Publish now to make these changes live.
+			</p>
+		</div>
+		<div class="card-right">
+			<button
+				(click)="emitPublishProfileClick($event)"
+				[disabled]="isSaveInProgress"
+				class="convo-btn-normal convo-btn-primary publish-bio"
+				data-cs-id="6f98ad8f-07b6-4494-b382-4532c5523fbf"
+				data-cs-label="Publish Profile"
+				data-cs-source="page"
+			>
+				<ng-container *ngIf="isSaveInProgress && isPublishInitiated; else saveBtn">
+					<span class="btn-spinner"></span>
+				</ng-container>
+				<ng-template #saveBtn>Publish Profile</ng-template>
+			</button>
+		</div>
+	</div>
+</div>

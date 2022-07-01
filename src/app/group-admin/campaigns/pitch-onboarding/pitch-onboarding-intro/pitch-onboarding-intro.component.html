@@ -1,0 +1,356 @@
+<div class="onboarding-head">
+	<button
+		class="back-button"
+		data-cs-id="49fa8ef4-2a5f-4f50-849e-ced0bc3ddab6"
+		data-cs-label="Prev page"
+		data-cs-source="page"
+		type="button"
+		(click)="recordButtonClick($event)"
+		[routerLink]="'/group-admin/campaigns/' + groupId + '/profile-pages/'"
+	>
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M19.0005 11.0007H7.83047L12.7105 6.1207C13.1005 5.7307 13.1005 5.0907 12.7105 4.7007C12.3205 4.3107 11.6905 4.3107 11.3005 4.7007L4.71047 11.2907C4.32047 11.6807 4.32047 12.3107 4.71047 12.7007L11.3005 19.2907C11.6905 19.6807 12.3205 19.6807 12.7105 19.2907C13.1005 18.9007 13.1005 18.2707 12.7105 17.8807L7.83047 13.0007H19.0005C19.5505 13.0007 20.0005 12.5507 20.0005 12.0007C20.0005 11.4507 19.5505 11.0007 19.0005 11.0007Z"
+				fill="#707084"
+			/>
+		</svg>
+	</button>
+	<div *ngIf="profilePage" class="head-profile-data">
+		<div class="head-profile-image">
+			<img
+				[fbEntityId]="profilePage?.fbGroupId"
+				alt=""
+				class="banner-background"
+				src="{{ profilePage?.coverImageUrl }}"
+			/>
+		</div>
+		<div class="head-profile-description">
+			<h5 class="head-name-profile">
+				{{ profilePage?.name }}
+			</h5>
+			<span>{{ profilePage?.keyStats.totalMembers | shortNumber }} members </span>
+		</div>
+	</div>
+	<app-loading-shimmer *ngIf="!profilePage" [type]="4"></app-loading-shimmer>
+</div>
+
+<div class="pitch-intro-page-wrap">
+	<div class="pitch-intro-page">
+		<!-- <div>Wait...</div> -->
+		<div class="pitch-intro-frame">
+			<div class="pitch-intro-content">
+				<div class="pitch-intro-video">
+					<div *ngIf="renderedOn === 'Mobile'">
+						<h3>What is a Brand Pitch?</h3>
+						<p>
+							Brands like to see information relevant to their category or brand before doing a brand campaign. Brand
+							Pitches help you create customised versions of your group profile to showcase the most relevant
+							information to a brand and do campaigns with them.
+						</p>
+					</div>
+					<video
+						class="video"
+						controls
+						(play)="recordButtonClick($event)"
+						data-cs-id="d9136f58-1101-4832-a871-97a98371c65e"
+						data-cs-label="play video"
+						data-cs-source="page"
+						id="introducingGroupProfilePagesVideo"
+						src="./assets/videos/brand_pitches.mp4"
+					></video>
+				</div>
+				<div class="pitch-intro-description">
+					<h3 *ngIf="renderedOn !== 'Mobile'">What is a Brand Pitch?</h3>
+					<p *ngIf="renderedOn !== 'Mobile'">
+						Brands like to see information relevant to their category or brand before doing a brand campaign. Brand
+						Pitches help you create customised versions of your group profile to showcase the most relevant information
+						to a brand and do campaigns with them.
+					</p>
+					<h3>Why should you create customised brand pitches?</h3>
+					<p>It is the easiest way to showcase the most relevant conversations happening in your to a brand.</p>
+
+					<ul class="pitch-intro-iplement-steps list-unstyled">
+						<li class="pitch-intro-iplement-item">
+							<div class="pitch-intro-iplement-circle">
+								<svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M31.6315 10.2781C32.7611 9.57204 33.1045 8.08393 32.3985 6.95429C31.6925 5.82465 30.2044 5.48124 29.0747 6.18727L9.82047 18.2212C9.65146 18.3219 9.49346 18.4441 9.35098 18.5868C8.89208 19.0449 8.64513 19.6632 8.64453 20.2928C8.64421 20.6315 8.71519 20.9735 8.86284 21.2955C8.98046 21.5535 9.14434 21.7926 9.35129 21.9991C9.49368 22.1417 9.65155 22.2638 9.82042 22.3644L29.0747 34.3984C30.2044 35.1044 31.6925 34.761 32.3985 33.6313C33.1045 32.5017 32.7611 31.0136 31.6315 30.3076L15.6079 20.2928L31.6315 10.2781Z"
+										fill="url(#paint0_linear_12293_273900)"
+									/>
+									<g filter="url(#filter0_b_12293_273900)">
+										<path
+											d="M18.2964 20.2986C18.2964 24.295 15.0567 27.5347 11.0603 27.5347C7.06392 27.5347 3.82422 24.295 3.82422 20.2986C3.82422 16.3022 7.06392 13.0625 11.0603 13.0625C15.0567 13.0625 18.2964 16.3022 18.2964 20.2986Z"
+											fill="#6AE092"
+											fill-opacity="0.6"
+										/>
+									</g>
+									<g filter="url(#filter1_b_12293_273900)">
+										<ellipse cx="30.3572" cy="8.23609" rx="7.23609" ry="7.23609" fill="#6AE092" fill-opacity="0.6" />
+									</g>
+									<g filter="url(#filter2_b_12293_273900)">
+										<ellipse cx="30.3572" cy="32.363" rx="7.23609" ry="7.23608" fill="#6AE092" fill-opacity="0.6" />
+									</g>
+									<defs>
+										<filter
+											id="filter0_b_12293_273900"
+											x="0.824219"
+											y="10.0625"
+											width="20.4727"
+											height="20.4727"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_273900" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_273900"
+												result="shape"
+											/>
+										</filter>
+										<filter
+											id="filter1_b_12293_273900"
+											x="20.1211"
+											y="-2"
+											width="20.4727"
+											height="20.4727"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_273900" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_273900"
+												result="shape"
+											/>
+										</filter>
+										<filter
+											id="filter2_b_12293_273900"
+											x="20.1211"
+											y="22.127"
+											width="20.4727"
+											height="20.4727"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="1.5" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_273900" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_273900"
+												result="shape"
+											/>
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_273900"
+											x1="14.0091"
+											y1="16.1056"
+											x2="40.7494"
+											y2="35.6718"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#75EDA1" />
+											<stop offset="1" stop-color="#349256" />
+										</linearGradient>
+									</defs>
+								</svg>
+								<svg
+									class="pitch-intro-arrow"
+									width="23"
+									height="16"
+									viewBox="0 0 23 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M2.52087 7.86375C2.45544 7.50479 2.61024 7.07994 2.9356 6.89449C3.19922 6.73913 3.4737 6.70784 3.77311 6.72044C3.84796 6.72359 3.91977 6.73827 3.98454 6.76091C4.90428 6.71808 5.8249 6.62607 6.7455 6.5983C7.87141 6.56979 8.99384 6.54526 10.1215 6.54688C12.115 6.54285 14.1067 6.63719 16.0993 6.68235C15.6315 6.33952 15.1533 6.00867 14.665 5.69729C14.4186 5.56818 14.1766 5.45015 13.9307 5.32858C13.1898 4.97538 12.4427 4.64522 11.6922 4.31905C11.3093 4.15263 11.1143 3.68414 11.1886 3.28672C11.2781 2.8317 11.7104 2.49255 12.1718 2.52962C12.5469 2.56044 12.8813 2.72595 13.2253 2.86443C13.6458 3.03618 14.0594 3.21592 14.4664 3.41115C14.8545 3.60371 15.2252 3.81617 15.5897 4.0517C15.8592 4.19456 16.1323 4.33343 16.4058 4.47983C16.7948 4.68746 17.1707 4.92611 17.5536 5.15677L17.5497 5.15322C18.0481 5.44511 18.5333 5.76802 18.9805 6.1423C19.1804 6.30815 19.3711 6.5728 19.4817 6.80816C19.6058 7.0843 19.6972 7.37369 19.6738 7.6812C19.5648 9.03305 18.5297 10.0578 17.6292 10.9536C17.1062 11.4682 16.5355 11.9326 15.9722 12.3966C15.6227 12.6817 15.2724 12.9518 14.9386 13.2511C14.6342 13.6054 14.1022 13.7048 13.7018 13.4298C13.2862 13.1481 13.1544 12.5437 13.451 12.118C13.6302 11.858 13.8991 11.6646 14.1452 11.4649C14.3305 11.3104 14.5197 11.1594 14.705 11.0049C15.3181 10.5001 15.9313 9.99536 16.5003 9.43653C16.4968 9.44051 16.4933 9.4445 16.4933 9.4445C16.5003 9.43653 16.5073 9.42856 16.5143 9.42059C16.5248 9.40863 16.5353 9.39667 16.5498 9.38826C16.5428 9.39623 16.5358 9.4042 16.5248 9.40862C16.7859 9.14381 17.043 8.87547 17.28 8.58185L17.2835 8.57785C17.0261 8.58168 16.7722 8.58152 16.5144 8.5778C15.9576 8.56902 15.4003 8.5527 14.8427 8.52886C13.8626 8.49588 12.8829 8.47042 11.9037 8.4525C11.5149 8.44516 11.1337 8.43741 10.7524 8.42963C9.5315 8.42972 8.31499 8.44089 7.09627 8.47866C6.51843 8.49379 5.93443 8.53195 5.35746 8.56215C5.11932 8.57617 4.87375 8.59063 4.63561 8.60466C4.18558 8.63494 3.72591 8.69227 3.28076 8.61267C3.11838 8.58066 2.96828 8.50257 2.85016 8.39614C2.66683 8.25955 2.55532 8.07336 2.52087 7.86375Z"
+										fill="black"
+									/>
+								</svg>
+							</div>
+							<span>
+								Share customised
+								<br />
+								<strong>brand pitches</strong>
+							</span>
+						</li>
+						<li class="pitch-intro-iplement-item">
+							<div class="pitch-intro-iplement-circle">
+								<svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M4.25788 34.3309L0.933434 28.1271C0.712165 27.8015 0.635598 27.3946 0.722524 27.0075C0.809179 26.6202 1.05142 26.2893 1.38905 26.0964C1.72667 25.9034 2.1278 25.867 2.49292 25.9957C2.85807 26.1247 3.15318 26.4069 3.30471 26.7723L3.51943 27.1744L21.2355 6.81845L20.6768 5.77319C20.4681 5.33682 20.4937 4.82048 20.7444 4.40852C20.9951 3.99626 21.4355 3.74722 21.908 3.75002C22.3805 3.75283 22.8179 4.00719 23.0639 4.42226L35.5648 27.7412C35.7585 28.0682 35.8141 28.4625 35.7184 28.8327C35.6225 29.2029 35.3841 29.5167 35.0579 29.7015C34.7317 29.8861 34.3464 29.9253 33.9914 29.8104C33.6363 29.6951 33.3423 29.4357 33.178 29.0921L32.4864 27.8377L22.4934 29.5624C22.7351 31.394 22.128 33.2363 20.8535 34.5386C19.5788 35.8408 17.7844 36.4524 16.0066 36.1905C14.2289 35.9283 12.6732 34.823 11.805 33.2048L10.9221 31.5606L6.30848 32.3646L6.64066 32.9878C6.82623 33.4205 6.78753 33.9202 6.53765 34.3171C6.28804 34.7139 5.86077 34.9546 5.40134 34.9574C4.94192 34.9602 4.51215 34.7246 4.25788 34.3309ZM19.81 30.0288L13.7704 31.0701L14.1884 31.8742C14.6372 32.7228 15.4454 33.3067 16.3732 33.4525C17.3014 33.5986 18.242 33.2895 18.9164 32.6176C19.5909 31.9456 19.9214 30.988 19.81 30.0288ZM7.69979 27.2748L23.3258 15.0403C23.625 14.7994 23.7125 14.3717 23.5329 14.0271L21.9705 11.1202C21.8977 10.9842 21.7656 10.8928 21.6157 10.8751C21.4658 10.8577 21.317 10.9161 21.2165 11.0316L7.40277 26.937C7.33764 27.0268 7.34391 27.1513 7.41721 27.2337C7.49079 27.3165 7.61096 27.3336 7.70361 27.2747L7.69979 27.2748Z"
+										fill="url(#paint0_linear_12293_273899)"
+									/>
+									<path
+										opacity="0.4"
+										d="M30.3757 11.6152C30.4751 11.2514 30.7316 10.955 31.0708 10.8112C31.3921 10.6715 31.7575 10.6908 32.0633 10.8633C33.02 11.4138 33.8075 12.2291 34.3364 13.2168C34.8654 14.2049 35.1144 15.3255 35.0556 16.4518C35.0338 16.8158 34.849 17.1485 34.5556 17.3526L34.4384 17.4289C34.1607 17.5871 33.8329 17.6247 33.5282 17.5335L33.4462 17.5094C33.1993 17.4297 32.9849 17.2682 32.8364 17.05C32.6881 16.8318 32.614 16.5693 32.6257 16.3032C32.6538 15.6562 32.5083 15.014 32.205 14.4467C31.902 13.8793 31.4526 13.4087 30.9068 13.0868C30.6771 12.9575 30.4959 12.7525 30.3926 12.5046C30.2891 12.257 30.2695 11.9804 30.3365 11.7199L30.3757 11.6152ZM33.2197 6.45299C32.9069 6.3167 32.5519 6.32707 32.247 6.48104C31.9385 6.63641 31.7093 6.92022 31.618 7.26095V7.30526C31.5404 7.58879 31.5663 7.89168 31.6908 8.15667C31.8153 8.42169 32.0298 8.63091 32.2938 8.74449C33.8994 9.44477 35.2278 10.6827 36.0641 12.2577C36.9001 13.8327 37.1944 15.6519 36.8996 17.4207C36.8549 17.7144 36.9171 18.0147 37.0743 18.264C37.2315 18.5134 37.4724 18.694 37.7512 18.7717H37.798C38.1016 18.8642 38.4283 18.8266 38.7043 18.667L38.7629 18.6309C39.0488 18.4469 39.2439 18.1451 39.2981 17.8027C39.6733 15.4834 39.278 13.1018 38.1757 11.0422C37.0734 8.98288 35.3287 7.36584 33.2236 6.45297L33.2197 6.45299Z"
+										fill="url(#paint1_linear_12293_273899)"
+									/>
+									<defs>
+										<linearGradient
+											id="paint0_linear_12293_273899"
+											x1="10.8058"
+											y1="10.8594"
+											x2="37.2587"
+											y2="20.6775"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#7FC0FB" />
+											<stop offset="1" stop-color="#20AFFF" />
+										</linearGradient>
+										<linearGradient
+											id="paint1_linear_12293_273899"
+											x1="25.9873"
+											y1="9.46487"
+											x2="41.2596"
+											y2="13.2646"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#7FC0FB" />
+											<stop offset="1" stop-color="#20AFFF" />
+										</linearGradient>
+									</defs>
+								</svg>
+								<svg
+									class="pitch-intro-arrow"
+									width="23"
+									height="16"
+									viewBox="0 0 23 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M2.52087 7.86375C2.45544 7.50479 2.61024 7.07994 2.9356 6.89449C3.19922 6.73913 3.4737 6.70784 3.77311 6.72044C3.84796 6.72359 3.91977 6.73827 3.98454 6.76091C4.90428 6.71808 5.8249 6.62607 6.7455 6.5983C7.87141 6.56979 8.99384 6.54526 10.1215 6.54688C12.115 6.54285 14.1067 6.63719 16.0993 6.68235C15.6315 6.33952 15.1533 6.00867 14.665 5.69729C14.4186 5.56818 14.1766 5.45015 13.9307 5.32858C13.1898 4.97538 12.4427 4.64522 11.6922 4.31905C11.3093 4.15263 11.1143 3.68414 11.1886 3.28672C11.2781 2.8317 11.7104 2.49255 12.1718 2.52962C12.5469 2.56044 12.8813 2.72595 13.2253 2.86443C13.6458 3.03618 14.0594 3.21592 14.4664 3.41115C14.8545 3.60371 15.2252 3.81617 15.5897 4.0517C15.8592 4.19456 16.1323 4.33343 16.4058 4.47983C16.7948 4.68746 17.1707 4.92611 17.5536 5.15677L17.5497 5.15322C18.0481 5.44511 18.5333 5.76802 18.9805 6.1423C19.1804 6.30815 19.3711 6.5728 19.4817 6.80816C19.6058 7.0843 19.6972 7.37369 19.6738 7.6812C19.5648 9.03305 18.5297 10.0578 17.6292 10.9536C17.1062 11.4682 16.5355 11.9326 15.9722 12.3966C15.6227 12.6817 15.2724 12.9518 14.9386 13.2511C14.6342 13.6054 14.1022 13.7048 13.7018 13.4298C13.2862 13.1481 13.1544 12.5437 13.451 12.118C13.6302 11.858 13.8991 11.6646 14.1452 11.4649C14.3305 11.3104 14.5197 11.1594 14.705 11.0049C15.3181 10.5001 15.9313 9.99536 16.5003 9.43653C16.4968 9.44051 16.4933 9.4445 16.4933 9.4445C16.5003 9.43653 16.5073 9.42856 16.5143 9.42059C16.5248 9.40863 16.5353 9.39667 16.5498 9.38826C16.5428 9.39623 16.5358 9.4042 16.5248 9.40862C16.7859 9.14381 17.043 8.87547 17.28 8.58185L17.2835 8.57785C17.0261 8.58168 16.7722 8.58152 16.5144 8.5778C15.9576 8.56902 15.4003 8.5527 14.8427 8.52886C13.8626 8.49588 12.8829 8.47042 11.9037 8.4525C11.5149 8.44516 11.1337 8.43741 10.7524 8.42963C9.5315 8.42972 8.31499 8.44089 7.09627 8.47866C6.51843 8.49379 5.93443 8.53195 5.35746 8.56215C5.11932 8.57617 4.87375 8.59063 4.63561 8.60466C4.18558 8.63494 3.72591 8.69227 3.28076 8.61267C3.11838 8.58066 2.96828 8.50257 2.85016 8.39614C2.66683 8.25955 2.55532 8.07336 2.52087 7.86375Z"
+										fill="black"
+									/>
+								</svg>
+							</div>
+							<span>
+								Get
+								<br />
+								<strong>brand campaigns</strong>
+							</span>
+						</li>
+						<li class="pitch-intro-iplement-item">
+							<div class="pitch-intro-iplement-circle">
+								<svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M21.3867 40.002C31.7421 40.002 40.1367 31.6073 40.1367 21.252C40.1367 10.8966 31.7421 2.50195 21.3867 2.50195C11.0314 2.50195 2.63672 10.8966 2.63672 21.252C2.63672 31.6073 11.0314 40.002 21.3867 40.002Z"
+										fill="url(#paint0_linear_12293_273898)"
+									/>
+									<path
+										d="M20.3783 33.752V30.9888C18.3125 30.9012 16.3095 30.3772 15.1367 29.7375L16.0627 26.3316C17.3582 27.0003 19.1756 27.6111 21.1808 27.6111C22.9377 27.6111 24.1404 26.9713 24.1404 25.8076C24.1404 24.701 23.1539 24.0018 20.8719 23.2738C17.5735 22.2265 15.3222 20.7711 15.3222 17.9486C15.3222 15.3865 17.2347 13.3789 20.5331 12.7673V10.002H23.5532V12.564C25.619 12.6516 27.0072 13.0568 28.0236 13.5236L27.1298 16.813C26.3288 16.4931 24.9108 15.8222 22.6893 15.8222C20.6864 15.8222 20.0387 16.6371 20.0387 17.4528C20.0387 18.4124 21.118 19.024 23.7387 19.9554C27.4058 21.1786 28.8867 22.778 28.8867 25.3994C28.8867 27.9896 26.9435 30.2013 23.3991 30.7839V33.752H20.3783Z"
+										fill="url(#paint1_linear_12293_273898)"
+										fill-opacity="0.9"
+									/>
+									<g filter="url(#filter0_b_12293_273898)">
+										<path
+											d="M8.26172 16.252C12.749 16.252 16.3867 12.6143 16.3867 8.12696C16.3867 3.63964 12.749 0.00195312 8.26172 0.00195312C3.77441 0.00195312 0.136719 3.63964 0.136719 8.12696C0.136719 12.6143 3.77441 16.252 8.26172 16.252Z"
+											fill="#F8B77B"
+											fill-opacity="0.6"
+										/>
+									</g>
+									<defs>
+										<filter
+											id="filter0_b_12293_273898"
+											x="-3.86328"
+											y="-3.99805"
+											width="24.25"
+											height="24.25"
+											filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB"
+										>
+											<feFlood flood-opacity="0" result="BackgroundImageFix" />
+											<feGaussianBlur in="BackgroundImage" stdDeviation="2" />
+											<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_12293_273898" />
+											<feBlend
+												mode="normal"
+												in="SourceGraphic"
+												in2="effect1_backgroundBlur_12293_273898"
+												result="shape"
+											/>
+										</filter>
+										<linearGradient
+											id="paint0_linear_12293_273898"
+											x1="13.454"
+											y1="10.7051"
+											x2="42.2274"
+											y2="20.6"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="#FBA47F" />
+											<stop offset="1" stop-color="#DF6B00" />
+										</linearGradient>
+										<linearGradient
+											id="paint1_linear_12293_273898"
+											x1="17.2855"
+											y1="19.0572"
+											x2="39.0184"
+											y2="20.1194"
+											gradientUnits="userSpaceOnUse"
+										>
+											<stop stop-color="white" />
+											<stop offset="1" stop-color="white" stop-opacity="0" />
+										</linearGradient>
+									</defs>
+								</svg>
+							</div>
+							<span>
+								Increase your
+								<br />
+								<strong>earnings</strong>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pitch-intro-frame-footer" *ngIf="renderedOn === 'Desktop'">
+				<button
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="4b0246fe-ef2d-4577-b2e8-c534c7e35622"
+					data-cs-label="See brand pitch examples"
+					data-cs-source="page"
+					(click)="recordButtonClick($event)"
+					[routerLink]="
+						'/group-admin/campaigns/' + groupId + '/profile-pages/' + projectId + '/pitch-onboarding/examples'
+					"
+				>
+					<span>See brand pitch examples</span>
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							opacity="0.95"
+							d="M9.48571 5.41078C9.20095 5.12602 9.20095 4.66434 9.48571 4.37958C9.77047 4.09483 10.2322 4.09483 10.5169 4.37958L15.6211 9.48375C15.9058 9.76851 15.9058 10.2302 15.6211 10.5149L10.5169 15.6191C10.2322 15.9039 9.77047 15.9039 9.48571 15.6191C9.20095 15.3344 9.20095 14.8727 9.48571 14.5879L13.3451 10.7285H4.89714C4.49443 10.7285 4.16797 10.4021 4.16797 9.99934C4.16797 9.59664 4.49443 9.27018 4.89714 9.27018H13.3451L9.48571 5.41078Z"
+							fill="white"
+						/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="pitch-intro-frame-footer" *ngIf="renderedOn === 'Mobile'">
+	<button
+		class="convo-btn-primary convo-btn-normal"
+		data-cs-id="4b0246fe-ef2d-4577-b2e8-c534c7e35622"
+		data-cs-label="See brand pitch examples"
+		data-cs-source="page"
+		(click)="recordButtonClick($event)"
+		[routerLink]="'/group-admin/campaigns/' + groupId + '/profile-pages/' + projectId + '/pitch-onboarding/examples'"
+	>
+		<span>See brand pitch examples</span>
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				opacity="0.95"
+				d="M9.48571 5.41078C9.20095 5.12602 9.20095 4.66434 9.48571 4.37958C9.77047 4.09483 10.2322 4.09483 10.5169 4.37958L15.6211 9.48375C15.9058 9.76851 15.9058 10.2302 15.6211 10.5149L10.5169 15.6191C10.2322 15.9039 9.77047 15.9039 9.48571 15.6191C9.20095 15.3344 9.20095 14.8727 9.48571 14.5879L13.3451 10.7285H4.89714C4.49443 10.7285 4.16797 10.4021 4.16797 9.99934C4.16797 9.59664 4.49443 9.27018 4.89714 9.27018H13.3451L9.48571 5.41078Z"
+				fill="white"
+			/>
+		</svg>
+	</button>
+</div>

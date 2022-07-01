@@ -1,0 +1,189 @@
+<div class="modal fade report-keywords-modal" id="EditReferenceConversation" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit Reference Conversation</h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="filter-wrapper">
+				<div class="row m-0 justify-content-between w-100 align-items-center">
+					<span class="font-weight-bolder">{{ totalPostVisibleToBrand }} screenshots visible to brand</span>
+					<div class="text-filter-wrapper d-flex align-items-center search-wrapper">
+						<mat-form-field appearance="outline" class="col-11 pl-0">
+							<input
+								[formControl]="form?.controls?.searchText"
+								matInput
+								placeholder="Seacrh Post, Comment and Group name"
+								type="text"
+						/></mat-form-field>
+						<button
+							(click)="onClickingSearchPost()"
+							class="convo-btn-normal convo-btn-primary searchPost"
+							mat-flat-button
+							type="submit"
+						>
+							Search Post
+						</button>
+					</div>
+				</div>
+				<div class="d-flex justify-content-between mt-3 check-filter">
+					<span class="d-inline-flex align-items-center w-100">
+						<span
+							(click)="
+								updateEditPopupLevelFilters({showIsSystemGeenrated: !EditPopupLevelFilters.showIsSystemGeenrated})
+							"
+							[ngClass]="{active: EditPopupLevelFilters.showIsSystemGeenrated}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showIsSystemGeenrated" class="material-icons"> done </span>
+							System Generated</span
+						>
+						<span
+							(click)="updateEditPopupLevelFilters({showManuallyUploaded: !EditPopupLevelFilters.showManuallyUploaded})"
+							[ngClass]="{active: EditPopupLevelFilters.showManuallyUploaded}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showManuallyUploaded" class="material-icons"> done </span>
+							Manually Uploaded
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showPost: !EditPopupLevelFilters.showPost})"
+							[ngClass]="{active: EditPopupLevelFilters.showPost}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showPost" class="material-icons"> done </span>
+							Posts
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showComment: !EditPopupLevelFilters.showComment})"
+							[ngClass]="{active: EditPopupLevelFilters.showComment}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showComment" class="material-icons"> done </span>
+							Comments
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showVisibleToBrand: !EditPopupLevelFilters.showVisibleToBrand})"
+							[ngClass]="{active: EditPopupLevelFilters.showVisibleToBrand}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showVisibleToBrand" class="material-icons"> done </span>
+							Conversation visible to brand
+						</span>
+					</span>
+
+					<div class="date-picker-wrapper">
+						<mat-form-field appearance="outline" class="range-picker-for-screenshot">
+							<mat-label>Enter a date range</mat-label>
+							<mat-date-range-input [rangePicker]="picker">
+								<input #startDate matStartDate placeholder="Start date" />
+								<input
+									(dateChange)="onSelectingDateRange(startDate.value, $event.value)"
+									matEndDate
+									placeholder="End date"
+								/>
+							</mat-date-range-input>
+							<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+							<mat-date-range-picker #picker></mat-date-range-picker>
+						</mat-form-field>
+					</div>
+				</div>
+			</div>
+			<div class="phase-idea">
+				<div class="post-wrapper">
+					<div>
+						<div class="shadow-box px-0 mb-3 mt-2">
+							<div #topPerformingPostPopupContainer class="fb-posts-wrapper">
+								<div *ngIf="!posts?.length" class="font-weight-bold text-center">No Data Avaialable</div>
+
+								<div class="masonry-wrapper">
+									<ul *ngIf="posts" class="grid effect-1" id="grid">
+										<li
+											*ngFor="
+												let post of popupFilteredPosts | slice: EditPopupLevelFilters.from:EditPopupLevelFilters.end;
+												let i = index
+											"
+											class="masonry-box"
+											data-target="#topPostModel"
+											data-toggle="modal"
+										>
+											<div class="post-item">
+												<div class="header font-weight-bold">
+													<div class="row m-0 justify-content-between p-2 pt-0 pb-0">
+														<div class="post-name">
+															{{ post['groupname'] }}
+															<br />
+															<span class="post-type"> {{ post.contenType || post.type }} </span>
+														</div>
+
+														<mat-slide-toggle
+															(change)="onTogglePostVisibility(post, $event)"
+															[checked]="post.visibleToBrand"
+															labelPosition="before"
+														></mat-slide-toggle>
+													</div>
+												</div>
+												<ng-container *ngIf="!post.isManuallyUploaded; else manualUploadScreenshot">
+													<ng-container
+														*ngIf="
+															!screenshotsProcessed[post.id] && getScreenshot(post.sourceId) | async as screenshotData
+														"
+													>
+														<div *ngIf="screenshotsObservablesErrors[post.id]" class="screenshot-error">
+															Failed to load screnshot
+														</div>
+
+														<app-facebook-post-screenshot
+															*ngIf="screenshotData?.data && !screenshotsObservablesErrors[post.id]"
+															[postData]="screenshotData?.data"
+														></app-facebook-post-screenshot>
+													</ng-container>
+													<!-- <div class="screenshot-error" *ngIf="screenshotsProcessed[post.id] && !getScreenshot(post.sourceId)">
+                              Screeenshot not availabler
+                            </div> -->
+												</ng-container>
+												<ng-template #manualUploadScreenshot>
+													<ng-container *ngIf="post.s3Key">
+														<div class="header font-weight-bold">
+															<figure *ngIf="post.s3Key">
+																<img [src]="post.s3Key" alt="" srcset="" />
+															</figure>
+														</div>
+													</ng-container>
+												</ng-template>
+
+												<div *ngIf="post.order" class="order-container w-100 d-flex">
+													<div class="wrapper">
+														<span class="current-value">
+															<input
+																(focusout)="onFocusOfffFromOrderInput(post, $event.target, 'visible_' + i)"
+																[id]="'visible_' + i"
+																[max]="totalPostVisibleToBrand"
+																[value]="post.order"
+																type="number"
+															/>
+														</span>
+														of {{ totalPostVisibleToBrand }} conversations
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div
+									*ngIf="EditPopupLevelFilters?.end < popupFilteredPosts?.length"
+									class="d-flex justify-content-center mt-4"
+								>
+									<mat-spinner></mat-spinner>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer"></div>
+		</div>
+	</div>
+</div>

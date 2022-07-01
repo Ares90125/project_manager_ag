@@ -1,0 +1,224 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+section {
+	background: #fff;
+	padding: 32px 24px;
+	border-radius: 4px;
+}
+.card-inner-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+	margin: 0;
+
+	h3 {
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 20px;
+		color: #33334f;
+	}
+
+	p {
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 14px;
+		color: #707084;
+		margin-bottom: 32px;
+	}
+
+	.membersOnboardedChart {
+		position: relative;
+		z-index: 100;
+	}
+}
+
+.btn-edit {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	color: #3654ff;
+	margin-left: 8px;
+	cursor: pointer;
+
+	img {
+		width: 10.5px;
+		height: 10.5px;
+		margin-left: 6px;
+		margin-bottom: 4px;
+	}
+}
+
+.description {
+	margin-top: 4px;
+}
+
+.control-panel {
+	min-height: 200px;
+	max-height: 200px;
+	padding-top: 8px;
+	padding-bottom: 38px;
+	width: 18%;
+
+	&.bucket-count-1 {
+		padding-top: 39px;
+		min-height: 125px;
+		max-height: 125px;
+	}
+
+	&.bucket-count-2 {
+		padding-top: 25px;
+		padding-bottom: 49px;
+		min-height: 150px;
+		max-height: 150px;
+	}
+
+	&.bucket-count-3 {
+		padding-top: 20px;
+		padding-bottom: 45px;
+		min-height: 175px;
+		max-height: 175px;
+	}
+
+	&.bucket-count-4 {
+		padding-top: 19px;
+		padding-bottom: 42px;
+		min-height: 200px;
+		max-height: 200px;
+	}
+
+	&.bucket-count-5 {
+		padding-top: 18px;
+		padding-bottom: 40px;
+		min-height: 225px;
+		max-height: 225px;
+	}
+
+	.chart-y-text {
+		color: #9999a7;
+		font-size: 14px;
+		line-height: 16px;
+	}
+}
+
+.chart-panel {
+	flex-grow: 1;
+	position: relative;
+
+	.label-panel {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+
+		min-height: 200px;
+		max-height: 200px;
+		padding-top: 8px;
+		padding-bottom: 38px;
+
+		&.bucket-count-1 {
+			padding-top: 41px;
+			min-height: 125px;
+			max-height: 125px;
+		}
+
+		&.bucket-count-2 {
+			padding-top: 27px;
+			padding-bottom: 52px;
+			min-height: 150px;
+			max-height: 150px;
+		}
+
+		&.bucket-count-3 {
+			padding-top: 22px;
+			padding-bottom: 48px;
+			min-height: 175px;
+			max-height: 175px;
+		}
+
+		&.bucket-count-4 {
+			padding-top: 21px;
+			padding-bottom: 44px;
+			min-height: 200px;
+			max-height: 200px;
+		}
+
+		&.bucket-count-5 {
+			padding-top: 20px;
+			padding-bottom: 44px;
+			min-height: 225px;
+			max-height: 225px;
+		}
+
+		.chart-label-text {
+			font-size: 12px;
+			color: white;
+			font-weight: 500;
+		}
+	}
+}
+
+.supporting-text {
+	font-weight: 500;
+	font-size: 16px;
+	color: #3654ff;
+	line-height: 64px;
+	cursor: pointer;
+	padding: 0 24px;
+	margin: 0 -24px;
+	display: block;
+	border-top: 1px solid #ebebed;
+	margin-top: 32px;
+	text-align: left;
+}
+
+:host ::ng-deep {
+	.highcharts-grid-line {
+		stroke-width: 0;
+	}
+
+	.highcharts-axis.highcharts-xaxis {
+		.highcharts-axis-line {
+			stroke-width: 1;
+			stroke: #d6d6dc;
+		}
+	}
+
+	.highcharts-axis.highcharts-yaxis {
+		.highcharts-axis-line {
+			stroke-width: 1;
+			stroke: #d6d6dc;
+		}
+	}
+
+	.highcharts-point.highcharts-color-0:nth-of-type(1) {
+		fill: #17becf;
+	}
+
+	.highcharts-point.highcharts-color-0:nth-of-type(2) {
+		fill: #1f77b4;
+	}
+
+	.highcharts-point.highcharts-color-0:nth-of-type(3) {
+		fill: #f7b6d2;
+	}
+
+	.highcharts-point.highcharts-color-0:nth-of-type(4) {
+		fill: rgb(253, 148, 51);
+	}
+
+	.highcharts-point.highcharts-color-0:nth-of-type(5) {
+		fill: rgb(228, 0, 124);
+	}
+}
+.supporting-text-input-text {
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: left;
+	color: #33334f;
+	padding: 16px 0;
+}
+.background-box {
+	background-color: #f9fafb;
+}

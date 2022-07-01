@@ -1,0 +1,289 @@
+<div class="campaign-report-posts-wrap">
+	<div class="campaign-report-post-header">
+		<button
+			data-cs-id="c8256ee2-a220-432c-a67c-2f683f2fd680"
+			data-cs-label="Add campaign posts"
+			data-cs-source="page"
+			(click)="onCloseConversations(true); recordButtonClick($event)"
+		>
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#707084" />
+			</svg>
+		</button>
+		<h5>Edit campaign highlights</h5>
+	</div>
+	<div class="campaign-report-post-body">
+		<div class="container">
+			<h6 data-test-id="heading-edit-campaign-highlight">
+				Campaign highlights are auto-generated screenshots of top posts that you would like to feature for brands to see
+				as proof of engagement during the campaign.
+			</h6>
+			<div class="note">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M7.33398 4.66732H8.66732V6.00065H7.33398V4.66732ZM7.33398 7.33398H8.66732V11.334H7.33398V7.33398ZM8.00065 1.33398C4.32065 1.33398 1.33398 4.32065 1.33398 8.00065C1.33398 11.6807 4.32065 14.6673 8.00065 14.6673C11.6807 14.6673 14.6673 11.6807 14.6673 8.00065C14.6673 4.32065 11.6807 1.33398 8.00065 1.33398ZM8.00065 13.334C5.06065 13.334 2.66732 10.9407 2.66732 8.00065C2.66732 5.06065 5.06065 2.66732 8.00065 2.66732C10.9407 2.66732 13.334 5.06065 13.334 8.00065C13.334 10.9407 10.9407 13.334 8.00065 13.334Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<span data-test-id="subheading-edit-campaign-highlight"
+					>Only posts containing text status, links, images, videos and completed live sessions will be available for
+					selection</span
+				>
+			</div>
+
+			<div class="posts-search-wrap">
+				<div class="search-box">
+					<img alt="" src="../../../../../assets/images/icon-search-small.svg" />
+					<input type="text" placeholder="Search posts" [(ngModel)]="searchParam" (input)="onSearchInput()" />
+				</div>
+				<button
+					class="convo-btn-normal convo-btn-primary"
+					[disabled]="!isSearchParamEnabled"
+					data-cs-id="56b60878-9dd0-4ce3-9831-658fca7ffd9d"
+					data-cs-label="Search posts"
+					data-cs-source="page"
+					(click)="onSearch(); recordButtonClick($event)"
+				>
+					Search posts
+				</button>
+			</div>
+
+			<div class="filter-wrap">
+				<div class="result-row" *ngIf="!isLoading">
+					Showing&nbsp;
+					<span *ngIf="numOfSearchedConversations?.length >= limit"
+						>{{
+							from + 1 + '-' + (numOfSearchedConversations?.length < end ? numOfSearchedConversations?.length : end)
+						}}&nbsp;</span
+					>
+					<span *ngIf="numOfSearchedConversations?.length < limit">{{ numOfSearchedConversations?.length }}&nbsp;</span>
+					<span *ngIf="terms?.length === 0">
+						<span *ngIf="numOfSearchedConversations?.length >= limit && terms?.length === 0">of All </span>posts
+					</span>
+					<span *ngIf="terms?.length > 0"> search results for... </span>
+					<div *ngFor="let term of terms; let i = index" class="search-for">
+						<span>{{ term }}</span>
+						<img (click)="onKeywordRemove(i)" alt="" src="../../../../../assets/images/clear-search-icon.svg" />
+					</div>
+				</div>
+
+				<div class="datepicker-wrap">
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-date-range-input [rangePicker]="picker" [min]="startDate" [max]="endDate">
+						<input matStartDate readonly [(ngModel)]="startDatePicker" type="text" placeholder="Start date" />
+						<input
+							matEndDate
+							readonly
+							[(ngModel)]="endDatePicker"
+							text="text"
+							placeholder="End date"
+							(dateChange)="saveDate()"
+						/>
+					</mat-date-range-input>
+					<mat-date-range-picker #picker></mat-date-range-picker>
+				</div>
+			</div>
+
+			<!-- Empty State-->
+			<div class="empty-state" *ngIf="!isLoading && numOfSearchedConversations?.length === 0">
+				<figure><img alt="" src="../../../../../assets/images/empty_state_icon.svg" /></figure>
+				<h6>You don't have posts to be shown in given date range</h6>
+			</div>
+			<div class="all-post-box">
+				<div class="table-wrapper">
+					<table aria-labelledby="">
+						<thead *ngIf="numOfSearchedConversations?.length > 0 || isLoading">
+							<tr>
+								<th class="text-left">
+									<div>TIME</div>
+								</th>
+								<th class="text-left">
+									<div>POST</div>
+								</th>
+								<th>
+									<div>GROUP NAME</div>
+								</th>
+								<th>
+									<div>COMMENTS</div>
+								</th>
+								<th>
+									<div>REACTIONS</div>
+								</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody *ngIf="!isLoading && numOfSearchedConversations?.length > 0">
+							<tr
+								[ngClass]="{'selected-row': post.isSelected}"
+								[hidden]="!post['isSearched']"
+								*ngFor="let post of numOfSearchedConversations | slice: from:end"
+							>
+								<td>
+									<div class="date-wrap">
+										{{ post.postCreatedAtUTC | date: 'dd MMM, YYYY' }}
+										<br />{{ post.postCreatedAtUTC | date: 'hh:mm a' }}
+									</div>
+								</td>
+								<td class="post-desc-wrap">
+									<div class="post-desc">
+										<figure>
+											<img
+												src="../../../../../assets/images/default_group_image.jpg"
+												alt=""
+												*ngIf="!post.postPhotoUrl && !post.videothumbnailurl"
+											/><img
+												[src]="post.postPhotoUrl"
+												(error)="showUpdatedImageFromFacebook($event, post.id)"
+												*ngIf="post.postPhotoUrl"
+											/>
+											<img
+												[src]="post.videothumbnailurl"
+												(error)="showUpdatedImageFromFacebook($event, post.id)"
+												*ngIf="post.videothumbnailurl"
+											/>
+										</figure>
+										<div class="post-content">
+											<h5>
+												{{ post?.postRawText?.substring(0, 100) + (post?.postRawText?.length >= 100 ? '...' : '') }}
+											</h5>
+											<ul class="list-unstyled">
+												<li>
+													<a
+														data-cs-label="View post"
+														data-cs-source="page"
+														data-cs-id="fcef80c9-7f74-4053-a627-d5ebb9c9ea46"
+														(click)="recordButtonClick($event)"
+														[href]="post.fbPermlink"
+														target="_blank"
+														rel="noopener"
+														>View post</a
+													>
+												</li>
+												<li *ngIf="post.postCreatedByName">
+													<span>by {{ post.postCreatedByName }}</span>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</td>
+								<td class="group-name">
+									<div>{{ post.groupName }}</div>
+								</td>
+								<td>
+									<div>{{ post.commentCount }}</div>
+								</td>
+								<td>
+									<div>{{ post.reactionCount }}</div>
+								</td>
+								<td>
+									<div class="float-right">
+										<button
+											class="select-btn selected"
+											*ngIf="post.isSelected"
+											data-cs-id="90cf13bc-a74d-4e9b-b131-2e1e51d55396"
+											data-cs-label="Toggle post selection"
+											data-cs-source="page"
+											[attr.data-cs-toggle-status]="!post.isSelected"
+											(click)="onPostSelection(post); recordToggleClicked($event)"
+										>
+											<img alt="" src="../../../../../assets/images/check-small.svg" />
+											<span>Selected</span>
+										</button>
+										<button
+											class="select-btn"
+											*ngIf="!post.isSelected"
+											data-cs-id="90cf13bc-a74d-4e9b-b131-2e1e51d55396"
+											data-cs-label="Toggle post selection"
+											data-cs-source="page"
+											[attr.data-cs-toggle-status]="!post.isSelected"
+											(click)="onPostSelection(post); recordToggleClicked($event)"
+										>
+											<span>Select</span>
+										</button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody *ngIf="isLoading" class="loading-wrapper">
+							<tr>
+								<td class="date-wrap">
+									<div class="loading-strip primary"></div>
+								</td>
+								<td class="post-desc-wrap">
+									<div class="post-desc-loading">
+										<div class="loading-strip loading-image"></div>
+										<div>
+											<div class="loading-strip primary"></div>
+											<div class="loading-strip secondary"></div>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="loading-strip"></div>
+								</td>
+								<td>
+									<div class="loading-strip"></div>
+								</td>
+								<td>
+									<div class="loading-strip"></div>
+								</td>
+								<td class="button-loading-wrap">
+									<div class="loading-strip loading-button"></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="pagination-wrap" *ngIf="!isLoading && numOfSearchedConversations?.length > 0">
+						<span
+							>{{
+								from + 1 + '-' + (numOfSearchedConversations?.length < end ? numOfSearchedConversations?.length : end)
+							}}
+							of All posts</span
+						>
+						<button
+							[disabled]="from <= 0"
+							data-cs-id="610a8dcf-b9ae-426b-94dd-9a7251ecceba"
+							data-cs-label="Get Previous Conversation"
+							data-cs-source="page"
+							(click)="getPreviousConversations(); recordButtonClick($event)"
+						>
+							<svg focusable="false" viewBox="0 0 24 24">
+								<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+							</svg>
+						</button>
+						<button
+							[disabled]="
+								end >= numOfSearchedConversations.length ||
+								(end >= numOfSearchedConversations.length && isConversationsLoaded)
+							"
+							data-cs-id="28c4263d-b101-4832-98f6-e82963a33990"
+							data-cs-label="Get Next Conversation"
+							data-cs-source="page"
+							(click)="getNextConversations(); recordButtonClick($event)"
+						>
+							<svg focusable="false" viewBox="0 0 24 24">
+								<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campaign-report-post-footer" *ngIf="!isLoading && conversations?.length > 0">
+		<span *ngIf="selectedPosts?.length === 0">Select atleast 1 post</span>
+		<span *ngIf="selectedPosts?.length > 0">{{ selectedPosts?.length }} posts selected</span>
+		<button
+			class="convo-btn-primary convo-btn-normal"
+			[disabled]="selectedPosts?.length === 0 || isSubmitting || !isAllowedToUpdate"
+			data-cs-id="976b74db-110b-48aa-a23f-53ad33bd8b95"
+			data-cs-label="Done"
+			data-cs-source="page"
+			(click)="onCloseConversations(false); recordButtonClick($event)"
+		>
+			{{ isSubmitting ? 'Generating screenshots...' : 'Done' }}
+		</button>
+	</div>
+</div>

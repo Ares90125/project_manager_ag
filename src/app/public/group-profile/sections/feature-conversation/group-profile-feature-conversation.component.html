@@ -1,0 +1,926 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div
+		class="featured-conversations-wrap red-border"
+		[class.expanded-state]="isExpanded"
+		[class.not-completed]="noOfFeatureConversation() === 0"
+	>
+		<div class="completed-flag" *ngIf="noOfFeatureConversation() === 0">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="35a4b37c-6889-4e6d-9b62-029a773c9bd5"
+			data-cs-label="Featured conversations"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header [expandedHeight]="renderedOn === 'Mobile' ? '110px' : '68px'" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<ng-container *ngIf="renderedOn === 'Mobile'">
+							<div class="panel-title-header">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M3.33366 14.3096V3.33464H16.667V8.33464H18.3337V3.33464C18.3337 2.41797 17.5837 1.66797 16.667 1.66797H3.33366C2.41699 1.66797 1.67533 2.41797 1.67533 3.33464L1.66699 18.3346L5.00033 15.0013H12.5003V13.3346H4.30866L3.33366 14.3096Z"
+										fill="#9999A7"
+									/>
+									<path
+										d="M18.7503 13.3346H16.917L18.3337 10.0013H14.167V15.0013H15.8337V19.168L18.7503 13.3346Z"
+										fill="#9999A7"
+									/>
+								</svg>
+								<span>Featured conversations</span>
+							</div>
+						</ng-container>
+						<ng-container *ngIf="renderedOn === 'Desktop'">
+							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M3.33366 14.3096V3.33464H16.667V8.33464H18.3337V3.33464C18.3337 2.41797 17.5837 1.66797 16.667 1.66797H3.33366C2.41699 1.66797 1.67533 2.41797 1.67533 3.33464L1.66699 18.3346L5.00033 15.0013H12.5003V13.3346H4.30866L3.33366 14.3096Z"
+									fill="#9999A7"
+								/>
+								<path
+									d="M18.7503 13.3346H16.917L18.3337 10.0013H14.167V15.0013H15.8337V19.168L18.7503 13.3346Z"
+									fill="#9999A7"
+								/>
+							</svg>
+							<span>Featured conversations</span>
+						</ng-container>
+						<button
+							*ngIf="isExpanded"
+							data-cs-id="217946e5-caee-45f3-ad71-c43abca3fa75"
+							data-cs-label="What's this?"
+							data-cs-source="page"
+							class="convo-btn-bordered what-this-btn"
+							(click)="
+								$event.stopPropagation();
+								recordButtonClick($event, null, null, null, groupProfilePage);
+								openFeatureConvHelpVideo()
+							"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							What's this?
+						</button>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span
+							>Brands are more likely to partner with groups that have engaging conversations relevant to their
+							category.</span
+						>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right">
+						<button
+							class="edit-row-btn"
+							(click)="$event.stopPropagation(); showEditFeaturePopup($event)"
+							data-cs-id="4c596bbb-7ebb-487b-91fd-c92ed3027c2b"
+							data-cs-label="Edit Feature Conversation Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div class="profile-card-body" *ngIf="!isLoading">
+				<div
+					class="featured-conversations-posts-wrap"
+					[class.disabled]="!groupProfilePage.showFeatureConversation"
+					*ngIf="featureConversations?.length > 0; else noFeatureConversation"
+				>
+					<div [class.featured-conversation-disabled]="!groupProfilePage.showFeatureConversation">
+						<div class="pills-wrap">
+							<ng-container *ngFor="let conv of featureConversations; let i = index">
+								<button
+									class="pill"
+									[class.active]="selectedPills === i"
+									data-target="#show-tag-modal"
+									*ngIf="isEditable || conv.showConversation"
+									data-toggle="modal"
+									data-cs-id="40c437e2-2372-4116-8cdd-2d5c857c0f22"
+									data-cs-label="Topic pills"
+									data-cs-source="page"
+									(click)="
+										selectConversationToDisplay(conv, i); recordButtonClick($event, null, null, null, groupProfilePage)
+									"
+								>
+									{{ conv?.topicName }}
+								</button>
+							</ng-container>
+						</div>
+						<ul class="list-unstyled">
+							<li *ngFor="let convScreenShot of conversation?.screenShots | slice: 0:3; let i = index">
+								<ng-container *ngIf="conversation?.showConversation; else hiddenImage">
+									<img
+										[src]="convScreenShot?.screenShotUrl"
+										(click)="openImageGallery($event, i, conversation?.screenShots)"
+										data-cs-id="dab5c64b-935b-449c-9522-0dc7f999a639"
+										data-cs-label="See screenshots"
+										data-cs-source="page"
+										alt=""
+										class="screenshot-img"
+									/>
+								</ng-container>
+							</li>
+						</ul>
+
+						<ng-template #hiddenImage>
+							<ul class="list-unstyled">
+								<li class="overlay-state-wrap">
+									<img alt="" class="overlay-image" src="./assets/images/hidden-conversation-state.png" />
+									<div class="hidden-state">
+										<img alt="" src="./assets/images/visibility_off.svg" />
+										<span>Hidden</span>
+									</div>
+								</li>
+							</ul>
+
+							<!-- <img src="./assets/images/no-conversations.png" alt="" /> -->
+						</ng-template>
+						<button
+							class="convo-btn-primary convo-btn-normal screenshot-btn"
+							data-cs-id="dab5c64b-935b-449c-9522-0dc7f999a639"
+							data-cs-label="See screenshots"
+							data-cs-source="page"
+							*ngIf="conversation?.showConversation"
+							(click)="openImageGallery($event, i, conversation?.screenShots)"
+						>
+							<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M8 0L9.53333 1.53333L7.60667 3.44667L8.55333 4.39333L10.4667 2.46667L12 4V0H8ZM0 4L1.53333 2.46667L3.44667 4.39333L4.39333 3.44667L2.46667 1.53333L4 0H0V4ZM4 12L2.46667 10.4667L4.39333 8.55333L3.44667 7.60667L1.53333 9.53333L0 8V12H4ZM12 8L10.4667 9.53333L8.55333 7.60667L7.60667 8.55333L9.53333 10.4667L8 12H12V8Z"
+									fill="white"
+								/>
+							</svg>
+							<span>See screenshots</span>
+						</button>
+					</div>
+
+					<div [hidden]="groupProfilePage.showFeatureConversation" class="hidden-state">
+						<img alt="" src="./assets/images/visibility_off.svg" />
+						<span>This section is hidden</span>
+					</div>
+				</div>
+				<ng-template #noFeatureConversation>
+					<div class="unavailable-state-wrap">
+						<img alt="" class="overlay-image" src="./assets/images/no-conversations.png" />
+						<div
+							class="unavailable-state cursor"
+							(click)="showEditFeaturePopup($event)"
+							data-cs-id="afd8d6d0-d176-425a-813d-1462b8358636"
+							data-cs-label="Edit Feature Conversation Modal"
+							data-cs-source="page"
+						>
+							<div class="overlay"></div>
+							<figure>
+								<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.0003 1.66666C5.40033 1.66666 1.66699 5.39999 1.66699 9.99999C1.66699 14.6 5.40033 18.3333 10.0003 18.3333C14.6003 18.3333 18.3337 14.6 18.3337 9.99999C18.3337 5.39999 14.6003 1.66666 10.0003 1.66666ZM10.8337 14.1667H9.16699V12.5H10.8337V14.1667ZM10.8337 10.8333H9.16699V5.83332H10.8337V10.8333Z"
+										fill="#EB5757"
+									/>
+								</svg>
+							</figure>
+							<h6>This section is hidden because you haven’t added any conversation screenshots yet.</h6>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="featured-conversations-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M3.33366 14.3096V3.33464H16.667V8.33464H18.3337V3.33464C18.3337 2.41797 17.5837 1.66797 16.667 1.66797H3.33366C2.41699 1.66797 1.67533 2.41797 1.67533 3.33464L1.66699 18.3346L5.00033 15.0013H12.5003V13.3346H4.30866L3.33366 14.3096Z"
+						fill="#9999A7"
+					/>
+					<path
+						d="M18.7503 13.3346H16.917L18.3337 10.0013H14.167V15.0013H15.8337V19.168L18.7503 13.3346Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Featured conversations</h5>
+			</div>
+		</div>
+		<div class="profile-card-body preview" *ngIf="!isLoading">
+			<div class="featured-conversations-posts-wrap">
+				<div>
+					<div class="pills-wrap">
+						<ng-container *ngFor="let conv of featureConversations; let i = index">
+							<button
+								class="pill"
+								[class.active]="selectedPills === i"
+								data-target="#show-tag-modal"
+								*ngIf="conv.showConversation"
+								data-toggle="modal"
+								data-cs-id="40c437e2-2372-4116-8cdd-2d5c857c0f22"
+								data-cs-label="Topic pills"
+								data-cs-source="page"
+								(click)="
+									selectConversationToDisplay(conv, i); recordButtonClick($event, null, null, null, groupProfilePage)
+								"
+							>
+								{{ conv?.topicName }}
+							</button>
+						</ng-container>
+					</div>
+					<ul class="list-unstyled">
+						<li *ngFor="let convScreenShot of conversation?.screenShots | slice: 0:3; let i = index">
+							<ng-container *ngIf="conversation?.showConversation; else hiddenImage">
+								<img
+									[src]="convScreenShot?.screenShotUrl"
+									(click)="openImageGallery($event, i, conversation?.screenShots)"
+									data-cs-id="dab5c64b-935b-449c-9522-0dc7f999a639"
+									data-cs-label="See screenshots"
+									data-cs-source="page"
+									alt=""
+									class="screenshot-img"
+								/>
+							</ng-container>
+						</li>
+					</ul>
+
+					<ng-template #hiddenImage>
+						<ul class="list-unstyled">
+							<li class="overlay-state-wrap">
+								<img alt="" class="overlay-image" src="./assets/images/hidden-conversation-state.png" />
+								<div class="hidden-state">
+									<img alt="" src="./assets/images/visibility_off.svg" />
+									<span>Hidden</span>
+								</div>
+							</li>
+						</ul>
+
+						<!-- <img src="./assets/images/no-conversations.png" alt="" /> -->
+					</ng-template>
+					<button
+						class="convo-btn-primary convo-btn-normal screenshot-btn"
+						data-cs-id="dab5c64b-935b-449c-9522-0dc7f999a639"
+						data-cs-label="See screenshots"
+						data-cs-source="page"
+						*ngIf="conversation?.showConversation"
+						(click)="openImageGallery($event, i, conversation?.screenShots)"
+					>
+						<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M8 0L9.53333 1.53333L7.60667 3.44667L8.55333 4.39333L10.4667 2.46667L12 4V0H8ZM0 4L1.53333 2.46667L3.44667 4.39333L4.39333 3.44667L2.46667 1.53333L4 0H0V4ZM4 12L2.46667 10.4667L4.39333 8.55333L3.44667 7.60667L1.53333 9.53333L0 8V12H4ZM12 8L10.4667 9.53333L8.55333 7.60667L7.60667 8.55333L9.53333 10.4667L8 12H12V8Z"
+								fill="white"
+							/>
+						</svg>
+						<span>See screenshots</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<div class="modal no-conversation-modal file-alert" *ngIf="showEditFeatureConversation">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Featured conversations</h5>
+				<button
+					(click)="closeAllFeaturePopup($event)"
+					data-cs-id="eb62115e-e479-4b6d-b258-f0f0027f437a"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="brands-settings-card">
+					<div class="brands-row border-0" *ngIf="featureConversations?.length === 0">
+						<p class="info-field m-0">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M7.33301 6.0013H8.66634V4.66797H7.33301V6.0013ZM7.33301 11.3346H8.66634V7.33464H7.33301V11.3346ZM7.99301 14.668C4.31301 14.668 1.33301 11.6813 1.33301 8.0013C1.33301 4.3213 4.31301 1.33464 7.99301 1.33464C11.6797 1.33464 14.6663 4.3213 14.6663 8.0013C14.6663 11.6813 11.6797 14.668 7.99301 14.668ZM7.99967 2.66797C5.05301 2.66797 2.66634 5.05464 2.66634 8.0013C2.66634 10.948 5.05301 13.3346 7.99967 13.3346C10.9463 13.3346 13.333 10.948 13.333 8.0013C13.333 5.05464 10.9463 2.66797 7.99967 2.66797Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							<span
+								>Showcase the top conversations happening in your group by uploading screenshots or adding post link.
+								Start by adding a topic.</span
+							>
+						</p>
+					</div>
+					<div class="brands-row main-row">
+						<p class="settings-field m-0">Show featured conversations</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(change)="onChangeFeatureConversation()"
+								[checked]="groupProfilePage?.showFeatureConversation"
+								[disabled]="featureConversations?.length === 0 || noOfConversationEnabled() === 0 || isSaveInProgress"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div
+					[class.show-tag-modal]="featureConversations?.length > 0"
+					[class.brand-pad]="featureConversations?.length === 0"
+				>
+					<div class="brands-row-0" *ngIf="featureConversations?.length === 0; else onlyFiveTopicMsg">
+						<p class="settings-field m-0">
+							<img alt="" class="info-icon" src="assets/images/influencer-info-icon.svg" />
+							You can show featured conversations only if you add at least 1 topic.
+						</p>
+					</div>
+					<ng-template #onlyFiveTopicMsg>
+						<div class="brands-row-0 mt-0 mb-3">
+							<p class="settings-field m-0">
+								<img alt="" class="info-icon" src="assets/images/influencer-info-icon.svg" />
+								You can add only a maximum of 5 topics
+							</p>
+						</div>
+						<div class="card-row" *ngFor="let featureConv of featureConversations; let i = index">
+							<div class="card-row-body">
+								<div class="card-body-left">
+									<h6>{{ featureConv?.topicName }}</h6>
+									<p class="m-0">{{ featureConv?.screenShots?.length }} screenshots added</p>
+								</div>
+								<div class="card-body-right">
+									<button
+										(click)="editTopicModel($event, i)"
+										data-cs-id="842cefe6-fdd5-4f2a-9c61-0c48b4f82ae5"
+										data-cs-label="Edit Conversation"
+										data-cs-source="dialog"
+									>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M3 17.4586V20.4986C3 20.7786 3.22 20.9986 3.5 20.9986H6.54C6.67 20.9986 6.8 20.9486 6.89 20.8486L17.81 9.93859L14.06 6.18859L3.15 17.0986C3.05 17.1986 3 17.3186 3 17.4586ZM20.71 7.03859C21.1 6.64859 21.1 6.01859 20.71 5.62859L18.37 3.28859C17.98 2.89859 17.35 2.89859 16.96 3.28859L15.13 5.11859L18.88 8.86859L20.71 7.03859Z"
+												fill="#ADADB9"
+											/>
+										</svg>
+									</button>
+									<button
+										(click)="openDeleteTopicConfirmation($event, i)"
+										data-target="#removeTopic"
+										data-toggle="modal"
+										data-cs-id="e4b0bb43-d7f2-466d-9de9-6e58657a5766"
+										data-cs-label="Delete Conversation"
+										data-cs-source="dialog"
+									>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM8 9H16V19H8V9ZM15.5 4L14.5 3H9.5L8.5 4H5V6H19V4H15.5Z"
+												fill="#ADADB9"
+											/>
+										</svg>
+									</button>
+								</div>
+							</div>
+							<div class="card-row-footer">
+								<div>Show on page:</div>
+								<div>
+									<mat-slide-toggle
+										(change)="onIndividualConversationToggle(i)"
+										[checked]="featureConv.showConversation"
+										[disabled]="isSaveInProgress"
+									></mat-slide-toggle>
+								</div>
+							</div>
+						</div>
+					</ng-template>
+
+					<button
+						class="convo-btn-normal convo-btn-outline mt-4"
+						(click)="showAddTopicModal($event)"
+						data-cs-id="9b8351e1-83f5-4a8f-a6a1-f140ff556951"
+						data-cs-label="Add new topic"
+						data-cs-source="dialog"
+						*ngIf="featureConversations.length < 5"
+					>
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.6663 8.66536H8.66634V12.6654H7.33301V8.66536H3.33301V7.33203H7.33301V3.33203H8.66634V7.33203H12.6663V8.66536Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>Add new topic</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					class="convo-btn-primary convo-btn-normal"
+					(click)="updateFeatureConversationChanges($event)"
+					[disabled]="isSaveInProgress || !isSaveEnabled()"
+					data-cs-id="9b8351e1-83f5-4a8f-8493-f140ff556951"
+					data-cs-label="Add new topic"
+					data-cs-source="dialog"
+					type="button"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal file-alert add-topic-modal" *ngIf="showAddFeatureTopic">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<button
+						(click)="saveConversation($event)"
+						data-cs-id="af16c2ee-9a6c-4fea-a864-d61af5dacf02"
+						data-cs-label="Back"
+						data-cs-source="dialog"
+					>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M19.0005 10.9988H7.83047L12.7105 6.11875C13.1005 5.72875 13.1005 5.08875 12.7105 4.69875C12.3205 4.30875 11.6905 4.30875 11.3005 4.69875L4.71047 11.2888C4.32047 11.6788 4.32047 12.3087 4.71047 12.6987L11.3005 19.2888C11.6905 19.6788 12.3205 19.6788 12.7105 19.2888C13.1005 18.8988 13.1005 18.2687 12.7105 17.8787L7.83047 12.9987H19.0005C19.5505 12.9987 20.0005 12.5487 20.0005 11.9988C20.0005 11.4488 19.5505 10.9988 19.0005 10.9988Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+					<span>Edit topic</span>
+				</h5>
+				<button
+					type="button"
+					(click)="closeAllFeaturePopup($event)"
+					data-cs-id="3ac08f1d-cc09-40c2-9415-b6435e3df56d"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="topic-head">
+				<form [formGroup]="topicForm">
+					<div class="input-wrap">
+						<label>Topic name <sup>*</sup></label>
+						<div class="input-row">
+							<input
+								type="text"
+								name="topic"
+								formControlName="topic"
+								maxlength="30"
+								[appFocusInput]="true"
+								class="convo-input"
+								placeholder="Example: Food"
+							/>
+							<button
+								class="convo-btn-normal convo-btn-primary"
+								[disabled]="
+									topicForm.invalid ||
+									(conversation | json) === '{}' ||
+									conversation?.screenShots?.length === 0 ||
+									uploading
+								"
+								data-cs-id="4b42e674-c55f-4242-bcfb-3fce2e34eb48"
+								data-cs-label="Close"
+								data-cs-source="dialog"
+								(click)="saveConversation()"
+							>
+								Done
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-body p-0">
+				<div class="topic-wrap">
+					<div class="modal-body p-0">
+						<div class="topic-wrap">
+							<div class="topic-body">
+								<div class="error-info-box" *ngIf="uploadFileError || uploadTypeError">
+									<div>
+										<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M7.33301 9.9987H8.66634V11.332H7.33301V9.9987ZM7.33301 4.66536H8.66634V8.66536H7.33301V4.66536ZM7.99301 1.33203C4.31301 1.33203 1.33301 4.3187 1.33301 7.9987C1.33301 11.6787 4.31301 14.6654 7.99301 14.6654C11.6797 14.6654 14.6663 11.6787 14.6663 7.9987C14.6663 4.3187 11.6797 1.33203 7.99301 1.33203ZM7.99967 13.332C5.05301 13.332 2.66634 10.9454 2.66634 7.9987C2.66634 5.05203 5.05301 2.66536 7.99967 2.66536C10.9463 2.66536 13.333 5.05203 13.333 7.9987C13.333 10.9454 10.9463 13.332 7.99967 13.332Z"
+												fill="#EB5757"
+											/>
+										</svg>
+										<span
+											>The file you selected is<span *ngIf="uploadFileError"> too large to upload</span
+											><span *ngIf="uploadTypeError"> not a valid image file</span>. Please upload a
+											<strong>PNG</strong> or <strong>JPG</strong> file less than <strong>300MB</strong>.</span
+										>
+									</div>
+									<button
+										(click)="
+											recordButtonClick($event, null, null, null, groupProfilePage);
+											uploadTypeError = false;
+											uploadFileError = false
+										"
+										data-cs-id="1b48c551-079b-4819-9633-f31cf47f026b"
+										data-cs-label="Close"
+										data-cs-source="dialog"
+										type="button"
+									>
+										<img alt="" src="./assets/images/close-icon.svg" />
+									</button>
+								</div>
+								<div class="col-row post-url" *ngIf="showPostUrlField">
+									<!-- post url section -->
+									<div class="post-url-box">
+										<div class="heading-row">
+											<h6>Generate screenshot using post URL</h6>
+											<button
+												(click)="
+													recordButtonClick($event, null, null, null, groupProfilePage); showPostUrlField = false
+												"
+												data-cs-id="e700d743-7b93-4c50-b99c-52da7db32da1"
+												data-cs-label="Close"
+												data-cs-source="dialog"
+												type="button"
+											>
+												<img alt="" src="./assets/images/close-icon.svg" />
+											</button>
+										</div>
+
+										<div class="post-url-form">
+											<form [formGroup]="postUrlForm">
+												<div class="input-wrap">
+													<div class="input-row">
+														<input
+															type="text"
+															(delayedInput)="processMetaInfo($event)"
+															appDelayedInput
+															name="postUrl"
+															[appFocusInput]="true"
+															formControlName="postUrl"
+															class="convo-input"
+															placeholder="Paste URL to the conversation post here.."
+														/>
+													</div>
+													<span class="input-error" *ngIf="showErrorOnPostUrlForm"
+														>Please enter URL in the correct format as shown below</span
+													>
+												</div>
+											</form>
+										</div>
+										<div class="post-form-info-wrapper">
+											<p class="info-field m-0">
+												<ng-container *ngIf="postUrlState === 'initialState'">
+													<div class="post-form-info state-color-1">
+														<svg
+															width="16"
+															height="16"
+															viewBox="0 0 16 16"
+															fill="none"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																d="M7.33301 6.0013H8.66634V4.66797H7.33301V6.0013ZM7.33301 11.3346H8.66634V7.33464H7.33301V11.3346ZM7.99301 14.668C4.31301 14.668 1.33301 11.6813 1.33301 8.0013C1.33301 4.3213 4.31301 1.33464 7.99301 1.33464C11.6797 1.33464 14.6663 4.3213 14.6663 8.0013C14.6663 11.6813 11.6797 14.668 7.99301 14.668ZM7.99967 2.66797C5.05301 2.66797 2.66634 5.05464 2.66634 8.0013C2.66634 10.948 5.05301 13.3346 7.99967 13.3346C10.9463 13.3346 13.333 10.948 13.333 8.0013C13.333 5.05464 10.9463 2.66797 7.99967 2.66797Z"
+																fill="#3654FF"
+															/>
+														</svg>
+														<span
+															><strong>Example:</strong>
+															https://facebook.com/groups/fbgroupgrowth/posts/909733499732821/</span
+														>
+													</div>
+												</ng-container>
+												<ng-container *ngIf="postUrlState === 'processingState'">
+													<div class="post-form-info state-color-2">
+														<span class="spinner"></span>
+														<span>Generating screenshot from URL...</span>
+													</div>
+												</ng-container>
+												<ng-container *ngIf="postUrlState === 'successState'">
+													<div class="post-form-info state-color-3">
+														<svg
+															width="20"
+															height="20"
+															viewBox="0 0 20 20"
+															fill="none"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																d="M9.99996 1.66699C5.39996 1.66699 1.66663 5.40033 1.66663 10.0003C1.66663 14.6003 5.39996 18.3337 9.99996 18.3337C14.6 18.3337 18.3333 14.6003 18.3333 10.0003C18.3333 5.40033 14.6 1.66699 9.99996 1.66699ZM8.33329 14.167L4.16663 10.0003L5.34163 8.82533L8.33329 11.8087L14.6583 5.48366L15.8333 6.66699L8.33329 14.167Z"
+																fill="#24A95A"
+															/>
+														</svg>
+
+														<span>Screenshot generated successfully!</span>
+													</div>
+												</ng-container>
+												<ng-container *ngIf="postUrlState === 'errorState'">
+													<div class="post-form-info state-color-4">
+														<svg
+															width="16"
+															height="16"
+															viewBox="0 0 16 16"
+															fill="none"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																d="M7.33301 9.9987H8.66634V11.332H7.33301V9.9987ZM7.33301 4.66536H8.66634V8.66536H7.33301V4.66536ZM7.99301 1.33203C4.31301 1.33203 1.33301 4.3187 1.33301 7.9987C1.33301 11.6787 4.31301 14.6654 7.99301 14.6654C11.6797 14.6654 14.6663 11.6787 14.6663 7.9987C14.6663 4.3187 11.6797 1.33203 7.99301 1.33203ZM7.99967 13.332C5.05301 13.332 2.66634 10.9454 2.66634 7.9987C2.66634 5.05203 5.05301 2.66536 7.99967 2.66536C10.9463 2.66536 13.333 5.05203 13.333 7.9987C13.333 10.9454 10.9463 13.332 7.99967 13.332Z"
+																fill="#EB5757"
+															/>
+														</svg>
+														<span>An unknown error occured while generating screenshot. Try again later.</span>
+													</div>
+												</ng-container>
+											</p>
+										</div>
+									</div>
+								</div>
+								<div
+									class="col-row-wrap"
+									[class.max-box-condition]="(conversation | json) !== '{}' && conversation?.screenShots?.length > 4"
+									[class.one-box-condition]="
+										(conversation | json) !== '{}' &&
+										((conversation?.screenShots?.length === 1 && !previewImage) ||
+											(previewImage && conversation?.screenShots?.length === 0))
+									"
+								>
+									<div
+										class="col-row lg-width"
+										[class.initial-box]="
+											(conversation | json) === '{}' || (conversation?.screenShots?.length === 0 && !previewImage)
+										"
+										*ngIf="(!conversation?.screenShots || conversation?.screenShots?.length < 5) && !showPostUrlField"
+									>
+										<div
+											class="info-box"
+											[class.large-width]="renderedOn === 'Desktop'"
+											*ngIf="((conversation | json) === '{}' || conversation?.screenShots?.length === 0) && !uploading"
+										>
+											<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M7.83301 9.9987H9.16634V11.332H7.83301V9.9987ZM7.83301 4.66536H9.16634V8.66536H7.83301V4.66536ZM8.49301 1.33203C4.81301 1.33203 1.83301 4.3187 1.83301 7.9987C1.83301 11.6787 4.81301 14.6654 8.49301 14.6654C12.1797 14.6654 15.1663 11.6787 15.1663 7.9987C15.1663 4.3187 12.1797 1.33203 8.49301 1.33203ZM8.49967 13.332C5.55301 13.332 3.16634 10.9454 3.16634 7.9987C3.16634 5.05203 5.55301 2.66536 8.49967 2.66536C11.4463 2.66536 13.833 5.05203 13.833 7.9987C13.833 10.9454 11.4463 13.332 8.49967 13.332Z"
+													fill="#A26700"
+												/>
+											</svg>
+											<span
+												><strong>Add at least one screenshot </strong>to this topic to save changes (<strong
+													>max. 5
+												</strong>
+												screenshots)</span
+											>
+										</div>
+										<div class="upload-screenshot-box">
+											<figure><img src="./assets/images/add-photo-icon.svg" alt="" /></figure>
+											<h6>Add new screenshot</h6>
+											<button
+												class="convo-btn-normal convo-btn-bordered"
+												data-cs-id="29400224-c402-4d18-bfc0-ace25c203bbd"
+												data-cs-label="Upload a screenshot"
+												data-cs-source="dialog"
+												(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+											>
+												<input
+													(change)="fileChange($event)"
+													class="input-file"
+													title=""
+													type="file"
+													accept=".jpg,.jpeg,.png"
+												/>
+
+												<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M6.49674 10.6667H10.4967V6.66667H13.1634L8.49675 2L3.83008 6.66667H6.49674V10.6667ZM3.83008 12H13.1634V13.3333H3.83008V12Z"
+														fill="#3654FF"
+													/>
+												</svg>
+												<span>Upload a screenshot</span>
+											</button>
+											<button
+												*ngIf="groupState === 'Installed'"
+												class="convo-btn-normal convo-btn-bordered"
+												data-cs-id="29400224-9c40-4d18-bfc0-ace25c203bbd"
+												data-cs-label="Paste post URL"
+												data-cs-source="dialog"
+												(click)="showPostUrlSection($event)"
+											>
+												<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M9.42768 1.9567L8.59873 2.78096C7.49345 3.87998 7.3553 5.5285 8.18425 6.6733L7.12503 7.72653C5.9737 6.85647 4.31579 7.03964 3.25657 8.09286L2.42762 8.91712C1.23024 10.1077 1.18419 12.031 2.33551 13.1758C2.88815 13.7253 3.625 14.0001 4.36185 14.0001C5.14475 14.0001 5.9737 13.6795 6.57239 13.0842L7.40135 12.26C8.50662 11.1609 8.64478 9.51242 7.81583 8.36762L8.87505 7.3144C9.38163 7.68073 9.98032 7.8639 10.533 7.8639C11.3159 7.8639 12.1448 7.54336 12.7435 6.94806L13.5725 6.1238C14.7698 4.9332 14.8159 3.00993 13.6646 1.86512C12.5593 0.674521 10.6251 0.720313 9.42768 1.9567ZM6.75661 11.5731L5.92765 12.3973C5.05264 13.2674 3.76316 13.3132 2.9342 12.5347C2.1513 11.7562 2.19735 10.4283 3.02631 9.60401L3.85526 8.77975C4.31579 8.32183 4.86843 8.13866 5.42107 8.13866C5.78949 8.13866 6.11186 8.23024 6.43424 8.41341L5.55923 9.28346C5.37501 9.46663 5.37501 9.74138 5.55923 9.92455C5.65133 10.0161 5.78949 10.0619 5.8816 10.0619C5.9737 10.0619 6.11186 10.0161 6.20397 9.92455L7.07898 9.0545C7.58556 9.78718 7.4474 10.8862 6.75661 11.5731ZM12.9277 5.43691L12.0988 6.26117C11.3619 6.99385 10.3027 7.13123 9.51979 6.62751L10.3948 5.75746C10.579 5.57429 10.579 5.29954 10.3948 5.11637C10.2106 4.9332 9.93427 4.9332 9.75006 5.11637L8.87505 5.98642C8.41452 5.20795 8.55268 4.10894 9.24347 3.42206L10.0724 2.5978C10.533 2.13987 11.0856 1.9567 11.6382 1.9567C12.1448 1.9567 12.6514 2.13987 13.0198 2.50621C13.8488 3.28468 13.8027 4.56686 12.9277 5.43691Z"
+														fill="#3654FF"
+													/>
+													<path
+														fill-rule="evenodd"
+														clip-rule="evenodd"
+														d="M13.8444 1.69137C12.631 0.388642 10.5346 0.456235 9.24978 1.78105L8.42245 2.60369C7.29116 3.72857 7.09304 5.4035 7.86185 6.64133L7.09692 7.40193C5.84905 6.59529 4.16504 6.83699 3.0803 7.91559L2.25134 8.73985C0.963238 10.0207 0.902204 12.1032 2.15924 13.3531C2.76192 13.9524 3.5636 14.2501 4.36185 14.2501C5.20901 14.2501 6.10188 13.9046 6.74867 13.2615L7.57762 12.4372C8.70892 11.3124 8.90704 9.63742 8.13823 8.39959L8.90589 7.63628C9.41444 7.954 9.99143 8.1139 10.533 8.1139C11.3801 8.1139 12.273 7.76846 12.9198 7.12534L13.7487 6.30108C15.0356 5.02147 15.0978 2.94168 13.8444 1.69137ZM13.4813 2.03521C12.4842 0.961095 10.7162 0.985572 9.60727 2.13062L9.60399 2.13401L8.775 2.95824C7.75115 3.9763 7.63472 5.48813 8.38674 6.52668L8.51213 6.69984L7.14743 8.05681L6.97431 7.92598C5.93315 7.13918 4.4138 7.29475 3.43285 8.27014L2.60389 9.0944C1.49724 10.1948 1.46617 11.9588 2.51179 12.9985C3.01438 13.4983 3.6864 13.7501 4.36185 13.7501C5.08049 13.7501 5.84553 13.4544 6.39612 12.9069L7.22508 12.0827C8.24893 11.0646 8.36536 9.5528 7.61334 8.51424L7.48795 8.34108L8.84941 6.98734L9.02154 7.11182C9.48575 7.44751 10.0332 7.6139 10.533 7.6139C11.2516 7.6139 12.0166 7.31825 12.5672 6.77078L13.3962 5.94652C14.5028 4.84614 14.5339 3.08209 13.4883 2.0424L13.4813 2.03521ZM11.6382 2.2067C11.1442 2.2067 10.6573 2.36874 10.2487 2.77507L9.41975 3.59933C8.89326 4.12284 8.7329 4.91567 8.95187 5.55748L9.57378 4.93909C9.85551 4.65896 10.2893 4.65896 10.5711 4.93909C10.8536 5.22 10.8536 5.65382 10.5711 5.93474L9.93951 6.56273C10.5737 6.81149 11.3482 6.65489 11.9225 6.0839L12.7514 5.25964C13.5425 4.47303 13.5585 3.35501 12.8487 2.68845L12.8435 2.68356C12.5272 2.36904 12.0866 2.2067 11.6382 2.2067ZM9.89615 2.42052C10.4086 1.911 11.027 1.7067 11.6382 1.7067C12.2019 1.7067 12.7733 1.90996 13.1935 2.3264C14.1389 3.21698 14.062 4.66156 13.104 5.61419L12.275 6.43845C11.4649 7.244 10.2775 7.41227 9.38452 6.83776L9.123 6.6695L10.2185 5.58018C10.3044 5.49476 10.3044 5.37907 10.2185 5.29365C10.1318 5.20744 10.013 5.20744 9.92633 5.29365L8.82348 6.39025L8.65988 6.11371C8.13888 5.23303 8.29841 4.00921 9.0672 3.24478L9.89615 2.42052ZM5.42107 8.38866C4.92702 8.38866 4.44018 8.55069 4.03154 8.95703L3.20258 9.78129C2.46181 10.5179 2.43663 11.6844 3.10796 12.3549C3.82935 13.0297 4.96338 13.0036 5.75138 12.2201L6.58033 11.3958C7.11264 10.8665 7.26435 10.0734 7.01869 9.467L6.38024 10.1018C6.23809 10.2432 6.0351 10.3119 5.8816 10.3119C5.72809 10.3119 5.5251 10.2432 5.38295 10.1018C5.10044 9.82092 5.10044 9.3871 5.38295 9.10618L6.0044 8.48826C5.81853 8.42133 5.62848 8.38866 5.42107 8.38866ZM3.67899 8.60247C4.19141 8.09296 4.80984 7.88866 5.42107 7.88866C5.83596 7.88866 6.20058 7.99311 6.55774 8.19605L6.84389 8.35863L5.7355 9.46074C5.64959 9.54616 5.64959 9.66185 5.7355 9.74728C5.75305 9.76473 5.78007 9.78226 5.81281 9.79529C5.8466 9.80873 5.87272 9.81193 5.8816 9.81193C5.89047 9.81193 5.9166 9.80873 5.95039 9.79529C5.98313 9.78226 6.01014 9.76473 6.0277 9.74728L7.11464 8.66649L7.28461 8.91232C7.86849 9.75679 7.6985 10.9891 6.93288 11.7504L6.10393 12.5746C5.14286 13.5302 3.69971 13.5966 2.76306 12.717L2.75786 12.7121C1.86596 11.8252 1.93382 10.3378 2.85003 9.42673L3.67899 8.60247Z"
+														fill="#3654FF"
+													/>
+												</svg>
+												<span>Paste post URL</span>
+											</button>
+										</div>
+									</div>
+
+									<div class="info-box" *ngIf="(conversation | json) !== '{}' && conversation?.screenShots?.length > 4">
+										<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M7.83301 9.9987H9.16634V11.332H7.83301V9.9987ZM7.83301 4.66536H9.16634V8.66536H7.83301V4.66536ZM8.49301 1.33203C4.81301 1.33203 1.83301 4.3187 1.83301 7.9987C1.83301 11.6787 4.81301 14.6654 8.49301 14.6654C12.1797 14.6654 15.1663 11.6787 15.1663 7.9987C15.1663 4.3187 12.1797 1.33203 8.49301 1.33203ZM8.49967 13.332C5.55301 13.332 3.16634 10.9454 3.16634 7.9987C3.16634 5.05203 5.55301 2.66536 8.49967 2.66536C11.4463 2.66536 13.833 5.05203 13.833 7.9987C13.833 10.9454 11.4463 13.332 8.49967 13.332Z"
+												fill="#A26700"
+											/>
+										</svg>
+										<span
+											>You can add only a maximum of 5 screenshots under one topic. Remove an existing screenshot to add
+											another one.</span
+										>
+									</div>
+
+									<div class="screenshot-box-wrap">
+										<div class="screenshot-box" *ngIf="previewImage">
+											<input
+												type="text"
+												class="convo-input"
+												disabled="true"
+												name="title"
+												placeholder="Add a description..."
+											/>
+											<div class="screenshot-wrap">
+												<span class="spinner-overlay"></span>
+												<span class="spinner-wrap"><span class="spinner"></span></span>
+												<img [src]="previewImage" alt="" />
+											</div>
+										</div>
+										<div class="screenshot-box" *ngFor="let conv of conversation?.screenShots; let i = index">
+											<input
+												type="text"
+												class="convo-input"
+												(ngModelChange)="changeInTitle($event, i)"
+												[ngModel]="conv?.title"
+												[defaultValue]="conv?.title"
+												name="title"
+												maxlength="120"
+												[appFocusInput]="true"
+												placeholder="Add a description..."
+											/>
+											<div class="screenshot-wrap">
+												<button
+													class="delete-btn"
+													(click)="openDeleteScreenshot($event, i); showDeleteScreenshotPopup = true"
+													data-cs-id="3a78c365-3880-43ba-b76c-74749613e45f"
+													data-cs-label="Delete screenshot"
+													data-cs-source="dialog"
+												>
+													<svg
+														width="21"
+														height="20"
+														viewBox="0 0 21 20"
+														fill="none"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path
+															d="M5.00326 15.8333C5.00326 16.75 5.75326 17.5 6.66992 17.5H13.3366C14.2533 17.5 15.0033 16.75 15.0033 15.8333V5.83333H5.00326V15.8333ZM6.66992 7.5H13.3366V15.8333H6.66992V7.5ZM12.9199 3.33333L12.0866 2.5H7.91992L7.08659 3.33333H4.16992V5H15.8366V3.33333H12.9199Z"
+															fill="white"
+														/>
+													</svg>
+												</button>
+												<div
+													class="delete-screenshot-pop"
+													*ngIf="showDeleteScreenshotPopup && i === selectedConvScreenshotIndex"
+												>
+													<button
+														class="cancel-delete"
+														(click)="
+															recordButtonClick($event, null, null, null, groupProfilePage);
+															showDeleteScreenshotPopup = false
+														"
+														data-cs-id="2b29d38a-a214-4cb2-babc-f529b1c567d4"
+														data-cs-label="Cross"
+														data-cs-source="dialog"
+													>
+														<svg
+															width="16"
+															height="16"
+															viewBox="0 0 16 16"
+															fill="none"
+															xmlns="http://www.w3.org/2000/svg"
+														>
+															<path
+																d="M12.2005 3.80714C11.9405 3.54714 11.5205 3.54714 11.2605 3.80714L8.00047 7.06047L4.74047 3.80047C4.48047 3.54047 4.06047 3.54047 3.80047 3.80047C3.54047 4.06047 3.54047 4.48047 3.80047 4.74047L7.06047 8.00047L3.80047 11.2605C3.54047 11.5205 3.54047 11.9405 3.80047 12.2005C4.06047 12.4605 4.48047 12.4605 4.74047 12.2005L8.00047 8.94047L11.2605 12.2005C11.5205 12.4605 11.9405 12.4605 12.2005 12.2005C12.4605 11.9405 12.4605 11.5205 12.2005 11.2605L8.94047 8.00047L12.2005 4.74047C12.4538 4.48714 12.4538 4.06047 12.2005 3.80714V3.80714Z"
+																fill="#707084"
+															/>
+														</svg>
+													</button>
+													<div class="delete-screenshot-pop-content">
+														<h6>Are you sure you want to remove this screenshot?</h6>
+														<button
+															class="remove-screenshot-btn"
+															(click)="deleteScreenshot($event); showDeleteScreenshotPopup = false"
+															data-cs-id="450cf416-ed45-4884-a132-429d39885760"
+															data-cs-label="Remove"
+															data-cs-source="dialog"
+														>
+															<svg
+																width="21"
+																height="20"
+																viewBox="0 0 21 20"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg"
+															>
+																<path
+																	d="M5.50033 15.8333C5.50033 16.75 6.25033 17.5 7.16699 17.5H13.8337C14.7503 17.5 15.5003 16.75 15.5003 15.8333V5.83333H5.50033V15.8333ZM7.16699 7.5H13.8337V15.8333H7.16699V7.5ZM13.417 3.33333L12.5837 2.5H8.41699L7.58366 3.33333H4.66699V5H16.3337V3.33333H13.417Z"
+																	fill="white"
+																/>
+															</svg>
+															<span>Remove</span>
+														</button>
+													</div>
+												</div>
+												<img [src]="conv.screenShotUrl" alt="" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Remove Topic Modal -->
+<div class="modal fade delete-topic-modal" id="removeTopic" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					data-dismiss="modal"
+					(click)="backToEditFeaturePopup($event)"
+					data-cs-id="34bc1e2c-78ad-42b9-86b1-53722d0c7dea"
+					data-cs-label="Back"
+					data-cs-source="dialog"
+				>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19.0005 10.9988H7.83047L12.7105 6.11875C13.1005 5.72875 13.1005 5.08875 12.7105 4.69875C12.3205 4.30875 11.6905 4.30875 11.3005 4.69875L4.71047 11.2888C4.32047 11.6788 4.32047 12.3087 4.71047 12.6987L11.3005 19.2888C11.6905 19.6788 12.3205 19.6788 12.7105 19.2888C13.1005 18.8988 13.1005 18.2687 12.7105 17.8787L7.83047 12.9987H19.0005C19.5505 12.9987 20.0005 12.5487 20.0005 11.9988C20.0005 11.4488 19.5505 10.9988 19.0005 10.9988Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<h5 class="modal-title">Remove topic</h5>
+				<button
+					type="button"
+					data-dismiss="modal"
+					data-cs-id="06d3e4d3-b6e9-427f-a672-8c130641b492"
+					data-cs-label="Cross"
+					data-cs-source="dialog"
+					(click)="backToEditFeaturePopup($event)"
+					class="close"
+					aria-label="Close"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Are you sure you want to remove <strong>{{ conversation?.topicName }}</strong> topic?
+				</p>
+			</div>
+			<div class="modal-footer border-0">
+				<button
+					type="button"
+					class="btn btn-cancel convo-btn-bordered"
+					data-dismiss="modal"
+					data-cs-id="75f741c2-dd25-47c6-913b-e6c2e57dcd20"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+					(click)="backToEditFeaturePopup($event)"
+				>
+					Cancel
+				</button>
+				<button
+					type="button"
+					class="btn convo-btn-danger"
+					data-cs-id="3a5d03bc-7b95-4f81-b12d-d4f06d179ee8"
+					data-cs-label="Remove"
+					data-cs-source="dialog"
+					(click)="deleteTopicModel($event, selectedIndex)"
+					data-dismiss="modal"
+				>
+					Remove
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showFeatureConversationVideo">
+	<app-what-this-video
+		[title]="'Featured conversations'"
+		[videoLink]="'./assets/videos/feature-conversations.mp4'"
+		(closeVideoPlayer)="closeVideoPlayer($event)"
+	></app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

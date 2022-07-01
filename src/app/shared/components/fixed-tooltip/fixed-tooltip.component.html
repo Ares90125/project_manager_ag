@@ -1,0 +1,7 @@
+<div class="info-tooltip" [ngClass]="{'exception-tooltip': exception === true}">
+	<h3 class="title">{{ title }}</h3>
+	<p class="content">{{ content }}</p>
+	<div class="next-btn-wrap">
+		<button class="convo-btn-bordered convo-btn-normal" (click)="triggerOnboardCount()">{{ btnText }}</button>
+	</div>
+</div>

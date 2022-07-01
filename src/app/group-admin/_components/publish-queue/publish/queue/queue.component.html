@@ -1,0 +1,784 @@
+<div class="publish-queue-body">
+	<div class="container">
+		<div class="page-headers" *ngIf="!showSubNav && !loadingRecommendationsAndPosts">
+			<h1>Create a post</h1>
+			<h6>Write a post to send in your group right away or schedule for later</h6>
+		</div>
+
+		<div *ngIf="false" class="group-item-wrapper">
+			<div class="group-item-wrapper-content">
+				<ul class="list-unstyled">
+					<li>
+						<figure>
+							<app-fb-group-cover-image
+								[coverImageUrl]="selectedGroup.coverImageUrl"
+								[fbGroupId]="selectedGroup.fbGroupId"
+							></app-fb-group-cover-image>
+						</figure>
+						<h5>
+							<span>{{ selectedGroup?.name }}</span>
+							<a
+								class="link-new-tab"
+								href="https://www.facebook.com/groups/{{ selectedGroup?.fbGroupId }}"
+								style="display: inline-block"
+								target="_blank"
+								rel="noopener"
+							>
+								<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M11.2899 7.6494C10.9776 7.6494 10.7244 7.90257 10.7244 8.21492V12.5046C10.7244 12.9812 10.3366 13.3689 9.86002 13.3689H1.99565C1.51905 13.3689 1.13129 12.9812 1.13129 12.5046V4.64022C1.13129 4.16361 1.51905 3.77585 1.99565 3.77585H6.28531C6.59763 3.77585 6.85084 3.52265 6.85084 3.21033C6.85084 2.89801 6.59763 2.64481 6.28531 2.64481H1.99565C0.895396 2.64481 0.000244141 3.53996 0.000244141 4.64022V12.5046C0.000244141 13.6049 0.895396 14.5 1.99565 14.5H9.85999C10.9603 14.5 11.8554 13.6049 11.8555 12.5046V8.21492C11.8555 7.90257 11.6023 7.6494 11.2899 7.6494Z"
+									/>
+									<path
+										d="M13.4345 0.500031H9.14489C8.83254 0.500031 8.57936 0.753234 8.57936 1.06555C8.57936 1.37787 8.83254 1.63108 9.14489 1.63108H12.869V5.35521C12.869 5.66753 13.1222 5.92074 13.4345 5.92074C13.7469 5.92074 14.0001 5.66753 14.0001 5.35521V1.06555C14.0001 0.753234 13.7469 0.500031 13.4345 0.500031Z"
+									/>
+									<path
+										d="M13.8348 0.665621C13.6139 0.444793 13.2558 0.444793 13.035 0.665621L5.17062 8.52996C4.94976 8.75081 4.94976 9.10888 5.17062 9.32973C5.28103 9.44018 5.42579 9.49538 5.57052 9.49538C5.71528 9.49538 5.86001 9.44015 5.97042 9.32973L13.8348 1.4654C14.0556 1.24454 14.0556 0.886477 13.8348 0.665621Z"
+									/>
+								</svg>
+							</a>
+						</h5>
+					</li>
+				</ul>
+				<!-- <div class="publish-queue-filter">
+					<button
+						(click)="recordButtonClick($event, selectedGroup)"
+						[class.not-all-active]="
+							!viewScheduledPost || !viewSuggestedTime || !viewSuggestedPost || !viewModeratorPost
+						"
+						class="chips-button"
+						data-cs-id="d4bd9751-0b9f-4b33-a333-b7f8ff1e326d"
+						data-cs-label="Filter"
+						data-cs-source="page"
+						data-target="#mobileFilerts"
+						data-toggle="modal"
+					>
+						<img alt="" src="assets/images/filter-icon.svg" />
+						<span>Filter</span>
+					</button>
+				</div> -->
+			</div>
+		</div>
+
+		<div class="calendar-container">
+			<button
+				(click)="moveRight($event)"
+				class="move-btn move-left stop"
+				data-cs-id="0b5fc5e3-8085-45f1-ab8e-51afd28b849f"
+				data-cs-label="Move Right"
+				data-cs-source="page"
+			>
+				<em></em>
+			</button>
+			<button
+				(click)="moveLeft($event)"
+				class="move-btn move-right"
+				data-cs-id="9a0107bb-f0da-41e9-9d84-479559fa8c46"
+				data-cs-label="Move left"
+				data-cs-source="page"
+			>
+				<em></em>
+			</button>
+			<div class="calendar-content" id="calendarSlider">
+				<div *ngFor="let date of calenderDates; let i = index" class="box">
+					<!-- <div (click)="changeSelectedDate(i)" [ngClass]="{ selected: i === selectedDateId }" class="date-box"> -->
+					<div
+						(click)="changeSelectedDate(i, $event)"
+						class="date-box"
+						data-cs-parent-label="Schedule posts"
+						data-cs-source="page"
+					>
+						<span class="date-number"> {{ date[1] }}</span>
+						<span class="date-month">{{ date[0] }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content Shimmer -->
+		<div [hidden]="!loadingRecommendationsAndPosts" class="publish-queue-content-shimmer">
+			<div class="date-shimmer"></div>
+			<div class="suggested-post-wrapper">
+				<h6 class="post-box-title"></h6>
+				<div class="post-box-wrapper">
+					<div class="shimmer-primary"></div>
+					<div class="shimmer-secondary"></div>
+				</div>
+
+				<h6 class="post-box-title"></h6>
+				<div class="post-box-wrapper">
+					<div class="shimmer-ternary"></div>
+				</div>
+				<div class="post-box-wrapper">
+					<div class="shimmer-ternary"></div>
+				</div>
+				<!-- <div class="post-box-wrapper">
+					<div class="shimmer-ternary"></div>
+				</div> -->
+
+				<!-- <h6 class="post-box-title"></h6>
+				<div class="post-box-wrapper">
+					<div class="shimmer-primary"></div>
+					<div class="shimmer-secondary"></div>
+				</div> -->
+			</div>
+		</div>
+
+		<div [hidden]="loadingRecommendationsAndPosts" class="publish-queue-content-body">
+			<div
+				(click)="toPostPageRedirect(null, $event, null)"
+				*ngIf="currentUser"
+				class="write-post-wrapper"
+				data-cs-id="3fa11823-568b-47f6-9126-d9cdbdd53213"
+				data-cs-label="To post page"
+				data-cs-source="page"
+			>
+				<figure>
+					<ng-container *ngIf="userProfilePicture; else defaultCoverImage1">
+						<img alt="" src="{{ userProfilePicture }}" />
+					</ng-container>
+					<ng-template #defaultCoverImage1></ng-template>
+				</figure>
+				<div class="write-post">
+					<div>
+						Hello <strong>{{ currentUser.givenname }},</strong>
+					</div>
+					<div class="text-secondary">Click here to post something...</div>
+				</div>
+			</div>
+
+			<div *ngFor="let date of calenderDates; let i = index" class="date-wrapper-parent">
+				<div [attr.id]="i" class="date-wrapper">
+					<div *ngIf="i === 0" class="date"><strong>Today,</strong> {{ date[4] }} {{ date[1] }}</div>
+					<div *ngIf="i !== 0" class="date">
+						<strong>{{ date[4] }} {{ date[1] }}</strong>
+					</div>
+				</div>
+
+				<div class="all-posts-wrapper">
+					<div
+						*ngIf="recommendations[date[0] + ' ' + date[1]]"
+						[hidden]="!viewSuggestedTime"
+						class="create-own-post-wrapper"
+					>
+						<h6 class="post-box-title" data-test-id="create-own-post-list-posts-screen">
+							Create your own posts
+							<strong class="title-tag" data-test-id="subheading-create-own-post"
+								>SUGGESTED POSTING TIMES FOR THE DAY</strong
+							>
+						</h6>
+
+						<ng-container *ngFor="let recommendation of recommendations[date[0] + ' ' + date[1]]">
+							<!-- Visible in desktop -->
+							<div class="d-none d-sm-none d-md-block">
+								<div *ngIf="recommendation.type === 'Timing'" class="post-box-wrapper">
+									<div class="post-box-left" data-test-id="heading-create-own-post-box">
+										<div>
+											<span class="text-secondary">Schedule a post for</span>
+											<strong>
+												{{ recommendation.toBePostedAtInLocalTime }}
+											</strong>
+											<span>for high engagement</span>
+										</div>
+									</div>
+
+									<div class="post-box-right">
+										<button
+											(click)="toPostPageRedirect(recommendation, $event, recommendation.toBePostedAtUTCTicks)"
+											class="schedule-btn"
+											data-cs-id="f164d50a-a353-48bc-bd15-c2cbe21de3f1"
+											data-cs-label="Schedule"
+											data-cs-source="page"
+											data-test-id="button-schedule-suggest-timings"
+										>
+											Schedule
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<!-- Visible in Mobile -->
+							<div class="d-block d-sm-block d-md-none">
+								<div
+									class="post-box-wrapper"
+									*ngIf="recommendation.type === 'Timing'"
+									(click)="toPostPageRedirect(recommendation, $event, recommendation.toBePostedAtUTCTicks)"
+									data-cs-id="f164d50a-a353-48bc-bd15-c2cbe21de3f1"
+									data-cs-label="Suggested posts by Convosight"
+									data-cs-source="page"
+								>
+									<div class="post-box-left">
+										<div>
+											<span class="text-secondary">Schedule a post for</span>
+											<strong>
+												{{ recommendation.toBePostedAtInLocalTime }}
+											</strong>
+										</div>
+									</div>
+
+									<div class="post-box-right">
+										<button class="mobile-visible-btn">
+											<svg fill="none" height="10" viewBox="0 0 10 10" width="10" xmlns="http://www.w3.org/2000/svg">
+												<path
+													clip-rule="evenodd"
+													d="M4.55813 1.06693C4.31405 0.822853 4.31405 0.42713 4.55813 0.183056C4.8022 -0.0610186 5.19793 -0.0610186 5.442 0.183056L9.81694 4.558C10.061 4.80207 10.061 5.1978 9.81694 5.44187L5.442 9.81681C5.19793 10.0609 4.8022 10.0609 4.55813 9.81681C4.31405 9.57274 4.31405 9.17702 4.55813 8.93294L7.86615 5.62492H0.625114C0.279941 5.62492 0.00012207 5.3451 0.00012207 4.99993C0.00012207 4.65476 0.279941 4.37494 0.625114 4.37494H7.86614L4.55813 1.06693Z"
+													fill=""
+													fill-rule="evenodd"
+												/>
+											</svg>
+										</button>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+
+					<div
+						[hidden]="!viewSuggestedPost"
+						class="suggested-post-wrapper"
+						*ngIf="recommendations[date[0] + ' ' + date[1]]"
+					>
+						<h6 class="post-box-title" data-test-id="suggested-post-listpost">
+							Suggested posts <span>by Convosight</span>
+						</h6>
+						<ng-container *ngFor="let recommendation of recommendations[date[0] + ' ' + date[1]]">
+							<div *ngIf="recommendation.type === 'ContentType'">
+								<div class="group-pill" hidden>
+									<app-fb-group-cover-image
+										[coverImageUrl]="selectedGroup.coverImageUrl"
+										[fbGroupId]="selectedGroup.fbGroupId"
+									></app-fb-group-cover-image>
+									<span>{{ selectedGroup.name }}</span>
+								</div>
+								<div class="post-box-wrapper">
+									<div class="d-flex">
+										<div class="post-box-left">
+											<figure data-test-id="figure-image-suggested-post">
+												<img alt="" src="{{ recommendation.iconUrl }}" />
+											</figure>
+											<div
+												class="sugested-post-content"
+												data-test-id="recommendation-heading-description-suggested-post"
+											>
+												<h5>{{ recommendation.headline }}</h5>
+												<p>
+													{{ recommendation.description }}
+												</p>
+											</div>
+										</div>
+										<div
+											(click)="toPostPageRedirect(recommendation, $event, recommendation.toBePostedAtUTCTicks)"
+											class="post-box-right"
+											data-cs-id="f164d50a-a353-48bc-bd15-c2cbe21de3f1"
+											data-cs-label="Suggested posts by Convosight"
+											data-cs-source="page"
+										>
+											<button class="schedule-btn" data-test-id="button-schedule-suggested-post">
+												<small>Schedule this post for </small>{{ recommendation.toBePostedAtInLocalTime }}
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+
+					<div
+						*ngIf="selectedGroup && posts[date[0] + ' ' + date[1]]"
+						[hidden]="!viewScheduledPost"
+						class="scheduled-post-wrapper"
+					>
+						<h6 *ngIf="isScheduledTasksExists" class="post-box-title">Scheduled posts</h6>
+
+						<div class="group-pill" hidden>
+							<app-fb-group-cover-image
+								[coverImageUrl]="selectedGroup.coverImageUrl"
+								[fbGroupId]="selectedGroup.fbGroupId"
+							></app-fb-group-cover-image>
+							<span>
+								{{ selectedGroup.name }}
+							</span>
+						</div>
+
+						<ng-container *ngFor="let scheduledPost of posts[date[0] + ' ' + date[1]]; let i = index">
+							<div *ngIf="!scheduledPost.campaignTaskId" class="post-box-wrapper">
+								<div class="scheduled-time">
+									{{ scheduledPost.toBePostedAtInLocalTime }}
+								</div>
+								<div class="post-box-header">
+									<figure>
+										<img alt="" src="{{ scheduledPost.createdByImgUrl }}" />
+									</figure>
+									<div class="user-info">
+										<div>
+											<strong>{{ scheduledPost.createdByName }}</strong>
+										</div>
+										<ul class="list-unstyled">
+											<li>
+												<img alt="" src="assets/images/user-icon.svg" />
+												<span>{{
+													scheduledPost.createdByRole && scheduledPost.createdByRole === 'Moderator'
+														? scheduledPost.createdByRole
+														: 'Administrator'
+												}}</span>
+											</li>
+											<li>Scheduled</li>
+										</ul>
+									</div>
+								</div>
+								<div class="post-box-body" data-test-id="scheduled-post-body">
+									<p class="scheduled-post-text" *ngIf="scheduledPost?.stringEnum === 'notClicked'">
+										{{ scheduledPost.shortString }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeMoreClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See More</span
+										>
+									</p>
+									<p class="scheduled-post-text" *ngIf="scheduledPost?.stringEnum === 'seeMoreClicked'">
+										{{ scheduledPost.text }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeLessClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See Less</span
+										>
+									</p>
+
+									<p class="scheduled-post-text" *ngIf="scheduledPost?.stringEnum === 'seeLessClicked'">
+										{{ scheduledPost.shortString }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeMoreClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See More</span
+										>
+									</p>
+
+									<div [ngClass]="scheduledPost.originalPostText ? 'reshared-post' : ''" class="attached-media">
+										<p class="originalText">
+											{{ scheduledPost.originalPostText ? scheduledPost.originalPostText : '' }}
+										</p>
+										<ul *ngIf="scheduledPost.imageUrls && scheduledPost.imageUrls?.length > 0" class="list-unstyled">
+											<li *ngFor="let imgUrl of scheduledPost.imageUrls; let i = index">
+												<img
+													alt=""
+													(error)="showUpdatedImageFromFacebook($event, scheduledPost.fbPostId)"
+													[src]="imgUrl"
+												/>
+											</li>
+										</ul>
+										<ul *ngIf="scheduledPost.videoUrls && scheduledPost.videoUrls?.length > 0" class="list-unstyled">
+											<li *ngFor="let vidUrl of scheduledPost.videoUrls">
+												<span class="video-play-icon">
+													<svg
+														fill="none"
+														height="26"
+														viewBox="0 0 26 26"
+														width="26"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<circle
+															cx="13"
+															cy="13"
+															fill="black"
+															fill-opacity="0.9"
+															r="12.5"
+															stroke="white"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+														/>
+														<path
+															d="M17.4945 12.6055C17.7512 12.8057 17.7512 13.1938 17.4945 13.394L10.8075 18.6099C10.4792 18.866 10 18.632 10 18.2157L10 7.78388C10 7.36748 10.4792 7.13353 10.8075 7.38963L17.4945 12.6055Z"
+															fill="white"
+														/>
+													</svg>
+												</span>
+												<video [src]="vidUrl" width="60px"></video>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="post-box-footer">
+									<div class="footer-left">
+										Will be published on
+										<span data-test-id="post-time"
+											>{{ scheduledPost.toBePostedAtInLocalDate }} , {{ scheduledPost.toBePostedAtInLocalTime }}</span
+										>
+										(UTC{{ userTimezone }})
+									</div>
+									<div
+										*ngIf="isScheduledPostModificationAllowed(scheduledPost.createdByRole, scheduledPost.createdById)"
+										class="footer-right"
+									>
+										<ul [hidden]="this.scheduledPostsToBeDeletedHashMap[scheduledPost.id]" class="list-unstyled">
+											<li (click)="showDeleteConfirmation(scheduledPost)">
+												<a
+													(click)="recordButtonClick($event, selectedGroup); tooltip.toggle()"
+													class="hover-danger"
+													data-cs-id="6986d445-432a-4b2e-9d14-40aee715ff97"
+													data-cs-label="Delete"
+													data-cs-source="page"
+													href="javascript:"
+													matTooltip="Remove this post from the queue"
+													matTooltipPosition="above"
+													#tooltip="matTooltip"
+													data-cs-parent-label="Tooltip"
+													data-cs-source="page"
+													(mouseenter)="tooltipHovered($event)"
+													>Delete</a
+												>
+											</li>
+											<li
+												(click)="editPost(scheduledPost)"
+												(click)="recordButtonClick($event)"
+												data-cs-id="a9c6d631-8ab6-4ae2-aca3-c46944d02b10"
+												data-cs-label="Delete"
+												data-cs-source="page"
+											>
+												<a data-test-id="edit-post-queue" href="javascript:">Edit</a>
+											</li>
+										</ul>
+										<ul [hidden]="!this.scheduledPostsToBeDeletedHashMap[scheduledPost.id]" class="list-unstyled">
+											<li class="ml-0">
+												<span>Are you sure you want to delete?</span>
+											</li>
+											<li
+												(click)="cancelDeleteConfirmation(scheduledPost)"
+												data-cs-id="012aebc3-9540-4632-9e18-56e0b7f5cd4d"
+												data-cs-label="Cancel"
+												data-cs-source="page"
+											>
+												<a href="javascript:">Cancel</a>
+											</li>
+											<li
+												(click)="deletePost(scheduledPost, $event)"
+												data-cs-id="ffd2d7da-fc90-4421-9222-d98431bf76c4"
+												data-cs-label="Confirm"
+												data-cs-source="page"
+											>
+												<a class="danger" href="javascript:">Confirm</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+
+						<h6 *ngIf="isCampaignPostsExists" class="post-box-title">Campaign Tasks</h6>
+
+						<div class="group-pill" hidden>
+							<app-fb-group-cover-image
+								[coverImageUrl]="selectedGroup.coverImageUrl"
+								[fbGroupId]="selectedGroup.fbGroupId"
+							></app-fb-group-cover-image>
+							<span>
+								{{ selectedGroup.name }}
+							</span>
+						</div>
+
+						<ng-container *ngFor="let scheduledPost of posts[date[0] + ' ' + date[1]]; let i = index">
+							<div *ngIf="scheduledPost.campaignTaskId" class="post-box-wrapper">
+								<div class="scheduled-time">
+									{{ scheduledPost.toBePostedAtInLocalTime }}
+								</div>
+
+								<div class="post-box-header">
+									<figure>
+										<img alt="" src="{{ scheduledPost.createdByImgUrl }}" />
+									</figure>
+									<div class="user-info">
+										<div>
+											<strong>{{ scheduledPost.createdByName }}</strong>
+										</div>
+										<ul class="list-unstyled">
+											<li>
+												<img alt="" src="assets/images/user-icon.svg" />
+												<span>{{
+													scheduledPost.createdByRole && scheduledPost.createdByRole === 'Moderator'
+														? scheduledPost.createdByRole
+														: 'Administrator'
+												}}</span>
+											</li>
+											<li>Scheduled</li>
+										</ul>
+									</div>
+								</div>
+								<div class="post-box-body">
+									<p *ngIf="scheduledPost?.stringEnum === 'notClicked'">
+										{{ scheduledPost.shortString }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeMoreClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See More</span
+										>
+									</p>
+									<p *ngIf="scheduledPost?.stringEnum === 'seeMoreClicked'">
+										{{ scheduledPost.text }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeLessClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See Less</span
+										>
+									</p>
+
+									<p *ngIf="scheduledPost?.stringEnum === 'seeLessClicked'">
+										{{ scheduledPost.shortString }}
+										<span
+											(click)="posts[date[0] + ' ' + date[1]][i]['stringEnum'] = 'seeMoreClicked'"
+											*ngIf="scheduledPost?.text?.length > 250"
+											class="view-more"
+											>See More</span
+										>
+									</p>
+
+									<div class="attached-media">
+										<ul *ngIf="scheduledPost.imageUrls" class="list-unstyled">
+											<li *ngFor="let imgUrl of scheduledPost.imageUrls; let i = index">
+												<img (click)="openImgGallery(scheduledPost.imageUrls, i)" alt="" src="{{ imgUrl }}" />
+											</li>
+										</ul>
+										<ul *ngIf="scheduledPost.videoUrls" class="list-unstyled">
+											<li
+												(click)="openVideoGallery(scheduledPost.videoUrls)"
+												*ngFor="let vidUrl of scheduledPost.videoUrls"
+											>
+												<span class="video-play-icon">
+													<svg
+														fill="none"
+														height="26"
+														viewBox="0 0 26 26"
+														width="26"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<circle
+															cx="13"
+															cy="13"
+															fill="black"
+															fill-opacity="0.9"
+															r="12.5"
+															stroke="white"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+														/>
+														<path
+															d="M17.4945 12.6055C17.7512 12.8057 17.7512 13.1938 17.4945 13.394L10.8075 18.6099C10.4792 18.866 10 18.632 10 18.2157L10 7.78388C10 7.36748 10.4792 7.13353 10.8075 7.38963L17.4945 12.6055Z"
+															fill="white"
+														/>
+													</svg>
+												</span>
+												<video src="{{ vidUrl }}" width="60px"></video>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div *ngIf="scheduledPost.campaignTaskDetails" class="content-task-details-wrapper">
+									<h6 (click)="showDetails()" [ngClass]="showAdditionalInfo ? 'active' : ' '">
+										Additional Info
+										<svg fill="none" height="6" viewBox="0 0 9 6" width="9" xmlns="http://www.w3.org/2000/svg">
+											<path
+												clip-rule="evenodd"
+												d="M9 1.06546L7.9011 -4.80345e-08L4.5 3.27603L1.0989 -3.45368e-07L-4.65728e-08 1.06546L4.5 5.4L9 1.06546Z"
+												fill="#0065FF"
+												fill-rule="evenodd"
+											/>
+										</svg>
+									</h6>
+									<div class="table-wrapper">
+										<table aria-describedby="">
+											<tr>
+												<td>
+													<small>Brand Name</small>
+													<div *ngIf="scheduledPost.campaignTaskDetails">
+														{{ scheduledPost.campaignTaskDetails.brandName }}
+													</div>
+												</td>
+												<td>
+													<small>Campaign Name</small>
+													<div *ngIf="scheduledPost.campaignTaskDetails">
+														{{ scheduledPost.campaignTaskDetails.campaignName }}
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<small>Post Type</small>
+													<div>{{ scheduledPost.contentType }}</div>
+												</td>
+												<td>
+													<small>Post time</small>
+													<div>Before {{ scheduledPost.toBePostedAtInLocalTime }}</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+								<div class="post-box-footer">
+									<div class="footer-left">
+										Will be published on
+										<span
+											>{{ scheduledPost.toBePostedAtInLocalDate }} , {{ scheduledPost.toBePostedAtInLocalTime }}</span
+										>
+										(UTC{{ userTimezone }})
+									</div>
+									<div
+										*ngIf="
+											isScheduledPostModificationAllowedForCampaignTask(
+												scheduledPost.createdByRole,
+												scheduledPost.createdById,
+												scheduledPost.createdByName
+											)
+										"
+										class="footer-right"
+									>
+										<ul [hidden]="this.scheduledPostsToBeDeletedHashMap[scheduledPost.id]" class="list-unstyled">
+											<li (click)="editPost(scheduledPost)">
+												<a href="javascript:">Edit</a>
+											</li>
+										</ul>
+										<ul [hidden]="!this.scheduledPostsToBeDeletedHashMap[scheduledPost.id]" class="list-unstyled">
+											<li class="ml-0">
+												<span>Are you sure you want to delete?</span>
+											</li>
+											<li (click)="cancelDeleteConfirmation(scheduledPost)">
+												<a href="javascript:">Cancel</a>
+											</li>
+											<li (click)="deletePost(scheduledPost, $event)">
+												<a class="danger" href="javascript:">Confirm</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- mobile-filters-modal -->
+<div
+	aria-hidden="true"
+	aria-labelledby="mobileFilerts"
+	class="modal fade mobile-publish-queue-groups-modal mobile-filerts-modal"
+	id="mobileFilerts"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Timeline filters</h5>
+				<button
+					(click)="recordButtonClick($event, selectedGroup)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="e7de6a77-a0dd-4629-8418-e6cf2eb6749f"
+					data-cs-label="Done"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+				>
+					Done
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="group-note">Select what to view in the timeline:</div>
+				<div class="publish-queue-sidebar-filters">
+					<ul class="list-unstyled">
+						<li>
+							<mat-checkbox (change)="(!viewSuggestedPost)" (click)="filterChanged()" [(ngModel)]="viewSuggestedPost">
+								Suggested posts
+							</mat-checkbox>
+						</li>
+						<li>
+							<mat-checkbox (change)="(!viewSuggestedTime)" (click)="filterChanged()" [(ngModel)]="viewSuggestedTime">
+								Suggested times
+							</mat-checkbox>
+						</li>
+						<li>
+							<mat-checkbox (change)="(!viewScheduledPost)" (click)="filterChanged()" [(ngModel)]="viewScheduledPost">
+								Scheduled posts
+							</mat-checkbox>
+						</li>
+						<li hidden>
+							<mat-checkbox (change)="(!viewModeratorPost)" (click)="filterChanged()" [(ngModel)]="viewModeratorPost">
+								Moderator posts
+							</mat-checkbox>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="showGallery" *ngIf="showVideoGallery">
+	<div (click)="closeVideoGallery()" class="gallery-overlay"></div>
+	<button (click)="closeVideoGallery()" class="close-gallery">
+		<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+			<path d="M15 1.00049L1 15.0001" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+			<path d="M15 14.9995L1 0.999875" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+		</svg>
+	</button>
+	<video [src]="preview[0].src" controls></video>
+</div>
+
+<!-- Add to Add Group Overlay starts here -->
+<!-- <ng-container *ngIf="showAddToGroupPopup">
+	<app-add-app-to-group-overlay
+		(closeAuthorizeConvoOverlay)="closeAuthorizeConvoOverlay($event)"
+		[group]="selectedGroup"
+	></app-add-app-to-group-overlay>
+</ng-container> -->
+<!-- Add to Add Group Overlay ends here -->
+
+<!-- Pop up for Create Post suggestion start hear -->
+<ng-container *ngIf="showPostPublisherModal">
+	<div class="post-publisher-modal">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h6>Welcome to the post publisher</h6>
+
+					<ul class="list-unstyled">
+						<li>
+							<figure><img src="./assets/images/icon_1.svg" alt="" /></figure>
+							<span>Post now or Schedule for later</span>
+						</li>
+						<li>
+							<figure><img src="./assets/images/icon_2.svg" alt="" /></figure>
+							<span>Post to multiple groups in one click</span>
+						</li>
+						<li>
+							<figure><img src="./assets/images/icon_3.svg" alt="" /></figure>
+							<span>Use ready-to-post templates</span>
+						</li>
+						<li>
+							<figure><img src="./assets/images/icon_4.svg" alt="" /></figure>
+							<span>See insights on your posts</span>
+						</li>
+					</ul>
+
+					<button
+						class="convo-btn-primary convo-btn-normal"
+						(click)="recordButtonClick($event); showPostPublisherModal = false"
+						data-cs-id="526f6142-c50d-476a-980d-4aefc2c479c7"
+						data-cs-label="Continue"
+						data-cs-source="dialog"
+						type="button"
+					>
+						Continue
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+<!-- Pop up for Create Post suggestion ends hear -->

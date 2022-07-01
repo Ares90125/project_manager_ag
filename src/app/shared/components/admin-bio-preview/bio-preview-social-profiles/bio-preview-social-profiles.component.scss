@@ -1,0 +1,29 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+.social-links {
+	margin: 0;
+	li {
+		margin-bottom: 16px;
+		&:last-child {
+			margin-bottom: 0;
+		}
+		a {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			color: #090c18;
+			text-decoration: none !important;
+		}
+		figure {
+			margin: 0;
+			img {
+				width: 32px;
+				height: 32px;
+			}
+			span {
+				padding-left: 8px;
+				@include font-paragraph-s;
+			}
+		}
+	}
+}

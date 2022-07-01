@@ -1,0 +1,570 @@
+<div [class.brand-side-wrapper]="!isFromBrand" class="campaign-details-wrapper">
+	<div class="daily-report-header">
+		<div class="container">
+			<div class="head-wrapper">
+				<div class="left-section">
+					<ul class="list-unstyled breadcrumb-nav" *ngIf="!isFromBrand">
+						<li (click)="navigateToBrands()"><a>Brands</a></li>
+						<li (click)="navigateToCampaigns()" *ngIf="brand">
+							<a>{{ brand.name }}</a>
+						</li>
+						<li (click)="navigateToCampaigns()"><a>Campaigns</a></li>
+						<li *ngIf="campaign">{{ campaign.campaignName }}</li>
+					</ul>
+					<h4 class="m-0">{{ campaign ? campaign.campaignName : 'Community marketing solution' }}</h4>
+				</div>
+			</div>
+		</div>
+		<div class="tabs-wrapper">
+			<div class="container">
+				<ul *ngIf="!isFromBrand" class="nav nav-tabs group-info-tabs" role="tablist">
+					<li
+						(click)="selectedSection = 'details'; changeUrlFragment('details')"
+						*ngIf="!campaign || campaign?.status !== 'Completed'"
+						class="nav-item"
+					>
+						<a
+							[class.active]="selectedSection === 'details'"
+							class="nav-link"
+							data-toggle="tab"
+							href="#daily-report-details"
+							id="daily-report-details-tab"
+							role="tab"
+						>
+							Details
+						</a>
+					</li>
+					<li (click)="selectedSection = 'communities'; changeUrlFragment('communities')" class="nav-item">
+						<a
+							[class.active]="selectedSection === 'communities'"
+							class="nav-link"
+							data-toggle="tab"
+							href="#communities"
+							id="communities-tab"
+							role="tab"
+						>
+							Selection
+							<span class="badge">{{
+								selectedCommunitiesFromApi?.length > 0 ? selectedCommunitiesFromApi?.length : '0'
+							}}</span>
+						</a>
+					</li>
+					<li
+						[matTooltip]="
+							selectedCommunitiesFromApi?.length === 0
+								? 'Please select communities to view the Execution Dashboard'
+								: null
+						"
+						class="nav-item"
+					>
+						<a
+							(click)="selectedSection = 'execution'; changeUrlFragment('execution')"
+							[class.active]="selectedSection === 'execution'"
+							[class.disabled]="selectedCommunitiesFromApi?.length === 0"
+							class="nav-link"
+							data-toggle="tab"
+							href="#daily-report-task"
+							id="daily-report-task-tab"
+							role="tab"
+						>
+							Execution
+						</a>
+					</li>
+					<li
+						[matTooltip]="
+							selectedCommunitiesFromApi?.length === 0 ? 'Please select communities to view the Task Dashboard' : null
+						"
+						class="nav-item"
+					>
+						<a
+							(click)="selectedSection = 'tasks'; changeUrlFragment('tasks')"
+							[class.active]="selectedSection === 'tasks'"
+							[class.disabled]="selectedCommunitiesFromApi?.length === 0"
+							class="nav-link"
+							data-toggle="tab"
+							href="#daily-report-task"
+							id="daily-report-task-tab"
+							role="tab"
+						>
+							Tasks
+						</a>
+					</li>
+					<li (click)="selectedSection = 'payments'; changeUrlFragment('payments')" class="nav-item" hidden>
+						<a
+							[class.active]="selectedSection === 'payments'"
+							class="nav-link"
+							data-toggle="tab"
+							href="#daily-report-payment"
+							id="daily-report-payment-tab"
+							role="tab"
+						>
+							Payments
+						</a>
+					</li>
+					<li (click)="selectedSection = 'report'; changeUrlFragment('report')" *ngIf="campaignId" class="nav-item">
+						<a
+							[class.active]="selectedSection === 'report'"
+							class="nav-link"
+							data-toggle="tab"
+							href="#daily-report-reports"
+							id="daily-report-reports-tab"
+							role="tab"
+						>
+							Reporting
+						</a>
+					</li>
+				</ul>
+				<ul *ngIf="isFromBrand" class="nav nav-tabs group-info-tabs" role="tablist">
+					<li (click)="selectedSection = 'report'" class="nav-item" *ngIf="isCampaignCreated && campaignId">
+						<a
+							class="nav-link active"
+							data-toggle="tab"
+							href="#daily-report-reports"
+							id="daily-report-reports-tab"
+							role="tab"
+						>
+							Report
+						</a>
+					</li>
+					<li (click)="selectedSection = 'tasks'" class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#daily-report-task" id="daily-report-task-tab" role="tab">
+							Tasks
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="campaign-details-body-section" *ngIf="!isCampaignLoaded">
+		<div class="tab-content">
+			<div
+				*ngIf="selectedSection === 'communities'"
+				aria-labelledby="communities-tab"
+				role="tabpanel"
+				class="tab-pane"
+				[class.active]="selectedSection === 'communities'"
+			>
+				<div
+					*ngIf="!selectedCommunitiesFromApi?.length > 0 && loadCommunities && !isLoading"
+					class="pre-message text-center"
+				>
+					<img src="assets/images/glass-icon.svg" />
+					<h3>No communities selected for the campaign</h3>
+					<p>Pick the required information above to see a list of communities</p>
+					<button
+						data-cs-id="5f2a8f8d-9fa1-452f-8fde-c805da236ca6"
+						data-cs-label="Add communities"
+						data-cs-source="page"
+						(click)="communitiesDialog(true); recordButtonClick($event)"
+						class="convo-btn-primary convo-btn-normal"
+					>
+						Add communities
+					</button>
+				</div>
+				<div
+					class="campaign-communities-wrapper"
+					*ngIf="!showDiscoverCommunitiesDialog && selectedCommunitiesFromApi?.length > 0 && !isLoading"
+				>
+					<div class="container">
+						<div class="filters-wrap">
+							<div class="filters-left">
+								<button
+									(click)="showDiscoverCommunitiesDialog = true; recordButtonClick($event)"
+									*ngIf="!isGroupSelectedForNotifications"
+									[hidden]="campaign?.status === 'Completed'"
+									class="convo-btn-primary convo-btn-normal"
+									data-cs-id="1ac8c0c8-e12b-4269-847e-b85e6c375424"
+									data-cs-label="Find more communities"
+									data-cs-source="page"
+								>
+									<svg fill="none" height="12" viewBox="0 0 24 12" width="24" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M12 6.75C13.63 6.75 15.07 7.14 16.24 7.65C17.32 8.13 18 9.21 18 10.38V11C18 11.55 17.55 12 17 12H7C6.45 12 6 11.55 6 11V10.39C6 9.21 6.68 8.13 7.76 7.66C8.93 7.14 10.37 6.75 12 6.75ZM4 7C5.1 7 6 6.1 6 5C6 3.9 5.1 3 4 3C2.9 3 2 3.9 2 5C2 6.1 2.9 7 4 7ZM5.13 8.1C4.76 8.04 4.39 8 4 8C3.01 8 2.07 8.21 1.22 8.58C0.48 8.9 0 9.62 0 10.43V11C0 11.55 0.45 12 1 12H4.5V10.39C4.5 9.56 4.73 8.78 5.13 8.1ZM20 7C21.1 7 22 6.1 22 5C22 3.9 21.1 3 20 3C18.9 3 18 3.9 18 5C18 6.1 18.9 7 20 7ZM24 10.43C24 9.62 23.52 8.9 22.78 8.58C21.93 8.21 20.99 8 20 8C19.61 8 19.24 8.04 18.87 8.1C19.27 8.78 19.5 9.56 19.5 10.39V12H23C23.55 12 24 11.55 24 11V10.43ZM12 0C13.66 0 15 1.34 15 3C15 4.66 13.66 6 12 6C10.34 6 9 4.66 9 3C9 1.34 10.34 0 12 0Z"
+											fill="white"
+										/>
+									</svg>
+									<span>Find more communities</span>
+								</button>
+
+								<button
+									(click)="downloadCommunities(); recordButtonClick($event)"
+									*ngIf="!isGroupSelectedForNotifications"
+									class="convo-btn-normal convo-btn-border"
+									data-cs-id="00d428cf-9799-4542-b0b9-db6ed2692c15"
+									data-cs-label="Download .xlsx"
+									data-cs-source="page"
+								>
+									<img alt="" src="./assets/images/icon-file-download.svg" />
+									<span>Download as ‘.xlsx’</span>
+								</button>
+
+								<button
+									(click)="openDeleteCommunityPopup = true"
+									*ngIf="isGroupSelectedForNotifications"
+									[hidden]="campaign?.status === 'Completed'"
+									class="convo-btn-normal convo-btn-border"
+								>
+									<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M3.9987 12.6667C3.9987 13.4 4.5987 14 5.33203 14H10.6654C11.3987 14 11.9987 13.4 11.9987 12.6667V4.66667H3.9987V12.6667ZM5.33203 6H10.6654V12.6667H5.33203V6ZM10.332 2.66667L9.66536 2H6.33203L5.66536 2.66667H3.33203V4H12.6654V2.66667H10.332Z"
+											fill="#EB5757"
+										/>
+									</svg>
+									<span class="text-danger">Remove from Campaign</span>
+								</button>
+							</div>
+							<div class="filters-right">
+								<div class="dropdown custom-dropdown">
+									<button class="convo-btn-normal convo-btn-border dropdown-toggle" data-toggle="dropdown">
+										<span class="sort-icon"><img alt="" src="./assets/images/icon-sort-by-alpha.svg" /></span>
+										<span>{{ sortBy }}</span>
+									</button>
+									<div class="convo-dropdown-wrapper dropdown-menu">
+										<button (click)="sortCommunities('Member count')" class="dropdown-item">Member Count</button>
+										<button (click)="sortCommunities('Campaign Engagement')" class="dropdown-item">
+											Campaign Engagement
+										</button>
+										<button (click)="sortCommunities('Post Engagement')" class="dropdown-item">Post Engagement</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<app-community-marketing-campaign-communities
+						*ngIf="selectedCommunitiesFromApi?.length > 0"
+						[campaign]="campaign"
+						[brand]="brand"
+						(closeDialog)="isNotificationsDialogOpen = false"
+						(updateDeletedCommunities)="updateDeletedCommunities($event)"
+						[isNotificationsDialogOpen]="isNotificationsDialogOpen"
+						[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+						[selectedCommunitiesFromDiscovery]="groupsSelectedForCampaignCreation"
+						(saveCommunitiesForCampaign)="saveCommunities($event)"
+						(isGroupSelectedForNotifications)="isGroupSelectedForNotifications = $event"
+						(closeDeleteCommunityPopup)="openDeleteCommunityPopup = false"
+						[openDeleteCommunityPopup]="openDeleteCommunityPopup"
+						[metadata]="metadata"
+					>
+					</app-community-marketing-campaign-communities>
+				</div>
+				<div *ngIf="isLoading">
+					<table class="loading-wrapper">
+						<tbody>
+							<ng-container *ngFor="let i of [].constructor(3)">
+								<tr>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td>
+										<div class="loading-strip tertiary"></div>
+									</td>
+								</tr>
+							</ng-container>
+						</tbody>
+					</table>
+				</div>
+				<app-community-discovery
+					*ngIf="showDiscoverCommunitiesDialog"
+					(groupsSelectedForCampaignCreation)="getGroupsSelectedForCampaignCreation($event)"
+					[selectedCommunities]="selectedCommunities"
+					[campaign]="campaign"
+					[brand]="brand"
+					[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+					[(showCommunityListPopup)]="showCommunityListPopup"
+					(updateDeletedCommunities)="updateDeletedCommunities($event)"
+					(saveCommunities)="saveCommunities($event)"
+					(hideCommunityListPopup)="hideCommunityListPopup($event)"
+					(hideCommunityOverlay)="closeCommunitySelectionOverlay()"
+					[metadata]="metadata"
+				></app-community-discovery>
+			</div>
+			<div
+				*ngIf="selectedSection === 'details'"
+				aria-labelledby="daily-report-details-tab"
+				[class.active]="selectedSection === 'details'"
+				id="daily-report-details"
+				role="tabpanel"
+				class="tab-pane daily-report-details-wrap"
+			>
+				<div class="container">
+					<div *ngIf="campaign && campaign?.status === 'PendingApproval'" class="review-proposal-message">
+						<div class="proposal-message-left">
+							<svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="16" cy="16" fill="#FF9C28" r="16" />
+								<path
+									d="M16.0198 21.2424C14.9426 21.2424 14.0396 22.0991 14.0396 23.1212C14.0396 24.1433 14.9426 25 16.0198 25C17.0574 25 18 24.1433 17.9525 23.1663C18 22.0916 17.105 21.2424 16.0198 21.2424Z"
+									fill="white"
+								/>
+								<path
+									d="M15.5287 8.05304C14.5861 8.30856 14 9.12021 14 10.1047C14.0475 10.6984 14.0871 11.2996 14.1347 11.8933C14.2693 14.1554 14.404 16.3725 14.5386 18.6346C14.5861 19.4011 15.2119 19.9572 16.0198 19.9572C16.8277 19.9572 17.4614 19.3635 17.501 18.5895C17.501 18.1235 17.501 17.6951 17.5485 17.2217C17.6356 15.7712 17.7307 14.3208 17.8178 12.8703C17.8653 11.9309 17.9525 10.9915 18 10.0521C18 9.71392 17.9525 9.41331 17.8178 9.1127C17.4139 8.27098 16.4713 7.84261 15.5287 8.05304Z"
+									fill="white"
+								/>
+							</svg>
+
+							<div>
+								<h6>This proposal is not yet accepted by the brand</h6>
+								<small>Brand will be notified about the changes made to this solution</small>
+							</div>
+						</div>
+					</div>
+					<div style="padding-bottom: 1px">
+						<app-community-marketing-campaign-info
+							[(campaign)]="campaign"
+							[brand]="brand"
+							[(campaignTasks)]="campaignTasks"
+							(sendCreatedCampaignToParent)="updateCampaign($event)"
+							[isReportEdit]="isReportEdit"
+							(closeCampaignDetail)="closeCampaignDetail($event)"
+							(discardChanges)="discardChanges($event)"
+						>
+						</app-community-marketing-campaign-info>
+					</div>
+				</div>
+			</div>
+			<div
+				*ngIf="selectedSection === 'execution' && !isFromBrand"
+				[class.active]="selectedSection === 'execution'"
+				aria-labelledby="daily-report-task-tab"
+				class="tab-pane"
+				id="daily-report-task"
+				role="tabpanel"
+			>
+				<app-community-marketing-campaign-tasks-dashboard
+					(updateDeletedCommunities)="updateDeletedCommunities($event)"
+					(getCommunitiesFromAPI)="getCommunitiesFromAPI()"
+					(updateCommunitiesPostingTime)="updateSelectedCommunitiesTime($event)"
+					*ngIf="selectedCommunitiesFromApi?.length > 0"
+					[campaign]="campaign"
+					[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+					[selectedSection]="selectedSection"
+					[communityManagers]="communityManagers"
+				></app-community-marketing-campaign-tasks-dashboard>
+				<div *ngIf="isLoading">
+					<table class="loading-wrapper">
+						<tbody>
+							<ng-container *ngFor="let i of [].constructor(3)">
+								<tr>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td>
+										<div class="loading-strip tertiary"></div>
+									</td>
+								</tr>
+							</ng-container>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div
+				*ngIf="selectedSection === 'tasks'"
+				aria-labelledby="daily-report-task-tab"
+				class="tab-pane"
+				id="daily-report-task"
+				role="tabpanel"
+				[class.active]="selectedSection === 'tasks'"
+			>
+				<app-community-marketing-campaign-tasks
+					(closeAddNewTaskPopup)="closeAddNewTaskPopup()"
+					(closeTaskDetailsView)="campaignTaskViewDetails = $event"
+					(finalTaskDetailsForProposal)="setFinalTaskDetailsForProposal($event)"
+					(isTaskCreated)="isTaskCreated = $event"
+					(updateSelectedCommunitiesStatus)="updateSelectedCommunitiesStatus($event)"
+					*ngIf="selectedCommunitiesFromApi?.length > 0"
+					[campaignTaskViewDetails]="campaignTaskViewDetails"
+					[campaign]="campaign"
+					[brand]="brand"
+					[isCMCEdition]="'true'"
+					[isCsAdmin]="isCsAdmin"
+					[isFromBrand]="isFromBrand"
+					[numberOfMissings]="campaignTaskDetails.numberOfMissings"
+					[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+					[selectedCommunities]="selectedCommunitiesFromApi"
+					[selectedSection]="selectedSection"
+					[taskName]="campaignTaskDetails.name"
+					[updatedTaskDetails]="campaignTaskViewDetails"
+					[communityManagers]="communityManagers"
+				>
+				</app-community-marketing-campaign-tasks>
+				<div *ngIf="isLoading">
+					<table class="loading-wrapper">
+						<tbody>
+							<ng-container *ngFor="let i of [].constructor(3)">
+								<tr>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td class="text-center">
+										<div class="loading-strip secondary"></div>
+									</td>
+									<td>
+										<div class="loading-strip tertiary"></div>
+									</td>
+								</tr>
+							</ng-container>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div
+				*ngIf="selectedSection === 'payments'"
+				[class.active]="selectedSection === 'payments'"
+				aria-labelledby="daily-report-payment-tab"
+				class="tab-pane"
+				id="daily-report-payment"
+				role="tabpanel"
+			>
+				<app-community-marketing-campaign-tasks-dashboard
+					(updateDeletedCommunities)="updateDeletedCommunities($event)"
+					*ngIf="selectedCommunitiesFromApi?.length > 0"
+					[campaign]="campaign"
+					[selectedCommunitiesFromApi]="selectedCommunitiesFromApi"
+					[selectedSection]="selectedSection"
+					[communityManagers]="communityManagers"
+				></app-community-marketing-campaign-tasks-dashboard>
+			</div>
+
+			<!--			<div-->
+			<!--				*ngIf="selectedSection === 'payments'"-->
+			<!--				aria-labelledby="daily-report-payment-tab"-->
+			<!--				class="tab-pane"-->
+			<!--				id="daily-report-payment"-->
+			<!--				role="tabpanel"-->
+			<!--			>-->
+			<!--				<app-community-marketing-campaign-payments></app-community-marketing-campaign-payments>-->
+			<!--			</div>-->
+
+			<div
+				*ngIf="selectedSection === 'report'"
+				[ngClass]="isFromBrand ? 'active' : ''"
+				aria-labelledby="daily-report-reports-tab"
+				class="tab-pane"
+				id="daily-report-reports"
+				role="tabpanel"
+				[class.active]="selectedSection === 'report'"
+			>
+				<div *ngIf="campaign && !campaign.cmcReportVersion">
+					<app-community-marketing-campaign-report [campaign]="campaign" [isFromBrand]="isFromBrand">
+					</app-community-marketing-campaign-report>
+				</div>
+				<div *ngIf="campaign?.cmcReportVersion === 2">
+					<app-community-marketing-campaign-report-data [campaign]="campaign" [isFromBrand]="isFromBrand">
+					</app-community-marketing-campaign-report-data>
+				</div>
+				<div *ngIf="campaign?.cmcReportVersion === 3">
+					<app-cmcreport-v3 [campaign]="campaign" [isFromBrand]="isFromBrand"></app-cmcreport-v3>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div *ngIf="openProposalModal" class="campaign-row-body modal-dialog-centered modal-dialog-scrollable">
+	<div class="send-proposal-wrapper modal-content modal-dialog">
+		<div class="p-0 modal-body">
+			<div class="modal-header">
+				<h6 class="m-0">Send Proposal to Brand</h6>
+				<a (click)="openProposalModal = false"><img alt="" src="assets/images/close-icon.svg" /></a>
+			</div>
+			<div class="modal-body">
+				<div class="proposal-note-box" *ngIf="selectedSection === 'tasks'">
+					❗️ Please Note ❗️<br />
+					Following tasks will be sent for approval
+
+					<ul>
+						<li>
+							{{ finalTaskDetailsForProposal?.communitiesForCreatedTask?.length }} tasks with Unassigned state
+							<span *ngIf="finalTaskDetailsForProposal?.deletedCommunitiesId?.length > 0"
+								>(Including {{ finalTaskDetailsForProposal.deletedCommunitiesId.length }} marked Caution)</span
+							>
+						</li>
+						<li *ngIf="finalTaskDetailsForProposal?.declinedCommunitiesId?.length > 0">
+							{{ finalTaskDetailsForProposal.declinedCommunitiesId.length }} tasks with Declined state
+						</li>
+					</ul>
+					<span *ngIf="finalTaskDetailsForProposal?.communitiesForDraftTask?.length > 0"
+						>{{ finalTaskDetailsForProposal.communitiesForDraftTask.length }} Draft tasks will NOT be sent for
+						approval.</span
+					>
+				</div>
+				<label class="body-title mb-0">Send the proposal to brand to get it accepted by the brand</label>
+				<h5 class="body-title mb-0">Proposal URL</h5>
+				<div class="url-box">
+					<span
+						>{{ proposalUrl }}
+						<input [value]="proposalUrl" id="copyProposalUrl" readonly />
+					</span>
+					<button (click)="copyProposalUrl()" class="copy-btn">Copy</button>
+				</div>
+
+				<h5 class="body-title mb-0">Enter email addresses <sup>*</sup></h5>
+				<p class="text-secondary"><small>You can enter multiple</small></p>
+				<div class="email-adderss-wrapper">
+					<div *ngFor="let key of getEmailAddressKeys()">
+						<div class="email-adderss-row">
+							<input
+								[(ngModel)]="brandEmailAddresses[key]"
+								[ngClass]="{'email-error': !validateEmailAddress(brandEmailAddresses[key])}"
+								type="text"
+							/>
+							<button (click)="removeEmailAddress(key)" class="close-btn">
+								<img alt="" src="assets/images/close-icon.svg" />
+							</button>
+						</div>
+					</div>
+					<button (click)="addEmailAddresses()" class="add-email">
+						<img alt="" src="assets/images/plus-icon.svg" />
+						<span>Add {{ getEmailAddressKeys().length > 0 ? 'another ' : '' }}email</span>
+					</button>
+				</div>
+				<div class="box-actions">
+					<button
+						(click)="saveEmailAddresses(); sendProposal(); recordButtonClick($event)"
+						[disabled]="!isEmailsAreValid || sendingProposalInProgress"
+						class="convo-btn-primary convo-btn-normal"
+						data-test-id="button-cmc-save-add-brand-email"
+						data-cs-id="aa095995-68b4-4834-a69f-b89389e4597f"
+						data-cs-label="Send Proposal"
+						data-cs-source="dialog"
+					>
+						Send Proposal
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+{
+	"data": {
+		"getGRecommendationByDay": {
+			"__typename": "GRecommendationByDay",
+			"groupId": "9a0f9a0f-a7e0-41f0-99a0-2934f58efaf2",
+			"id": "b84f7141-98f0-4590-84cc-7b516b5386bf",
+			"createdAtUTC": "2021-02-26T11:15:12.079Z",
+			"updatedAtUTC": "2021-02-26T11:15:12.079Z",
+			"optLength": "{\"minChar\": 55, \"maxChar\": 327, \"minWord\": 10, \"maxWord\": 56}",
+			"emotions": "{\"Relaxed and Peaceful\": [{\"healthy\": 1.0}, {\"certain\": 0.0}, {\"\\u0916\\u0941\\u0932\\u0947 \\u0935\\u093f\\u091a\\u093e\\u0930\\u094b\\u0902 \\u0935\\u093e\\u0932\\u093e\": 0.0}], \"Curiosity\": [{\"secret\": 0.0}, {\"kya tumane suna\": 0.0}, {\"\\u0930\\u093f\\u0915\\u0949\\u0930\\u094d\\u0921 \\u0938\\u0947 \\u092a\\u0930\\u0947\": 0.0}], \"Urgency\": [{\"magical\": 0.0}, {\"\\u0924\\u094d\\u0935\\u0930\\u093f\\u0924 \\u092c\\u091a\\u0924\": 0.0}, {\"sheeghr\": 0.0}], \"Confusion or Helplessness\": [{\"doubtful\": 0.0}, {\"\\u091a\\u093f\\u0902\\u0924\\u093f\\u0924\": 0.0}, {\"\\u0927\\u092e\\u0915\\u0940 \\u0926\\u0940\": 0.0}], \"Anger\": [{\"\\u0905\\u0935\\u093f\\u0936\\u094d\\u0935\\u0938\\u0928\\u0940\\u092f\": 0.0}, {\"parakh\": 0.0}, {\"\\u0936\\u0915\\u094d\\u0924\\u093f\\u0939\\u0940\\u0928\": 0.0}], \"Safe and Satisfied\": [{\"instantly\": 0.0}, {\"\\u0938\\u094d\\u0925\\u093f\\u0930\": 0.0}, {\"\\u0905\\u0924\\u093f \\u0909\\u0924\\u094d\\u0915\\u0943\\u0937\\u094d\\u091f\": 0.0}], \"Happy and Alive\": [{\"\\u0909\\u0924\\u094d\\u0924\\u0947\\u091c\\u093f\\u0924\": 0.0}, {\"dhoop\": 0.0}, {\"\\u0906\\u0930\\u093e\\u092e\\u0926\\u093e\\u092f\\u0915\": 0.0}], \"Inspired\": [{\"confident\": 0.0}, {\"\\u091c\\u093c\\u094b\\u0928 \\u092e\\u0947\\u0902\": 0.0}, {\"\\u0909\\u0924\\u094d\\u092a\\u093e\\u0926\\u0915\": 0.0}]}",
+			"timings": "{\"Sunday\": [22, 7, 9], \"Monday\": [22, 7, 9], \"Tuesday\": [22, 7, 9], \"Wednesday\": [22, 7, 9], \"Thursday\": [22, 7, 9], \"Friday\": [22, 7, 9], \"Saturday\": [22, 7, 9]}",
+			"contentTypes": "{\"sunday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"monday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"tuesday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"wednesday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"thursday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"friday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}], \"saturday\": [{\"22\": \"Photo\"}, {\"7\": \"Photo\"}, {\"9\": \"Photo\"}]}",
+			"keywords": "Fruit|Fruits|Protein|Fiber|Milk",
+			"categories": "Nutrition|Pregnancy|Feeding|Immunity|Baby Care",
+			"topics": "food|recipe|easycookingtheme|participate|healthy",
+			"numOfMonth": "2",
+			"numOfYear": "2021"
+		}
+	}
+}

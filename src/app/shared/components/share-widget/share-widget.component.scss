@@ -1,0 +1,103 @@
+@import '../../../../assets/scss/custom/_variables.scss';
+@import '../../../../assets/scss/custom/mixins';
+
+.share-modal {
+	.modal-dialog-centered {
+		// @media (max-width: 767px) {
+		// 	align-items: flex-end;
+		// 	margin: 0;
+		// 	min-height: 100vh;
+		// 	.modal-content {
+		// 		border-radius: 0;
+		// 		box-shadow: none;
+		// 	}
+		// }
+	}
+
+	.modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px;
+
+		h5 {
+			@include font-label-m-md;
+			margin: 0;
+		}
+
+		button {
+			padding: 0;
+			border: none;
+			outline: none;
+			background: none;
+		}
+	}
+
+	.modal-body {
+		@include font-label-s;
+
+		p {
+			margin-bottom: 12px;
+		}
+
+		ul {
+			list-style: none;
+			display: flex;
+			align-items: center;
+			margin: 0;
+			padding: 4px 0 24px;
+
+			li {
+				margin-right: 16px;
+
+				figure {
+					margin: 0;
+					cursor: pointer;
+				}
+
+				img {
+					width: 50px;
+					height: 50px;
+				}
+			}
+		}
+
+		.input-wrap {
+			background: #f4f6f8;
+			border-radius: 4px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-right: 8px;
+
+			input {
+				padding: 12px;
+				color: $black-70;
+				border: none;
+				outline: none;
+				background: #f4f6f8;
+				flex: 1;
+			}
+
+			button {
+				@include shadow-elevation-medium;
+				@include font-label-s-md;
+				color: $emp-blue-1;
+				border: none;
+				background: #fff;
+				padding: 6px 10px;
+				border-radius: 2px;
+			}
+		}
+
+		.btn-customize {
+			font-weight: 500;
+			font-size: 12px;
+			line-height: 16px;
+			background: transparent;
+			border: none;
+			color: $emp-blue-1;
+			margin-top: 10px;
+		}
+	}
+}

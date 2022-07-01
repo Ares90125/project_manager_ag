@@ -1,0 +1,247 @@
+<div class="campaign-report-wrapper" *ngIf="!isCampaignPostsEnabled">
+	<div class="campaign-report-header">
+		<button
+			data-cs-id="901e78b8-4cca-48d9-9b61-273a488e0980"
+			data-cs-label="Back"
+			data-cs-source="page"
+			(click)="navigateToCampaignReports(); recordButtonClick($event)"
+		>
+			<img *ngIf="!isEditMode" alt="" src="./assets/images/close-icon.svg" />
+			<svg *ngIf="isEditMode" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#707084" />
+			</svg>
+		</button>
+		<h5 data-test-id="heading-create-new-report" *ngIf="!isEditMode">Create a new report</h5>
+		<h5 data-test-id="heading-edit-report" *ngIf="isEditMode">Edit report</h5>
+	</div>
+
+	<div class="campaign-report-body">
+		<div class="container" *ngIf="campaignReportForm" [formGroup]="campaignReportForm">
+			<div class="report-body-row">
+				<h3>📝 Tell us a few details about your campaign</h3>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label
+							>Campaign Name<sup>*</sup>
+							<app-tooltip class="labelTooltip" setTooltipText="Name for your campaign report"> </app-tooltip>
+						</label>
+						<input placeholder="Campaign name" type="text" class="form-control" formControlName="campaignName" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									>First post date<sup>*</sup>
+									<app-tooltip
+										class="labelTooltip"
+										setTooltipText="The date when you did the first post for the campaign in your group(s)"
+									>
+									</app-tooltip>
+								</label>
+								<div class="datepicker-wrap">
+									<input
+										(click)="startDate.open()"
+										[matDatepicker]="startDate"
+										placeholder="Campaign first post date"
+										required
+										readonly
+										[max]="maxDate"
+										type="text"
+										formControlName="startDateAtUTC"
+									/>
+									<mat-datepicker-toggle [for]="startDate" matSuffix></mat-datepicker-toggle>
+									<mat-datepicker #startDate></mat-datepicker>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="flex-box">
+							<div class="form-group">
+								<label
+									>Last post date<sup>*</sup>
+									<app-tooltip
+										class="labelTooltip"
+										setTooltipText="The date when you did the last post for the campaign in your group(s)"
+									>
+									</app-tooltip>
+								</label>
+								<div class="datepicker-wrap">
+									<input
+										(click)="endDate.open()"
+										[matDatepicker]="endDate"
+										placeholder="Campaign last post date"
+										required
+										readonly
+										[min]="endMinDate"
+										type="text"
+										formControlName="endDateAtUTC"
+									/>
+									<mat-datepicker-toggle [for]="endDate" matSuffix></mat-datepicker-toggle>
+									<mat-datepicker #endDate></mat-datepicker>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex-box">
+					<div class="form-group">
+						<label
+							>Participating Facebook groups<sup>*</sup>
+							<app-tooltip
+								class="labelTooltip"
+								setTooltipText="All your Facebook Groups involved in this campaign"
+							></app-tooltip>
+						</label>
+						<div class="custom-dropdown" *ngIf="selectedGroups.length > 0">
+							<app-custom-dropdown
+								(selectionChange)="setSelectedGroups($event)"
+								[items]="installedGroups"
+								[isMultipleSelection]="'true'"
+								[selectedItems]="selectedGroups"
+								[value]="selectedGroups[0]"
+								[isCampaignReport]="'true'"
+								defaultText="Select all your Facebook Groups involved in this campaign"
+							>
+							</app-custom-dropdown>
+						</div>
+						<div class="custom-dropdown" *ngIf="selectedGroups.length === 0">
+							<app-custom-dropdown
+								(selectionChange)="setSelectedGroups($event)"
+								[items]="installedGroups"
+								[isMultipleSelection]="'true'"
+								[selectedItems]="selectedGroups"
+								[value]="''"
+								[isCampaignReport]="'true'"
+								defaultText="Select all your Facebook Groups involved in this campaign"
+							>
+							</app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="report-body-row">
+				<h3 data-test-id="brand-mention-heading">💼 Which brand do you want to track for this campaign?</h3>
+				<div class="hashtag-row-wrap">
+					<div class="hashtag-row">
+						<label>Brand name variations </label>
+					</div>
+
+					<mat-form-field class="example-chip-list" floatLabel="never">
+						<mat-chip-list #brandKeywordList aria-label="Keyword selection">
+							<mat-chip
+								*ngFor="let keyword of brandKeywords; let i = index"
+								[selectable]="'true'"
+								[removable]="'true'"
+								(removed)="removeKeywords(i, brandKeywords)"
+								data-test-id="brand-keyword"
+							>
+								{{ keyword }}
+								<mat-icon matChipRemove *ngIf="'true'" data-test-id="remove-keyword">cancel</mat-icon>
+							</mat-chip>
+							<input
+								placeholder="Enter comma (,) separated variations of brand name"
+								[matChipInputFor]="brandKeywordList"
+								[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								[matChipInputAddOnBlur]="'true'"
+								(matChipInputTokenEnd)="addKeywords($event, brandKeywords)"
+								data-test-id="input-brand-mention"
+							/>
+						</mat-chip-list>
+					</mat-form-field>
+
+					<div data-test-id="brand-mention-note" class="note">
+						Enter all common spelling variations of the brand name. For example - “Amazon, Amzon, Amazone, AMZN”
+					</div>
+				</div>
+			</div>
+
+			<div class="report-body-row">
+				<h3 data-test-id="heading-keywords">
+					📊 What are the keywords & hashtags you would like to track for this campaign?
+				</h3>
+
+				<div class="hashtag-row-wrap">
+					<div class="hashtag-row">
+						<label>Keywords and hashtags </label>
+					</div>
+
+					<mat-form-field class="example-chip-list" floatLabel="never">
+						<mat-chip-list #hashtagList aria-label="Keyword selection">
+							<mat-chip
+								*ngFor="let keyword of customKeywords; let i = index"
+								[selectable]="'true'"
+								[removable]="'true'"
+								(removed)="removeKeywords(i, customKeywords)"
+								data-test-id="keyword-tile"
+							>
+								{{ keyword }}
+								<mat-icon matChipRemove *ngIf="'true'" data-test-id="remove-keyword-tile">cancel</mat-icon>
+							</mat-chip>
+							<input
+								placeholder="Enter comma (,) separated hashtags and keywords"
+								[matChipInputFor]="hashtagList"
+								[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								[matChipInputAddOnBlur]="'true'"
+								(matChipInputTokenEnd)="addKeywords($event, customKeywords)"
+								data-test-id="input-keyword-tile"
+							/>
+						</mat-chip-list>
+					</mat-form-field>
+					<div data-test-id="note-keyword-tile" class="note">
+						Enter all common spelling variations of hashtags and keywords you want to track for this campaign. Example -
+						“#healthyraho, #health, nutrition, parenting”
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="!campaignReportForm">
+			<div class="loading-wrapper">
+				<div class="bt-spinner-center"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campaign-report-footer" *ngIf="campaignReportForm">
+		<span
+			data-test-id="text-requiredfield-not-populated"
+			*ngIf="
+				!campaignReportForm?.valid ||
+				groupIds?.length === 0 ||
+				(brandKeywords?.length === 0 && customKeywords?.length === 0)
+			"
+			>At least one brand name or keyword is required to generate a report</span
+		>
+		<button
+			class="convo-btn-primary convo-btn-normal"
+			[disabled]="
+				!campaignReportForm?.valid ||
+				groupIds?.length === 0 ||
+				(brandKeywords?.length === 0 && customKeywords?.length === 0) ||
+				isSubmitting
+			"
+			data-cs-id="39e9714d-80cf-43c3-95a6-40353898edf5"
+			[attr.data-cs-label]="!isEditMode ? 'Generate your campaign report' : 'Save changes & update report'"
+			data-cs-source="page"
+			(click)="createSelfMonetizationCampaign(); recordButtonClick($event)"
+		>
+			{{ !isEditMode ? 'Generate your campaign report' : 'Save changes & update report' }}
+		</button>
+	</div>
+</div>
+
+<div *ngIf="isCampaignPostsEnabled">
+	<app-campaign-report-posts
+		[startDate]="campaignReportForm.get('startDateAtUTC').value"
+		[endDate]="campaignReportForm.get('endDateAtUTC').value"
+		[groups]="selectedGroups"
+		[selectedPosts]="conversations"
+		(closeConversations)="closeConversations($event)"
+	></app-campaign-report-posts>
+</div>

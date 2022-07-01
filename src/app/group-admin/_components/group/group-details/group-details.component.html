@@ -1,0 +1,190 @@
+<div class="container">
+	<div class="page-headers">
+		<h1>Group Details</h1>
+		<h6>Share the correct details of your group so we can offer the best experience</h6>
+	</div>
+
+	<div class="group-details-component">
+		<div *ngIf="!loadingGroupData" class="update-group-details">
+			<div class="card">
+				<div class="card-header">
+					<h5>Update group details</h5>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<h6><strong>Select the category</strong> of this group</h6>
+								<div class="custom-dropdown dropdown pills-dropdown">
+									<div class="fake-input dropdown-toggle" data-toggle="dropdown">
+										<span *ngIf="group?.businessCategory; else noCategory" class="placeholder">{{
+											group.businessCategory
+										}}</span>
+										<ng-template #noCategory>
+											<span class="placeholder">Select category</span>
+										</ng-template>
+									</div>
+									<div class="dropdown-menu-wrapper dropdown-menu">
+										<div class="dropdown-container">
+											<div *ngFor="let bsCat of businessCategory" class="form-check">
+												<div (click)="changeBusinessCategory(bsCat)" class="form-check-label">
+													{{ bsCat }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-sm-6">
+							<div class="form-group">
+								<h6><strong>Which country</strong> does this group focus on?</h6>
+								<app-searchable-dropdown
+									(optionSelected)="changeGroupCountry($event)"
+									[mainDropDownOptions]="countryList"
+									[placeholder]=""
+									[selectedValue]="countryPlaceholder"
+								>
+								</app-searchable-dropdown>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="d-flex align-items-center submit-wrapper">
+								<div [hidden]="isFormSubmitted === false" class="loading-wrapper">
+									<div class="bt-spinner"></div>
+									<p class="primary-loading-text">Submitting</p>
+									<p class="secondary-loading-text">Please wait...</p>
+								</div>
+								<div>
+									<button
+										(click)="updateGroupInformation($event)"
+										data-cs-label="Save changes"
+										data-cs-source="page"
+										data-cs-id="d73418ef-0b4c-4316-8d5f-c46a41a17ab1"
+										[disabled]="!(group?.businessCategory && group?.country)"
+										[hidden]="isFormSubmitted === true"
+										class="submit-btn"
+										type="button"
+									>
+										Save changes
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="eligibilityForInsightsUpload" class="card">
+				<div class="card-header">
+					<div class="card-header-left">
+						<h5>Insights upload</h5>
+					</div>
+					<div class="card-header-right">
+						<button
+							class="convo-btn-normal convo-btn-border"
+							(click)="playVideo()"
+							data-target="#videoModal"
+							data-toggle="modal"
+						>
+							<img src="./assets/images/icon-play-circle-outline.svg" alt="" /><span>What is insights upload?</span>
+						</button>
+					</div>
+				</div>
+				<div class="card-body">
+					<app-facebook-insights-upload-card [group]="group" [pageType]="pageType"></app-facebook-insights-upload-card>
+				</div>
+			</div>
+			<div *ngIf="group.role !== 'Moderator'" class="card">
+				<div class="card-header">
+					<div class="card-header-left">
+						<h5>Revoke access</h5>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="revoke-access">
+						<h6>
+							This will remove all access of Convosight from your Group and you will not be able to access Convosight
+							features and monetisation campaigns
+						</h6>
+						<button
+							(click)="confirmUninstallation($event, group)"
+							class="convo-btn-normal convo-btn-danger"
+							data-cs-id="89816d1c-b2f6-490e-a628-67830ab47ced"
+							data-cs-label="Revoke Access"
+							data-cs-source="page"
+						>
+							Revoke access
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="loadingGroupData">
+			<div class="loading-wrapper">
+				<div class="bt-spinner-center"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Uninstall overlay starts here -->
+<!-- ToDo : Please make changes such that clicking outside the overlay closes the overlay and remove the *ngIf condition -->
+<div class="convosight-overlay" *ngIf="groupToUninstall !== null">
+	<div class="uninstall-wrapper">
+		<div class="content-wrapper">
+			<button class="close" (click)="closeGroupUninstallOverlay($event)">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h2 class="head-text">How to uninstall?</h2>
+			<p class="content">Go to your Facebook Group to uninstall Convosight from group settings</p>
+		</div>
+		<div class="button-wrapper">
+			<a #fbGroupRedirection hidden target="_blank" href="https://www.facebook.com/groups/{{ group.fbGroupId }}"></a>
+			<button
+				type="button"
+				class="btn-cancel px-4 convo-btn-normal"
+				data-cs-label="Ok"
+				data-cs-source="dialog"
+				data-cs-id="b7121d67-17b1-4312-91cf-5e5cc7fbfd5a"
+				(click)="fbGroupRedirection.click()"
+				(click)="closeGroupUninstallOverlay($event)"
+				(click)="groupToUninstall = null"
+			>
+				Go to Facebook Group
+			</button>
+			<button class="convo-btn-danger convo-btn-normal" hidden type="button">Remove</button>
+		</div>
+	</div>
+</div>
+<!-- Uninstall overlay ends here -->
+
+<!-- Video Modal -->
+<div
+	class="modal fade video-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="videoModal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button class="close" data-dismiss="modal" (click)="closeModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body text-center p-0">
+				<iframe
+					[src]="videoLink | sanitizeUrl"
+					title="YouTube video player"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen
+				></iframe>
+			</div>
+		</div>
+	</div>
+</div>

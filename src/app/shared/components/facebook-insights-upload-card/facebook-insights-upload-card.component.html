@@ -1,0 +1,114 @@
+<div class="insight-upload-wrapper" *ngIf="enableInputBlock">
+	<input type="file" accept=".xlsx" title=" " class="input-file" (change)="fileChange($event)" />
+	<div class="icon">
+		<img src="./assets/images/icon-file-upload.svg" alt="" />
+	</div>
+	<h6 *ngIf="renderedOn === 'Desktop'">Drag and drop your file here, or <span>browse files on your computer</span></h6>
+	<h6 *ngIf="renderedOn === 'Mobile'"><span>Browse file to upload</span></h6>
+
+	<p>Upload insights data in a .xlsx file format. Max file size - 5MB</p>
+</div>
+<div class="upload-card-wrap" *ngIf="!enableInputBlock">
+	<div class="upload-card-left">
+		<figure class="m-0 group-info-wrap" *ngIf="pageType !== 'group-details'">
+			<app-fb-group-cover-image
+				[coverImageUrl]="group.coverImageUrl"
+				[fbGroupId]="group.fbGroupId"
+			></app-fb-group-cover-image>
+		</figure>
+		<div class="uploaded-file-wrap" [ngClass]="{'p-0': pageType === 'group-details'}">
+			<h5 class="group-name" *ngIf="pageType !== 'group-details'">{{ group.name }}</h5>
+			<div class="file-wrap-left">
+				<div class="file-status-wrap">
+					<div *ngIf="fileExist" class="progress-wrap file-detail">
+						<figure>
+							<img
+								[ngClass]="{'w-auto': pageType === 'group-details'}"
+								src="./assets/images/icon-file-present.svg"
+								alt=""
+							/>
+						</figure>
+						<h6
+							class="mb-0 pointer"
+							*ngIf="pageType !== 'group-details'"
+							(click)="downloadFile()"
+							title="{{ fileName }}"
+						>
+							{{ modifiedFileName }}
+						</h6>
+					</div>
+					<div class="file-status" [ngClass]="{'ml-1': pageType === 'group-details'}">
+						<h6
+							class="mb-1 pointer font-weight-bold"
+							*ngIf="pageType === 'group-details'"
+							(click)="downloadFile()"
+							title="{{ fileName }}"
+						>
+							{{ fileName }}
+						</h6>
+						<div *ngIf="!fileExist" class="progress-wrap">
+							<img src="./assets/images/pending-upload-icon.svg" alt="" /> <span class="ml-1">Upload pending</span>
+						</div>
+
+						<div *ngIf="fileUploading" class="progress-wrap">
+							<span class="bt-spinner-center ml-1"></span> <span>Uploading file...</span>
+						</div>
+
+						<div class="progress-wrap" *ngIf="fileProcessing">
+							<img src="./assets/images/icon-access-time.svg" alt="" /> <span class="ml-1">Processing file...</span>
+						</div>
+
+						<div class="progress-wrap valid" *ngIf="fileStatus === 'Valid'">
+							<img src="./assets/images/icon-check-circle.svg" alt="" /><span class="ml-1">File valid</span>
+						</div>
+
+						<div class="progress-wrap invalid" *ngIf="fileStatus === 'Invalid'">
+							<img src="./assets/images/icon-error-outline.svg" alt="" /><span class="ml-1">File invalid</span>
+						</div>
+
+						<div class="progress-wrap expired" *ngIf="fileStatus === 'Expired'">
+							<img src="./assets/images/icon-expired-outline.svg" alt="" /><span class="ml-1">File expired</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="upload-card-right">
+		<input type="file" accept=".xlsx" title=" " #uploadFile class="input-file" (change)="fileChange($event)" />
+		<button class="convo-btn-normal convo-btn-cancel" (click)="cancelUploading()" *ngIf="fileUploading">
+			Cancel upload
+		</button>
+		<button
+			class="convo-btn-normal convo-btn-bordered"
+			*ngIf="!fileExist || fileStatus === 'Invalid' || fileStatus === 'Expired'"
+			(click)="uploadFile.click()"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M6.00016 10.6667H10.0002V6.66667H12.6668L8.00016 2L3.3335 6.66667H6.00016V10.6667ZM3.3335 12H12.6668V13.3333H3.3335V12Z"
+					fill="3654FF"
+				/>
+			</svg>
+			<span>Upload insights</span>
+		</button>
+		<div
+			class="dropdown-wrap"
+			*ngIf="fileExist && !fileUploading && fileStatus !== 'Invalid' && fileStatus !== 'Expired'"
+		>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" type="button" class="dropdown-btn">
+				<svg fill="none" height="16" viewBox="0 0 4 16" width="4" xmlns="http://www.w3.org/2000/svg">
+					<path
+						clip-rule="evenodd"
+						d="M0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12C0.9 12 0 12.9 0 14ZM0 2C0 3.1 0.9 4 2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2ZM0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6C0.9 6 0 6.9 0 8Z"
+						fill="#9999A7"
+						fill-rule="evenodd"
+					/>
+				</svg>
+			</button>
+			<div class="dropdown-menu">
+				<button class="dropdown-item" (click)="uploadFile.click()">Upload new insights</button>
+			</div>
+		</div>
+	</div>
+</div>

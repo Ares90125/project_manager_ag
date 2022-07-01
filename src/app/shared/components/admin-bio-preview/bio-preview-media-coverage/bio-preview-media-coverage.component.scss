@@ -1,0 +1,71 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.media-coverage-wrap {
+	.media-row {
+		@include shadow-elevation-low;
+		background: #fff;
+		display: flex;
+		align-items: center;
+		border-radius: 8px;
+		overflow: hidden;
+		cursor: pointer;
+		color: $primary-1;
+		text-decoration: none !important;
+		margin-bottom: 8px;
+		border: 1px solid $borders-grey;
+		@media (max-width: 767px) {
+			border: 1px solid $borders-grey;
+			flex-direction: column;
+		}
+		.media-row-left {
+			width: 168px;
+			min-width: 168px;
+			height: 126px;
+			@media (max-width: 767px) {
+				width: 100%;
+				height: 170px;
+			}
+			img {
+				height: 100%;
+				width: 100%;
+				object-fit: cover;
+			}
+		}
+		.media-row-right {
+			padding-left: 16px;
+			padding-right: 16px;
+			@media (max-width: 767px) {
+				padding: 12px;
+				border-top: 1px solid $borders-grey;
+				width: 100%;
+			}
+			h6 {
+				@include font-paragraph-s-md;
+				margin-bottom: 4px;
+				max-height: 40px;
+				overflow: hidden;
+				color: $primary-1;
+			}
+			p {
+				@include font-paragraph-xs;
+				margin-bottom: 4px;
+				color: $black-70;
+				max-height: 36px;
+				overflow: hidden;
+			}
+			.link {
+				color: $emp-blue-1;
+				@include font-label-xs;
+				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				max-width: 240px;
+				@media (max-width: 767px) {
+					max-width: 260px;
+				}
+			}
+		}
+	}
+}

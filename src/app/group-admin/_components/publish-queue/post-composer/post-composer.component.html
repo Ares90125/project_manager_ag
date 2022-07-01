@@ -1,0 +1,797 @@
+<div class="post-composer-main-wrapper">
+	<div>
+		<div class="post-composer-header">
+			<div>
+				<button (click)="navigateToPreviousRoute()" data-test-id="button-close-post-composer">
+					<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2998 5.70997C17.9098 5.31997 17.2798 5.31997 16.8898 5.70997L11.9998 10.59L7.10985 5.69997C6.71985 5.30997 6.08985 5.30997 5.69985 5.69997C5.30985 6.08997 5.30985 6.71997 5.69985 7.10997L10.5898 12L5.69985 16.89C5.30985 17.28 5.30985 17.91 5.69985 18.3C6.08985 18.69 6.71985 18.69 7.10985 18.3L11.9998 13.41L16.8898 18.3C17.2798 18.69 17.9098 18.69 18.2998 18.3C18.6898 17.91 18.6898 17.28 18.2998 16.89L13.4098 12L18.2998 7.10997C18.6798 6.72997 18.6798 6.08997 18.2998 5.70997Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<span data-test-id="heading-post-composer-page">New post</span>
+			</div>
+			<button
+				(click)="multiGroupPost($event, true)"
+				*ngIf="renderedOn === 'Mobile' && !publishInProgress"
+				[disabled]="!this.enablePublishPostButton"
+				class="convo-btn-primary convo-btn-normal"
+				data-cs-parent-label="Compose post"
+				data-cs-source="page"
+			>
+				{{ selectedPostOption === 'Publish now' ? selectedPostOption : 'Schedule' }}
+			</button>
+			<button *ngIf="renderedOn === 'Mobile' && publishInProgress" class="convo-btn-primary convo-btn-normal">
+				<span class="bt-spinner btn-spinner-white"></span>
+			</button>
+		</div>
+
+		<div *ngIf="renderedOn === 'Mobile'" class="mobile-options">
+			<ul class="list-unstyled">
+				<li
+					(click)="setGroupsSelected()"
+					data-target="#multiGroupSelectModal"
+					data-toggle="modal"
+					[class.disabled-multi-group-select-mobile]="postToBeReShared"
+				>
+					<figure *ngIf="numOfGroupSelected === 1">
+						<img alt="" src="assets/images/default_group_image.jpg" />
+						<h6>{{ group?.name }}</h6>
+					</figure>
+
+					<div *ngIf="numOfGroupSelected > 1" class="multiple-posting">
+						<figure>
+							<div class="group-img-wrap">
+								<img alt="" src="assets/images/default_group_image.jpg" />
+								<img alt="" src="assets/images/default_group_image.jpg" />
+							</div>
+							<div class="multiple-posting-groups">
+								<h6>Posting to {{ numOfGroupSelected }} groups</h6>
+								<h5>
+									<span *ngFor="let selectedGroup of selectedGroups | keyvalue">{{ selectedGroup.value.name }} , </span>
+								</h5>
+							</div>
+						</figure>
+					</div>
+
+					<div [hidden]="postToBeReShared">
+						<svg fill="none" height="24" viewBox="0 0 25 24" width="25" xmlns="http://www.w3.org/2000/svg">
+							<path d="M19.5879 13H13.5879V19H11.5879V13H5.58789V11H11.5879V5H13.5879V11H19.5879V13Z" fill="#9999A7" />
+						</svg>
+					</div>
+				</li>
+				<li
+					(click)="publishService.selectedPostOption = selectedPostOption"
+					data-target="#publishTimeModal"
+					data-toggle="modal"
+				>
+					<figure>
+						<img alt="" src="assets/images/schedule-icon.svg" />
+						<h6>{{ toBeShownTime }}</h6>
+					</figure>
+					<div>
+						<svg fill="none" height="24" viewBox="0 0 25 24" width="25" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M3.58789 17.4601V20.5001C3.58789 20.7801 3.80789 21.0001 4.08789 21.0001H7.12789C7.25789 21.0001 7.38789 20.9501 7.47789 20.8501L18.3979 9.94006L14.6479 6.19006L3.73789 17.1001C3.63789 17.2001 3.58789 17.3201 3.58789 17.4601ZM21.2979 7.04006C21.6879 6.65006 21.6879 6.02006 21.2979 5.63006L18.9579 3.29006C18.5679 2.90006 17.9379 2.90006 17.5479 3.29006L15.7179 5.12006L19.4679 8.87006L21.2979 7.04006Z"
+								fill="#ADADB9"
+							/>
+						</svg>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="post-composer-main-content">
+			<div class="app-multi-group-select">
+				<app-multi-group-select
+					[postToBeReShared]="postToBeReShared"
+					[postToBeEdited]="postToBeEdited"
+					(setAllGroupSelection)="toggleAllGroupSelection($event)"
+					(setGroupSelection)="toggleGroupSelection($event)"
+					*ngIf="installedGroups?.length > 0 && group; else loadingGroups"
+					[group]="group"
+					[installedGroups]="installedGroups"
+					[selectedGroups]="selectedGroups"
+				></app-multi-group-select>
+				<ng-template #loadingGroups>
+					<div class="shimmers-wrap">
+						<ul class="list-unstyled">
+							<li>
+								<div class="img-shimmer shimmer"></div>
+								<div class="shimmer shimmer-large"></div>
+							</li>
+							<li>
+								<div class="img-shimmer shimmer"></div>
+								<div class="shimmer shimmer-large"></div>
+							</li>
+							<li>
+								<div class="img-shimmer shimmer"></div>
+								<div class="shimmer shimmer-large"></div>
+							</li>
+							<li>
+								<div class="img-shimmer shimmer"></div>
+								<div class="shimmer shimmer-large"></div>
+							</li>
+						</ul>
+					</div>
+				</ng-template>
+			</div>
+
+			<div class="app-compose-post-wrapper">
+				<div>
+					<h6 class="post-title" data-test-id="heading-post-composer">YOUR POST</h6>
+					<app-custom-post-text-area
+						[postToBeReShared]="postToBeReShared"
+						(postUpdate)="postUpdate($event)"
+						[(postMessage)]="postMessage"
+						[imageFiles]="imageFiles"
+						[isPublished]="isPosting"
+						[isTypeRepost]="isTypeRepost"
+						[previewImage]="previewImage"
+						[showSpinner]="showSpinner"
+						[videoFiles]="videoFiles"
+					>
+					</app-custom-post-text-area>
+					<div class="post-content-help">
+						<ul class="list-unstyled">
+							<li>
+								<a
+									data-target="#templateModal"
+									data-toggle="modal"
+									(click)="showTemplateModal = true; recordButtonClick($event)"
+									data-cs-id="923676a5-e88f-4a59-a855-4ba90bd3c96a"
+									data-cs-label="Use a template"
+									data-cs-source="page"
+								>
+									<div>
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M7 19H17V4H7V19ZM2 17H6V6H2V17ZM18 6V17H22V6H18Z" fill="#9999A7" />
+										</svg>
+										<span data-test-id="template-link-post-composer">Use a template</span>
+									</div>
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M9.29 6.71002C8.9 7.10002 8.9 7.73002 9.29 8.12002L13.17 12L9.29 15.88C8.9 16.27 8.9 16.9 9.29 17.29C9.68 17.68 10.31 17.68 10.7 17.29L15.29 12.7C15.68 12.31 15.68 11.68 15.29 11.29L10.7 6.70002C10.32 6.32002 9.68 6.32002 9.29 6.71002Z"
+											fill="#ADADB9"
+										/>
+									</svg>
+								</a>
+							</li>
+							<li *ngIf="numOfGroupSelected === 1">
+								<a
+									(click)="this.checkSuggestion(recommendation); recordButtonClick($event)"
+									data-cs-id="deeac958-2a95-4169-bf1b-79f2caeef55a"
+									data-cs-label="Check content suggestions"
+									data-cs-source="page"
+									data-target="#contentSuggestions"
+									data-toggle="modal"
+								>
+									<div>
+										<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M19 3H14.82C14.4 1.84 13.3 1 12 1C10.7 1 9.6 1.84 9.18 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM12 3C12.55 3 13 3.45 13 4C13 4.55 12.55 5 12 5C11.45 5 11 4.55 11 4C11 3.45 11.45 3 12 3ZM14 17H7V15H14V17ZM17 13H7V11H17V13ZM17 9H7V7H17V9Z"
+												fill="#9999A7"
+											/>
+										</svg>
+										<span data-test-id="link-check-content-suggestion-post-composer">Check content suggestions</span>
+									</div>
+									<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M9.29 6.71002C8.9 7.10002 8.9 7.73002 9.29 8.12002L13.17 12L9.29 15.88C8.9 16.27 8.9 16.9 9.29 17.29C9.68 17.68 10.31 17.68 10.7 17.29L15.29 12.7C15.68 12.31 15.68 11.68 15.29 11.29L10.7 6.70002C10.32 6.32002 9.68 6.32002 9.29 6.71002Z"
+											fill="#ADADB9"
+										/>
+									</svg>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="app-publish-time">
+				<app-publish-time
+					(postToBePublishedAtTime)="getToBePublishedAtTime($event)"
+					(publishPost)="multiGroupPost($event, false)"
+					*ngIf="initialGroupId"
+					[(selectedPostOption)]="selectedPostOption"
+					[autoRecommendation]="recommendation"
+					[enablePublishPostButton]="enablePublishPostButton"
+					[initialGroupId]="initialGroupId"
+					[numOfGroupSelected]="numOfGroupSelected"
+					[selectedGroups]="selectedGroups"
+					[postToBeEdited]="postToBeEdited"
+					[publishInProgress]="publishInProgress"
+				></app-publish-time>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="renderedOn === 'Mobile'" class="action-wrap">
+		<button
+			(click)="multiGroupPost($event, true)"
+			*ngIf="!publishInProgress"
+			[disabled]="!this.enablePublishPostButton"
+			class="convo-btn-primary convo-btn-normal"
+			data-cs-parent-label="Compose post"
+			data-cs-source="page"
+		>
+			{{ selectedPostOption === 'Publish now' ? selectedPostOption : 'Schedule' }}
+		</button>
+		<button *ngIf="publishInProgress" class="convo-btn-primary convo-btn-normal">
+			<span class="bt-spinner btn-spinner-white"></span>
+		</button>
+	</div>
+</div>
+
+<!-- Content Suggestions Modal -->
+<div
+	aria-hidden="true"
+	class="modal fade content-suggestions-modal"
+	id="contentSuggestions"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Check content suggestions</h5>
+				<button
+					(click)="recordButtonClick($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="28f62918-d185-49fc-92ed-a9f89f364a43"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2997 5.70973C17.9097 5.31973 17.2797 5.31973 16.8897 5.70973L11.9997 10.5897L7.10973 5.69973C6.71973 5.30973 6.08973 5.30973 5.69973 5.69973C5.30973 6.08973 5.30973 6.71973 5.69973 7.10973L10.5897 11.9997L5.69973 16.8897C5.30973 17.2797 5.30973 17.9097 5.69973 18.2997C6.08973 18.6897 6.71973 18.6897 7.10973 18.2997L11.9997 13.4097L16.8897 18.2997C17.2797 18.6897 17.9097 18.6897 18.2997 18.2997C18.6897 17.9097 18.6897 17.2797 18.2997 16.8897L13.4097 11.9997L18.2997 7.10973C18.6797 6.72973 18.6797 6.08973 18.2997 5.70973Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="content-suggestion-wrapper">
+					<div *ngIf="recommendation" class="suggestions-met">
+						<div class="bt-spinner" hidden></div>
+
+						<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<rect fill="white" height="24" rx="12" width="24" />
+							<path
+								d="M8.91551 11.2085L8.92151 11.2492L6.40014 5.83975C6.20947 5.43241 5.63479 5.29708 5.11678 5.53908L5.07612 5.55775C4.62278 5.76908 4.36211 6.19976 4.43344 6.57776C4.43344 6.57776 3.58343 5.81308 3.08409 6.04642L3.04409 6.06442C2.54475 6.29776 2.29541 6.82177 2.48875 7.23577L2.84408 8.03045C2.64342 7.60111 2.05074 7.45311 1.52073 7.70111L1.4794 7.72045C0.94939 7.96778 0.681386 8.51646 0.882056 8.9458L4.30277 17.7126L8.83217 17.8539L10.1862 13.6872L8.91551 11.2085ZM22.5677 7.72111L22.5264 7.70178C21.9957 7.45378 21.403 7.60178 21.203 8.03112L21.5584 7.23644C21.7517 6.82243 21.5024 6.29776 21.0037 6.06509L20.9637 6.04709C20.4643 5.81375 19.903 5.96109 19.709 6.37509L19.6137 6.5791C19.685 6.20109 19.425 5.77042 18.971 5.55908L18.9297 5.54041C18.4116 5.29841 17.837 5.43375 17.647 5.84175L15.1329 11.2338L15.1109 11.1578L13.7636 14.1712L15.9989 18.4326L20.129 15.4572L23.165 8.94646C23.3657 8.51712 23.097 7.96845 22.5677 7.72111Z"
+								fill="#EF9645"
+							/>
+							<path
+								d="M23.8719 10.6306C23.8719 10.6306 24.3073 9.93527 23.5692 9.59193C22.8319 9.24859 22.5812 10.0299 22.5812 10.0299L20.9879 13.458C20.8939 13.3487 20.5179 13.114 20.4105 13.0106L22.6206 8.25325C22.6206 8.25325 23.0559 7.5579 22.3172 7.21456C21.5792 6.87189 21.3285 7.65257 21.3285 7.65257L19.2499 12.1266C19.1332 12.0606 18.8298 11.9086 18.7085 11.8446L21.1192 6.65722C21.1192 6.65722 21.5539 5.96188 20.8159 5.61854C20.0785 5.2752 19.8279 6.05655 19.8279 6.05655L17.4158 11.2433C17.2872 11.1913 16.8845 11.02 16.7571 10.974L19.0105 6.12588C19.0105 6.12588 19.4445 5.43054 18.7072 5.0872C17.9685 4.74386 17.7185 5.52521 17.7185 5.52521L15.3358 10.6513L15.1451 11.0626L15.0598 11.2466C17.2752 12.276 18.0505 14.9907 17.1932 16.836C17.0212 17.2054 16.4085 17.036 16.4085 17.036C17.4378 14.822 16.6471 12.6586 14.4324 11.63L14.5285 8.59992C14.5285 8.59992 14.6178 7.79124 13.8091 7.70124C12.9991 7.6119 12.9098 8.42125 12.9098 8.42125L12.5704 10.5433C12.4351 11.3846 12.2831 12.2266 12.0304 13.0406C11.3197 15.3387 12.3978 17.8661 14.6405 18.9094C17.0865 20.0461 19.9919 18.9841 21.1285 16.5387L21.2999 16.168L23.8719 10.6306Z"
+								fill="#FFDC5D"
+							/>
+							<path
+								d="M0.127901 10.6309C0.127901 10.6309 -0.308105 9.93558 0.429905 9.59224C1.16792 9.2489 1.41792 10.0302 1.41792 10.0302L3.01128 13.4583C3.10528 13.349 3.48128 13.1143 3.58862 13.011L1.37859 8.25356C1.37859 8.25356 0.942579 7.55821 1.68192 7.21487C2.4186 6.8722 2.66994 7.65288 2.66994 7.65288L4.7493 12.1269C4.86597 12.0609 5.16931 11.9089 5.29064 11.8449L2.88061 6.6582C2.88061 6.6582 2.44527 5.96286 3.18394 5.61952C3.92196 5.27618 4.17263 6.05752 4.17263 6.05752L6.58466 11.2443C6.71333 11.1923 7.116 11.0209 7.24334 10.9749L4.98997 6.12686C4.98997 6.12686 4.55596 5.43151 5.29331 5.08818C6.03132 4.74484 6.28199 5.52618 6.28199 5.52618L8.66469 10.6523L8.85536 11.0636L8.94069 11.2476C6.72533 12.2769 5.94998 14.9917 6.80733 16.837C6.97933 17.2064 7.59201 17.037 7.59201 17.037C6.56266 14.823 7.35334 12.6596 9.56737 11.6309L9.47203 8.60089C9.47203 8.60089 9.3827 7.79222 10.1907 7.70221C11.0007 7.61288 11.0907 8.42222 11.0907 8.42222L11.4294 10.5443C11.5647 11.3856 11.7174 12.2276 11.9701 13.0416C12.6814 15.3397 11.6021 17.867 9.35937 18.9104C6.91333 20.0471 4.00796 18.985 2.87127 16.5397L2.7006 16.169L0.127901 10.6309Z"
+								fill="#FFDC5D"
+							/>
+						</svg>
+						<div>
+							<span *ngIf="loadingSuggestions" class="bt-spinner"></span>
+							<div *ngIf="!loadingSuggestions">
+								<strong>{{ suggestionMatched }}</strong> / {{ totalSuggestion }}
+								suggestions met
+							</div>
+						</div>
+					</div>
+
+					<!-- <div class="content-suggestion-header">
+            <h6>
+              Content suggestions:
+            </h6>
+          </div> -->
+
+					<div class="content-suggestion-body">
+						<div
+							*ngIf="!postToBeEdited || !(postToBeEdited && postToBeEdited.campaignTaskId)"
+							class="content-suggestion-wrapper"
+						>
+							<div *ngIf="recommededEmotions" class="content-suggestion-header">
+								<h6 *ngIf="recommededEmotions || (SuggestionChecked && (SuggestionChecked | json) !== '{}')">
+									Content suggestions:
+								</h6>
+							</div>
+
+							<div class="content-suggestion-body">
+								<ng-container *ngIf="SuggestionChecked && (SuggestionChecked | json) !== '{}'">
+									<ng-container *ngIf="SuggestionChecked?.optimumLength">
+										<h5>Optimum length</h5>
+										<p class="text-secondary">
+											Keeping your post to an optimum length of approx.
+											{{ SuggestionChecked?.optimumLength?.minChar }} characters ({{
+												SuggestionChecked?.optimumLength?.minWord
+											}}
+											words) leads to better engagement.
+										</p>
+
+										<ul *ngIf="SuggestionChecked.optimumLengthResult" class="list-unstyled optimum-length-points">
+											<li class="character-count">
+												<figure
+													[class.green]="SuggestionChecked.optimumLengthResult?.optimumCharacterCount?.flag"
+													[class.orange]="!SuggestionChecked.optimumLengthResult?.optimumCharacterCount?.flag"
+												>
+													{{ SuggestionChecked.optimumLengthResult?.optimumCharacterCount?.value }}
+												</figure>
+												<div class="optimum-length-description">
+													<div class="optimum-length-title">Character count</div>
+													<p *ngIf="SuggestionChecked.optimumLengthResult?.optimumCharacterCount?.flag">Perfect!</p>
+													<p *ngIf="!SuggestionChecked.optimumLengthResult?.optimumCharacterCount?.flag">
+														You can be a bit more descriptive!
+													</p>
+												</div>
+											</li>
+											<li class="word-count">
+												<figure
+													[class.green]="SuggestionChecked.optimumLengthResult?.optimumWordCount?.flag"
+													[class.orange]="!SuggestionChecked.optimumLengthResult?.optimumWordCount?.flag"
+												>
+													{{ SuggestionChecked.optimumLengthResult?.optimumWordCount?.value }}
+												</figure>
+												<div class="optimum-length-description">
+													<div class="optimum-length-title">Word count</div>
+													<p *ngIf="SuggestionChecked.optimumLengthResult?.optimumWordCount?.flag">Perfect!</p>
+													<p *ngIf="!SuggestionChecked.optimumLengthResult?.optimumWordCount?.flag">
+														You can be a bit more descriptive!
+													</p>
+												</div>
+											</li>
+										</ul>
+									</ng-container>
+
+									<ng-container
+										*ngIf="
+											(SuggestionChecked?.categories && SuggestionChecked?.categories?.length !== 0) ||
+											(SuggestionChecked?.topics && SuggestionChecked?.topics?.length !== 0) ||
+											(SuggestionChecked?.keywords && SuggestionChecked?.keywords?.length !== 0)
+										"
+									>
+										<h5>Popular category</h5>
+										<p class="text-secondary">
+											Write your content around these trending categories & topics to get better engagement.
+										</p>
+
+										<ng-container *ngIf="SuggestionChecked?.categories && SuggestionChecked?.categories?.length !== 0">
+											<h6>Top categories</h6>
+											<ul class="custom-tags-container">
+												<li *ngFor="let cat of SuggestionChecked?.categories" [class.matched]="cat?.flag">
+													{{ cat?.value }}
+												</li>
+											</ul>
+										</ng-container>
+
+										<ng-container *ngIf="SuggestionChecked?.topics && SuggestionChecked?.topics?.length !== 0">
+											<h6>Trending topics</h6>
+											<ul class="custom-tags-container">
+												<li *ngFor="let topic of SuggestionChecked?.topics" [class.matched]="topic?.flag">
+													{{ topic?.value }}
+												</li>
+											</ul>
+										</ng-container>
+
+										<ng-container *ngIf="SuggestionChecked?.keywords && SuggestionChecked?.keywords?.length !== 0">
+											<h6>Trending keywords</h6>
+											<ul class="custom-tags-container">
+												<li *ngFor="let keyword of SuggestionChecked?.keywords" [class.matched]="keyword?.flag">
+													{{ keyword?.value }}
+												</li>
+											</ul>
+										</ng-container>
+									</ng-container>
+								</ng-container>
+								<ng-container *ngIf="recommededEmotions">
+									<h5>Emotion and Tone</h5>
+									<p class="text-secondary">
+										Establish a deep connection with your audience by using any one of the below suggested emotional
+										state keywords and get better engagement.
+									</p>
+
+									<ng-container *ngFor="let emotionObj of recommededEmotions; let i = index">
+										<ng-container *ngIf="i < numOfEmotionsToShow">
+											<h6>{{ emotionObj.emotion }}</h6>
+											<ul class="custom-tags-container lg-tags">
+												<li *ngFor="let keyword of emotionObj.keywords" [class.matched]="keyword?.flag" class="">
+													<strong>{{ keyword.keyword }}</strong>
+													<span>{{ keyword.mentions }} mentions</span>
+												</li>
+											</ul>
+										</ng-container>
+									</ng-container>
+									<div class="more-less-emotions-wrapper">
+										<button (click)="numOfEmotionsToShow = 10" [hidden]="numOfEmotionsToShow === 10" class="more-tags">
+											See more emotions
+										</button>
+										<button (click)="numOfEmotionsToShow = 3" [hidden]="numOfEmotionsToShow === 3" class="more-tags">
+											See less emotions
+										</button>
+									</div>
+								</ng-container>
+
+								<p class="text-secondary tips-heading">Tips for more engagement:</p>
+
+								<div class="more-tips">
+									<ul class="list-unstyled">
+										<li>
+											<figure>
+												<img alt="" src="assets/images/promise-icon.svg" />
+											</figure>
+											<div class="tip">
+												<h4>Make a genuine promise</h4>
+												<p class="text-secondary">
+													A genuine promise that your post makes and the content that backs it, is useful
+												</p>
+											</div>
+										</li>
+										<li>
+											<figure>
+												<img alt="" src="assets/images/ask-icon.svg" />
+											</figure>
+											<div class="tip">
+												<h4>Ask a question</h4>
+												<p class="text-secondary">
+													Asking a question to clarify on what to do and what not to do can help avoid wrong choices.
+												</p>
+											</div>
+										</li>
+										<li>
+											<figure>
+												<img alt="" src="assets/images/smile-icon.svg" />
+											</figure>
+											<div class="tip">
+												<h4>Use images that invokes emotion</h4>
+												<p class="text-secondary">
+													Pictures that have real people and clear emotions visible on their faces results in more
+													clicks.
+												</p>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Use a Template Modal -->
+<div
+	class="modal fade template-modal"
+	id="templateModal"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+	*ngIf="showTemplateModal"
+>
+	<app-templates (templateUpdate)="postUpdate($event)" (templateModalShow)="templateModalShow($event)"> </app-templates>
+</div>
+
+<!-- Publish Time Modal For Mobile -->
+<div class="modal fade publish-time-modal" id="publishTimeModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					(click)="selectedPostOption = publishService.selectedPostOption; recordButtonClick($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="a3cc67fd-a771-4dba-91d9-da6019ca1364"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2997 5.70973C17.9097 5.31973 17.2797 5.31973 16.8897 5.70973L11.9997 10.5897L7.10973 5.69973C6.71973 5.30973 6.08973 5.30973 5.69973 5.69973C5.30973 6.08973 5.30973 6.71973 5.69973 7.10973L10.5897 11.9997L5.69973 16.8897C5.30973 17.2797 5.30973 17.9097 5.69973 18.2997C6.08973 18.6897 6.71973 18.6897 7.10973 18.2997L11.9997 13.4097L16.8897 18.2997C17.2797 18.6897 17.9097 18.6897 18.2997 18.2997C18.6897 17.9097 18.6897 17.2797 18.2997 16.8897L13.4097 11.9997L18.2997 7.10973C18.6797 6.72973 18.6797 6.08973 18.2997 5.70973Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<h5 class="modal-title">Select time to publish</h5>
+			</div>
+			<div class="modal-body">
+				<app-publish-time
+					(postToBePublishedAtTime)="getToBePublishedAtTime($event)"
+					(publishPost)="multiGroupPost($event, false)"
+					*ngIf="initialGroupId"
+					[(selectedPostOption)]="selectedPostOption"
+					[autoRecommendation]="recommendation"
+					[enablePublishPostButton]="enablePublishPostButton"
+					[initialGroupId]="initialGroupId"
+					[numOfGroupSelected]="numOfGroupSelected"
+					[selectedGroups]="selectedGroups"
+					[postToBeEdited]="postToBeEdited"
+					[publishInProgress]="publishInProgress"
+				></app-publish-time>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Multi Select Group Modal For Mobile -->
+<div
+	aria-hidden="true"
+	class="modal fade multi-group-select-modal"
+	id="multiGroupSelectModal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					(click)="cancelGroupsSelected(); recordButtonClick($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="75b83652-226b-4569-8776-a7cbfedcb45f"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M18.2997 5.70973C17.9097 5.31973 17.2797 5.31973 16.8897 5.70973L11.9997 10.5897L7.10973 5.69973C6.71973 5.30973 6.08973 5.30973 5.69973 5.69973C5.30973 6.08973 5.30973 6.71973 5.69973 7.10973L10.5897 11.9997L5.69973 16.8897C5.30973 17.2797 5.30973 17.9097 5.69973 18.2997C6.08973 18.6897 6.71973 18.6897 7.10973 18.2997L11.9997 13.4097L16.8897 18.2997C17.2797 18.6897 17.9097 18.6897 18.2997 18.2997C18.6897 17.9097 18.6897 17.2797 18.2997 16.8897L13.4097 11.9997L18.2997 7.10973C18.6797 6.72973 18.6797 6.08973 18.2997 5.70973Z"
+							fill="#707084"
+						/>
+					</svg>
+				</button>
+				<h5 class="modal-title">Select groups to publish</h5>
+			</div>
+			<div class="modal-body">
+				<app-multi-group-select
+					[postToBeReShared]="postToBeReShared"
+					[postToBeEdited]="postToBeEdited"
+					(setAllGroupSelection)="toggleAllGroupSelection($event)"
+					(setGroupSelection)="toggleGroupSelection($event)"
+					*ngIf="group"
+					[group]="group"
+					[installedGroups]="installedGroups"
+					[selectedGroups]="selectedGroups"
+				></app-multi-group-select>
+			</div>
+			<div class="groups-action">
+				<button
+					(click)="setGroupsSelected(); recordButtonClick($event)"
+					*ngIf="renderedOn === 'Mobile'"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="c3bf8af8-b8c8-46ec-8fa2-7424a3f52b95"
+					data-cs-label="Done"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- file-size-alert modal -->
+<div *ngIf="showAlert" class="modal file-alert" data-test-id="alert-post-composer">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h5 data-test-id="heading-alert-post-composer">{{ alertMessage?.heading }}</h5>
+				<p class="m-0" data-test-id="subheading-alert-post-composer">{{ alertMessage?.content }}</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="showAlert = false; recordButtonClick($event, group)"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					data-cs-id="0a3aafd7-56a1-460e-87ed-f23c1ea405f1"
+					data-cs-label="Ok"
+					data-cs-source="dialog"
+					type="button"
+					data-test-id="button-alert-post-composer"
+				>
+					OK
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--<div class="better-publish-time-modal modal" id="betterPublishTimeModal"-->
+<!--     tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--  <div class="modal-overlay"></div>-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-body">-->
+<!--        <h6>We found a better time!</h6>-->
+<!--        <p>Based on activity insights from your group</p>-->
+<!--        <h4>⏰ Today, 3:30pm</h4>-->
+<!--        <h5><strong>30% higher engagement expected</strong> than publish now-->
+<!--        </h5>-->
+
+<!--        <button class="convo-btn-primary convo-btn-normal">-->
+<!--          <span>Schedule this post for</span>-->
+<!--          <strong>Today, 3:30pm</strong>-->
+<!--        </button>-->
+
+<!--        <button class="cancel-btn convo-btn-normal">No thanks</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--        -->
+<!-- Full Brief Modal -->
+<div
+	*ngIf="postToBeEdited && postToBeEdited.campaignTaskDetails"
+	aria-hidden="true"
+	aria-labelledby="full-brief-modal"
+	class="modal fade full-brief-modal"
+	id="full-brief-modal"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header px-4">
+				<h5 class="modal-title">Details</h5>
+			</div>
+			<div class="modal-body px-4">
+				<h6>Full Brief</h6>
+				<div *ngIf="postToBeEdited.campaignTaskDetails" [innerHTML]="postToBeEdited.campaignTaskDetails.details"></div>
+
+				<h6>Objective</h6>
+				<div
+					*ngIf="postToBeEdited.campaignTaskDetails"
+					[innerHTML]="postToBeEdited.campaignTaskDetails.objective"
+				></div>
+
+				<h6>Duration</h6>
+				<p *ngIf="postToBeEdited.campaignTaskDetails">
+					{{ postToBeEdited.campaignTaskDetails.startDateAtUTC | date: 'd MMMM, yyyy' }}
+					-
+					{{ postToBeEdited.campaignTaskDetails.endDateAtUTC | date: 'd MMMM, yyyy' }}
+					<br /><small>{{ daysCountOfCampaign }} days</small>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="recordButtonClick($event, group)"
+					class="convo-btn-primary convo-btn-normal px-4"
+					data-cs-id="0a388589-2fed-4b3f-bc2c-2037ab4071aa"
+					data-cs-label="Okay"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+				>
+					Okay
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="post-delay-modal modal" *ngIf="showPostDelayPopup">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<figure><img alt="" src="assets/images/clock-image.svg" /></figure>
+				<h6>Your posts might be delayed due to high volume of activity</h6>
+				<p>
+					To avoid being blocked by Facebook, we'll add delays of
+					<strong>{{ minPostDelayTime }}-{{ maxPostDelayTime }} min</strong> to your posts being published
+				</p>
+
+				<div class="btn-wrap">
+					<button
+						(click)="recordButtonClick($event, group)"
+						class="btn-link"
+						data-cs-id="5b10fab2-deaf-4fdc-ab67-e3ac754300d1"
+						data-cs-label="Learn more"
+						data-cs-source="dialog"
+						hidden
+					>
+						<span>Learn more</span>
+						<svg fill="none" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+							<g opacity="0.5">
+								<path
+									d="M7.74167 5.59166C7.41667 5.91666 7.41667 6.44166 7.74167 6.76666L10.975 10L7.74167 13.2333C7.41667 13.5583 7.41667 14.0833 7.74167 14.4083C8.06667 14.7333 8.59167 14.7333 8.91667 14.4083L12.7417 10.5833C13.0667 10.2583 13.0667 9.73333 12.7417 9.40833L8.91667 5.58333C8.60001 5.26666 8.06667 5.26666 7.74167 5.59166Z"
+									fill="#3654FF"
+								/>
+							</g>
+						</svg>
+					</button>
+					<button
+						(click)="publishPost(); recordButtonClick($event, group)"
+						class="convo-btn-primary convo-btn-normal"
+						data-cs-id="988a662b-a855-4ea0-a1df-95aa766e1784"
+						data-cs-label="Continue"
+						data-cs-source="dialog"
+					>
+						Continue
+					</button>
+					<button
+						(click)="closePostDelayPopup($event)"
+						class="convo-btn-normal cancel-btn"
+						data-cs-id="27f97524-749b-4372-a14b-1742410d1f34"
+						data-cs-label="Cancel"
+						data-cs-source="dialog"
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="post-delay-modal modal" id="publishSuggestionModal" *ngIf="showPublishSuggestionPopup">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h6>We found a better time!</h6>
+				<p>Based on activity insights from your group</p>
+				<h4>⏰ {{ nextBestTimeToBeShownAfterPublishIsClicked }}</h4>
+				<div class="btn-wrap">
+					<button
+						*ngIf="!scheduleInProgress"
+						(click)="publishAtSuggestedTime(); recordButtonClick($event, group); scheduleInProgress = true"
+						class="convo-btn-primary convo-btn-normal"
+						data-cs-id="b04c92f4-9f39-4c08-9c8c-434729be4ea8"
+						[attr.data-cs-label]="'Schedule this post for ' + this.nextBestTimeToBeShownAfterPublishIsClicked"
+						data-cs-source="dialog"
+					>
+						<p>Schedule this post for</p>
+						<label>{{ this.nextBestTimeToBeShownAfterPublishIsClicked }}</label>
+					</button>
+					<button *ngIf="scheduleInProgress" class="convo-btn-primary convo-btn-normal">
+						<span class="bt-spinner btn-spinner-white"></span>
+					</button>
+					<button
+						*ngIf="!cancelInProgress"
+						(click)="publishPost(); recordButtonClick($event, group); cancelInProgress = true"
+						class="convo-btn-normal cancel-btn"
+						data-cs-id="5c5653f9-532c-4c0d-bb34-983cf5696a10"
+						data-cs-label="No thanks"
+						data-cs-source="dialog"
+					>
+						No thanks
+					</button>
+					<button *ngIf="cancelInProgress" class="convo-btn-normal cancel-btn">
+						<span class="bt-spinner"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Loader Modal -->
+<div class="post-delay-modal modal" *ngIf="publishInProgress">
+	<div class="modal-overlay"></div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="progress-custom">
+					<mat-progress-spinner
+						diameter="24"
+						[mode]="totalPostToBePosted > 1 ? 'determinate' : 'indeterminate'"
+						value="{{ percentageValueForProgressBar }}"
+					>
+					</mat-progress-spinner>
+					<span>{{ loaderBodyText }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-container *ngIf="showPermissionRequired">
+	<app-publish-permission-overlay (closeDialog)="cancelPublishPermission($event)"></app-publish-permission-overlay>
+</ng-container>

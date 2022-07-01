@@ -1,0 +1,287 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div class="admin-wrap red-border" [class.expanded-state]="isExpanded" [class.not-completed]="getAdminNumber() === 0">
+		<div class="completed-flag" *ngIf="showNoFilledBorder && getAdminNumber() === 0">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="67ba0312-90cf-4791-a61a-45bf90d69a41"
+			data-cs-label="Admins"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header expandedHeight="92px" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M14.1667 13.85C14.6822 13.85 15.1001 13.4322 15.1001 12.9167C15.1001 12.4012 14.6822 11.9834 14.1667 11.9834C13.6513 11.9834 13.2334 12.4012 13.2334 12.9167C13.2334 13.4322 13.6513 13.85 14.1667 13.85Z"
+								fill="#9999A7"
+							/>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M14.1665 14.5833C13.5581 14.5833 12.3415 14.8833 12.2998 15.4833C12.7165 16.075 13.3998 16.4583 14.1665 16.4583C14.9331 16.4583 15.6165 16.075 16.0331 15.4833C15.9915 14.8833 14.7748 14.5833 14.1665 14.5833Z"
+								fill="#9999A7"
+							/>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M15 9.24167V5.225L8.75 2.5L2.5 5.225V9.31667C2.5 13.1 5.16667 16.6417 8.75 17.5C9.20833 17.3917 9.65 17.2333 10.0833 17.0417C10.9833 18.325 12.475 19.1667 14.1667 19.1667C16.925 19.1667 19.1667 16.925 19.1667 14.1667C19.1667 11.6917 17.3667 9.64167 15 9.24167ZM9.16667 14.1667C9.16667 14.6333 9.23333 15.0917 9.35833 15.5167C9.15833 15.6083 8.95833 15.7 8.75 15.7667C6.10833 14.9333 4.16667 12.2333 4.16667 9.31667V6.31667L8.75 4.31667L13.3333 6.31667V9.24167C10.9667 9.64167 9.16667 11.6917 9.16667 14.1667ZM14.1667 17.5C12.325 17.5 10.8333 16.0083 10.8333 14.1667C10.8333 12.325 12.325 10.8333 14.1667 10.8333C16.0083 10.8333 17.5 12.325 17.5 14.1667C17.5 16.0083 16.0083 17.5 14.1667 17.5Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Admins · {{ getAdminCount(true) }}</span>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span>The admins of your group who have signed up on Convosight will show up here.</span>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right section-icon-wrap">
+						<button
+							class="edit-row-btn"
+							(click)="
+								$event.stopPropagation();
+								openAdminModal = true;
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="70449250-e7e0-4ceb-bab0-8ba3ae611430"
+							data-cs-label="Edit Admin Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+			<div class="profile-card-body">
+				<div class="admin-body-wrap" [class.disabled]="!groupProfilePage.showAdmins">
+					<div class="admin-row-wrap">
+						<ng-container *ngFor="let admin of groupProfilePage.admins | slice: 0 - noOfProfilesToBeShown">
+							<div *ngIf="isEditable ? true : admin.showUser" [hidden]="!admin.userDisplayName" class="admin-row">
+								<div [ngClass]="{' disabled': !admin.showUser}" class="user-row">
+									<div class="user-left">
+										<figure>
+											<img
+												[appDefaultImageSrc]="'./assets/images/default_user.png'"
+												alt=""
+												src="{{ admin.userProfileImageURL }}"
+											/>
+										</figure>
+										<div class="d-flex">
+											<h6>{{ admin.userDisplayName }}</h6>
+											<span *ngIf="admin.userCountry" class="country-row">
+												<span class="iti-flag {{ admin.userCountry | lowercase }}"></span>
+												<small>{{ getCountryName(admin.userCountry) }}</small>
+											</span>
+										</div>
+									</div>
+									<div class="user-right">
+										<a
+											(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+											[href]="getUerBioLink(admin)"
+											data-cs-id="cbe59396-0954-4dd0-bdb5-609535245f83"
+											data-cs-label="View Bio"
+											data-cs-source="page"
+											target="_blank"
+										>
+											View Bio
+										</a>
+									</div>
+								</div>
+								<div *ngIf="!admin.showUser" class="hidden-state">
+									<img alt="" src="./assets/images/visibility_off.svg" /><span>Hidden</span>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+					<div *ngIf="!groupProfilePage.showAdmins" class="hidden-state">
+						<img alt="" src="./assets/images/visibility_off.svg" /><span>This section is hidden</span>
+					</div>
+					<button
+						(click)="updateNoOfProfileToBeShown(); recordButtonClick($event, null, null, null, groupProfilePage)"
+						*ngIf="getAdminCount() > 4 && groupProfilePage.showAdmins"
+						[attr.data-cs-label]="noOfProfilesToBeShown === 4 ? 'View less' : 'View all'"
+						class="convo-btn-normal convo-btn-bordered"
+						data-cs-id="f8d27c28-63fb-4c24-a238-23b5a844a18f"
+						data-cs-source="page"
+					>
+						{{ noOfProfilesToBeShown === 4 ? 'View all ' + getAdminCount() + ' members' : 'View less' }}
+					</button>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="admin-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M14.1667 13.85C14.6822 13.85 15.1001 13.4322 15.1001 12.9167C15.1001 12.4012 14.6822 11.9834 14.1667 11.9834C13.6513 11.9834 13.2334 12.4012 13.2334 12.9167C13.2334 13.4322 13.6513 13.85 14.1667 13.85Z"
+						fill="#9999A7"
+					/>
+					<path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M14.1665 14.5833C13.5581 14.5833 12.3415 14.8833 12.2998 15.4833C12.7165 16.075 13.3998 16.4583 14.1665 16.4583C14.9331 16.4583 15.6165 16.075 16.0331 15.4833C15.9915 14.8833 14.7748 14.5833 14.1665 14.5833Z"
+						fill="#9999A7"
+					/>
+					<path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M15 9.24167V5.225L8.75 2.5L2.5 5.225V9.31667C2.5 13.1 5.16667 16.6417 8.75 17.5C9.20833 17.3917 9.65 17.2333 10.0833 17.0417C10.9833 18.325 12.475 19.1667 14.1667 19.1667C16.925 19.1667 19.1667 16.925 19.1667 14.1667C19.1667 11.6917 17.3667 9.64167 15 9.24167ZM9.16667 14.1667C9.16667 14.6333 9.23333 15.0917 9.35833 15.5167C9.15833 15.6083 8.95833 15.7 8.75 15.7667C6.10833 14.9333 4.16667 12.2333 4.16667 9.31667V6.31667L8.75 4.31667L13.3333 6.31667V9.24167C10.9667 9.64167 9.16667 11.6917 9.16667 14.1667ZM14.1667 17.5C12.325 17.5 10.8333 16.0083 10.8333 14.1667C10.8333 12.325 12.325 10.8333 14.1667 10.8333C16.0083 10.8333 17.5 12.325 17.5 14.1667C17.5 16.0083 16.0083 17.5 14.1667 17.5Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>Admins · {{ getAdminCount(true) }}</h5>
+			</div>
+		</div>
+		<div class="profile-card-body preview">
+			<div class="admin-body-wrap" [class.disabled]="!groupProfilePage.showAdmins">
+				<div class="admin-row-wrap">
+					<ng-container *ngFor="let admin of groupProfilePage.admins | slice: 0 - noOfProfilesToBeShown">
+						<div *ngIf="isEditable ? true : admin.showUser" [hidden]="!admin.userDisplayName" class="admin-row">
+							<div [ngClass]="{' disabled': !admin.showUser}" class="user-row">
+								<div class="user-left">
+									<figure>
+										<img
+											[appDefaultImageSrc]="'./assets/images/default_user.png'"
+											alt=""
+											src="{{ admin.userProfileImageURL }}"
+										/>
+									</figure>
+									<div class="d-flex">
+										<h6>{{ admin.userDisplayName }}</h6>
+										<span *ngIf="admin.userCountry" class="country-row">
+											<span class="iti-flag {{ admin.userCountry | lowercase }}"></span>
+											<small>{{ getCountryName(admin.userCountry) }}</small>
+										</span>
+									</div>
+								</div>
+								<div class="user-right">
+									<a
+										(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+										[href]="getUerBioLink(admin)"
+										data-cs-id="cbe59396-0954-4dd0-bdb5-609535245f83"
+										data-cs-label="View Bio"
+										data-cs-source="page"
+										target="_blank"
+									>
+										View Bio
+									</a>
+								</div>
+							</div>
+							<div *ngIf="!admin.showUser" class="hidden-state">
+								<img alt="" src="./assets/images/visibility_off.svg" /><span>Hidden</span>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+				<div *ngIf="!groupProfilePage.showAdmins" class="hidden-state">
+					<img alt="" src="./assets/images/visibility_off.svg" /><span>This section is hidden</span>
+				</div>
+				<button
+					(click)="updateNoOfProfileToBeShown(); recordButtonClick($event, null, null, null, groupProfilePage)"
+					*ngIf="getAdminCount() > 4 && groupProfilePage.showAdmins"
+					[attr.data-cs-label]="noOfProfilesToBeShown === 4 ? 'View less' : 'View all'"
+					class="convo-btn-normal convo-btn-bordered"
+					data-cs-id="f8d27c28-63fb-4c24-a238-23b5a844a18f"
+					data-cs-source="page"
+				>
+					{{ noOfProfilesToBeShown === 4 ? 'View all ' + getAdminCount() + ' members' : 'View less' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Start : Edit admins Overlay -->
+<div class="modal file-alert editAdminModal" *ngIf="openAdminModal">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit admins</h5>
+				<button
+					#closeButtonForEditAdmin
+					aria-label="Close"
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); reset()"
+					data-cs-id="7a85d980-e16c-4f4d-bb96-ebd6a5748e61"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="admin-settings-card">
+					<div class="admins-row">
+						<p class="settings-field m-0">Show group admins on page</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="initiateSavingAdminSectionPreferences(); recordToggleClicked($event)"
+								[attr.data-cs-toggle-status]="!groupProfilePage.showAdmins"
+								[(ngModel)]="groupProfilePage.showAdmins"
+								data-cs-id="4d3acf14-8bb9-4a1a-a339-134d6f296b83"
+								data-cs-label="show group admins"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="_currentAdminProfile && getAdminCount() > 1" class="admin-settings-card">
+					<div class="admins-row">
+						<p class="settings-field m-0">Hide your admin profile from page</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="initiateSavingAdminSectionPreferences(); recordToggleClicked($event)"
+								[attr.data-cs-toggle-status]="_currentAdminProfile.showUser"
+								[(ngModel)]="!_currentAdminProfile.showUser"
+								[disabled]="!groupProfilePage.showAdmins"
+								data-cs-id="3728da64-9a04-46ed-8eae-37eb735b01df"
+								data-cs-label="hide admin profile"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<ng-container *ngIf="false">
+					<div class="bio-card">
+						<p class="bio-title">Edit your admin bio</p>
+						<div class="bio-info">
+							<h5>What is your bio?</h5>
+							<p>It's the introduction to who you are as a group admin and what you have achieved.</p>
+						</div>
+					</div>
+					<app-admin-bio [isIntroductionSectionNeeded]="false"></app-admin-bio>
+				</ng-container>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="closeButtonForEditAdmin.click(); recordButtonClick($event, null, null, null, groupProfilePage)"
+					[disabled]="isSaveInProgress || !isSaveEnabled()"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="17dee058-9dba-48ec-bd88-7d58408665ea"
+					data-cs-label="Save changes"
+					data-cs-source="dialog"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End :Edit admins Overlay -->

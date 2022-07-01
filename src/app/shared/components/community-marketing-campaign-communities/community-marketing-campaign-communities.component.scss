@@ -1,0 +1,277 @@
+@import '../../../../assets/scss/custom/variables';
+@import '../../../../assets/scss/custom/mixins';
+
+.convo-dropdown {
+	border: none;
+	box-shadow: none;
+	width: 36px;
+	border-radius: 30px;
+
+	&:after {
+		display: none;
+	}
+}
+
+.convo-dropdown-wrapper {
+	width: fit-content;
+}
+
+.campaign-communities-body {
+	min-height: 68vh;
+	overflow: auto;
+	.table-wrapper {
+		background: #fff;
+		color: #33334f;
+		margin-top: 16px;
+		color: $primary-1;
+		min-width: 1280px;
+
+		table {
+			width: 100%;
+
+			th {
+				@include font-label-xs-md;
+				color: $black-70;
+				white-space: nowrap;
+				padding: 8px;
+
+				&:first-child {
+					text-align: left;
+					padding-left: 8px;
+				}
+
+				&:nth-child(2) {
+					text-align: left;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+			}
+
+			td {
+				@include font-label-s;
+				padding: 7px 8px;
+				height: 32px;
+				border-top: 1px solid $divider-grey;
+				white-space: nowrap;
+
+				&:first-child {
+					text-align: left;
+				}
+
+				&:nth-child(2) {
+					text-align: left;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+
+				.custom-dropdown {
+					.convo-dropdown.convo-normal-dropdown {
+						height: 24px;
+						width: 24px;
+						padding: 0;
+					}
+				}
+
+				.group-name-wrapper {
+					width: 300px;
+					cursor: pointer;
+					display: flex;
+					align-items: center;
+					position: relative;
+
+					div {
+						display: flex;
+
+						span {
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							max-width: 225px;
+						}
+					}
+
+					.Approved {
+						color: #00b47e;
+					}
+
+					.Declined {
+						color: #d62f2f;
+					}
+
+					.PendingApproval {
+						color: rgba(51, 51, 79, 0.6);
+					}
+				}
+
+				&.community-checkbox {
+					cursor: pointer;
+
+					.mat-checkbox {
+						pointer-events: none;
+					}
+				}
+			}
+
+			tr {
+				.link-icon {
+					opacity: 0;
+				}
+
+				&:hover {
+					.link-icon {
+						opacity: 1;
+					}
+				}
+			}
+
+			tr {
+				&:hover {
+					background: #eaeeff !important;
+					cursor: pointer;
+				}
+
+				&.row-selected {
+					background: #eaeeff !important;
+				}
+			}
+		}
+	}
+}
+
+.find-more-communities {
+	position: absolute;
+	width: 100%;
+	top: 50px;
+	background: #fff;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+
+	.more-communities-header {
+		padding: 16px;
+		border-bottom: 1px solid #e0e0e5;
+
+		.go-back {
+			display: flex;
+			align-items: center;
+			color: $primary-1;
+			font-weight: 500;
+			font-size: 18px;
+			text-decoration: none;
+
+			span {
+				padding-left: 16px;
+			}
+		}
+	}
+
+	.more-communities-body {
+		flex: 1;
+		overflow: auto;
+		padding: 24px 40px;
+		position: relative;
+	}
+
+	.more-communities-footer {
+		background: #fff;
+		border-top: 1px solid #e0e0e5;
+		padding: 12px 100px 12px 0;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		color: $black-70;
+		font-size: 14px;
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			text-align: right;
+
+			li {
+				&.bold-text {
+					font-weight: 500;
+					color: $primary-1;
+
+					a {
+						color: #3654ff;
+						text-decoration: none;
+					}
+				}
+			}
+		}
+
+		.convo-btn-normal {
+			box-shadow: none;
+			height: 40px;
+			margin-left: 24px;
+			width: 200px;
+			font-size: 14px;
+
+			&:disabled {
+				background: $black-40;
+				border: none;
+				color: #fff;
+			}
+		}
+	}
+}
+.loading-strip {
+	height: 14px;
+	opacity: 0.06;
+	@include gradient(right, $shimmerColor);
+	animation: shimmer 2s infinite linear;
+	background-size: 1000px 100%;
+}
+.remove-campaign-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1040;
+	background: rgba(0, 0, 0, 0.54);
+	bottom: 0;
+	right: 0;
+	.campaign-communities-body {
+		height: 100%;
+	}
+}
+
+.remove-campaign-modal > div {
+	height: 100%;
+}
+
+.top-cities {
+	width: 130px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.tooltip-wrap {
+	display: flex;
+	align-items: center;
+
+	span {
+		padding-right: 2px;
+	}
+}
+
+.bt-spinner {
+	width: 16px;
+	border: 2px solid rgba(54, 84, 255, 0.15);
+	height: 16px;
+	margin: 0 auto;
+	animation: 1s spin linear infinite;
+	background-color: transparent;
+	border-top-color: $emp-blue-1;
+	-webkit-animation: 1s spin linear infinite;
+	@include border-radius(50%);
+}
+
+.modal-component {
+	display: block;
+}

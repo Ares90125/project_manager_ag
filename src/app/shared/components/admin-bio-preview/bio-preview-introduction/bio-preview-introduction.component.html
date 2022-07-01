@@ -1,0 +1,14 @@
+<div class="bio-preview-into-wrap">
+	<ng-container *ngIf="bio">
+		<div class="bio" [innerHTML]="bio | sanitizeHtml"></div>
+	</ng-container>
+
+	<div class="pitch-video" *ngIf="pitchVideo?.url">
+		<video #video *ngIf="isFacebookBrowser" class="video" controls poster="assets/images/black-cover.png">
+			<source [src]="pitchVideo?.url" type="video/mp4" />
+		</video>
+		<video #video *ngIf="!isFacebookBrowser" class="video" controls>
+			<source [src]="pitchVideo?.url" type="video/mp4" />
+		</video>
+	</div>
+</div>

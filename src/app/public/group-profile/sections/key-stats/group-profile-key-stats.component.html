@@ -1,0 +1,330 @@
+<mat-accordion *ngIf="isEditable; else publicPage">
+	<div class="key-stats-wrap red-border" [class.expanded-state]="isExpanded" [class.not-completed]="showNoFilledBorder">
+		<div class="completed-flag" *ngIf="showNoFilledBorder">
+			<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M7.9987 5.44076C8.36537 5.44076 8.66536 5.74076 8.66536 6.10742V8.77409C8.66536 9.14076 8.36537 9.44076 7.9987 9.44076C7.63203 9.44076 7.33203 9.14076 7.33203 8.77409V6.10742C7.33203 5.74076 7.63203 5.44076 7.9987 5.44076ZM7.99203 2.10742C4.31203 2.10742 1.33203 5.09409 1.33203 8.77409C1.33203 12.4541 4.31203 15.4408 7.99203 15.4408C11.6787 15.4408 14.6654 12.4541 14.6654 8.77409C14.6654 5.09409 11.6787 2.10742 7.99203 2.10742ZM7.9987 14.1074C5.05203 14.1074 2.66536 11.7208 2.66536 8.77409C2.66536 5.82742 5.05203 3.44076 7.9987 3.44076C10.9454 3.44076 13.332 5.82742 13.332 8.77409C13.332 11.7208 10.9454 14.1074 7.9987 14.1074ZM8.66536 12.1074H7.33203V10.7741H8.66536V12.1074Z"
+					fill="white"
+				/>
+			</svg>
+			<span>The section is not yet completed</span>
+		</div>
+		<mat-expansion-panel
+			(click)="recordToggleClicked($event, null, null, groupProfilePage)"
+			data-cs-id="c2cbc90c-5a8f-437b-9ede-373b1036b3b7"
+			data-cs-label="Key Stats"
+			data-cs-source="page"
+		>
+			<mat-expansion-panel-header [expandedHeight]="renderedOn === 'Mobile' ? '86px' : '68px'" collapsedHeight="60px">
+				<div class="panel-info">
+					<div class="panel-title">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM15.8333 15.8333H4.16667V4.16667H15.8333V15.8333ZM5.83333 8.33333H7.5V14.1667H5.83333V8.33333ZM9.16667 5.83333H10.8333V14.1667H9.16667V5.83333ZM12.5 10.8333H14.1667V14.1667H12.5V10.8333Z"
+								fill="#9999A7"
+							/>
+						</svg>
+						<span>Key Stats</span>
+						<app-tooltip [setTooltipText]="tooltipToBeShown"></app-tooltip>
+						<button
+							*ngIf="isExpanded"
+							data-cs-id="b58ba8cb-9627-49fc-b93d-3e283ab01036"
+							data-cs-label="What's this?"
+							data-cs-source="page"
+							class="convo-btn-bordered what-this-btn"
+							(click)="
+								$event.stopPropagation();
+								recordButtonClick($event, null, null, null, groupProfilePage);
+								openStatsHelpVideo()
+							"
+						>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M6.1987 9.87409L9.31203 7.54076C9.49203 7.40742 9.49203 7.14076 9.31203 7.00742L6.1987 4.67409C5.9787 4.50742 5.66536 4.66742 5.66536 4.94076V9.60742C5.66536 9.88076 5.9787 10.0408 6.1987 9.87409ZM6.9987 0.607422C3.3187 0.607422 0.332031 3.59409 0.332031 7.27409C0.332031 10.9541 3.3187 13.9408 6.9987 13.9408C10.6787 13.9408 13.6654 10.9541 13.6654 7.27409C13.6654 3.59409 10.6787 0.607422 6.9987 0.607422ZM6.9987 12.6074C4.0587 12.6074 1.66536 10.2141 1.66536 7.27409C1.66536 4.33409 4.0587 1.94076 6.9987 1.94076C9.9387 1.94076 12.332 4.33409 12.332 7.27409C12.332 10.2141 9.9387 12.6074 6.9987 12.6074Z"
+									fill="#3654FF"
+								/>
+							</svg>
+							What's this?
+						</button>
+					</div>
+					<div class="panel-description" *ngIf="isExpanded">
+						<span>These are quick stats about your group that we get when you add Convosight app to your group.</span>
+					</div>
+				</div>
+				<div class="panel-edit-btn">
+					<div *ngIf="isExpanded" class="header-right section-icon-wrap">
+						<button
+							class="edit-row-btn"
+							(click)="
+								$event.stopPropagation();
+								openKeyStatsModal = true;
+								recordButtonClick($event, null, null, null, groupProfilePage)
+							"
+							data-cs-id="bea6f8d5-7a85-4bc1-8db1-53b7516994df"
+							data-cs-label="Edit Keystats Modal"
+							data-cs-source="page"
+						>
+							<img alt="" src="./assets/images/btn-icon-edit.svg" />
+						</button>
+						<app-fixed-tooltip
+							*ngIf="viewToolTip"
+							[title]="welcomeTitle"
+							[content]="welcomeContent"
+						></app-fixed-tooltip>
+					</div>
+				</div>
+			</mat-expansion-panel-header>
+
+			<div class="profile-card-body">
+				<div class="stats-wrap">
+					<ul class="list-unstyled">
+						<li
+							*ngIf="isEditable ? true : groupProfilePage.showMonthlyConversations"
+							[class.disabled]="!groupProfilePage.showMonthlyConversations"
+						>
+							<h6>Monthly conversations</h6>
+							<h5>{{ groupProfilePage.keyStats.monthlyConversations | shortNumber }}</h5>
+							<div [hidden]="groupProfilePage.showMonthlyConversations" class="hidden-state">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</li>
+						<li
+							*ngIf="isEditable ? true : groupProfilePage.showEngagementRate"
+							[class.disabled]="!groupProfilePage.showEngagementRate"
+						>
+							<h6>
+								<span>Engagement rate</span>
+								<app-tooltip
+									setTooltipText="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+								></app-tooltip>
+							</h6>
+							<h5>{{ (groupProfilePage.keyStats.engagementRate | number: '1.0-2') + '%' }}</h5>
+							<div [hidden]="groupProfilePage.showEngagementRate" class="hidden-state">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</li>
+						<li
+							*ngIf="isEditable ? true : groupProfilePage.showActivityRate"
+							[class.disabled]="!groupProfilePage.showActivityRate"
+						>
+							<h6>
+								<span>Activity Rate</span>
+								<app-tooltip
+									setTooltipText="Average number of actions (comments + reactions + shares) a post gets in your group"
+								></app-tooltip>
+							</h6>
+							<h5>{{ groupProfilePage.keyStats.activityRate | number: '1.0-2' }}</h5>
+							<div [hidden]="groupProfilePage.showActivityRate" class="hidden-state">
+								<img alt="" src="./assets/images/visibility_off.svg" />
+								<span>Hidden</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</mat-expansion-panel>
+	</div>
+</mat-accordion>
+
+<ng-template #publicPage>
+	<div class="key-stats-wrap">
+		<div class="profile-card-header">
+			<div class="header-left">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM15.8333 15.8333H4.16667V4.16667H15.8333V15.8333ZM5.83333 8.33333H7.5V14.1667H5.83333V8.33333ZM9.16667 5.83333H10.8333V14.1667H9.16667V5.83333ZM12.5 10.8333H14.1667V14.1667H12.5V10.8333Z"
+						fill="#9999A7"
+					/>
+				</svg>
+				<h5>
+					<span>Key Stats</span>
+					<app-tooltip [setTooltipText]="tooltipToBeShown"></app-tooltip>
+				</h5>
+			</div>
+			<div class="header-right section-icon-wrap" *ngIf="isEditable">
+				<button
+					class="edit-row-btn"
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage)"
+					data-cs-id="dafa8548-fe1c-4dd9-b0ba-1e840b5789f5"
+					data-cs-label="Edit Keystats Modal"
+					data-cs-source="page"
+					data-target="#editKeystatsModal"
+					data-toggle="modal"
+				>
+					<img alt="" src="./assets/images/btn-icon-edit.svg" />
+				</button>
+				<app-fixed-tooltip *ngIf="viewToolTip" [title]="welcomeTitle" [content]="welcomeContent"></app-fixed-tooltip>
+			</div>
+		</div>
+		<div class="profile-card-body preview">
+			<div class="stats-wrap">
+				<ul class="list-unstyled">
+					<li *ngIf="groupProfilePage.showMonthlyConversations">
+						<h6>Monthly conversations</h6>
+						<h5>{{ groupProfilePage.keyStats.monthlyConversations | shortNumber }}</h5>
+					</li>
+					<li *ngIf="groupProfilePage.showEngagementRate">
+						<h6>
+							<span>Engagement rate</span>
+							<app-tooltip
+								setTooltipText="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+							></app-tooltip>
+						</h6>
+						<h5>{{ (groupProfilePage.keyStats.engagementRate | number: '1.0-2') + '%' }}</h5>
+					</li>
+					<li *ngIf="groupProfilePage.showActivityRate">
+						<h6>
+							<span>Activity Rate</span>
+							<app-tooltip
+								setTooltipText="Average number of actions (comments + reactions + shares) a post gets in your group"
+							></app-tooltip>
+						</h6>
+						<h5>{{ groupProfilePage.keyStats.activityRate | number: '1.0-2' }}</h5>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Start : Edit key stats Overlay -->
+<div class="modal file-alert editKeystatsModal" *ngIf="openKeyStatsModal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit key stats</h5>
+				<button
+					#closeButtonForEditKeyStats
+					aria-label="Close"
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); reset()"
+					[disabled]="isSaveInProgress"
+					data-cs-id="aa725298-89fd-4dc1-9533-333e6d81a95c"
+					data-cs-label="Close"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span *ngIf="isSaveInProgress" class="btn-spinner"></span>
+					<img *ngIf="!isSaveInProgress" alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="key-stats-settings-card">
+					<div *ngIf="!areGroupMetricsAvailable" class="key-stats-row-0">
+						<p class="settings-field m-0">
+							<img alt="" class="info-icon" src="assets/images/influencer-info-icon.svg" />Add Convosight app to this
+							group to fetch this group’s monthly conversations, engagement rate and activity rate. If you have already
+							installed the App then this data will be available here soon.
+						</p>
+					</div>
+					<div class="key-stats-row">
+						<p class="settings-field m-0">
+							Show monthly conversations
+							<img
+								matTooltip="Total conversations in the last 30 days"
+								matTooltipPosition="above"
+								(click)="conversationTooltip.toggle()"
+								#conversationTooltip="matTooltip"
+								alt=""
+								class="info-icon"
+								src="assets/images/key-stats-info-icon.svg"
+							/>
+						</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="recordToggleClicked($event); updateKeysStats()"
+								[attr.data-cs-toggle-status]="!groupProfilePage.showMonthlyConversations"
+								[(ngModel)]="groupProfilePage.showMonthlyConversations"
+								[disabled]="!areGroupMetricsAvailable || isSaveInProgress"
+								data-cs-id="33e98ba7-0cf0-4c31-85af-98bbd58b2a34"
+								data-cs-label="show group admins"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div class="key-stats-settings-card">
+					<div class="key-stats-row">
+						<p class="settings-field m-0">
+							Show engagement rate
+							<img
+								matTooltip="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+								matTooltipPosition="above"
+								(click)="engagementTooltip.toggle()"
+								#engagementTooltip="matTooltip"
+								alt=""
+								class="info-icon"
+								src="assets/images/key-stats-info-icon.svg"
+							/>
+						</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="recordToggleClicked($event); updateKeysStats()"
+								[attr.data-cs-toggle-status]="!groupProfilePage.showEngagementRate"
+								[(ngModel)]="groupProfilePage.showEngagementRate"
+								[disabled]="!areGroupMetricsAvailable || isSaveInProgress"
+								data-cs-id="9a421425-d83e-4271-880b-c30614111951"
+								data-cs-label="hide admin profile"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+				<div class="key-stats-settings-card">
+					<div class="key-stats-row last-item">
+						<p class="settings-field m-0">
+							Show activity rate
+							<img
+								matTooltip="Average number of actions (comments + reactions + shares) a post gets in your group"
+								matTooltipPosition="above"
+								(click)="activityTooltip.toggle()"
+								#activityTooltip="matTooltip"
+								alt=""
+								class="info-icon"
+								src="assets/images/key-stats-info-icon.svg"
+							/>
+						</p>
+						<div class="slide-toggle-wrapper">
+							<mat-slide-toggle
+								(toggleChange)="recordToggleClicked($event); updateKeysStats()"
+								[attr.data-cs-toggle-status]="!groupProfilePage.showActivityRate"
+								[(ngModel)]="groupProfilePage.showActivityRate"
+								[disabled]="!areGroupMetricsAvailable || isSaveInProgress"
+								data-cs-id="e97603a4-9bb2-4ede-a3a8-014c0466432e"
+								data-cs-label="hide admin profile"
+								data-cs-source="page"
+							></mat-slide-toggle>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer border-0 pt-0">
+				<button
+					(click)="recordButtonClick($event, null, null, null, groupProfilePage); closeButtonForEditKeyStats.click()"
+					[disabled]="!isSaveEnabled() || isSaveInProgress"
+					class="convo-btn-primary convo-btn-normal"
+					type="button"
+					data-cs-id="274be648-14bf-46f6-ae89-47da404e488b"
+					data-cs-label="Save changes"
+					data-cs-source="page"
+				>
+					<span class="btn-spinner" *ngIf="isSaveInProgress"></span>
+					{{ isSaveInProgress ? 'Saving draft' : 'Done' }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End :Edit key stats Overlay -->
+
+<!-- What's this video start here -->
+<ng-container *ngIf="showKeyStatsVideo">
+	<app-what-this-video
+		[title]="'Key Stats'"
+		[videoLink]="'./assets/videos/key-stats.mp4'"
+		(closeVideoPlayer)="closeVideoPlayer($event)"
+	></app-what-this-video>
+</ng-container>
+<!-- What's this vide ends here -->

@@ -1,0 +1,82 @@
+<!-- Persona Survey start here -->
+<div *ngIf="true" class="category-survey-modal">
+	<div class="survey-modal-overlay"></div>
+	<div class="survey-modal-dialoag modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header align-items-center">
+				<h5 class="modal-title">Persona Survey - Help us serve your needs better!</h5>
+				<button
+					(click)="closePersona($event)"
+					aria-label="Close"
+					class="close"
+					data-cs-id="be07efc4-cfa8-4c74-b94e-df74f199305f"
+					data-cs-label="Close"
+					data-cs-source="page"
+					data-dismiss="modal"
+					type="button"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<h6>What drives you to run your Facebook Group?</h6>
+				<div class="mb-4">
+					<mat-radio-group (change)="personaAnswer($event, 0)">
+						<mat-radio-button selected value="I support a Social Cause">I support a Social Cause</mat-radio-button>
+						<mat-radio-button value="I run it as a Hobby">I run it as a Hobby</mat-radio-button>
+						<mat-radio-button value="It’s linked to my Business">It’s linked to my Business</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<h6>Do you have a fixed source of income?</h6>
+				<div class="mb-4">
+					<mat-radio-group (change)="personaAnswer($event, 1)">
+						<mat-radio-button selected value="Yes, salaried">Yes, salaried</mat-radio-button>
+						<mat-radio-button value="Yes, business">Yes, business</mat-radio-button>
+						<mat-radio-button value="No">No</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<h6>Are you open to running paid campaigns on your Group?</h6>
+				<div class="mb-4">
+					<mat-radio-group (change)="personaAnswer($event, 2)">
+						<mat-radio-button selected value="Yes">Yes</mat-radio-button>
+						<mat-radio-button value="No">No</mat-radio-button>
+						<mat-radio-button value="Donations only">Donations only</mat-radio-button>
+						<mat-radio-button value="I may consider Case by case basis"
+							>I may consider Case by case basis</mat-radio-button
+						></mat-radio-group
+					>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="closePersona($event)"
+					class="cancel-btn"
+					data-cs-id="070e9a6a-248f-4e28-9d37-ad4dcae74e2c"
+					data-cs-label="Cancel"
+					data-cs-source="dialog"
+				>
+					Cancel
+				</button>
+				<button
+					*ngIf="!isSubmitClicked; else submitClicked"
+					class="convo-btn-primary convo-btn-normal px-4 ml-2"
+					type="button"
+					(click)="submitPersona($event)"
+					[disabled]="!isPersonaFilled"
+					data-cs-id="f739d817-de13-4f74-8410-aae5f11986e9"
+					data-cs-label="Submit"
+					data-cs-source="dialog"
+				>
+					Submit
+				</button>
+				<ng-template #submitClicked>
+					<button [disabled]="true" class="convo-btn-primary convo-btn-normal px-4" type="button">
+						<span class="bt-spinner"></span>
+						Submit
+					</button>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Persona Survey start here -->

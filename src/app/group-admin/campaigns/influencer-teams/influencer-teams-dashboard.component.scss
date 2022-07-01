@@ -1,0 +1,16 @@
+.campaign-right-content-with-group-sidebar-wrap {
+	padding-left: 250px;
+	padding-top: 50px;
+	@media (max-width: 767px) {
+		padding: 0 16px;
+	}
+	.campaign-right-content-with-group-sidebar {
+		margin: 0px auto;
+		width: 703px;
+		padding-bottom: 32px;
+		@media (max-width: 767px) {
+			width: 100%;
+			padding-bottom: 80px;
+		}
+	}
+}

@@ -1,0 +1,161 @@
+<div class="container brand-chart background-box">
+	<div class="container brand-chart" id="brand-share-voice-chart" [hidden]="!data?.isBrandChartVisible">
+		<div class="card-inner-wrapper">
+			<div class="flex-box">
+				<h3>Brand Share of Voice</h3>
+				<p>
+					The overall share of your brand mentions in comparison to other brand mentions in the community conversations
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<div #brandChartCBR></div>
+			</div>
+			<div class="col-md-4">
+				<div class="legend">
+					<p>Legend:</p>
+					<div *ngFor="let legendValue of brandOptions.chartOptions.series; let i = index">
+						<span style="display: inline-flex; align-items: center"
+							><span
+								[style]="
+									'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+									brandOptions.chartOptions.colors[i]
+								"
+							></span
+							>{{ legendValue.name }}</span
+						>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['brand-conversations'] }}</p>
+	</div>
+	<br />
+	<div
+		class="container brand-chart background-box"
+		id="brand-sentiment-chart"
+		[hidden]="!data?.isSentimentChartVisible"
+	>
+		<div class="card-inner-wrapper">
+			<div class="flex-box">
+				<h3>Brand Sentiment</h3>
+				<p>Sentiment breakdown of the audience towards your brand for the selected time period</p>
+			</div>
+		</div>
+		<div class="row" id="conversation-sentiment-chart">
+			<div class="col-md-8">
+				<div #sentimentChartCBR></div>
+			</div>
+			<div class="col-md-4">
+				<div class="legend">
+					<p>Legend:</p>
+					<div class="brand-sentiment-lagends">
+						<div *ngFor="let legendValue of sentimentOptions.chartOptions.series[0].data; let i = index">
+							<span style="display: inline-flex; align-items: center"
+								><span
+									[style]="
+										'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+										sentimentOptions.chartOptions.colors[i]
+									"
+								></span
+								>{{ legendValue.name }}</span
+							><span>{{ legendValue.y / totalSentimentData | percent }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['sentiment'] }}</p>
+	</div>
+	<div class="container charts background-box" id="topics-chart">
+		<div class="row">
+			<div class="col-md-4" [hidden]="!data?.isTopicChartVisible">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Topics</h3>
+						<p>Top topics discussed in the community</p>
+					</div>
+				</div>
+				<div id="conversation-topic-chart">
+					<div #topicChartCBR></div>
+					<div class="legend">
+						<p>Legend:</p>
+						<div *ngFor="let legendValue of topicOptions.chartOptions.series[0].data; let i = index">
+							<span style="display: inline-flex; align-items: center"
+								><span
+									[style]="
+										'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+										topicOptions.chartOptions.colors[i]
+									"
+								></span
+								>{{ legendValue[0] }}</span
+							><span>{{ legendValue[1] / totalTopicData | percent }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" [hidden]="!data?.isKeywordChartVisible">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Keywords</h3>
+						<p>Top keywords discussed in the community</p>
+					</div>
+				</div>
+				<div id="conversation-keywords-chart">
+					<div #keywordChartCBR></div>
+					<div class="legend">
+						<p>Legend:</p>
+						<div *ngFor="let legendValue of keywordOptions.chartOptions.series[0].data; let i = index">
+							<span style="display: inline-flex; align-items: center"
+								><span
+									[style]="
+										'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+										keywordOptions.chartOptions.colors[i]
+									"
+								></span
+								>{{ legendValue[0] }}</span
+							><span>{{ legendValue[1] / totalKeywordData | percent }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" [hidden]="!data?.isProductChartVisible">
+				<div class="card-inner-wrapper">
+					<div class="flex-box">
+						<h3>Products</h3>
+						<p>Top products discussed in the community</p>
+					</div>
+				</div>
+				<div id="conversation-products-chart">
+					<div #productChartCBR></div>
+					<div class="legend">
+						<p>Legend:</p>
+						<div *ngFor="let legendValue of productOptions.chartOptions.series[0].data; let i = index">
+							<span style="display: inline-flex; align-items: center"
+								><span
+									[style]="
+										'height: 14px;width: 14px;margin-right: 8px;border-radius: 2px;background-color:' +
+										productOptions.chartOptions.colors[i]
+									"
+								></span
+								>{{ legendValue[0] }}</span
+							><span>{{ legendValue[1] / totalProductData | percent }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p *ngIf="supportingText" class="supporting-text-input-text">{{ supportingText['categories'] }}</p>
+	</div>
+	<app-reference-conversation
+		[isReportCBR]="true"
+		(resetModalData)="resetModalData()"
+		[data]="referenceConversationData"
+		[showReferenceConversationDialog]="showReferenceConversationDialog"
+	></app-reference-conversation>
+	<app-reference-conversation *ngIf="showReferenceConversationDialog"></app-reference-conversation>
+	<button data-target="#reference-conversation-modal" data-toggle="modal" id="openReferenceConversationButton">
+		Open reference conversation modal
+	</button>
+</div>

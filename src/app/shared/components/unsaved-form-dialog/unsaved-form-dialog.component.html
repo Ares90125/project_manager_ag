@@ -1,0 +1,19 @@
+<div class="modal-container">
+	<div class="modal-header">
+		<h5>You have unsaved changes</h5>
+		<button class="close-btn" (click)="dialogRef.close(false)">
+			<img src="./assets/images/close-icon.svg" alt="" />
+		</button>
+	</div>
+	<div class="modal-body" mat-dialog-content>
+		<h6>You are about to leave this page. All unsaved changes will be lost. Save before you go!</h6>
+		<div class="modal-actions" mat-dialog-actions>
+			<button class="convo-btn-normal convo-btn-big convo-btn-outline" (click)="dialogRef.close(true)">
+				Leave anyway
+			</button>
+			<button class="convo-btn-normal convo-btn-big convo-btn-primary" (click)="dialogRef.close(false)">
+				Stay here
+			</button>
+		</div>
+	</div>
+</div>

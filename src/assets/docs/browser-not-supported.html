@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Convosight</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'none'; base-uri 'self'; font-src 'self'; form-action 'none'; img-src 'self'; style-src 'self'"
+		/>
+		<link href="./../scss/browser-supported.css" media="screen" rel="stylesheet" />
+	</head>
+	<body class="not-supported non-boxless">
+		<div class="wrapper">
+			<img alt="" class="status-page-image" src="./../favicons/chrome-96x96.png" />
+			<h1 class="not-supported-page-title">
+				Oh snap! We don't support this version of your browser,
+				<em>and neither should you!</em>
+			</h1>
+
+			<p class="not-supported-intro">
+				You are visiting this page because we detected an unsupported browser. Your browser does not support security
+				features that we require. We highly recommend that you update your browser.
+			</p>
+
+			<div class="browsers-container">
+				<h2 class="supported-intro">These are the ones we recommend:</h2>
+
+				<ul class="supported-browsers-list">
+					<li class="supported-browsers-list-item browser-chrome">
+						<div class="supported-browser-information">Google Chrome</div>
+						<div class="supported-browser-download">
+							<a href="https://www.google.com/intl/en/chrome/browser/" rel="noopener" target="_blank">
+								Download latest
+							</a>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+					<li class="supported-browsers-list-item browser-firefox">
+						<div class="supported-browser-information">Mozilla Firefox</div>
+						<div class="supported-browser-download">
+							<a href="https://www.mozilla.org/firefox/all/" rel="noopener" target="_blank"> Download latest </a>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+					<li class="supported-browsers-list-item browser-opera">
+						<div class="supported-browser-information">Opera</div>
+						<div class="supported-browser-download">
+							<a href="http://www.opera.com/download/get/" rel="noopener" target="_blank"> Download latest </a>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

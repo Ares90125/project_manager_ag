@@ -1,0 +1,144 @@
+@import '../../../../../assets/scss/custom/variables';
+@import '../../../../../assets/scss/custom/mixins';
+
+.select-campaign-type-wrapper {
+	padding-top: 50px;
+
+	.btn-secondary {
+		background: rgba(51, 51, 79, 0.1);
+		border-radius: 3px;
+		height: 44px;
+		font-weight: 500;
+		font-size: 15px;
+		padding: 10px 30px;
+		color: rgba(51, 51, 79, 0.89);
+		border: none;
+
+		&.active {
+			background: #3654ff;
+			color: #fff;
+			box-shadow: 0px 2px 6px rgba(54, 84, 255, 0.1);
+		}
+	}
+
+	.back-btn {
+		font-size: 13px;
+		color: rgba(0, 0, 0, 0.43);
+		font-weight: 500;
+		text-decoration: none !important;
+		cursor: pointer;
+
+		span {
+			padding-left: 3px;
+		}
+	}
+}
+
+.add-new-campaign-wrapper,
+.select-solution-wrapper {
+	position: relative;
+	height: 90vh;
+}
+
+.add-new-campaign,
+.select-solution {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 500px;
+	padding: 50px;
+	text-align: center;
+
+	h1 {
+		padding: 25px 0 15px;
+		margin: 0;
+		letter-spacing: -0.004em;
+		color: #33334f;
+		font-size: 32px;
+		font-weight: 700;
+	}
+
+	h6 {
+		color: #33334f;
+		opacity: 0.89;
+		font-size: 15px;
+		margin-bottom: 30px;
+		font-weight: normal;
+	}
+
+	.input-group {
+		margin-bottom: 35px;
+
+		.form-control {
+			border: 1px dashed #ddddf9;
+			border-radius: 3px;
+			height: 50px;
+			padding: 15px;
+			box-shadow: none !important;
+		}
+	}
+}
+
+.select-solution-wrapper {
+	.select-solution {
+		width: 100%;
+
+		.solution-types {
+			display: flex;
+			list-style: none;
+			padding-top: 10px;
+			justify-content: center;
+			padding-bottom: 30px;
+
+			li {
+				position: relative;
+				background: #ffffff;
+				box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+				border-radius: 10px;
+				width: 253px;
+				margin: 0 8px;
+				height: 160px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.05s;
+
+				.selected-tag {
+					display: none;
+				}
+
+				&.selected {
+					box-shadow: 0px 0px 6px rgba(54, 84, 255, 0.3);
+					background: linear-gradient(0deg, rgba(54, 84, 255, 0.03), rgba(54, 84, 255, 0.03)), #ffffff;
+					border: 1px solid #0065ff;
+
+					.selected-tag {
+						display: block;
+						position: absolute;
+						top: -22px;
+						left: -22px;
+					}
+				}
+
+				cursor: pointer;
+
+				&:hover {
+					background: rgba(50, 50, 78, 0.1);
+					box-shadow: none;
+				}
+
+				.info-icon {
+					position: absolute;
+					top: 6px;
+					right: 6px;
+				}
+
+				h5 {
+					color: #7171a6;
+					font-size: 15px;
+				}
+			}
+		}
+	}
+}

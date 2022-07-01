@@ -1,0 +1,276 @@
+<div class="unanswered-wrapper">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="page-headers">
+					<h1 data-test-id="heading-unanswered-post-page">Unanswered Posts</h1>
+					<h6 data-test-id="subheading-unanswered-post-page">
+						Never leave a post unanswered. This screen shows posts that receive no comments for 2 hours
+					</h6>
+				</div>
+				<div class="unanswered-posts-section" *ngIf="!isLoading; else loadingPosts">
+					<p data-test-id="number-of-unanswered-post-heading">
+						<span
+							>{{
+								group.isUnAnsweredPostsTodaySectionAvailable() && todayUnansweredPosts?.length !== 0
+									? todayUnansweredPosts?.length
+									: 'No '
+							}}
+						</span>
+						<span>unanswered posts found <strong>Today</strong></span>
+					</p>
+					<ng-container
+						[ngTemplateOutlet]="group.isUnAnsweredPostsTodaySectionAvailable() ? todaySection : zeroStateSection"
+						[ngTemplateOutletContext]="
+							group.isUnAnsweredPostsTodaySectionAvailable()
+								? {$implicit: {isSectionAvailable: true}}
+								: {$implicit: {isSectionAvailable: false}}
+						"
+					></ng-container>
+				</div>
+				<div class="unanswered-posts-section" *ngIf="!isLoading; else loadingPosts">
+					<p data-test-id="number-unanswered-post-last-7-days">
+						<span>
+							{{
+								group.isUnAnsweredPosts7DaysSectionAvailable() && lastSevenDaysUnansweredPosts.length !== 0
+									? lastSevenDaysUnansweredPosts?.length
+									: 'No '
+							}}
+						</span>
+						<span>unanswered posts from past <strong>7 days</strong></span>
+					</p>
+					<ng-container
+						[ngTemplateOutlet]="group.isUnAnsweredPosts7DaysSectionAvailable() ? sevenDaysSection : zeroStateSection"
+						[ngTemplateOutletContext]="
+							group.isUnAnsweredPosts7DaysSectionAvailable()
+								? {$implicit: {isSectionAvailable: true}}
+								: {$implicit: {isSectionAvailable: false}}
+						"
+					></ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<ng-template #todaySection>
+	<div class="post-box-wrap">
+		<ng-container
+			[ngTemplateOutlet]="todayUnansweredPosts?.length > 0 ? todayPostDetails : zeroStateSection"
+			[ngTemplateOutletContext]="{$implicit: {isSectionAvailable: true}}"
+		></ng-container>
+		<ng-template #todayPostDetails>
+			<div *ngFor="let post of todayUnansweredPosts; let i = index" class="post-box">
+				<div class="post-box-body" data-test-id="post-raw-today-body">
+					<ul class="list-unstyled m-0">
+						<li class="post-description" data-test-id="post-raw-today-description">
+							<div class="post-description-inner">
+								<figure *ngIf="post.postType === 'Photo'">
+									<img alt="" *ngIf="!post.photourl" src="assets/images/default_group_image.jpg" />
+									<img
+										alt=""
+										(error)="showUpdatedImageFromFacebook($event, post.id)"
+										*ngIf="post.photourl"
+										[src]="post.photourl"
+										data-test-id="post-raw-today-photo"
+									/>
+								</figure>
+								<figure class="video-wrapper" *ngIf="post.postType === 'Video'">
+									<img alt="" *ngIf="!post.videothumbnailurl" src="assets/images/default_group_image.jpg" />
+									<img
+										alt=""
+										(error)="showUpdatedImageFromFacebook($event, post.id)"
+										*ngIf="post.videothumbnailurl"
+										[src]="post.videothumbnailurl"
+										data-test-id="post-raw-today-video"
+									/>
+								</figure>
+								<figcaption data-test-id="post-raw-today-text">{{ post.rawText }}</figcaption>
+							</div>
+							<div class="post-time" data-test-id="post-raw-today-time">
+								{{ post.postCreatedAtUTC | date: 'hh:mm a, MMM dd' }}
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="post-box-foot">
+					<ul class="list-unstyled m-0">
+						<li
+							(click)="recordButtonClick($event)"
+							data-cs-id="a9d01a2d-1f53-4756-9475-16ace7688617"
+							data-cs-label="facebook perm link"
+							data-cs-source="page"
+						>
+							<a data-test-id="post-today-unanswered" href="{{ post.fbPermlink }}" rel="noopener" target="_blank">
+								<span>
+									<img alt="" src="assets/images/fb-small-icon.svg" />
+									<small>Post</small>
+								</span>
+							</a>
+						</li>
+						<li
+							(click)="markUnansweredPostAsRead($event, post, 'today')"
+							data-cs-id="8adfeb6e-eeba-42ae-81dd-0c25ce0be6a1"
+							data-cs-label="Mark as Read"
+							data-cs-source="page"
+						>
+							<button
+								class="post-action-link no-external"
+								[disabled]="post.isMarkingRead"
+								data-test-id="button-mark-as-read-unanswered"
+							>
+								{{ post.isMarkingRead ? 'Marking as read' : 'Mark as Read' }}
+							</button>
+						</li>
+						<li
+							(click)="recordButtonClick($event)"
+							data-cs-id="efa22404-0b11-4213-84b8-67e07f4181f1"
+							data-cs-label="Respond"
+							data-cs-source="page"
+						>
+							<a
+								href="{{ post.fbPermlink }}"
+								target="_blank"
+								rel="noopener"
+								class="post-action-link"
+								data-test-id="link-respond-unanswered-post"
+								>Respond</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</ng-template>
+	</div>
+</ng-template>
+<ng-template #sevenDaysSection>
+	<div class="post-box-wrap">
+		<ng-container
+			[ngTemplateOutlet]="lastSevenDaysUnansweredPosts.length > 0 ? sevenDaysPostDetails : zeroStateSection"
+			[ngTemplateOutletContext]="{$implicit: {isSectionAvailable: true}}"
+		></ng-container>
+		<ng-template #sevenDaysPostDetails>
+			<div *ngFor="let post of lastSevenDaysUnansweredPosts; let i = index" class="post-box">
+				<div class="post-box-body" data-test-id="post-raw-last7Days-body">
+					<ul class="list-unstyled m-0">
+						<li class="post-description">
+							<div class="post-description-inner">
+								<figure *ngIf="post.postType === 'Photo'">
+									<img alt="" *ngIf="!post.photourl" src="assets/images/default_group_image.jpg" />
+									<img
+										alt=""
+										(error)="showUpdatedImageFromFacebook($event, post.id)"
+										*ngIf="post.photourl"
+										[src]="post.photourl"
+										data-test-id="post-raw-last7Days-photo"
+									/>
+								</figure>
+								<figure class="video-wrapper" *ngIf="post.postType === 'Video'">
+									<img alt="" *ngIf="!post.videothumbnailurl" src="assets/images/default_group_image.jpg" />
+									<img
+										alt=""
+										(error)="showUpdatedImageFromFacebook($event, post.id)"
+										*ngIf="post.videothumbnailurl"
+										[src]="post.videothumbnailurl"
+										data-test-id="post-raw-last7Days-video"
+									/>
+								</figure>
+								<figcaption data-test-id="post-raw-last7Days-text">{{ post.rawText }}</figcaption>
+							</div>
+							<div class="post-time" data-test-id="post-raw-last7Days-time">
+								{{ post.postCreatedAtUTC | date: 'hh:mm a, MMM dd' }}
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="post-box-foot">
+					<ul class="list-unstyled m-0">
+						<li
+							(click)="recordButtonClick($event)"
+							data-cs-id="238158d1-2873-439e-8105-7e1708905542"
+							data-cs-label="facebook perm link"
+							data-cs-source="page"
+						>
+							<a data-test-id="post-last7days-unanswered" href="{{ post.fbPermlink }}" rel="noopener" target="_blank">
+								<span>
+									<img alt="" src="assets/images/fb-small-icon.svg" />
+									<small>Post</small>
+								</span>
+							</a>
+						</li>
+						<li
+							(click)="markUnansweredPostAsRead($event, post, 'lastSevenDays')"
+							data-cs-id="8adfeb6e-eeba-42ae-81dd-0c25ce0be6a1"
+							data-cs-label="Mark as Read"
+							data-cs-source="page"
+						>
+							<button
+								class="post-action-link no-external"
+								[disabled]="post.isMarkingRead"
+								data-test-id="mark-as-read-last7Days"
+							>
+								{{ post.isMarkingRead ? 'Marking as read' : 'Mark as Read' }}
+							</button>
+						</li>
+						<li
+							(click)="recordButtonClick($event)"
+							data-cs-id="6301050a-a93e-4cf4-b0f4-e2274abf9f68"
+							data-cs-label="Respond"
+							data-cs-source="page"
+						>
+							<a
+								href="{{ post.fbPermlink }}"
+								target="_blank"
+								rel="noopener"
+								class="post-action-link"
+								data-test-id="respond-last7Days-unanswered"
+								>Respond</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</ng-template>
+	</div>
+</ng-template>
+<ng-template #loadingPosts>
+	<div class="loader-shimmer-wrapper">
+		<div class="loading-header loading-strip primary"></div>
+		<div class="loading-body">
+			<div class="loading-body-left">
+				<div class="rectangle loading-strip mr-3"></div>
+				<div class="primary loading-strip mb-0"></div>
+			</div>
+			<div class="loading-body-right">
+				<div class="secondary loading-strip mr-5"></div>
+				<div class="tertiary loading-strip"></div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+<ng-template #zeroStateSection let-d>
+	<div class="no-result-state">
+		<div class="no-results-found" data-test-id="no-comments-last7Days-class">
+			<figure>
+				<img
+					data-test-id="img-no-comments-last7Days-class"
+					src="assets/images/group-icons/emoji_raised_hands.svg"
+					alt=""
+				/>
+			</figure>
+			<h5 data-test-id="heading-no-comments-last7Days-class">
+				{{ d.isSectionAvailable ? 'You’re doing great!' : 'You have no unanswered posts' }}
+			</h5>
+			<span>{{ d.data }}</span>
+			<h6 data-test-id="subheading-no-comments-last7Days-class">
+				<ng-container *ngIf="d.isSectionAvailable; else descriptionWithTwoLines">
+					All recent posts in your group have received comments
+				</ng-container>
+				<ng-template #descriptionWithTwoLines>
+					Posts with no comments for more than 2 hours are shown here.
+					<br />
+					Only posts after your group install are analysed
+				</ng-template>
+			</h6>
+		</div>
+	</div>
+</ng-template>

@@ -1,0 +1,932 @@
+<div class="group-post-trends-component">
+	<div class="container">
+		<div class="page-headers">
+			<h1 data-test-id="heading-reshare-post">Reshare Posts</h1>
+			<h6 data-test-id="subheading-reshare-post">Reshare posts from your group that were previously trending</h6>
+		</div>
+	</div>
+
+	<div class="fixed-tabs">
+		<div class="container">
+			<ul class="nav nav-tabs graph-tabs" id="insightsTab" role="tablist">
+				<li class="nav-item">
+					<button
+						(click)="getPostAnalyticsDataBySelectedPeriod('currentMonth'); recordButtonClick($event, group)"
+						[attr.data-cs-label]="group.getPillNameBasedOnReportType('currentMonth')"
+						aria-controls="currentmonth"
+						aria-selected="true"
+						class="btn-month active"
+						data-cs-id="2e2b091b-57fb-497d-b6a4-734c536334c6"
+						data-cs-source="page"
+						data-toggle="tab"
+						role="tab"
+					>
+						{{ group.getPillNameBasedOnReportType('currentMonth') }}
+					</button>
+				</li>
+				<li class="nav-item" *ngIf="!group.isLastMonthPillDisabled">
+					<button
+						(click)="getPostAnalyticsDataBySelectedPeriod('lastMonth'); recordButtonClick($event, group)"
+						[attr.data-cs-label]="group.getPillNameBasedOnReportType('lastMonth')"
+						aria-controls="1month"
+						aria-selected="false"
+						class="btn-month"
+						data-cs-id="3edd3152-5d30-4270-bae2-c960e15bf486"
+						data-cs-source="page"
+						data-test-id="tile-lastMonth"
+						data-toggle="tab"
+						role="tab"
+					>
+						{{ group.getPillNameBasedOnReportType('lastMonth') }}
+					</button>
+				</li>
+				<li class="nav-item" *ngIf="!group.isSecondLastMonthPillDisabled">
+					<button
+						(click)="getPostAnalyticsDataBySelectedPeriod('lastTwoMonths'); recordButtonClick($event, group)"
+						[attr.data-cs-label]="group.getPillNameBasedOnReportType('lastTwoMonths')"
+						aria-controls="2months"
+						aria-selected="false"
+						class="btn-month"
+						data-cs-id="755bdd64-341a-45b6-9c20-8e8b75e93de3"
+						data-cs-source="page"
+						data-toggle="tab"
+						role="tab"
+					>
+						{{ group.getPillNameBasedOnReportType('lastTwoMonths') }}
+					</button>
+				</li>
+				<li class="nav-item" *ngIf="!group?.isThirdLastMonthPillDisabled">
+					<button
+						(click)="getPostAnalyticsDataBySelectedPeriod('lastThreeMonths'); recordButtonClick($event, group)"
+						[attr.data-cs-label]="group.getPillNameBasedOnReportType('lastThreeMonths')"
+						aria-controls="3months"
+						aria-selected="false"
+						class="btn-month"
+						data-cs-id="e9a0e162-a322-44bd-94c9-997c6bc18929"
+						data-cs-source="page"
+						data-toggle="tab"
+						role="tab"
+					>
+						{{ group.getPillNameBasedOnReportType('lastThreeMonths') }}
+					</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="fixed-border"></div>
+	<div class="container" *ngIf="isTheGroupInAnalysingState()">
+		<div class="matrics-top-container">
+			<div class="summary-row">
+				<div class="metrics-wrapper analysing" *ngFor="let postType of postTypes">
+					<div class="heading-wrapper">
+						<h3 class="heading-overview">
+							<span data-test-id="heading-yesterdayActivity-overview"> {{ postType }} Posts</span>
+							<p class="sub-heading-overview">Insights about <strong>Activity Rates</strong></p>
+						</h3>
+						<div *ngIf="timePeriod === 'currentMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLast28DaysMetricsAvailable"
+								[inline]="true"
+								[diameter]="28"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLastMonthMetricsAvailable"
+								[inline]="true"
+								[diameter]="28"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastTwoMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+								[inline]="true"
+								[diameter]="28"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastThreeMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+								[inline]="true"
+								[diameter]="28"
+							></app-analysis-state>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container" *ngIf="isGroupAnalysisComplete()">
+		<div class="matrics-top-container">
+			<div class="summary-row">
+				<div class="metrics-wrapper">
+					<h6 class="metric-name">Video posts</h6>
+					<div *ngIf="(selectedSummaryReport | async) !== null; else loadingVideoSummary">
+						<p class="metric-value">
+							{{ (selectedSummaryReport | async).totalVideoPosts }}
+						</p>
+						<div
+							class="metric-description"
+							data-cs-label="(Comments + Reactions) on videos / Total video posts"
+							matTooltipPosition="above"
+							#tooltip="matTooltip"
+							(click)="tooltip.toggle()"
+							data-cs-parent-label="Tooltip"
+							matTooltip="(Comments + Reactions) on videos / Total video posts"
+							data-cs-source="page"
+							(mouseenter)="tooltipHovered($event)"
+						>
+							<span>Activity rate:</span>
+							{{ (selectedSummaryReport | async).totalActivityRateOnVideoPosts }}
+						</div>
+					</div>
+					<ng-template #loadingVideoSummary>
+						<div class="loader-shimmer">
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</div>
+					</ng-template>
+				</div>
+
+				<div class="metrics-wrapper">
+					<h6 class="metric-name">Image posts</h6>
+					<div *ngIf="(selectedSummaryReport | async) !== null; else loadingImageSummary">
+						<p class="metric-value">
+							{{ (selectedSummaryReport | async).totalPhotoPosts }}
+						</p>
+						<div
+							class="metric-description"
+							data-cs-label="(Comments + Reactions) on images / Total image posts"
+							matTooltipPosition="above"
+							#tooltip="matTooltip"
+							(click)="tooltip.toggle()"
+							data-cs-parent-label="Tooltip"
+							matTooltip="(Comments + Reactions) on images / Total image posts"
+							data-cs-source="page"
+							(mouseenter)="tooltipHovered($event)"
+						>
+							<span>Activity rate:</span>
+							{{ (selectedSummaryReport | async).totalActivityRateOnPhotoPosts }}
+						</div>
+					</div>
+					<ng-template #loadingImageSummary>
+						<div class="loader-shimmer">
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</div>
+					</ng-template>
+				</div>
+
+				<div class="metrics-wrapper">
+					<h6 class="metric-name">Plain text posts</h6>
+					<div *ngIf="(selectedSummaryReport | async) !== null; else loadingTextSummary">
+						<p class="metric-value">
+							{{ (selectedSummaryReport | async).totalTextPosts }}
+						</p>
+						<div
+							class="metric-description"
+							data-cs-label="(Comments + Reactions) on plain texts / Total plain text posts"
+							matTooltipPosition="above"
+							#tooltip="matTooltip"
+							(click)="tooltip.toggle()"
+							data-cs-parent-label="Tooltip"
+							matTooltip="(Comments + Reactions) on plain texts / Total plain text posts"
+							data-cs-source="page"
+							(mouseenter)="tooltipHovered($event)"
+						>
+							<span>Activity rate:</span>
+							{{ (selectedSummaryReport | async).totalActivityRateOnTextPosts }}
+						</div>
+					</div>
+					<ng-template #loadingTextSummary>
+						<div class="loader-shimmer">
+							<div class="loading-strip primary"></div>
+							<div class="loading-strip secondary"></div>
+						</div>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-content graph-tab-content">
+		<div class="container">
+			<h5 class="post-box-title">Top video posts</h5>
+			<div class="post-box-wrap" *ngIf="isTheGroupInAnalysingState()">
+				<div class="no-results-wrapper">
+					<div class="no-results-found">
+						<div *ngIf="timePeriod === 'currentMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLast28DaysMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-video.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-video.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastTwoMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-video.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastThreeMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-video.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div class="create-new-content">
+							<img src="assets/images/group-icons/emoji_warning.svg" alt="" />
+							<span
+								><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="isGroupAnalysisComplete()">
+				<div class="post-box-wrap" *ngIf="selectedPostAnalyticsData | async; else loadingVideoPosts">
+					<div
+						*ngFor="let post of (selectedPostAnalyticsData | async).video | slice: 0:10; let i = index"
+						class="post-box"
+					>
+						<div class="post-box-head">
+							<ul class="list-unstyled m-0">
+								<li>
+									{{ post.postCreatedAtUTC | date: 'dd MMM ‘yy' }} at
+									{{ post.postCreatedAtUTC | date: 'hh:mm a' }}
+								</li>
+								<li>
+									<a
+										(click)="recordButtonClick($event, group)"
+										class="view-post-link"
+										data-cs-id="8fbc4426-58e3-4cc3-b6b0-fc3c48c90f51"
+										data-cs-label="View Post"
+										data-cs-source="page"
+										href="{{ post.fbPermlink }}"
+										target="_blank"
+										rel="noopener"
+									>
+										<div>View Post</div>
+										<img src="assets/images/external_icon-blue.svg" alt="" />
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-body">
+							<ul class="list-unstyled m-0">
+								<li class="post-description">
+									<div class="post-description-inner">
+										<figure class="video-wrapper">
+											<img alt="" *ngIf="!post.videothumbnailurl" src="assets/images/default_group_image.jpg" />
+											<img
+												alt=""
+												(error)="showUpdatedImageFromFacebook($event, post.id)"
+												*ngIf="post.videothumbnailurl"
+												[src]="post.videothumbnailurl"
+											/>
+										</figure>
+										<figcaption>{{ post.rawText }}</figcaption>
+									</div>
+								</li>
+								<li>
+									<div class="response waiting">
+										<span matTooltip="Comments + Reactions" matTooltipPosition="above">Activity : </span
+										><strong *ngIf="!(post.commentCount === null && post.reactions === null)">{{
+											post.activityRate
+										}}</strong
+										><span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<button
+											(click)="repostPost($event, post)"
+											class="repost-btn"
+											data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+											data-cs-label="Repost this"
+											data-cs-source="page"
+										>
+											<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+													fill="white"
+												/>
+												<path
+													d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+													fill="white"
+												/>
+											</svg>
+											Repost
+										</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-foot">
+							<ul class="list-unstyled m-0">
+								<li>
+									<img alt="" src="assets/images/like-icon.svg" />
+									<span *ngIf="post.reactions !== null"
+										><strong>{{ post.reactions }}</strong> reactions</span
+									><span *ngIf="post.reactions === null" class="waiting">Awaiting</span>
+								</li>
+								<li>
+									<img alt="" src="assets/images/comment-icon.svg" />
+									<span *ngIf="post.commentCount !== null"
+										><strong>{{ post.commentCount }}</strong> comments</span
+									>
+									<span *ngIf="post.commentCount === null" class="waiting">Awaiting</span>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-mobile-stats">
+							<ul class="list-unstyled m-0">
+								<li>
+									<div
+										class="label-wrap"
+										#tooltip="matTooltip"
+										data-cs-label="Comments + Reactions"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										data-cs-parent-label="Tooltip"
+										matTooltip="Comments + Reactions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span>Activity </span>:
+										<strong *ngIf="!(post.commentCount === null && post.reactions === null)">
+											{{ post.activityRate }}
+										</strong>
+										<span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<button
+										(click)="repostPost($event, post)"
+										class="repost-btn"
+										data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+										data-cs-label="Repost this"
+										data-cs-source="page"
+									>
+										<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+												fill="white"
+											/>
+											<path
+												d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+												fill="white"
+											/>
+										</svg>
+										Repost
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="no-results-wrapper" *ngIf="(selectedPostAnalyticsData | async).video.length === 0">
+						<div class="no-results-found">
+							<img src="assets/images/group-icons/no-data-video.svg" alt="" />
+							<h5>No posts to show here, yet</h5>
+							<p class="m-0">Check back at some other time.</p>
+
+							<div class="create-new-content">
+								<img src="assets/images/group-icons/emoji_warning.svg" alt="" />
+								<span
+									><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+				<ng-template #loadingVideoPosts>
+					<div class="loader-shimmer-wrapper">
+						<div class="loading-header loading-strip primary"></div>
+						<div class="loading-body">
+							<div class="loading-body-left">
+								<div class="rectangle loading-strip mr-3"></div>
+								<div class="primary loading-strip mb-0"></div>
+							</div>
+							<div class="loading-body-right">
+								<div class="secondary loading-strip mr-5"></div>
+								<div class="tertiary loading-strip"></div>
+							</div>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+			<h5 class="post-box-title">Top image posts</h5>
+			<div class="post-box-wrap" *ngIf="isTheGroupInAnalysingState()">
+				<div class="no-results-wrapper">
+					<div class="no-results-found">
+						<div *ngIf="timePeriod === 'currentMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLast28DaysMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-image.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-image.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastTwoMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-image.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastThreeMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-image.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div class="create-new-content">
+							<img src="assets/images/group-icons/emoji_warning.svg" alt="" />
+							<span
+								><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="isGroupAnalysisComplete()">
+				<div class="post-box-wrap" *ngIf="selectedPostAnalyticsData | async; else loadingImagePosts">
+					<div
+						*ngFor="let post of (selectedPostAnalyticsData | async).image | slice: 0:10; let i = index"
+						class="post-box"
+					>
+						<div class="post-box-head">
+							<ul class="list-unstyled m-0">
+								<li>
+									{{ post.postCreatedAtUTC | date: 'dd MMM ‘yy' }} at
+									{{ post.postCreatedAtUTC | date: 'hh:mm a' }}
+								</li>
+								<li>
+									<a
+										(click)="recordButtonClick($event, group)"
+										class="view-post-link"
+										data-cs-id="f0e1a2c9-13e6-48f9-b61b-3f3b126f3c2d"
+										data-cs-label="View Post"
+										data-cs-source="page"
+										href="{{ post.fbPermlink }}"
+										target="_blank"
+										rel="noopener"
+									>
+										<div>View Post</div>
+										<img src="assets/images/external_icon-blue.svg" alt="" />
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-body">
+							<ul class="list-unstyled m-0">
+								<li class="post-description">
+									<div class="post-description-inner">
+										<figure>
+											<img alt="" *ngIf="!post.photourl" src="assets/images/default_group_image.jpg" />
+											<img
+												alt=""
+												(error)="showUpdatedImageFromFacebook($event, post.id)"
+												*ngIf="post.photourl"
+												[src]="post.photourl"
+											/>
+										</figure>
+										<figcaption>{{ post.rawText }}</figcaption>
+									</div>
+								</li>
+								<li>
+									<div class="response waiting" matTooltip="Comments + Reactions" matTooltipPosition="above">
+										<span>Activity : </span
+										><strong *ngIf="!(post.commentCount === null && post.reactions === null)">{{
+											post.activityRate
+										}}</strong
+										><span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<button
+											(click)="repostPost($event, post)"
+											data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+											data-cs-label="Repost this"
+											data-cs-source="page"
+											class="repost-btn"
+										>
+											<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+													fill="white"
+												/>
+												<path
+													d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+													fill="white"
+												/>
+											</svg>
+											Repost
+										</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-foot">
+							<ul class="list-unstyled m-0">
+								<li>
+									<img alt="" src="assets/images/like-icon.svg" />
+									<span *ngIf="post.reactions !== null"
+										><strong>{{ post.reactions }}</strong> reactions</span
+									><span *ngIf="post.reactions === null" class="waiting">Awaiting</span>
+								</li>
+								<li>
+									<img alt="" src="assets/images/comment-icon.svg" />
+									<span *ngIf="post.commentCount !== null"
+										><strong>{{ post.commentCount }}</strong> comments</span
+									><span *ngIf="post.commentCount === null" class="waiting">Awaiting</span>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-mobile-stats">
+							<ul class="list-unstyled m-0">
+								<li>
+									<div
+										class="label-wrap"
+										matTooltip="Comments + Reactions"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Comments + Reactions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span>Activity</span>:<strong *ngIf="!(post.commentCount === null && post.reactions === null)">{{
+											post.activityRate
+										}}</strong
+										><span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<button
+										(click)="repostPost($event, post)"
+										class="repost-btn"
+										data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+										data-cs-label="Repost this"
+										data-cs-source="page"
+									>
+										<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+												fill="white"
+											/>
+											<path
+												d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+												fill="white"
+											/>
+										</svg>
+										Repost
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="no-results-wrapper" *ngIf="(selectedPostAnalyticsData | async).image.length === 0">
+						<div class="no-results-found">
+							<img src="assets/images/group-icons/no-data-image.svg" alt="" />
+							<h5>No posts to show here, yet</h5>
+							<p class="m-0">Check back at some other time.</p>
+							<div class="create-new-content">
+								<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="7" cy="7.9375" r="7" fill="#FF9C28" />
+									<path
+										d="M7.00866 10.231C6.53738 10.231 6.14233 10.6059 6.14233 11.053C6.14233 11.5002 6.53738 11.875 7.00866 11.875C7.46262 11.875 7.875 11.5002 7.85421 11.0727C7.875 10.6026 7.48342 10.231 7.00866 10.231Z"
+										fill="white"
+									/>
+									<path
+										d="M6.79381 4.46071C6.38144 4.5725 6.125 4.92759 6.125 5.35831C6.14579 5.61806 6.16312 5.88109 6.18391 6.14084C6.24282 7.13051 6.30173 8.10045 6.36064 9.09012C6.38144 9.42549 6.6552 9.6688 7.00866 9.6688C7.36213 9.6688 7.63936 9.40905 7.65668 9.07039C7.65668 8.86654 7.65668 8.67913 7.67747 8.47199C7.71559 7.83741 7.75718 7.20284 7.7953 6.56827C7.81609 6.15728 7.85421 5.74629 7.875 5.3353C7.875 5.18734 7.85421 5.05582 7.7953 4.9243C7.61856 4.55606 7.20619 4.36864 6.79381 4.46071Z"
+										fill="white"
+									/>
+								</svg>
+								<span
+									><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<ng-template #loadingImagePosts>
+					<div class="loader-shimmer-wrapper">
+						<div class="loading-header loading-strip primary"></div>
+						<div class="loading-body">
+							<div class="loading-body-left">
+								<div class="rectangle loading-strip mr-3"></div>
+								<div class="primary loading-strip mb-0"></div>
+							</div>
+							<div class="loading-body-right">
+								<div class="secondary loading-strip mr-5"></div>
+								<div class="tertiary loading-strip"></div>
+							</div>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+			<h5 class="post-box-title">Top plain text posts</h5>
+			<div class="post-box-wrap" *ngIf="isTheGroupInAnalysingState()">
+				<div class="no-results-wrapper">
+					<div class="no-results-found">
+						<div *ngIf="timePeriod === 'currentMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLast28DaysMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-text.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastMonth'">
+							<app-analysis-state
+								[value]="group?.percentageLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-text.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastTwoMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesSecondLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-text.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div *ngIf="timePeriod === 'lastThreeMonths'">
+							<app-analysis-state
+								[value]="group?.percentagesThirdLastMonthMetricsAvailable"
+								[iconLg]="'assets/images/group-icons/analysing-text.svg'"
+								[inline]="false"
+								[heading]="'Analysing Information'"
+								[subHeading]="'Please wait...'"
+								[diameter]="72"
+							></app-analysis-state>
+						</div>
+						<div class="create-new-content">
+							<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="7" cy="7.9375" r="7" fill="#FF9C28" />
+								<path
+									d="M7.00866 10.231C6.53738 10.231 6.14233 10.6059 6.14233 11.053C6.14233 11.5002 6.53738 11.875 7.00866 11.875C7.46262 11.875 7.875 11.5002 7.85421 11.0727C7.875 10.6026 7.48342 10.231 7.00866 10.231Z"
+									fill="white"
+								/>
+								<path
+									d="M6.79381 4.46071C6.38144 4.5725 6.125 4.92759 6.125 5.35831C6.14579 5.61806 6.16312 5.88109 6.18391 6.14084C6.24282 7.13051 6.30173 8.10045 6.36064 9.09012C6.38144 9.42549 6.6552 9.6688 7.00866 9.6688C7.36213 9.6688 7.63936 9.40905 7.65668 9.07039C7.65668 8.86654 7.65668 8.67913 7.67747 8.47199C7.71559 7.83741 7.75718 7.20284 7.7953 6.56827C7.81609 6.15728 7.85421 5.74629 7.875 5.3353C7.875 5.18734 7.85421 5.05582 7.7953 4.9243C7.61856 4.55606 7.20619 4.36864 6.79381 4.46071Z"
+									fill="white"
+								/>
+							</svg>
+							<span
+								><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="isGroupAnalysisComplete()">
+				<div class="post-box-wrap" *ngIf="selectedPostAnalyticsData | async; else loadingTextPosts">
+					<div
+						*ngFor="let post of (selectedPostAnalyticsData | async).text | slice: 0:10; let i = index"
+						class="post-box"
+					>
+						<div class="post-box-head">
+							<ul class="list-unstyled m-0">
+								<li>
+									{{ post.postCreatedAtUTC | date: 'dd MMM ‘yy' }} at
+									{{ post.postCreatedAtUTC | date: 'hh:mm a' }}
+								</li>
+								<li>
+									<a
+										(click)="recordButtonClick($event, group)"
+										class="view-post-link"
+										data-cs-id="292c470d-3dbc-4f2b-850a-5baf186d7ea9"
+										data-cs-label="View Post"
+										data-cs-source="page"
+										href="{{ post.fbPermlink }}"
+										target="_blank"
+										rel="noopener"
+									>
+										<div>View Post</div>
+										<img src="assets/images/external_icon-blue.svg" alt="" />
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-body">
+							<ul class="list-unstyled m-0">
+								<li class="post-description">
+									<div class="post-description-inner">
+										<figcaption>{{ post.rawText }}</figcaption>
+									</div>
+								</li>
+								<li>
+									<div class="response waiting" matTooltip="Comments + Reactions" matTooltipPosition="above">
+										<span>Activity : </span
+										><strong *ngIf="!(post.commentCount === null && post.reactions === null)">{{
+											post.activityRate
+										}}</strong
+										><span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<button
+											(click)="repostPost($event, post)"
+											data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+											data-cs-label="Repost this"
+											data-cs-source="page"
+											class="repost-btn"
+										>
+											<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+												<path
+													d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+													fill="white"
+												/>
+												<path
+													d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+													fill="white"
+												/>
+											</svg>
+											Repost
+										</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-foot">
+							<ul class="list-unstyled m-0">
+								<li>
+									<img alt="" src="assets/images/like-icon.svg" />
+									<span *ngIf="post.reactions !== null"
+										><strong>{{ post.reactions }}</strong> reactions</span
+									><span *ngIf="post.reactions === null" class="waiting">Awaiting</span>
+								</li>
+								<li>
+									<img alt="" src="assets/images/comment-icon.svg" />
+									<span *ngIf="post.commentCount !== null"
+										><strong>{{ post.commentCount }}</strong> comments</span
+									><span *ngIf="post.commentCount === null" class="waiting">Awaiting</span>
+								</li>
+							</ul>
+						</div>
+						<div class="post-box-mobile-stats">
+							<ul class="list-unstyled m-0">
+								<li>
+									<div
+										class="label-wrap"
+										matTooltip="Comments + Reactions"
+										matTooltipPosition="above"
+										(click)="tooltip.toggle()"
+										#tooltip="matTooltip"
+										data-cs-parent-label="Tooltip"
+										data-cs-label="Comments + Reactions"
+										data-cs-source="page"
+										(mouseenter)="tooltipHovered($event)"
+									>
+										<span>Activity</span>:<strong *ngIf="!(post.commentCount === null && post.reactions === null)">{{
+											post.activityRate
+										}}</strong
+										><span *ngIf="post.commentCount === null && post.reactions === null" class="waiting">Awaiting</span>
+									</div>
+								</li>
+								<li>
+									<button
+										(click)="repostPost($event, post)"
+										class="repost-btn"
+										data-cs-id="bb29d416-1f17-4e1b-a265-38ec85515f42"
+										data-cs-label="Repost this"
+										data-cs-source="page"
+									>
+										<svg fill="none" height="20" viewBox="0 0 19 20" width="19" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M3.50652 16.7277H2.12852C1.56665 16.7277 1.10732 16.2684 1.10732 15.7065V4.28882C1.10732 3.72696 1.56665 3.26762 2.12852 3.26762H11.4505L10.2366 4.48157C10.0192 4.69894 10.0192 5.04754 10.2366 5.2649C10.3432 5.37153 10.4867 5.42895 10.6262 5.42895C10.7697 5.42895 10.9092 5.37563 11.0158 5.2649L13.1771 3.10357C13.2797 3.00105 13.3412 2.8575 13.3412 2.71396C13.3412 2.57042 13.2838 2.42688 13.1771 2.32435L11.0158 0.163022C10.7984 -0.0543408 10.4498 -0.0543408 10.2325 0.163022C10.0151 0.380385 10.0151 0.728986 10.2325 0.946349L11.4464 2.1603H2.12852C0.955577 2.1603 0 3.11588 0 4.28882V15.7106C0 16.8836 0.955577 17.8391 2.12852 17.8391H3.51062C3.81821 17.8391 4.06428 17.5931 4.06428 17.2855C4.06428 16.9779 3.81411 16.7277 3.50652 16.7277Z"
+												fill="white"
+											/>
+											<path
+												d="M16.7126 2.15983H15.3305C15.0229 2.15983 14.7768 2.4059 14.7768 2.71349C14.7768 3.02108 15.0229 3.26715 15.3305 3.26715H16.7126C17.2744 3.26715 17.7338 3.72649 17.7338 4.28835V15.7102C17.7338 16.272 17.2744 16.7314 16.7126 16.7314H7.39058L8.60453 15.5174C8.8219 15.3 8.8219 14.9514 8.60453 14.7341C8.38717 14.5167 8.03857 14.5167 7.82121 14.7341L5.65988 16.8954C5.55735 16.9979 5.49583 17.1415 5.49583 17.285C5.49583 17.4286 5.55325 17.5721 5.65988 17.6746L7.82121 19.836C7.92784 19.9426 8.07138 20 8.21082 20C8.35026 20 8.4938 19.9467 8.60043 19.836C8.8178 19.6186 8.8178 19.27 8.60043 19.0526L7.38648 17.8387H16.7085C17.8814 17.8387 18.837 16.8831 18.837 15.7102V4.28835C18.8411 3.11131 17.8855 2.15983 16.7126 2.15983Z"
+												fill="white"
+											/>
+										</svg>
+										Repost
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="no-results-wrapper" *ngIf="(selectedPostAnalyticsData | async).text.length === 0">
+						<div class="no-results-found">
+							<img src="assets/images/group-icons/no-data-text.svg" alt="" />
+							<h5>No posts to show here, yet</h5>
+							<p class="m-0">Check back at some other time.</p>
+							<div class="create-new-content">
+								<svg fill="none" height="15" viewBox="0 0 14 15" width="14" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="7" cy="7.9375" r="7" fill="#FF9C28" />
+									<path
+										d="M7.00866 10.231C6.53738 10.231 6.14233 10.6059 6.14233 11.053C6.14233 11.5002 6.53738 11.875 7.00866 11.875C7.46262 11.875 7.875 11.5002 7.85421 11.0727C7.875 10.6026 7.48342 10.231 7.00866 10.231Z"
+										fill="white"
+									/>
+									<path
+										d="M6.79381 4.46071C6.38144 4.5725 6.125 4.92759 6.125 5.35831C6.14579 5.61806 6.16312 5.88109 6.18391 6.14084C6.24282 7.13051 6.30173 8.10045 6.36064 9.09012C6.38144 9.42549 6.6552 9.6688 7.00866 9.6688C7.36213 9.6688 7.63936 9.40905 7.65668 9.07039C7.65668 8.86654 7.65668 8.67913 7.67747 8.47199C7.71559 7.83741 7.75718 7.20284 7.7953 6.56827C7.81609 6.15728 7.85421 5.74629 7.875 5.3353C7.875 5.18734 7.85421 5.05582 7.7953 4.9243C7.61856 4.55606 7.20619 4.36864 6.79381 4.46071Z"
+										fill="white"
+									/>
+								</svg>
+								<span
+									><strong><a (click)="redirectToCreatePost()">Create a Post</a></strong> now to engage your group</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<ng-template #loadingTextPosts>
+					<div class="loader-shimmer-wrapper">
+						<div class="loading-header loading-strip primary"></div>
+						<div class="loading-body">
+							<div class="loading-body-left">
+								<div class="primary loading-strip mb-0"></div>
+							</div>
+							<div class="loading-body-right">
+								<div class="secondary loading-strip mr-5"></div>
+								<div class="tertiary loading-strip"></div>
+							</div>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="showAlert" class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h5>{{ alertMessage?.heading }}</h5>
+				<p class="m-0">{{ alertMessage?.content }}</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="showAlert = false; recordButtonClick($event, group)"
+					class="px-4 full-btn convo-btn-normal convo-btn-primary"
+					data-cs-id="68634524-091d-4187-8697-40e95e57c362"
+					data-cs-label="OK"
+					data-cs-source="page"
+					type="button"
+				>
+					OK
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <a [hidden] #openRepostModal class="repost-btn" data-target="#rePostModal" data-toggle="modal"></a> -->

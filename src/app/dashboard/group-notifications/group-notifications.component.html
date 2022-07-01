@@ -1,0 +1,73 @@
+<div [ngClass]="{'mobile-view': renderedOn === 'Mobile'}" class="notification-wrapper">
+	<div class="head-section">
+		<h3 class="head-text" data-test-id="heading-notification-pannel">Notifications</h3>
+	</div>
+	<ng-container *ngIf="notification$ | async as notifications; else notificationsLoading">
+		<ul class="notification-list">
+			<ng-container *ngFor="let notification of notifications">
+				<li
+					[ngClass]="{
+						'unread-notification': !notification.viewedAtUTC
+					}"
+					class="notification-list-item success"
+					data-test-id="text-notification"
+				>
+					<div class="img-wrapper">
+						<img alt="" class="img-notification img-success" src="assets/images/notification-icons/success_icon.svg" />
+					</div>
+					<div class="content-wrapper">
+						<p class="notification-text">
+							<span [innerHTML]="notification.inAppTitle"></span>
+							<ng-container *ngIf="notification.showLink">
+								<svg
+									(click)="goToNotificationRoute(notification, $event)"
+									data-cs-parent-label="Notifications"
+									data-cs-source="header"
+									data-test-id="notfication-redirection-link"
+									fill="none"
+									height="15"
+									viewBox="0 0 14 15"
+									width="14"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M11.2899 7.6494C10.9776 7.6494 10.7244 7.90257 10.7244 8.21492V12.5046C10.7244 12.9812 10.3366 13.3689 9.86002 13.3689H1.99565C1.51905 13.3689 1.13129 12.9812 1.13129 12.5046V4.64022C1.13129 4.16361 1.51905 3.77585 1.99565 3.77585H6.28531C6.59763 3.77585 6.85084 3.52265 6.85084 3.21033C6.85084 2.89801 6.59763 2.64481 6.28531 2.64481H1.99565C0.895396 2.64481 0.000244141 3.53996 0.000244141 4.64022V12.5046C0.000244141 13.6049 0.895396 14.5 1.99565 14.5H9.85999C10.9603 14.5 11.8554 13.6049 11.8555 12.5046V8.21492C11.8555 7.90257 11.6023 7.6494 11.2899 7.6494Z"
+									/>
+									<path
+										d="M13.4345 0.500031H9.14489C8.83254 0.500031 8.57936 0.753234 8.57936 1.06555C8.57936 1.37787 8.83254 1.63108 9.14489 1.63108H12.869V5.35521C12.869 5.66753 13.1222 5.92074 13.4345 5.92074C13.7469 5.92074 14.0001 5.66753 14.0001 5.35521V1.06555C14.0001 0.753234 13.7469 0.500031 13.4345 0.500031Z"
+									/>
+									<path
+										d="M13.8348 0.665621C13.6139 0.444793 13.2558 0.444793 13.035 0.665621L5.17062 8.52996C4.94976 8.75081 4.94976 9.10888 5.17062 9.32973C5.28103 9.44018 5.42579 9.49538 5.57052 9.49538C5.71528 9.49538 5.86001 9.44015 5.97042 9.32973L13.8348 1.4654C14.0556 1.24454 14.0556 0.886477 13.8348 0.665621Z"
+									/>
+								</svg>
+							</ng-container>
+						</p>
+						<p class="notification-timestamp">{{ notification.timeFromX }}</p>
+					</div>
+				</li>
+			</ng-container>
+		</ul>
+		<div [hidden]="notifications.length > 0" class="no-notification-wrapper">
+			<div class="no-notification">
+				<figure>
+					<img alt="" src="assets/images/no-notifications.svg" />
+				</figure>
+				<h5>No new notifications</h5>
+			</div>
+		</div>
+	</ng-container>
+	<ng-template #notificationsLoading>
+		<ul class="notification-list">
+			<div class="loader-wrapper">
+				<div class="loader"></div>
+			</div>
+		</ul>
+	</ng-template>
+	<div *ngIf="false" class="bottom-wrapper">
+		<a (click)="showAllNotifications = true" class="btn-view-all" href="javascript:void(0);">View all notifications</a>
+	</div>
+	<div *ngIf="showAllNotifications" class="convosight-overlay">
+		<app-notifications (closeNotificationList)="closeNotificationList($event)" [notification$]="notification$">
+		</app-notifications>
+	</div>
+</div>

@@ -1,0 +1,85 @@
+<div class="engagment-wrapper d-flex flex-wrap">
+	<app-intent
+		(showReferenceConversation)="showReferenceConversation.emit($event)"
+		(valueUpdated)="onUpdaatingIntent($event)"
+		*ngIf="!isBrandLoggedIn || sectionData?.intentVisibleToBrand"
+		[data]="sectionData?.content?.intent"
+		[isBrandLoggedIn]="isBrandLoggedIn"
+		[visibleToBrand]="sectionData?.intentVisibleToBrand"
+	></app-intent>
+	<app-emotions
+		(showReferenceConversation)="showReferenceConversation.emit($event)"
+		(valueUpdated)="onUpdaatingEmotion($event)"
+		*ngIf="!isBrandLoggedIn || sectionData?.emotionsVisibleToBrand"
+		[data]="sectionData?.content?.emotions"
+		[isBrandLoggedIn]="isBrandLoggedIn"
+		[visibleToBrand]="sectionData?.emotionsVisibleToBrand"
+	></app-emotions>
+
+	<app-benefits
+		(showReferenceConversation)="showReferenceConversation.emit($event)"
+		(valueUpdated)="onUpdaatingBenefits($event)"
+		*ngIf="!isBrandLoggedIn || sectionData?.benefitsVisibleToBrand"
+		[data]="sectionData?.content?.benefits"
+		[isBrandLoggedIn]="isBrandLoggedIn"
+		[visibleToBrand]="sectionData?.benefitsVisibleToBrand"
+	></app-benefits>
+</div>
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !sectionData?.supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add Supporting Text
+	</div>
+
+	<div *ngIf="!editingSupportingText && form?.value?.supportingText" class="supprt-text pb-3 pt-1">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button
+					(click)="cancelEditingSupportingText()"
+					class="mt-1 cancel"
+					color="primary"
+					mat-stroked-button
+					type="button"
+				>
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

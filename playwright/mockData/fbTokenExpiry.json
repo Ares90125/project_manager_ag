@@ -1,0 +1,8 @@
+{
+	"data": {
+		"executeFacebookGraphApi": {
+			"__typename": "FacebookGraphAPIResponse",
+			"response": "{\"error\":{\"message\":\"Invalid OAuth access token.\",\"type\":\"OAuthException\",\"code\":190,\"fbtrace_id\":\"AfdpzX6mpD4OwsTB6zpuX1m\"}}"
+		}
+	}
+}

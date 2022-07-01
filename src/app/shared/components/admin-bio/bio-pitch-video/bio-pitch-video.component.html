@@ -1,0 +1,165 @@
+<div class="bio-card">
+	<h5><img src="./assets/images/pitch-video-icon.png" alt="" /> Pitch video</h5>
+	<h6>Add a video of you talking about why brands should work with you <strong>(max. 2 minute or 500MB)</strong>.</h6>
+	<div *ngIf="adminBio?.pitchVideo?.size" class="pitch-video-wrap">
+		<div class="video-row">
+			<div class="video-box" data-test-id="video-pitch-adminbio-page">
+				<figure>
+					<ng-container>
+						<video [src]="adminBio?.pitchVideo?.url ?? previewImage" type="video/mp4"></video>
+					</ng-container>
+
+					<button
+						class="play-btn"
+						data-cs-id="50554aa7-8ce3-4b8d-8601-64a5399326ba"
+						data-cs-label="Play"
+						data-cs-source="page"
+						*ngIf="!uploading"
+						(click)="recordButtonClick($event)"
+						data-target="#videoPlayerModal"
+						data-toggle="modal"
+					>
+						<img src="assets/images/video_play_icon.svg" alt="" />
+					</button>
+
+					<button class="play-btn" style="cursor: default" *ngIf="uploading">
+						<img src="assets/images/video_play_icon.svg" alt="" />
+					</button>
+				</figure>
+
+				<div>
+					<div *ngIf="renderedOn === 'Desktop'" class="video-name" data-test-id="text-videoname-adminbio-page">
+						{{ video?.name ?? adminBio?.pitchVideo?.title | ellipsis: 80 }}
+					</div>
+
+					<div class="video-name" *ngIf="renderedOn === 'Mobile'">
+						{{ video?.name ?? adminBio?.pitchVideo?.title | ellipsis: 30 }}
+					</div>
+					<div *ngIf="uploading" class="video-size" data-test-id="text-uploadingvideo-adminbio">
+						<span class="btn-spinner"></span> Uploading...
+					</div>
+					<div *ngIf="!uploading" class="video-size" data-test-id="text-videosize-adminbio">
+						{{ video?.size ?? adminBio?.pitchVideo?.size | fileSize }}
+					</div>
+				</div>
+			</div>
+
+			<div class="video-action" *ngIf="!uploading">
+				<button
+					data-cs-id="bc8ab91a-59cc-4a69-94c7-a4d0ff24f05f"
+					data-cs-label="Cross"
+					data-cs-source="page"
+					(click)="recordButtonClick($event); cancelUpload(); removePitchVideo()"
+					class="remove-btn"
+					data-test-id="button-cross-pitchvideo-adminbio"
+				>
+					<img src="assets/images/remove-icon.svg" alt="" />
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div
+		[hidden]="(initialState && !adminBio?.pitchVideo?.url) || adminBio?.pitchVideo?.size"
+		class="fanvideo-upload-wrap"
+	>
+		<iframe
+			[src]="fanVideoUrl | sanitizeUrl"
+			allow="camera *; microphone *; autoplay *; encrypted-media *; fullscreen *; display-capture *;"
+			height="350px"
+			style="border: 1px dashed #e0e0e5; border-radius: 4px"
+			width="100%"
+		></iframe>
+	</div>
+
+	<button
+		(click)="recordButtonClick($event); initialState = false"
+		class="convo-btn-normal convo-btn-bordered convo-btn-small"
+		data-cs-id="0ba45cc1-ba4a-474f-a35b-2ae707a1911b"
+		*ngIf="initialState && !adminBio?.pitchVideo?.url"
+		data-cs-source="page"
+		data-cs-label="Upload or record a video"
+	>
+		<img alt="" src="./assets/images/icon_file_upload.svg" /> <span>Upload or record a video</span>
+	</button>
+
+	<button
+		*ngIf="!adminBio?.pitchVideo?.url"
+		class="convo-btn-normal convo-btn-bordered convo-btn-small mt-2"
+		data-cs-id="c9ae748b-cde0-4636-9107-dc36994f4714"
+		data-cs-label="See sample video"
+		[class.sampleVideo]="previewImage || adminBio?.pitchVideo?.url"
+		data-cs-source="page"
+		data-target="#sampleVideoModal"
+		data-toggle="modal"
+		(click)="recordButtonClick($event)"
+	>
+		<img src="./assets/images/play_circle_outline.svg" alt="" /> <span>See sample video</span>
+	</button>
+</div>
+
+<div
+	class="modal fade"
+	id="videoPlayerModal"
+	tabindex="-1"
+	data-backdrop="static"
+	aria-labelledby="videoPlayerModal"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ video?.name ?? adminBio?.pitchVideo?.title }}</h5>
+				<button
+					type="button"
+					data-cs-id="281fedbd-18ad-82fo-8672-c637e8a330be"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeAddArticle"
+					(click)="recordButtonClick($event); closeVideo('pitchVideo')"
+					class="close-btn"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<video class="video" id="pitchVideo" [src]="adminBio?.pitchVideo?.url ?? previewImage" controls></video>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="modal fade"
+	id="sampleVideoModal"
+	tabindex="-1"
+	data-backdrop="static"
+	aria-labelledby="videoPlayerModal"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Sample Pitch Video</h5>
+				<button
+					type="button"
+					data-cs-id="d061bd1d-9cb1-4eca-8653-661cc658475b"
+					data-cs-label="Close"
+					data-cs-source="page"
+					id="closeAddArticle"
+					(click)="recordButtonClick($event); closeVideo('sampleVideo')"
+					class="close-btn"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<img src="./assets/images/close-icon.svg" alt="" />
+				</button>
+			</div>
+			<div class="modal-body">
+				<video class="video" id="sampleVideo" src="assets/videos/sample_pitch.mp4" controls></video>
+			</div>
+		</div>
+	</div>
+</div>

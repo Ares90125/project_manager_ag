@@ -1,0 +1,3132 @@
+<div class="campaign-report-data-wrapper" (scroll)="scrollOnSections($event)">
+	<div *ngIf="!isFromBrand" class="status-saved-bar">
+		<div class="container">
+			<div>
+				<svg fill="none" height="12" viewBox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+					<rect fill="#1F54E6" height="9" width="4.5" x="3.5" y="1.25" />
+					<path
+						d="M10.979 3.11371C10.4648 2.2328 9.76737 1.53533 8.88643 1.02116C8.00534 0.507019 7.0435 0.25 6.00018 0.25C4.95697 0.25 3.99484 0.507019 3.11391 1.02116C2.23292 1.53525 1.53544 2.23272 1.02124 3.11371C0.50702 3.99475 0.25 4.95687 0.25 6C0.25 7.04318 0.507099 8.00515 1.02116 8.88624C1.53534 9.76715 2.23281 10.4646 3.1138 10.9788C3.99485 11.493 4.95689 11.75 6.00008 11.75C7.04326 11.75 8.00542 11.493 8.88641 10.9788C9.76735 10.4648 10.4648 9.76715 10.9789 8.88624C11.493 8.00522 11.75 7.04313 11.75 6C11.75 4.95677 11.493 3.99462 10.979 3.11371ZM5.04181 1.6874C5.04181 1.61749 5.06423 1.56014 5.1092 1.51524C5.1541 1.47037 5.21155 1.44785 5.28141 1.44785H6.71901C6.78881 1.44785 6.84627 1.47037 6.89106 1.51524C6.93593 1.56014 6.95853 1.61749 6.95853 1.6874V2.88535C6.95853 2.95521 6.93593 3.01264 6.89106 3.05749C6.84627 3.10238 6.78884 3.12483 6.71901 3.12483H5.28141C5.21155 3.12483 5.15412 3.10238 5.1092 3.05749C5.06423 3.01267 5.04181 2.95521 5.04181 2.88535V1.6874ZM7.91678 9.59375C7.91678 9.66356 7.89415 9.72102 7.84938 9.76581C7.8047 9.81075 7.74724 9.8332 7.67728 9.8332H4.32301C4.25307 9.8332 4.19572 9.81075 4.1508 9.76581C4.1059 9.72102 4.08346 9.66359 4.08346 9.59367V8.39572C4.08346 8.3257 4.1059 8.26846 4.1508 8.22351C4.19572 8.17872 4.25315 8.15612 4.32301 8.15612H5.04181V5.76037H4.32301C4.25307 5.76037 4.19575 5.73795 4.1508 5.69303C4.1059 5.64816 4.08346 5.59073 4.08346 5.52081V4.32294C4.08346 4.25303 4.1059 4.19568 4.1508 4.15073C4.19577 4.10581 4.2532 4.08339 4.32301 4.08339H6.71901C6.78881 4.08339 6.84627 4.10581 6.89106 4.15073C6.93593 4.19568 6.95853 4.25303 6.95853 4.32294V8.1563H7.67709C7.74708 8.1563 7.80452 8.17872 7.84938 8.22359C7.89407 8.26848 7.91668 8.32589 7.91668 8.3958V9.59378H7.91678V9.59375Z"
+						fill="white"
+					/>
+				</svg>
+				<span
+					>You have made changes to this report. <strong>Publish the report to confirm these changes</strong> and update
+					this report on brand dashboard.</span
+				>
+			</div>
+			<div>
+				<button
+					(click)="uploadToS3(); recordButtonClick($event)"
+					[disabled]="isPublishing"
+					class="btn-publish"
+					data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c650"
+					data-cs-label="Publish now"
+					data-cs-source="page"
+				>
+					<p *ngIf="!isPublishing">
+						<svg fill="none" height="10" viewBox="0 0 13 10" width="13" xmlns="http://www.w3.org/2000/svg">
+							<path
+								clip-rule="evenodd"
+								d="M12.5396 1.32117L4.38368 9.47706L0 5.09391L1.32109 3.77267L4.3836 6.83481L11.2184 0L12.5396 1.32117Z"
+								fill="#1F54E6"
+								fill-rule="evenodd"
+							/>
+						</svg>
+						<span>Publish now</span>
+					</p>
+					<p *ngIf="isPublishing">
+						<span class="bt-spinner"></span>
+						<span>Publishing..</span>
+					</p>
+				</button>
+				<span data-target="#published-changes" data-toggle="modal" hidden id="published"></span>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="data-wrapper-inner">
+			<div class="left-sidebar">
+				<ul class="list-unstyled" id="leftNav">
+					<li class="active" (click)="scrollTo(aboutCampaign, $event)">
+						<span class="visibility" hidden *ngIf="!isFromBrand"
+							><img src="./assets/images/eye-close-icon.svg" alt=""
+						/></span>
+						Campaign Overview
+					</li>
+					<li (click)="scrollTo(keyMatrixRow, $event)" [hidden]="!(visibleCampaignReport.keyMetrics || !isFromBrand)">
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.keyMetrics"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Key Metrics
+					</li>
+					<li
+						(click)="scrollTo(campaignStats, $event)"
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(isFromBrand && campaignStatsInfo?.length > 0 && visibleCampaignReport.campaignStatistics)
+							)
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.campaignStatistics"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Campaign Stats
+					</li>
+					<li
+						(click)="scrollTo(shareOfVoice, $event)"
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(isFromBrand &&
+									(afterSOV?.series || beforeSOV?.series || duringSOV?.series) &&
+									visibleCampaignReport.shareOfVoice)
+							)
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.shareOfVoice"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Share of Voice
+					</li>
+					<li
+						(click)="scrollTo(sentimentMap, $event)"
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(isFromBrand &&
+									(beforeSentimentMaps || afterSentimentMaps || duringSentimentMaps) &&
+									visibleCampaignReport.sentimentMap)
+							)
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.sentimentMap"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Sentiment Map
+					</li>
+					<li
+						(click)="scrollTo(brandConversations, $event)"
+						[hidden]="!(visibleCampaignReport.brandConversationsAndMentions || !isFromBrand)"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.brandConversationsAndMentions"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Brand Conversations & Mentions
+					</li>
+					<li
+						(click)="scrollTo(participationByGroups, $event)"
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(isFromBrand &&
+									((participantGroupsDetails && visibleCampaignReport.participationByGroups) ||
+										visibleCampaignReport.participationByGroupsMetrics))
+							)
+						"
+					>
+						<span
+							class="visibility"
+							*ngIf="
+								!isFromBrand &&
+								!visibleCampaignReport.participationByGroups &&
+								!visibleCampaignReport.participationByGroupsMetrics
+							"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Participation by Groups
+					</li>
+					<li
+						(click)="scrollTo(participatingGroups, $event)"
+						[hidden]="
+							!(!isFromBrand || (isFromBrand && participantGroups && visibleCampaignReport.participatingGroups))
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.participatingGroups"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Participating Groups
+					</li>
+					<li
+						(click)="scrollTo(campaignHighlights, $event)"
+						[hidden]="
+							!(
+								!isFromBrand ||
+								(isFromBrand && reportCampaignHighlights?.length > 0 && visibleCampaignReport.campaignHighlights)
+							)
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.campaignHighlights"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Campaign Highlights
+					</li>
+					<li
+						(click)="scrollTo(wordCloud, $event)"
+						[hidden]="
+							!(!isFromBrand || (isFromBrand && (withOutCampaign || withCampaign) && visibleCampaignReport.wordCloud))
+						"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.wordCloud"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>Word Cloud
+					</li>
+					<li
+						(click)="scrollTo(allPosts, $event)"
+						[hidden]="!(!isFromBrand || (isFromBrand && campaignPosts?.length > 0 && visibleCampaignReport.allPosts))"
+					>
+						<span class="visibility" *ngIf="!isFromBrand && !visibleCampaignReport.allPosts"
+							><img src="./assets/images/eye-close-icon.svg" alt="" /></span
+						>All Posts
+					</li>
+				</ul>
+			</div>
+			<div class="data-content-wrap">
+				<div class="branding-head">
+					<!--					<figure><img src="./assets/images/brand-logo/Dettol.png" alt="" /></figure>-->
+					<div class="head-description" style="padding-left: 0">
+						<h6>{{ campaign?.campaignName }}</h6>
+						<div>
+							{{ campaign?.startDateAtUTC | date: 'MMM dd YYYY' }}
+							-
+							{{ campaign?.endDateAtUTC | date: 'MMM dd YYYY' }}
+						</div>
+					</div>
+				</div>
+
+				<div class="upload-cover-wrap" *ngIf="!previewImage && !isFromBrand">
+					<div class="upload-cover-inner">
+						<figure><img src="./assets/images/icon_add_photo.svg" alt="" /></figure>
+						<h5>Upload Cover Image</h5>
+						<h6>Drag and drop or <span>browse</span> an image file to upload</h6>
+						<p class="m-0">(Suggested dimension of 1920 x 960, or 960 x 480)</p>
+						<input
+							type="file"
+							title=" "
+							class="upload-file"
+							(change)="fileUpload($event)"
+							accept=".gif,.jpg,.jpeg,.png"
+						/>
+					</div>
+				</div>
+
+				<div *ngIf="campaign.s3CoverImageUrl && isFromBrand">
+					<div *ngIf="previewImage"></div>
+					<!--					<ng-template #loadingCoverImage>-->
+					<!--						<div class="shimmers-wrap cover-shimmers">-->
+					<!--							<ul class="list-unstyled">-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--								<li>-->
+					<!--									<div class="loading-strip secondary"></div>-->
+					<!--								</li>-->
+					<!--							</ul>-->
+					<!--						</div>-->
+					<!--					</ng-template>-->
+				</div>
+
+				<div class="banner-wrap" *ngIf="previewImage">
+					<figure><img [src]="previewImage" alt="" /></figure>
+					<div class="banner-actions">
+						<button *ngIf="!isFromBrand">
+							<img src="./assets/images/icon_replace.svg" alt="" /> <span>Replace Image</span>
+							<input
+								type="file"
+								title=" "
+								class="upload-file"
+								(change)="fileUpload($event)"
+								accept=".gif,.jpg,.jpeg,.png"
+							/>
+						</button>
+						<button *ngIf="!isFromBrand" (click)="isLogoRemoved = true; previewImage = null">
+							<img src="./assets/images/icon_delete.svg" alt="" /> <span>Remove Image</span>
+						</button>
+					</div>
+				</div>
+				<div class="campaign-row" id="row1" #aboutCampaign>
+					<h3>About the Campaign</h3>
+					<div class="about-campaign">
+						<div class="row">
+							<div class="col-md-4">
+								<h6>Type</h6>
+								<p>
+									<span
+										data-test-id="report-campaign-type"
+										*ngFor="let type of campaign['selectedCmcType']; let i = index"
+									>
+										{{ type }}{{ index < campaign['selectedCmcType'].length - 1 ? ',' : '' }}
+									</span>
+								</p>
+							</div>
+							<div class="col-md-4">
+								<h6>Primary Objective</h6>
+								<p data-test-id="report-primary-objective">{{ campaign.primaryObjective }}</p>
+							</div>
+							<div class="col-md-4">
+								<h6>Secondary Objective</h6>
+								<p>{{ campaign.secondaryObjective ? campaign.secondaryObjective : '-' }}</p>
+							</div>
+							<div class="col-md-4">
+								<h6>Category</h6>
+								<p data-test-id="report-category">{{ campaign.keywordCategory }}</p>
+							</div>
+							<div class="col-md-4">
+								<h6>Sub-Category</h6>
+								<p data-test-id="report-sub-category">
+									<span *ngFor="let keywordSubcategory of campaign['keywordSubCategories']; let i = index">
+										{{ keywordSubcategory }}{{ i < campaign['keywordSubCategories'].length - 1 ? ', ' : '' }}
+									</span>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<h6>Campaign KPIs</h6>
+								<ul class="kpi-list">
+									<li *ngFor="let kpi of campaign['selectedKPIs']">{{ kpi }}</li>
+								</ul>
+							</div>
+							<div class="col-12">
+								<h6>Keywords tracked</h6>
+								<div class="tags-wrap">
+									<span class="badge" *ngFor="let keyword of transformedKeywords">{{ keyword }}</span>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<h6>Summary</h6>
+								<div
+									data-test-id="report-summary"
+									*ngIf="campaign.details"
+									[innerHtml]="campaign.details | sanitizeHtml"
+								></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="campaign-row"
+					id="row2"
+					[hidden]="!(visibleCampaignReport.keyMetrics || !isFromBrand)"
+					#keyMatrixRow
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Key Metrics</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									createKeyMerticsForm(overallSnapshot, postDistribution, engagementDistribution, 'overallSnapshot');
+									recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c651"
+								data-cs-label="Key Metrics"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#keyMetricsModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.keyMetrics = !visibleCampaignReport.keyMetrics"
+								*ngIf="visibleCampaignReport.keyMetrics"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.keyMetrics = !visibleCampaignReport.keyMetrics"
+								*ngIf="!visibleCampaignReport.keyMetrics"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Here are the key findings from the campaign that was successfully completed on Facebook groups.
+								</h6>
+							</div>
+						</div>
+
+						<div class="stats-wrap row-margin">
+							<ul class="list-unstyled" *ngFor="let key of keywordMetricsArrayLength; let i = index">
+								<li
+									class="state-box"
+									[hidden]="!keyMetric.statistics.value && isFromBrand"
+									*ngFor="let keyMetric of overallSnapshot | slice: key * 4:key * 4 + 4"
+								>
+									<h5 attr.data-test-id="report-value-{{ keyMetric.name }}">
+										{{ !keyMetric.statistics.value ? 0 : (keyMetric.statistics.value | shortNumber)
+										}}<small *ngIf="keyMetric.name === 'Share of Voice'">%</small>
+									</h5>
+									<h6 attr.data-test-id="report-name-{{ keyMetric.name }}">{{ keyMetric.name }}</h6>
+								</li>
+							</ul>
+							<div class="row" *ngIf="textBlocks.keyMetrics">
+								<div class="col-md-8">
+									<h6 class="body-description">
+										{{ textBlocks.keyMetrics }}
+									</h6>
+								</div>
+							</div>
+						</div>
+
+						<div class="charts-wrapper row-margin">
+							<div class="row">
+								<div class="col-md-4" *ngIf="!postDistribution?.isEmpty">
+									<div class="card" *ngIf="postDistribution">
+										<h5>POST DISTRIBUTION</h5>
+										<h6 data-test-id="report-post-count">
+											{{
+												(postDistribution.series[0]?.data ? postDistribution.series[0]?.data[0] : 0) +
+													(postDistribution.series[1]?.data ? postDistribution.series[1]?.data[0] : 0)
+											}}
+										</h6>
+										<div><strong>Total Posts</strong></div>
+
+										<div class="chart-box">
+											<!-- Chart goes here -->
+											<div *ngIf="!postDistribution?.isEmpty">
+												<app-chart [setChartObject]="postDistribution"></app-chart>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li data-test-id="report-admin-posts">
+												<span class="dot blue"></span> Admin Posts -
+												{{ postDistribution.series[0]?.data ? postDistribution.series[0]?.data[0] : 0 }}
+											</li>
+											<li data-test-id="report-organic-posts">
+												<span class="dot green"></span>Organic Posts (UGC) -
+												{{ postDistribution.series[1]?.data ? postDistribution.series[1]?.data[0] : 0 }}
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="card">
+										<h5>ENGAGEMENT DISTRIBUTION</h5>
+										<h6 data-test-id="report-engagement-distribution">
+											{{ engagementDistribution?.adminPosts + engagementDistribution?.ugcPosts }}
+										</h6>
+										<div><strong>Campaign Engagement</strong></div>
+
+										<div class="chart-box" *ngIf="engagementDistribution">
+											<div class="vertical-line-chart-wrap">
+												<div class="lines-wrap">
+													<div class="line-parent">
+														<div
+															class="line-completed sentimentMap-line-completed color-1"
+															[ngStyle]="{height: engagementDistribution['adminPercentage'] + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															class="line-completed sentimentMap-line-completed color-2"
+															[ngStyle]="{height: engagementDistribution['ugcPercentage'] + '%'}"
+														></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li data-test-id="report-admin-post-engage">
+												<span class="dot color-1"></span> Admin Posts Engagement -
+												{{ engagementDistribution.adminPercentage }}%
+											</li>
+											<li data-test-id="report-admin-post-dist">
+												<span class="dot color-2"></span>UGC Posts Engagement -
+												{{ engagementDistribution.ugcPercentage }}%
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row3"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand && campaignStatsInfo?.length > 0 && visibleCampaignReport.campaignStatistics)
+						)
+					"
+					#campaignStats
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Campaign Stats</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									addNewCampaignStats();
+									createWhatsAppForm(whatsAppStatsInfo, 'campaignStats');
+									recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+								data-cs-label="Campaign Stats"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#camapaignStatsModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.campaignStatistics = !visibleCampaignReport.campaignStatistics"
+								*ngIf="visibleCampaignReport.campaignStatistics"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.campaignStatistics = !visibleCampaignReport.campaignStatistics"
+								*ngIf="!visibleCampaignReport.campaignStatistics"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Here is the breakdown about how the campaign performed during their different phases, under different
+									platforms.
+								</h6>
+							</div>
+						</div>
+
+						<div class="campaign-state-box fb-box row-margin">
+							<div class="state-box-header" *ngIf="campaignStatistics">
+								<div class="branding">
+									<figure>
+										<img src="./assets/images/facebook-icon.svg" alt="" /> <span>{{ campaignStatistics[0].name }}</span>
+									</figure>
+								</div>
+								<div class="post-progress-wrap">
+									<div>
+										<h6>Posts</h6>
+										<strong
+											>{{ campaignStatistics[0]?.statistics?.completedCount }} /
+											{{ campaignStatistics[0]?.statistics?.totalPosts }}</strong
+										>
+									</div>
+									<div class="state-progress">
+										<div
+											class="progress-complete"
+											[ngStyle]="{width: campaignStatistics[0]?.statistics?.percentage + '%'}"
+										></div>
+									</div>
+								</div>
+
+								<div data-test-id="report-campaign-stats-reaction">
+									<h6>Reactions</h6>
+									<strong>{{ campaignStatistics[0]?.statistics.reactions }}%</strong>
+								</div>
+
+								<div data-test-id="report-campaign-stats-comment">
+									<h6>Comments</h6>
+									<strong>{{ campaignStatistics[0]?.statistics.comments }}%</strong>
+								</div>
+							</div>
+							<div class="state-box-body">
+								<div class="state-box" *ngFor="let campaignStatInfo of campaignStatsInfo">
+									<div class="box-head">
+										<h5 data-test-id="report-campaign-period-name">{{ campaignStatInfo.name }}</h5>
+									</div>
+									<div class="box-body">
+										<div class="progress-wrap">
+											<h6 data-test-id="report-stats-post-progress">
+												{{ campaignStatInfo.statistics.completedCount }} out of
+												{{ campaignStatInfo.statistics.totalPost }} posts done
+											</h6>
+											<div class="state-progress">
+												<div
+													class="progress-complete"
+													[ngStyle]="{width: campaignStatInfo.statistics.percentage + '%'}"
+												></div>
+											</div>
+										</div>
+
+										<svg
+											*ngIf="campaignStatInfo.statistics.completedCount === campaignStatInfo.statistics.totalPost"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM9.29 16.29L5.7 12.7C5.31 12.31 5.31 11.68 5.7 11.29C6.09 10.9 6.72 10.9 7.11 11.29L10 14.17L16.88 7.29C17.27 6.9 17.9 6.9 18.29 7.29C18.68 7.68 18.68 8.31 18.29 8.7L10.7 16.29C10.32 16.68 9.68 16.68 9.29 16.29Z"
+												fill="#27AE60"
+											/>
+										</svg>
+										<svg
+											*ngIf="campaignStatInfo.statistics.completedCount !== campaignStatInfo.statistics.totalPost"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM9.29 16.29L5.7 12.7C5.31 12.31 5.31 11.68 5.7 11.29C6.09 10.9 6.72 10.9 7.11 11.29L10 14.17L16.88 7.29C17.27 6.9 17.9 6.9 18.29 7.29C18.68 7.68 18.68 8.31 18.29 8.7L10.7 16.29C10.32 16.68 9.68 16.68 9.29 16.29Z"
+												fill="#D6D6DC"
+											/>
+										</svg>
+									</div>
+									<div class="box-foot">
+										<ul class="list-unstyled">
+											<li>
+												<figure><img src="./assets/images/thumb_icon.svg" alt="" /></figure>
+												<div>
+													<h6>Reactions</h6>
+													<strong>{{ campaignStatInfo.statistics.reactions }}</strong>
+												</div>
+											</li>
+											<li>
+												<figure><img src="./assets/images/comment_icon.svg" alt="" /></figure>
+												<div>
+													<h6>Comments</h6>
+													<strong>{{ campaignStatInfo.statistics.comments }}</strong>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="campaign-state-box wa-box" *ngIf="whatsAppStatsInfo?.length > 0">
+							<div class="state-box-header">
+								<div class="branding">
+									<figure>
+										<img src="./assets/images/whatsapp_icon.svg" alt="" /> <span>{{ campaignStatistics[1].name }}</span>
+									</figure>
+								</div>
+								<div class="post-progress-wrap">
+									<div>
+										<h6>Posts</h6>
+										<strong
+											>{{ campaignStatistics[1]?.statistics?.completedCount }} /
+											{{ campaignStatistics[1]?.statistics?.totalPosts }}</strong
+										>
+									</div>
+									<div class="state-progress">
+										<div
+											class="progress-complete"
+											[ngStyle]="{width: campaignStatistics[1]?.statistics?.completedCount + '%'}"
+										></div>
+									</div>
+								</div>
+
+								<div>
+									<h6>Reactions</h6>
+									<strong>{{ campaignStatistics[1]?.statistics.reactions }}%</strong>
+								</div>
+
+								<div>
+									<h6>Comments</h6>
+									<strong>{{ campaignStatistics[1]?.statistics.comments }}%</strong>
+								</div>
+							</div>
+							<div class="state-box-body">
+								<div class="state-box" *ngFor="let campaignStatInfo of whatsAppStatsInfo">
+									<div class="box-head">
+										<h5>{{ campaignStatInfo.name }}</h5>
+									</div>
+									<div class="box-body">
+										<div class="progress-wrap">
+											<h6>
+												{{ campaignStatInfo.statistics.completedCount }} out of
+												{{ campaignStatInfo.statistics.totalPost }} posts done
+											</h6>
+											<div class="state-progress">
+												<div
+													class="progress-complete"
+													[ngStyle]="{width: campaignStatInfo.statistics.percentage + '%'}"
+												></div>
+											</div>
+										</div>
+
+										<svg
+											*ngIf="campaignStatInfo.statistics.completedCount === campaignStatInfo.statistics.totalPost"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM9.29 16.29L5.7 12.7C5.31 12.31 5.31 11.68 5.7 11.29C6.09 10.9 6.72 10.9 7.11 11.29L10 14.17L16.88 7.29C17.27 6.9 17.9 6.9 18.29 7.29C18.68 7.68 18.68 8.31 18.29 8.7L10.7 16.29C10.32 16.68 9.68 16.68 9.29 16.29Z"
+												fill="#27AE60"
+											/>
+										</svg>
+										<svg
+											*ngIf="campaignStatInfo.statistics.completedCount !== campaignStatInfo.statistics.totalPost"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM9.29 16.29L5.7 12.7C5.31 12.31 5.31 11.68 5.7 11.29C6.09 10.9 6.72 10.9 7.11 11.29L10 14.17L16.88 7.29C17.27 6.9 17.9 6.9 18.29 7.29C18.68 7.68 18.68 8.31 18.29 8.7L10.7 16.29C10.32 16.68 9.68 16.68 9.29 16.29Z"
+												fill="#D6D6DC"
+											/>
+										</svg>
+									</div>
+									<div class="box-foot">
+										<ul class="list-unstyled">
+											<li>
+												<figure><img src="./assets/images/thumb_icon.svg" alt="" /></figure>
+												<div>
+													<h6>Reactions</h6>
+													<strong>{{ campaignStatInfo.statistics.reactions }}</strong>
+												</div>
+											</li>
+											<li>
+												<figure><img src="./assets/images/comment_icon.svg" alt="" /></figure>
+												<div>
+													<h6>Comments</h6>
+													<strong>{{ campaignStatInfo.statistics.comments }}</strong>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.campaignStats">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.campaignStats }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row4"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand &&
+								(afterSOV?.series || beforeSOV?.series || duringSOV?.series) &&
+								visibleCampaignReport.shareOfVoice)
+						)
+					"
+					#shareOfVoice
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Share of Voice</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									createShareOfVoiceForm(beforeSOV, afterSOV, duringSOV, 'shareOfVoice'); recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c653"
+								data-cs-label="Share of voice"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#shareOfVoiceModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.shareOfVoice = !visibleCampaignReport.shareOfVoice"
+								*ngIf="visibleCampaignReport.shareOfVoice"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.shareOfVoice = !visibleCampaignReport.shareOfVoice"
+								*ngIf="!visibleCampaignReport.shareOfVoice"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Insights about how your brand compares to the rest of the brands that are being talked about during
+									campaign.
+								</h6>
+							</div>
+						</div>
+
+						<div
+							class="charts-wrapper row-margin"
+							[hidden]="!isFromBrand && beforeSOV?.isEmpty && duringSOV?.isEmpty && afterSOV?.isEmpty"
+						>
+							<div class="row">
+								<div
+									class="col-md-4"
+									*ngIf="(!isFromBrand || (isFromBrand && beforeSOV?.series)) && !beforeSOV?.isEmpty"
+								>
+									<div class="card">
+										<h5 class="mb-0">BEFORE CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand"><small>Visible</small></div>
+
+										<div class="chart-box">
+											<!-- Chart goes here -->
+											<div *ngIf="!beforeSOV?.isEmpty">
+												<app-chart [setChartObject]="beforeSOV"></app-chart>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li
+												class="sov-legend"
+												*ngFor="let key of beforeSOV?.series?.graphSeries; let i = index"
+												[ngStyle]="{color: shareOfVoiceColors[i]}"
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name !== campaign.keywordBrand"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+										<ul class="list-unstyled">
+											<li
+												data-test-id="report-before-share-of-voice-brand"
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name === campaign.keywordBrand"
+												*ngFor="let key of beforeSOV?.series?.graphSeries; let i = index"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div
+									class="col-md-4"
+									*ngIf="(!isFromBrand || (isFromBrand && duringSOV?.series)) && !duringSOV?.isEmpty"
+								>
+									<div class="card">
+										<h5 class="mb-0">DURING CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand"><small>Visible</small></div>
+
+										<div class="chart-box">
+											<!-- Chart goes here -->
+											<div *ngIf="!duringSOV?.isEmpty">
+												<app-chart [setChartObject]="duringSOV"></app-chart>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li
+												class="sov-legend"
+												*ngFor="let key of duringSOV?.series?.graphSeries; let i = index"
+												[ngStyle]="{color: shareOfVoiceColors[i]}"
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name !== campaign.keywordBrand"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+										<ul class="list-unstyled">
+											<li
+												data-test-id="report-during-share-of-voice-brand"
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name === campaign.keywordBrand"
+												*ngFor="let key of duringSOV?.series?.graphSeries; let i = index"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div
+									class="col-md-4"
+									*ngIf="(!isFromBrand || (isFromBrand && afterSOV?.series) || afterSOV) && !afterSOV?.isEmpty"
+								>
+									<div class="card">
+										<h5 class="mb-0">AFTER CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand">
+											<small
+												>Visible
+												<span class="primary-text" (click)="hideMetrics.sov = !hideMetrics.sov"
+													>({{ !hideMetrics.sov ? 'Show' : 'Hide' }})</span
+												></small
+											>
+										</div>
+
+										<div class="chart-box">
+											<!-- Chart goes here -->
+											<div *ngIf="!afterSOV?.isEmpty">
+												<app-chart [setChartObject]="afterSOV"></app-chart>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li
+												class="sov-legend"
+												*ngFor="let key of afterSOV?.series?.graphSeries; let i = index"
+												[ngStyle]="{color: shareOfVoiceColors[i]}"
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name !== campaign.keywordBrand"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+										<ul class="list-unstyled">
+											<li
+												[hidden]="!(key.data?.length > 0 && key.data[0] > 0) || key.name === campaign.keywordBrand"
+												*ngFor="let key of afterSOV?.series?.graphSeries; let i = index"
+											>
+												<span class="dot" [ngStyle]="{background: shareOfVoiceColors[i]}"></span>{{ key.name }} -
+												{{ key.data?.length > 0 ? key.data[0] : 0 }} %
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.sov">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.sov }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row5"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand &&
+								(beforeSentimentMaps || afterSentimentMaps || duringSentimentMaps) &&
+								visibleCampaignReport.sentimentMap)
+						)
+					"
+					#sentimentMap
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Sentiment Map</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									createSentimentMapForm(beforeSentimentMaps, afterSentimentMaps, duringSentimentMaps, 'sentimentMap');
+									recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c654"
+								data-cs-label="Sentiment Map"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#sentimentMapModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.sentimentMap = !visibleCampaignReport.sentimentMap"
+								*ngIf="visibleCampaignReport.sentimentMap"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.sentimentMap = !visibleCampaignReport.sentimentMap"
+								*ngIf="!visibleCampaignReport.sentimentMap"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Here is how the campaign fared in terms of the sentiments for the groups that were a part of it. This
+									helps recognise the overall responsiveness & feedback towards your brand from the selected group’s
+									members.
+								</h6>
+							</div>
+						</div>
+
+						<div class="charts-wrapper row-margin">
+							<div class="row">
+								<div class="col-md-4">
+									<div class="card">
+										<h5 class="mb-0">BEFORE CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand"><small>Visible</small></div>
+
+										<div class="chart-box">
+											<div class="vertical-line-chart-wrap">
+												<div class="lines-wrap">
+													<div class="line-parent">
+														<div
+															data-test-id="report-before-sentiment-like-graph"
+															class="line-completed sentimentMap-line-completed color-1"
+															[ngStyle]="{height: beforeSentimentMaps?.likePercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-before-sentiment-neutral-graph"
+															class="line-completed sentimentMap-line-completed color-3"
+															[ngStyle]="{height: beforeSentimentMaps?.neutralPercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-before-sentiment-dislike-graph"
+															class="line-completed sentimentMap-line-completed color-4"
+															[ngStyle]="{height: beforeSentimentMaps?.dislikePercentage + '%'}"
+														></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li data-test-id="report-before-sentiment-like">
+												<span class="dot color-1"></span> Like - {{ beforeSentimentMaps?.likePercentage }}%
+											</li>
+											<li data-test-id="report-before-sentiment-neutral">
+												<span class="dot color-3"></span>Neutral - {{ beforeSentimentMaps?.neutralPercentage }}%
+											</li>
+											<li data-test-id="report-before-sentiment-dislike">
+												<span class="dot color-4"></span> Dislike - {{ beforeSentimentMaps?.dislikePercentage }}%
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="card">
+										<h5 class="mb-0">DURING CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand"><small>Visible</small></div>
+
+										<div class="chart-box">
+											<div class="vertical-line-chart-wrap">
+												<div class="lines-wrap">
+													<div class="line-parent">
+														<div
+															data-test-id="report-during-sentiment-like-graph"
+															class="line-completed sentimentMap-line-completed color-1"
+															[ngStyle]="{height: duringSentimentMaps?.likePercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-during-sentiment-neutral-graph"
+															class="line-completed sentimentMap-line-completed color-3"
+															[ngStyle]="{height: duringSentimentMaps?.neutralPercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-during-sentiment-dislike-graph"
+															class="line-completed sentimentMap-line-completed color-4"
+															[ngStyle]="{height: duringSentimentMaps?.dislikePercentage + '%'}"
+														></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li data-test-id="report-during-sentiment-like">
+												<span class="dot color-1"></span> Like - {{ duringSentimentMaps?.likePercentage }}%
+											</li>
+											<li data-test-id="report-during-sentiment-neutral">
+												<span class="dot color-3"></span>Neutral - {{ duringSentimentMaps?.neutralPercentage }}%
+											</li>
+											<li data-test-id="report-during-sentiment-dislike">
+												<span class="dot color-4"></span> Dislike - {{ duringSentimentMaps?.dislikePercentage }}%
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col-md-4" *ngIf="afterSentimentMaps">
+									<div class="card">
+										<h5 class="mb-0">AFTER CAMPAIGN</h5>
+										<div *ngIf="!isFromBrand">
+											<small
+												>Visible
+												<span class="primary-text" (click)="hideMetrics.sentimentMap = !hideMetrics.sentimentMap"
+													>({{ !hideMetrics.sentimentMap ? 'Show' : 'Hide' }})</span
+												></small
+											>
+										</div>
+
+										<div class="chart-box">
+											<div class="vertical-line-chart-wrap">
+												<div class="lines-wrap">
+													<div class="line-parent">
+														<div
+															data-test-id="report-after-sentiment-like-graph"
+															class="line-completed sentimentMap-line-completed color-1"
+															[ngStyle]="{height: afterSentimentMaps?.likePercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-after-sentiment-neutral-graph"
+															class="line-completed sentimentMap-line-completed color-3"
+															[ngStyle]="{height: afterSentimentMaps?.neutralPercentage + '%'}"
+														></div>
+													</div>
+													<div class="line-parent">
+														<div
+															data-test-id="report-after-sentiment-dislike-graph"
+															class="line-completed sentimentMap-line-completed color-4"
+															[ngStyle]="{height: afterSentimentMaps?.dislikePercentage + '%'}"
+														></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<ul class="list-unstyled">
+											<li data-test-id="report-after-sentiment-like">
+												<span class="dot color-1"></span> Like - {{ afterSentimentMaps?.likePercentage }}%
+											</li>
+											<li data-test-id="report-after-sentiment-neutral">
+												<span class="dot color-3"></span>Neutral - {{ afterSentimentMaps?.neutralPercentage }}%
+											</li>
+											<li data-test-id="report-after-sentiment-dislike  ">
+												<span class="dot color-4"></span> Dislike - {{ afterSentimentMaps?.dislikePercentage }}%
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.sentimentMap">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.sentimentMap }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row6"
+					class="campaign-row"
+					[hidden]="!(visibleCampaignReport.brandConversationsAndMentions || !isFromBrand)"
+					#brandConversations
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Brand Conversations & Mentions</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									createBrandConversationsForm(brandConversationsAndMentionsInfo, 'brandConvAndMent');
+									recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c655"
+								data-cs-label="Brand conversations and mentions"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#brandConversationsModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									visibleCampaignReport.brandConversationsAndMentions =
+										!visibleCampaignReport.brandConversationsAndMentions
+								"
+								*ngIf="visibleCampaignReport.brandConversationsAndMentions"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									visibleCampaignReport.brandConversationsAndMentions =
+										!visibleCampaignReport.brandConversationsAndMentions
+								"
+								*ngIf="!visibleCampaignReport.brandConversationsAndMentions"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Overall insights about the brand conversations & mentions, with comparisons with before and after the
+									campaign.
+								</h6>
+							</div>
+						</div>
+
+						<div class="charts-wrapper row-margin">
+							<div class="row">
+								<div class="col">
+									<div class="card p-0 border-0">
+										<table class="conversation-table">
+											<thead>
+												<tr>
+													<th style="width: 50%">
+														<div>
+															<h5 class="mb-0">METRIC</h5>
+															<div><small> </small></div>
+														</div>
+													</th>
+													<th>
+														<div>
+															<h5 class="mb-0">BEFORE CAMPAIGN</h5>
+															<div *ngIf="!isFromBrand"><small>Visible</small></div>
+														</div>
+													</th>
+													<th>
+														<div>
+															<h5 class="mb-0">DURING CAMPAIGN</h5>
+															<div *ngIf="!isFromBrand"><small>Visible</small></div>
+														</div>
+													</th>
+													<th
+														*ngIf="
+															!isFromBrand ||
+															(brandConversationsAndMentionsInfo[0]?.statistics.isVisible && isFromBrand)
+														"
+													>
+														<div>
+															<h5 class="mb-0">AFTER CAMPAIGN</h5>
+															<div *ngIf="!isFromBrand">
+																<small
+																	>Visible
+																	<span
+																		class="primary-text"
+																		(click)="hideMetrics.brandMentions = !hideMetrics.brandMentions"
+																		>({{ !hideMetrics.brandMentions ? 'Show' : 'Hide' }})</span
+																	></small
+																>
+															</div>
+														</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr *ngFor="let brandConvAndMen of brandConversationsAndMentionsInfo">
+													<td>
+														<div attr.data-test-id="report-{{ brandConvAndMen.name }}">{{ brandConvAndMen.name }}</div>
+													</td>
+													<td>
+														<div class="chart-box">
+															<div
+																attr.data-test-id="report-{{ brandConvAndMen.name }}-before-brand-conversations"
+																class="chart-changes"
+															>
+																<strong>{{ brandConvAndMen.statistics.beforeCampaign }}</strong>
+															</div>
+															<div class="vertical-line-chart-wrap">
+																<div class="lines-wrap">
+																	<div class="line-parent">
+																		<div
+																			attr.data-test-id="report-{{
+																				brandConvAndMen.name
+																			}}-before-brand-conversations-percent"
+																			class="line-completed color-4"
+																			[ngStyle]="{height: brandConvAndMen.statistics.beforeCampaignPercentage + '%'}"
+																		></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="chart-box">
+															<div
+																class="chart-changes"
+																attr.data-test-id="report-{{ brandConvAndMen.name }}-during-brand-conversations"
+															>
+																<strong>{{ brandConvAndMen.statistics.duringCampaign }}</strong>
+																<div class="changes" [ngClass]="brandConvAndMen.statistics.impact >= 0 ? 'up' : 'down'">
+																	<span *ngIf="brandConvAndMen.statistics.impact > 0">&uarr;</span>
+																	<span *ngIf="brandConvAndMen.statistics.impact < 0">&darr;</span>
+																	<span *ngIf="brandConvAndMen.statistics.impact"
+																		>{{ brandConvAndMen.statistics.impact }}%</span
+																	>
+																</div>
+															</div>
+															<div class="vertical-line-chart-wrap">
+																<div class="lines-wrap">
+																	<div class="line-parent">
+																		<div
+																			attr.data-test-id="report-{{
+																				brandConvAndMen.name
+																			}}-during-brand-conversations-percent"
+																			class="line-completed color-2"
+																			[ngStyle]="{height: brandConvAndMen.statistics.duringCampaignPercentage + '%'}"
+																		></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td *ngIf="!isFromBrand || (brandConvAndMen.statistics.isVisible && isFromBrand)">
+														<div class="chart-box">
+															<div
+																attr.data-test-id="report-{{ brandConvAndMen.name }}-after-brand-conversations"
+																class="chart-changes"
+															>
+																<strong>{{ brandConvAndMen.statistics.afterCampaign }}</strong>
+																<div
+																	class="changes"
+																	[ngClass]="brandConvAndMen.statistics.afterImpact >= 0 ? 'up' : 'down'"
+																>
+																	<span *ngIf="brandConvAndMen.statistics.afterImpact > 0">&uarr;</span>
+																	<span *ngIf="brandConvAndMen.statistics.afterImpact < 0">&darr;</span>
+																	<span *ngIf="brandConvAndMen.statistics.afterImpact"
+																		>{{ brandConvAndMen.statistics.afterImpact }}%</span
+																	>
+																</div>
+																<!-- <div class="changes down"><span>&darr;</span> 37%</div> -->
+															</div>
+															<div class="vertical-line-chart-wrap">
+																<div class="lines-wrap">
+																	<div class="line-parent">
+																		<div
+																			attr.data-test-id="report-{{
+																				brandConvAndMen.name
+																			}}-after-brand-conversations-percent"
+																			class="line-completed color-5"
+																			[ngStyle]="{height: brandConvAndMen.statistics.afterCampaignPercentage + '%'}"
+																		></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.brandConversationsAndMentions">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.brandConversationsAndMentions }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row7"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand &&
+								((participantGroupsDetails && visibleCampaignReport.participationByGroups) ||
+									visibleCampaignReport.participationByGroupsMetrics))
+						)
+					"
+					#participationByGroups
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Participation by Groups</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="
+									createParticipantGroupsDetails(participantGroupsDetails, 'participantGroups');
+									recordButtonClick($event)
+								"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c656"
+								data-cs-label="Paticipation by groups"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#participationGroupsModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.participationByGroups = !visibleCampaignReport.participationByGroups"
+								*ngIf="visibleCampaignReport.participationByGroups"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.participationByGroups = !visibleCampaignReport.participationByGroups"
+								*ngIf="!visibleCampaignReport.participationByGroups"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Insights about how the groups participated in the campaign in terms of the keywords, hashtags, and
+									brand mentions per group.
+								</h6>
+							</div>
+						</div>
+
+						<div class="stats-wrap row-margin">
+							<ul
+								class="list-unstyled"
+								[hidden]="!(!isFromBrand || (isFromBrand && visibleCampaignReport.participationByGroupsMetrics))"
+							>
+								<li class="state-box">
+									<h5>
+										{{
+											participatingGroupsSummary?.totalKeywords
+												? (participatingGroupsSummary?.totalKeywords | shortNumber)
+												: '-'
+										}}
+									</h5>
+									<h6>Total Keyword Mentions</h6>
+								</li>
+								<li class="state-box">
+									<h5>
+										{{
+											participatingGroupsSummary?.totalHashtags
+												? (participatingGroupsSummary?.totalHashtags | shortNumber)
+												: '-'
+										}}
+									</h5>
+									<h6>Total Hashtag Mentions</h6>
+								</li>
+								<li class="state-box">
+									<h5>
+										{{
+											participatingGroupsSummary?.totalBrandMentions
+												? (participatingGroupsSummary?.totalBrandMentions | shortNumber)
+												: '-'
+										}}
+									</h5>
+									<h6>Total Brand Mentions</h6>
+								</li>
+								<button
+									class="convo-btn-normal outline-btn"
+									(click)="
+										visibleCampaignReport.participationByGroupsMetrics =
+											!visibleCampaignReport.participationByGroupsMetrics
+									"
+									*ngIf="visibleCampaignReport.participationByGroupsMetrics && !isFromBrand"
+								>
+									<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+									<div class="arrow-icon">
+										<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+												fill="#33334F"
+											/>
+										</svg>
+									</div>
+								</button>
+								<button
+									class="convo-btn-normal outline-btn"
+									(click)="
+										visibleCampaignReport.participationByGroupsMetrics =
+											!visibleCampaignReport.participationByGroupsMetrics
+									"
+									*ngIf="!visibleCampaignReport.participationByGroupsMetrics && !isFromBrand"
+								>
+									<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+									<div class="arrow-icon">
+										<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+												fill="#33334F"
+											/>
+										</svg>
+									</div>
+								</button>
+							</ul>
+							<div
+								class="row"
+								[hidden]="
+									!(
+										!isFromBrand ||
+										(isFromBrand && participantGroupsDetails && visibleCampaignReport.participationByGroups)
+									)
+								"
+							>
+								<div class="col-md-3 count">GROUP NAME</div>
+								<div class="col-md-9 count">
+									<div class="header">COUNT</div>
+									<span class="dot keywords"></span>KEYWORDS <span class="dot hashtags"></span>HASHTAGS
+									<span class="dot brand-mentions"></span>BRAND MENTIONS
+								</div>
+							</div>
+							<div
+								class="row partcipating-groups"
+								[hidden]="
+									groupIndex < participantGroupFrom ||
+									groupIndex > participantGroupEnd - 1 ||
+									!(
+										!isFromBrand ||
+										(isFromBrand && participantGroupsDetails && visibleCampaignReport.participationByGroups)
+									)
+								"
+								*ngFor="let group of participantGroupsDetails; let groupIndex = index"
+							>
+								<div class="col-md-3 campaign-state-progress group-name-wrapper" matTooltip="{{ group.groupName }}">
+									{{ group.groupName }}
+								</div>
+								<div class="col-md-9 campaign-state-progress">
+									<div class="keywords" [ngStyle]="{width: group.totalKeywordMentionsPercentage + '%'}"></div>
+									<div class="hashtags" [ngStyle]="{width: group.totalHashtagMentionsPercentage + '%'}"></div>
+									<div class="brand-mentions" [ngStyle]="{width: group.totalBrandMentionsPercentage + '%'}"></div>
+									<div class="total">{{ group.total }}</div>
+								</div>
+							</div>
+							<div class="pagination-wrap" *ngIf="participantGroupsDetails?.length > limit">
+								<span
+									>{{
+										participantGroupFrom +
+											1 +
+											'-' +
+											(participantGroupsDetails?.length < participantGroupEnd
+												? participantGroupsDetails?.length
+												: participantGroupEnd)
+									}}
+									of All groups</span
+								>
+								<button
+									[disabled]="participantGroupFrom <= 0"
+									(click)="getPreviousParticipatingGroups(participantGroupFrom, participantGroupEnd)"
+								>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+									</svg>
+								</button>
+								<button
+									[disabled]="
+										participantGroupEnd > participantGroupsDetails.length ||
+										participantGroupEnd >= participantGroupsDetails.length
+									"
+									(click)="getNextParticipatingGroups()"
+								>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.participantByGroups">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.participantByGroups }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row8"
+					class="campaign-row"
+					[hidden]="!(!isFromBrand || (isFromBrand && participantGroups && visibleCampaignReport.participatingGroups))"
+					#participatingGroups
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Participating Groups</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button class="convo-btn-normal outline-btn" hidden>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.participatingGroups = !visibleCampaignReport.participatingGroups"
+								*ngIf="visibleCampaignReport.participatingGroups"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.participatingGroups = !visibleCampaignReport.participatingGroups"
+								*ngIf="!visibleCampaignReport.participatingGroups"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									Following are the groups that particapated in the campaign with their overall member and post
+									engagement metrics.
+								</h6>
+							</div>
+						</div>
+						<div class="group-box-table table-wrapper row-margin">
+							<table aria-labelledby="">
+								<thead>
+									<tr>
+										<th>
+											<div>GROUP NAME</div>
+										</th>
+										<th>
+											<div class="justify-content-center">
+												<span>MEMBERS</span>
+												<app-tooltip
+													class="ml-1 tooltip-small"
+													setTooltipText="Total members in the group at the end of campaign duration."
+												>
+												</app-tooltip>
+											</div>
+										</th>
+										<th>
+											<div class="justify-content-center">
+												<span>CAMPAIGN ENGAGEMENT</span>
+												<app-tooltip
+													class="ml-1 tooltip-small"
+													setTooltipText="Indicates average activity (reactions/shares/comments/posts) per member in the group over last 30 days. Calculated at the end of campaign duration. Data is not available if group was installed after the campaign duration."
+												>
+												</app-tooltip>
+											</div>
+										</th>
+										<th>
+											<div class="justify-content-center">
+												<span>POST ENGAGEMENT</span>
+												<app-tooltip
+													class="ml-1 tooltip-small"
+													setTooltipText="Indicates average activity (reactions/shares/comments) per post in the group over last 30 days. Calculated at the end of campaign duration."
+												>
+												</app-tooltip>
+											</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody *ngIf="participantGroups">
+									<tr *ngFor="let group of participantGroups | slice: groupFrom:groupEnd">
+										<td>
+											<div class="group-wrap">
+												<figure>
+													<img
+														(error)="group.iconError = true"
+														[src]="group.iconError ? 'assets/images/default_group_image.jpg' : group.iconUrl"
+														*ngIf="group.iconUrl"
+														alt=""
+													/>
+													<img *ngIf="!group.iconUrl" src="assets/images/default_group_image.jpg" alt="" />
+												</figure>
+												<figcaption>{{ group.groupName }}</figcaption>
+											</div>
+										</td>
+										<td>
+											<div>{{ group.memberCount ? group.memberCount : '-' }}</div>
+										</td>
+										<td>
+											<div>
+												{{
+													group.campaignPostEngagementRateLastNinetyDays
+														? group.campaignPostEngagementRateLastNinetyDays
+														: '-'
+												}}
+											</div>
+										</td>
+										<td *ngIf="group.postsEngagementRateLastNinetyDays">
+											<div>{{ group.postsEngagementRateLastNinetyDays }}</div>
+										</td>
+										<td *ngIf="!group.postsEngagementRateLastNinetyDays">
+											<div>{{ group.postEngagementRateUTC ? group.postEngagementRateUTC : '-' }}</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="pagination-wrap" *ngIf="participantGroups?.length > limit">
+							<span
+								>{{
+									groupFrom + 1 + '-' + (participantGroups?.length < groupEnd ? participantGroups?.length : groupEnd)
+								}}
+								of All groups</span
+							>
+							<button [disabled]="groupFrom <= 0" (click)="getPreviousGroups()">
+								<svg focusable="false" viewBox="0 0 24 24">
+									<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+								</svg>
+							</button>
+							<button
+								[disabled]="groupEnd > participantGroups.length || groupEnd >= participantGroups.length"
+								(click)="getNextGroups()"
+							>
+								<svg focusable="false" viewBox="0 0 24 24">
+									<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row9"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand && reportCampaignHighlights?.length > 0 && visibleCampaignReport.campaignHighlights)
+						)
+					"
+					#campaignHighlights
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Campaign Highlights</h3>
+							<a *ngIf="isLongPressingEnabled" (click)="changeSelectedPostsStatus(false)">Clear selection</a>
+							<a
+								*ngIf="isLongPressingEnabled"
+								(click)="isRefreshingAllPosts ? '' : refreshPostScreenshotUrl(reportCampaignHighlights)"
+								>{{ isRefreshingAllPosts ? 'Refreshing...' : 'Refresh data' }}</a
+							>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button class="convo-btn-normal outline-btn" hidden>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.campaignHighlights = !visibleCampaignReport.campaignHighlights"
+								*ngIf="visibleCampaignReport.campaignHighlights"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.campaignHighlights = !visibleCampaignReport.campaignHighlights"
+								*ngIf="!visibleCampaignReport.campaignHighlights"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h6 class="body-description">
+									Here are some of the posts that were able to get a lot of engagement during the campaign
+								</h6>
+								<div>
+									<div class="shadow-box px-0 mb-3 mt-4">
+										<div class="fb-posts-wrapper" (scroll)="scrollAllPostHandler($event)">
+											<div class="masonry-wrapper">
+												<ul class="grid effect-1" id="grid">
+													<li
+														class="masonry-box"
+														*ngFor="let postScreenshot of reportCampaignHighlights; let i = index"
+														data-toggle="modal"
+														data-target="#topPostModel"
+													>
+														<input
+															class="post-checkbox"
+															type="checkbox"
+															*ngIf="isLongPressingEnabled && postScreenshot.statistics?.data"
+															[(ngModel)]="postScreenshot['isSelected']"
+															(input)="setNumberSelectedPosts()"
+															[readonly]="numberOfSelectedPosts === 20 && !postScreenshot['isSelected']"
+														/>
+														<img
+															class="post-checkbox-image"
+															src="./assets/images/eye-icon.svg"
+															alt=""
+															*ngIf="!postScreenshot.isHidden && !isFromBrand"
+															(click)="postScreenshot.isHidden = !postScreenshot.isHidden"
+														/>
+														<span
+															class="post-checkbox-image-wrap"
+															(click)="postScreenshot.isHidden = !postScreenshot.isHidden"
+															*ngIf="postScreenshot.isHidden && !isFromBrand"
+														>
+															<img src="./assets/images/eye-close-icon.svg" alt="" />
+														</span>
+														<div
+															class="post-item"
+															appLongPress
+															(emitLongPress)="onLongPress(postScreenshot, false)"
+															*ngIf="postScreenshot.statistics.data && !postScreenshot['isLoading']"
+														>
+															<app-facebook-post-screenshot
+																[postData]="postScreenshot['statistics'].data"
+																(click)="setTopPostsModel(i)"
+															></app-facebook-post-screenshot>
+														</div>
+														<div
+															class="post-item error-wrapper"
+															*ngIf="postScreenshot.statistics?.data && postScreenshot['isLoading']"
+														>
+															<div class="loading-strip primary"></div>
+															<div class="loading-strip secondary"></div>
+														</div>
+													</li>
+												</ul>
+											</div>
+											<div *ngIf="isAllPostsLoading">
+												<div class="shadow-box pb-0 mb-3 empty-loading-wrapper" style="height: 200px">
+													<div class="loader-wrapper">
+														<div class="loader"></div>
+														<p class="loading-text">Loading data</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row10"
+					class="campaign-row"
+					[hidden]="
+						!(
+							!isFromBrand ||
+							(isFromBrand &&
+								(!wordCloudEmptyState.withOutCampaign || !wordCloudEmptyState.withCampaign) &&
+								visibleCampaignReport.wordCloud)
+						)
+					"
+					#wordCloud
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>Word Cloud</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="addNewWordCloud(); recordButtonClick($event)"
+								data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c657"
+								data-cs-label="Word Cloud"
+								data-cs-source="page"
+								data-toggle="modal"
+								data-target="#wordCloudModal"
+							>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.wordCloud = !visibleCampaignReport.wordCloud"
+								*ngIf="visibleCampaignReport.wordCloud"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.wordCloud = !visibleCampaignReport.wordCloud"
+								*ngIf="!visibleCampaignReport.wordCloud"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-body">
+						<div class="row">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									The top keywords that were trending during the campaign are present below against the ones that were
+									trending before the campaign
+								</h6>
+							</div>
+						</div>
+
+						<div class="row">
+							<div
+								class="col-md-6 row-margin"
+								*ngIf="
+									(isFromBrand && !wordCloudEmptyState.withOutCampaign) ||
+									(!isFromBrand && !wordCloudEmptyState.withOutCampaign)
+								"
+							>
+								<div class="card campaign-card without-campaign">
+									<div class="card-header">Before Campaign</div>
+									<div class="card-body">
+										<img
+											*ngIf="withOutCampaign; else loadingWithOutCampaign"
+											[src]="withOutCampaign"
+											alt=""
+											class="img-fluid"
+										/>
+										<ng-template #loadingWithOutCampaign>
+											<div class="shimmers-wrap">
+												<ul class="list-unstyled">
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+												</ul>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-6 row-margin"
+								*ngIf="
+									(isFromBrand && !wordCloudEmptyState.withCampaign) ||
+									(!isFromBrand && !wordCloudEmptyState.withCampaign)
+								"
+							>
+								<div class="card campaign-card">
+									<div class="card-header">During Campaign</div>
+									<div class="card-body">
+										<img *ngIf="withCampaign; else loadingWithCampaign" [src]="withCampaign" alt="" class="img-fluid" />
+										<ng-template #loadingWithCampaign>
+											<div class="shimmers-wrap">
+												<ul class="list-unstyled">
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+													<li>
+														<div class="loading-strip secondary"></div>
+													</li>
+												</ul>
+											</div>
+										</ng-template>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" *ngIf="textBlocks.wordCloud">
+							<div class="col-md-8">
+								<h6 class="body-description">
+									{{ textBlocks.wordCloud }}
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div
+					id="row11"
+					class="campaign-row"
+					[hidden]="!(!isFromBrand || (isFromBrand && campaignPosts?.length > 0 && visibleCampaignReport.allPosts))"
+					#allPosts
+				>
+					<div class="campaign-header">
+						<div class="header-left">
+							<h3>All Posts</h3>
+						</div>
+						<div class="header-right" *ngIf="!isFromBrand">
+							<button class="convo-btn-normal outline-btn" hidden>
+								<img src="./assets/images/icon-edit.svg" alt="" /><span>Edit</span>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.allPosts = !visibleCampaignReport.allPosts"
+								*ngIf="visibleCampaignReport.allPosts"
+							>
+								<img src="./assets/images/eye-icon.svg" alt="" /><span>Visible to Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+							<button
+								class="convo-btn-normal outline-btn"
+								(click)="visibleCampaignReport.allPosts = !visibleCampaignReport.allPosts"
+								*ngIf="!visibleCampaignReport.allPosts"
+							>
+								<img src="./assets/images/eye-close-icon.svg" alt="" /><span>Hidden from Brands</span>
+								<div class="arrow-icon">
+									<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M8.825 0.156372L5 3.97304L1.175 0.156372L0 1.33137L5 6.33137L10 1.33137L8.825 0.156372Z"
+											fill="#33334F"
+										/>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+					<div class="campaign-body">
+						<div class="post-filters">
+							<div class="filter-box">
+								<div class="dropdown">
+									<button
+										aria-expanded="false"
+										aria-haspopup="true"
+										class="post-dropdown-button"
+										data-toggle="dropdown"
+										type="button"
+									>
+										<span>View</span><strong>{{ selectedValueFilter }}</strong>
+										<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M13.825 8.15649L10 11.9732L6.175 8.15649L5 9.33149L10 14.3315L15 9.33149L13.825 8.15649Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+									<div class="dropdown-menu post-dropdown-menu">
+										<a class="dropdown-item" (click)="filterByPostType(null, 'All Posts')">All Posts</a>
+										<a class="dropdown-item" (click)="filterByPostType(false, 'UGC Posts')">UGC Posts</a>
+										<a class="dropdown-item" (click)="filterByPostType(true, 'Posts by Admin')">Posts by Admin</a>
+									</div>
+								</div>
+							</div>
+							<div class="filter-box">
+								<div class="dropdown">
+									<button
+										aria-expanded="false"
+										aria-haspopup="true"
+										class="post-dropdown-button"
+										data-toggle="dropdown"
+										type="button"
+									>
+										<span>Sorted by</span><strong>{{ selectedFilter }}</strong>
+										<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M13.825 8.15649L10 11.9732L6.175 8.15649L5 9.33149L10 14.3315L15 9.33149L13.825 8.15649Z"
+												fill="#3654FF"
+											/>
+										</svg>
+									</button>
+									<div class="dropdown-menu post-dropdown-menu">
+										<a
+											class="dropdown-item"
+											(click)="sortByMetrics('reactionPercentage', 'Reactions', filteredCampaignPosts)"
+											>Reactions</a
+										>
+										<a
+											class="dropdown-item"
+											(click)="sortByMetrics('commentPercentage', 'Comments', filteredCampaignPosts)"
+											>Comments</a
+										>
+										<a
+											class="dropdown-item"
+											(click)="sortByMetrics('engagement', 'Engagement', filteredCampaignPosts)"
+											hidden
+											>Engagement</a
+										>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="all-post-box">
+							<div class="table-wrapper">
+								<table aria-labelledby="">
+									<thead>
+										<tr>
+											<th class="text-left">
+												<div>TIME</div>
+											</th>
+											<th class="text-left">
+												<div>POST</div>
+											</th>
+											<th>
+												<div class="justify-content-center">POSTED IN GROUP</div>
+											</th>
+											<th>
+												<div class="justify-content-center">Reaction %</div>
+											</th>
+											<th>
+												<div class="justify-content-center">Comment %</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody *ngFor="let post of filteredCampaignPosts | slice: from:end">
+										<tr>
+											<td>
+												<div class="date-wrap">
+													{{ post?.postCreatedAtUTC | date: 'dd MMM, YYYY' }} <br />{{
+														post?.postCreatedAtUTC | date: 'hh:mm a'
+													}}
+												</div>
+											</td>
+											<td class="post-desc-wrap">
+												<div class="post-desc">
+													<figure [ngClass]="post.isHidden ? 'hidden-post' : ''">
+														<img
+															class="group-image"
+															src="assets/images/default_group_image.jpg"
+															alt=""
+															*ngIf="!post.postPhotoUrl"
+														/>
+														<img class="group-image" [src]="post.postPhotoUrl" *ngIf="post.postPhotoUrl" />
+														<img
+															class="eye-icon"
+															*ngIf="post.isHidden"
+															src="./assets/images/eye-close-icon.svg"
+															alt=""
+														/>
+													</figure>
+													<div class="post-content">
+														<h5 *ngIf="post?.postRawText">
+															{{
+																post?.postRawText?.substring(0, 100) + (post?.postRawText?.length >= 100 ? '...' : '')
+															}}
+														</h5>
+														<ng-container *ngIf="!post?.postRawText">
+															<h5 class="no-post-text">Live Video Session</h5>
+															<span class="no-post-text">No text in post</span>
+														</ng-container>
+														<ul class="list-unstyled">
+															<li (click)="toggleMoreInfo(post.id)"><a>View post</a></li>
+															<li *ngIf="!isFromBrand" (click)="post.isHidden = !post.isHidden">
+																<a>{{ post.isHidden ? 'Unhide' : 'Hide' }}</a>
+															</li>
+															<li *ngIf="post.isAdminPost">
+																<img src="assets/images/icon-star-green.svg" alt="" /><span class="text-success"
+																	>Admin post</span
+																>
+															</li>
+															<li *ngIf="post.postCreatedByName">
+																<span>by {{ post.postCreatedByName }}</span>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</td>
+											<td class="group-name">
+												<div>{{ post?.groupName }}</div>
+											</td>
+											<td>
+												<div>{{ post?.reactionPercentage }}%</div>
+											</td>
+											<td>
+												<div>{{ post?.commentPercentage }}%</div>
+											</td>
+										</tr>
+										<tr [ngClass]="moreInfoRow ? 'show' : ''" id="{{ post.id }}" class="info-row">
+											<td></td>
+											<td colspan="5">
+												<div class="more-info">
+													<div>
+														<button
+															type="button"
+															class="close"
+															data-cs-label="Close"
+															data-cs-source="page"
+															data-cs-id="48ea5739-bcea-45c8-83e9-8a86f61d86de"
+															(click)="toggleInfo(post.id); recordButtonClick($event)"
+															aria-label="Close"
+														>
+															<svg
+																width="20"
+																height="21"
+																viewBox="0 0 20 21"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg"
+															>
+																<path
+																	d="M15.8327 5.68379L14.6577 4.50879L9.99935 9.16712L5.34102 4.50879L4.16602 5.68379L8.82435 10.3421L4.16602 15.0005L5.34102 16.1755L9.99935 11.5171L14.6577 16.1755L15.8327 15.0005L11.1743 10.3421L15.8327 5.68379Z"
+																	fill="#707084"
+																/>
+															</svg>
+														</button>
+													</div>
+													<div>
+														{{ post.postRawText }}
+														<div><img [src]="post.postPhotoUrl" *ngIf="post.postPhotoUrl" /></div>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="pagination-wrap" *ngIf="!isLoading && filteredCampaignPosts?.length > 0">
+								<span
+									>{{ from + 1 + '-' + (filteredCampaignPosts?.length < end ? filteredCampaignPosts?.length : end) }} of
+									All posts</span
+								>
+								<button
+									[disabled]="from <= 0"
+									data-cs-label="Get Previous Conversation"
+									data-cs-source="page"
+									(click)="getPreviousConversations()"
+								>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+									</svg>
+								</button>
+								<button
+									[disabled]="
+										end > filteredCampaignPosts.length || (end >= filteredCampaignPosts.length && isConversationsLoaded)
+									"
+									data-cs-label="Get Next Conversation"
+									data-cs-source="page"
+									(click)="getNextConversations()"
+								>
+									<svg focusable="false" viewBox="0 0 24 24">
+										<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Posts Gallery -->
+
+<div
+	class="modal fade campaign-highlight-modal"
+	id="topPostModel"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="showTopPosts"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body campaigns-modal-body">
+				<button class="close-btn" data-dismiss="modal">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+							fill="#323232"
+						/>
+					</svg>
+				</button>
+				<button class="arrow arrow-left" (click)="loadPreviousPost()">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M15.41 16.59L10.83 12L15.41 7.41L14 6L8 12L14 18L15.41 16.59Z" fill="#323232" />
+					</svg>
+				</button>
+				<button class="arrow arrow-right" (click)="loadNextPost()">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M8.59003 16.59L13.17 12L8.59003 7.41L10 6L16 12L10 18L8.59003 16.59Z" fill="#323232" />
+					</svg>
+				</button>
+				<div class="post-item">
+					<app-facebook-post-screenshot
+						[postData]="reportCampaignHighlights[selectedIndex]['statistics']['data']"
+					></app-facebook-post-screenshot>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Key Metrics Modal -->
+<div
+	class="modal fade"
+	id="keyMetricsModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'overallSnapshot'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Key Metrics</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" id="cancel" class="close-btn" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							Here are the key findings from the campaign that was successfully completed on Facebook groups.
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div>
+							<div class="data-row" *ngFor="let key of editCampaignStatsNumber; let i = index">
+								<div
+									class="data-col"
+									*ngFor="
+										let campaignGroupForm of campaignReportForm.controls.report.controls | slice: key * 3:key * 3 + 3
+									"
+								>
+									<div class="input-wrap" *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<label>{{ campaignGroupForm.get('name').value }}</label
+										><input type="text" formControlName="value" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-2 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Campaign Stats Modal -->
+<div
+	class="modal fade"
+	id="camapaignStatsModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'campaignStats'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Campaign Stats</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">Here are stats from the keywords that were being tracked during the campaign</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div class="dark-row">
+							<div class="dark-row-left">
+								<h6>PLATFORM - FACEBOOK</h6>
+							</div>
+							<div class="dark-row-right">
+								<h6>
+									POSTS PLANNED - <span>{{ campaignStatistics[0]?.statistics?.totalPosts }}</span>
+								</h6>
+								<h6>
+									POSTS DONE - <span>{{ campaignStatistics[0]?.statistics.completedCount }}</span>
+								</h6>
+								<h6>
+									REACTIONS - <span>{{ campaignStatistics[0]?.statistics.reactions }}%</span>
+								</h6>
+								<h6>
+									COMMENTS - <span>{{ campaignStatistics[0]?.statistics.comments }}%</span>
+								</h6>
+							</div>
+						</div>
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th>CAMPAIGN PERIOD</th>
+										<th>POSTS PLANNED</th>
+										<th>POSTS DONE</th>
+										<th>REACTIONS</th>
+										<th>COMMENTS</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm?.controls?.report?.controls">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td>
+											<div>
+												<input type="text" formControlName="name" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="totalPost" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="completedCount" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="reactions" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="comments" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<button class="convo-btn-normal convo-btn-outline-primary" (click)="addFormControl(campaignReportForm)">
+								Add row to table
+							</button>
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div class="dark-row">
+							<div class="dark-row-left">
+								<h6>PLATFORM - WHATSAPP</h6>
+							</div>
+							<div class="dark-row-right">
+								<h6>
+									POSTS PLANNED - <span>{{ campaignStatistics[1]?.statistics?.totalPosts }}</span>
+								</h6>
+								<h6>
+									POSTS DONE - <span>{{ campaignStatistics[1]?.statistics.completedCount }}</span>
+								</h6>
+								<h6>
+									REACTIONS - <span>{{ campaignStatistics[1]?.statistics.reactions }}%</span>
+								</h6>
+								<h6>
+									COMMENTS - <span>{{ campaignStatistics[1]?.statistics.comments }}%</span>
+								</h6>
+							</div>
+						</div>
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th>CAMPAIGN PERIOD</th>
+										<th>POSTS PLANNED</th>
+										<th>POSTS DONE</th>
+										<th>REACTIONS</th>
+										<th>COMMENTS</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReport2Form?.controls?.report?.controls">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td>
+											<div>
+												<input type="text" formControlName="name" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="totalPost" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="completedCount" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="reactions" />
+											</div>
+										</td>
+										<td>
+											<div>
+												<input type="number" formControlName="comments" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<button class="convo-btn-normal convo-btn-outline-primary" (click)="addFormControl(campaignReport2Form)">
+								Add row to table
+							</button>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Share of Voice Modal -->
+<div
+	class="modal fade"
+	id="shareOfVoiceModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'shareOfVoice'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Share of Voice</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							Insights about how your brand compares to the rest of the brands that are being talked about during
+							campaign.
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th *ngFor="let keyHeader of campaignReportFormHeaderValues; let headerIndex = index">
+											{{ headerIndex > 0 ? keyHeader : '' }}
+										</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm?.controls?.report?.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td *ngFor="let item of campaignReportFormHeaderValues; let campaignGroupIndex = index">
+											<div *ngIf="campaignGroupIndex === 0">
+												<input type="text" formControlName="statsName" *ngIf="i === 0" disabled />
+												<app-searchable-dropdown
+													[class.disabled]="selectedShareOfVoiceKeys?.length > 0"
+													(optionSelected)="optionSelected($event, campaignGroupForm)"
+													[mainDropDownOptions]="selectedShareOfVoiceKeys"
+													[placeholder]="'Select Brand'"
+													[selectedValue]="campaignGroupForm.get('statsName').value"
+													[isMultiStateOption]="'true'"
+													[isFromCsAdmin]="'true'"
+													[dropListChanged]="selectedShareOfVoiceKeys"
+													*ngIf="i > 0"
+												>
+												</app-searchable-dropdown>
+											</div>
+											<div *ngIf="campaignGroupIndex > 0">
+												<input type="text" [formControlName]="campaignReportFormHeaderValues[campaignGroupIndex]" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-5 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Sentiment Map Modal -->
+<div
+	class="modal fade"
+	id="sentimentMapModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'sentimentMap'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Sentiment Map</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							Here is how the campaign fared in terms of the sentiments for the groups that were a part of it. This
+							helps recognise the overall responsiveness & feedback towards your brand from the selected group’s
+							members.
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th *ngFor="let keyHeader of campaignReportFormHeaderValues; let headerIndex = index">
+											{{ headerIndex > 0 ? keyHeader : '' }}
+										</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm?.controls?.report?.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td *ngFor="let item of campaignReportFormHeaderValues; let campaignGroupIndex = index">
+											<div *ngIf="campaignGroupIndex === 0">
+												<input type="text" formControlName="statsName" disabled />
+											</div>
+											<div *ngIf="campaignGroupIndex > 0">
+												<input type="text" [formControlName]="campaignReportFormHeaderValues[campaignGroupIndex]" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-5 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Brand Conversations Modal -->
+<div
+	class="modal fade"
+	id="brandConversationsModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'brandConvAndMent'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Brand Conversations & Mentions</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							Here is how the campaign fared in terms of the sentiments for the groups that were a part of it. This
+							helps recognise the overall responsiveness & feedback towards your brand from the selected group’s
+							members.
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th *ngFor="let keyHeader of campaignReportFormHeaderValues; let headerIndex = index">
+											{{ headerIndex > 0 ? keyHeader : '' }}
+										</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm?.controls?.report?.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td *ngFor="let item of campaignReportFormHeaderValues; let campaignGroupIndex = index">
+											<div *ngIf="campaignGroupIndex === 0">
+												<input type="text" formControlName="statsName" disabled />
+											</div>
+											<div *ngIf="campaignGroupIndex > 0">
+												<input type="text" [formControlName]="campaignReportFormHeaderValues[campaignGroupIndex]" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-5 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Participation by Groups Modal -->
+<div
+	class="modal fade"
+	id="participationGroupsModal"
+	*ngIf="selectedReportModel === 'participantGroups'"
+	tabindex="-1"
+	aria-hidden="true"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Participation by Groups</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							Insights about how the groups participated in the campaign in terms of the keywords, hashtags, and brand
+							mentions per group.
+						</div>
+					</div>
+
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th>GROUP</th>
+										<th>KEYWORDS</th>
+										<th>HASHTAGS</th>
+										<th>BRAND MENTIONS</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm?.controls?.report?.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td *ngFor="let item of campaignReportFormHeaderValues; let campaignGroupIndex = index">
+											<div *ngIf="campaignGroupIndex === 0">
+												<input type="text" formControlName="statsName" disabled />
+											</div>
+											<div *ngIf="campaignGroupIndex > 0">
+												<input type="text" [formControlName]="campaignReportFormHeaderValues[campaignGroupIndex]" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-5 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Word Cloud Modal -->
+<div
+	class="modal fade"
+	id="wordCloudModal"
+	tabindex="-1"
+	aria-hidden="true"
+	*ngIf="selectedReportModel === 'wordCloud'"
+	data-backdrop="static"
+	data-keyboard="false"
+>
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Section - Word Cloud</h5>
+				<div class="modal-header-right">
+					<button class="convo-btn-normal convo-btn-primary" (click)="saveCampaignReportModel(selectedReportModel)">
+						Save
+					</button>
+					<button type="button" class="close-btn" id="cancel" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="campaigns-modal-body">
+					<div class="info-wrap">
+						<div class="info">
+							The top keywords that were trending during the campaign are present below against the ones that were
+							trending before the campaign.
+						</div>
+					</div>
+					<div>Before Campaign</div>
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReportForm.controls.report.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td>
+											<div>
+												<input
+													formControlName="name"
+													placeholder="Enter keyword name (leave blank to remove this entry)"
+													type="text"
+												/>
+											</div>
+										</td>
+										<td>
+											<div>
+												<input class="input-small" formControlName="value" type="number" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<button class="convo-btn-normal convo-btn-outline-primary" (click)="addFormControl(campaignReportForm)">
+						Add row to table
+					</button>
+
+					<div>During Campaign</div>
+					<div class="campaign-table-wrap">
+						<div>
+							<table class="campaign-table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody *ngFor="let campaignGroupForm of campaignReport2Form.controls.report.controls; let i = index">
+									<tr *ngIf="campaignGroupForm" [formGroup]="campaignGroupForm">
+										<td>
+											<div>
+												<input
+													formControlName="name"
+													placeholder="Enter keyword name (leave blank to remove this entry)"
+													type="text"
+												/>
+											</div>
+										</td>
+										<td>
+											<div>
+												<input class="input-small" formControlName="value" type="number" />
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<button class="convo-btn-normal convo-btn-outline-primary" (click)="addFormControl(campaignReportForm)">
+						Add row to table
+					</button>
+
+					<div class="text-block" *ngIf="showNewTextBlock">
+						<input placeholder="Enter text here" [(ngModel)]="textBlockValue" />
+						<span (click)="showNewTextBlock = false; textBlockValue = null">
+							<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+									fill="#707084"
+								/>
+							</svg>
+						</span>
+					</div>
+
+					<button class="add-text-block mt-5 mb-2" (click)="showNewTextBlock = true" *ngIf="!showNewTextBlock">
+						<img src="./assets/images/icon_plus.svg" alt="" /> <span>Add new text block</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

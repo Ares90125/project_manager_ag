@@ -1,0 +1,431 @@
+<div class="category-survey-modal">
+	<div class="survey-modal-overlay"></div>
+	<div class="survey-modal-dialoag modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="selected-group-wrapper">
+					<div class="img-wrapper">
+						<app-fb-group-cover-image
+							[coverImageUrl]="selectedGroup.coverImageUrl"
+							[fbGroupId]="selectedGroup.fbGroupId"
+						></app-fb-group-cover-image>
+					</div>
+					<h5 class="modal-title">{{ selectedGroup?.name }}</h5>
+				</div>
+				<div class="headings">
+					Hey! While your group insights are getting ready, let’s get to know your group a little better!
+				</div>
+			</div>
+			<div class="modal-body">
+				<div *ngIf="!isStepOneHidden" class="step-1">
+					<h3 class="body-title">Pick a group category</h3>
+					<div class="categories-list">
+						<ul>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Entertainment'"
+								data-cs-id="e0b90262-9ee8-4583-92d2-08b71ddc008d"
+								data-cs-label="Entertainment"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/entertainment.svg" />
+								</figure>
+								<span>Entertainment</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Cooking & Recipes'"
+								data-cs-id="1f3d389b-e4d3-4646-81f6-201a8c4f63b5"
+								data-cs-label="Cooking & Recipes"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Cooking-Recipes.svg" />
+								</figure>
+								<span>Cooking & Recipes</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Fitness & Health'"
+								data-cs-id="44d40255-0a06-4d20-ac47-e44be1da6d16"
+								data-cs-label="Fitness & Health"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Fitness-Health.svg" />
+								</figure>
+								<span>Fitness & Health</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Food & Drink'"
+								data-cs-id="5e68e37a-ba9a-4394-acc2-dd84c5240d4d"
+								data-cs-label="Food & Drink"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Food-Groups.svg" />
+								</figure>
+								<span>Food & Drink</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Hobbies & Interests'"
+								data-cs-id="de7be5ed-4f05-4175-a3db-99a60ce77f28"
+								data-cs-label="Hobbies & Interests"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Hobby-Groups.svg" />
+								</figure>
+								<span>Hobbies & Interests</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Jobs & Careers'"
+								data-cs-id="6f22b2fb-30ca-47cb-85b8-c9c3d833e8df"
+								data-cs-label="Jobs & Careers"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Job-Groups.svg" />
+								</figure>
+								<span>Jobs & Careers</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Learning & Education'"
+								data-cs-id="3b0cafda-7048-48d7-a78c-5e4a330770d7"
+								data-cs-label="Learning & Education"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Learning-Education.svg" />
+								</figure>
+								<span>Learning & Education</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Lifestyle, Beauty & Makeup'"
+								data-cs-id="5ae24e69-15ab-4768-8853-12b75fce0b7d"
+								data-cs-label="Lifestyle, Beauty & Makeup"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Lifestyle-Beauty-Makeup.svg" />
+								</figure>
+								<span>Lifestyle, Beauty & Makeup</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Medical & Mental Health'"
+								data-cs-id="8b505954-9d65-4e0d-8339-e524baccf60c"
+								data-cs-label="Medical & Mental Health"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Medical.svg" />
+								</figure>
+								<span>Medical & Mental Health</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Neighborhood/Local Groups'"
+								data-cs-id="36f5e1df-2a6f-4a7d-93e6-e547d2e7bdcc"
+								data-cs-label="Neighborhood/Local Groups"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/neighborhood.svg" />
+								</figure>
+								<span>Neighborhood/Local Groups</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Parenting'"
+								data-cs-id="52e777dc-ae19-442d-ac7e-cda97105abcc"
+								data-cs-label="Parenting"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Parenting.svg" />
+								</figure>
+								<span>Parenting</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Travel'"
+								data-cs-id="1f35493e-5c93-4a74-a066-9d45ab940b4f"
+								data-cs-label="Travel"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Travel.svg" />
+								</figure>
+								<span>Travel</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Politics'"
+								data-cs-id="af87cf2f-4b3c-4b94-bfa8-710879aae4c4"
+								data-cs-label="Politics"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Politics.svg" />
+								</figure>
+								<span>Politics</span>
+							</li>
+
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Sports & Gaming'"
+								data-cs-id="43abb4f0-7ef4-4725-a17b-dcc0043f3b65"
+								data-cs-label="Sports & Gaming"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Sports-Gaming.svg" />
+								</figure>
+								<span>Sports & Gaming</span>
+							</li>
+
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Buy & Sell'"
+								data-cs-id="45fff289-7eb8-4ecb-a76a-a783aa434aa1"
+								data-cs-label="Buy & Sell"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/buy-sell.svg" />
+								</figure>
+								<span>Buy & Sell</span>
+							</li>
+
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Faith & Spirituality'"
+								data-cs-id="c132dc35-94e7-4843-8cb7-5ba32df4f11c"
+								data-cs-label="Faith & Spirituality"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/faith.svg" />
+								</figure>
+								<span>Faith & Spirituality</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Business-Brand'"
+								data-cs-id="b7d84d4c-226f-4397-a771-d22261242b5f"
+								data-cs-label="Business-Brand"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/business.svg" />
+								</figure>
+								<span>Business-Brand</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Arts'"
+								data-cs-id="c6165f13-501a-47c6-b2e9-5d42a89d2cd6"
+								data-cs-label="Arts"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/arts.svg" />
+								</figure>
+								<span>Arts</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Animals'"
+								data-cs-id="541fe8e4-60f0-4bfd-a2ad-ed04242903e8"
+								data-cs-label="Animals"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/animals.svg" />
+								</figure>
+								<span>Animals</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Relationships & Identity'"
+								data-cs-id="8a9b65b9-5aa8-4a66-bda6-695527705424"
+								data-cs-label="Relationships & Identity"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/relationship.svg" />
+								</figure>
+								<span>Relationships & Identity</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Vehicles & Commutes'"
+								data-cs-id="8a9b65b9-5aa8-4a66-bda6-695527705424"
+								data-cs-label="Vehicles & Commutes"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/vahicle.svg" />
+								</figure>
+								<span>Vehicles & Commutes</span>
+							</li>
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Humor'"
+								data-cs-id="3979935f-08b7-4964-98de-8c34aa413ac5"
+								data-cs-label="Humor"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/humor.svg" />
+								</figure>
+								<span>Humor</span>
+							</li>
+
+							<li
+								(click)="selectBusinessCategory($event)"
+								[class.active]="selectedCategory === 'Others'"
+								data-cs-id="4e353acb-2c40-470a-925b-e977b7689fbf"
+								data-cs-label="Others"
+								data-cs-source="dialog"
+							>
+								<figure>
+									<img alt="" src="assets/images/group-icons/Other-icon.svg" />
+								</figure>
+								<span>Others</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div *ngIf="!isStepTwoHidden" class="step-2">
+					<div class="body-title">Group category selected</div>
+					<div class="selected-group-row">
+						<div class="selected-group-row-left">
+							<figure [ngSwitch]="selectedCategory">
+								<ng-container *ngSwitchCase="'Entertainment'">
+									<img alt="" src="assets/images/group-icons/entertainment.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Cooking & Recipes'">
+									<img alt="" src="assets/images/group-icons/Cooking-Recipes.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Lifestyle, Beauty & Makeup'">
+									<img alt="" src="assets/images/group-icons/Lifestyle-Beauty-Makeup.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Parenting'">
+									<img alt="" src="assets/images/group-icons/Parenting.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Sports & Gaming'">
+									<img alt="" src="assets/images/group-icons/Sports-Gaming.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Fitness & Health'">
+									<img alt="" src="assets/images/group-icons/Fitness-Health.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Medical & Mental Health'">
+									<img alt="" src="assets/images/group-icons/Medical.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Travel'">
+									<img alt="" src="assets/images/group-icons/Travel.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Politics'">
+									<img alt="" src="assets/images/group-icons/Politics.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Food & Drink'">
+									<img alt="" src="assets/images/group-icons/Food-Groups.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Neighborhood/Local Groups'">
+									<img alt="" src="assets/images/group-icons/neighborhood.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Jobs & Careers'">
+									<img alt="" src="assets/images/group-icons/Job-Groups.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Hobbies & Interests'">
+									<img alt="" src="assets/images/group-icons/Hobby-Groups.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Learning & Education'">
+									<img alt="" src="assets/images/group-icons/Learning-Education.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Buy & Sell'">
+									<img alt="" src="assets/images/group-icons/buy-sell.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Faith & Spirituality'">
+									<img alt="" src="assets/images/group-icons/faith.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Business-Brand'">
+									<img alt="" src="assets/images/group-icons/business.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Arts'">
+									<img alt="" src="assets/images/group-icons/arts.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Animals'">
+									<img alt="" src="assets/images/group-icons/animals.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Relationships & Identity'">
+									<img alt="" src="assets/images/group-icons/relationship.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Vehicles & Commutes'">
+									<img alt="" src="assets/images/group-icons/vahicle.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Humor'">
+									<img alt="" src="assets/images/group-icons/humor.svg" />
+								</ng-container>
+								<ng-container *ngSwitchCase="'Others'">
+									<img alt="" src="assets/images/group-icons/Other-icon.svg" />
+								</ng-container>
+							</figure>
+							<span>{{ selectedCategory }}</span>
+						</div>
+						<div>
+							<button
+								(click)="showBusinessCategories($event)"
+								class="change-btn"
+								data-cs-id="a8674e1b-7a4e-443a-bdb1-37084e117cef"
+								data-cs-label="Change"
+								data-cs-source="dialog"
+							>
+								Change
+							</button>
+						</div>
+					</div>
+					<div class="body-title">Select primary country</div>
+					<div class="country-label">Which country does this group focus on?</div>
+					<app-searchable-dropdown
+						(optionSelected)="changeGroupCountry($event)"
+						[mainDropDownOptions]="countryList"
+						[placeholder]=""
+						[selectedValue]="countryPlaceholder"
+					>
+					</app-searchable-dropdown>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					*ngIf="!isSubmitClicked; else submitClicked"
+					(click)="updateBusinessCategoryAndCountry($event)"
+					[disabled]="!(selectedCategory && selectedGroup?.country)"
+					data-cs-id="1f926256-7dde-4664-9064-eff6240c3ca1"
+					data-cs-label="Confirm"
+					data-cs-source="dialog"
+					class="convo-btn-primary convo-btn-normal px-4"
+					type="button"
+				>
+					Confirm
+				</button>
+				<!-- Mukesh work here -->
+				<ng-template #submitClicked>
+					<button [disabled]="true" class="convo-btn-primary convo-btn-normal px-4" type="button">
+						<span class="bt-spinner"></span>
+						Confirm
+					</button>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</div>

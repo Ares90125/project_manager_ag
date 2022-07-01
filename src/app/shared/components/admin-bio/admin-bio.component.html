@@ -1,0 +1,304 @@
+<div class="admin-bio-wrapper pb-3">
+	<ng-container *ngIf="isAdminBioLoaded; else loaderState">
+		<app-bio-introduction
+			*ngIf="isIntroductionSectionNeeded"
+			[adminBio]="mainAdminBio"
+			[draftAdminBio]="draftAdminBio"
+		></app-bio-introduction>
+		<app-bio-personal-info [adminBio]="draftAdminBio"></app-bio-personal-info>
+
+		<app-bio-pitch-video [adminBio]="draftAdminBio" (pitchVideoFile)="pitchVideoFile($event)"></app-bio-pitch-video>
+		<app-bio-key-achievements [adminBio]="draftAdminBio"></app-bio-key-achievements>
+		<app-bio-media-coverage [adminBio]="draftAdminBio"></app-bio-media-coverage>
+		<app-bio-facebook-groups-list [adminBio]="draftAdminBio"></app-bio-facebook-groups-list>
+		<app-bio-supporting-docs [adminBio]="draftAdminBio"></app-bio-supporting-docs>
+		<app-bio-social-profiles [adminBio]="draftAdminBio"></app-bio-social-profiles>
+		<app-bio-contact [adminBio]="draftAdminBio"></app-bio-contact>
+		<app-bio-slug-url [adminBio]="mainAdminBio"></app-bio-slug-url>
+	</ng-container>
+</div>
+
+<ng-template #loaderState>
+	<div class="bio-card small-card">
+		<div class="card-left">
+			<div>
+				<app-loading-shimmer [type]="2"></app-loading-shimmer>
+			</div>
+		</div>
+	</div>
+	<div class="bio-card">
+		<div class="profile-box">
+			<div class="change-image-row">
+				<div class="change-image-row-left">
+					<figure>
+						<img alt="" src="assets/images/default_user.png" />
+					</figure>
+
+					<app-loading-shimmer [type]="1"></app-loading-shimmer>
+				</div>
+				<div class="change-image-row-right">
+					<input
+						(change)="fileUpload($event)"
+						title=" "
+						class="hide-input"
+						type="file"
+						id="profilePicture"
+						data-test-id="button-changeimage-adminbio-page"
+						name="profilePicture"
+						accept=".gif,.jpg,.jpeg,.png"
+					/>
+					<button
+						class="convo-btn-normal convo-btn-bordered convo-btn-small"
+						data-cs-id="b83d4d94-05e4-4049-81da-7a72ef5680d2"
+						data-cs-label="Change Image"
+						data-cs-source="page"
+						(click)="recordButtonClick($event)"
+					>
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0)">
+								<path
+									d="M7.99996 2.66636V1.47303C7.99996 1.17303 7.63996 1.02636 7.43329 1.23969L5.56663 3.09969C5.43329 3.23303 5.43329 3.43969 5.56663 3.57303L7.42663 5.43303C7.63996 5.63969 7.99996 5.49303 7.99996 5.19303V3.99969C10.2066 3.99969 12 5.79303 12 7.99969C12 8.52636 11.9 9.0397 11.7066 9.49969C11.6066 9.7397 11.68 10.013 11.86 10.193C12.2 10.533 12.7733 10.413 12.9533 9.96636C13.2 9.35969 13.3333 8.69303 13.3333 7.99969C13.3333 5.05303 10.9466 2.66636 7.99996 2.66636ZM7.99996 11.9997C5.79329 11.9997 3.99996 10.2064 3.99996 7.99969C3.99996 7.47303 4.09996 6.95969 4.29329 6.49969C4.39329 6.2597 4.31996 5.98636 4.13996 5.80636C3.79996 5.46636 3.22663 5.58636 3.04663 6.03303C2.79996 6.6397 2.66663 7.30636 2.66663 7.99969C2.66663 10.9464 5.05329 13.333 7.99996 13.333V14.5264C7.99996 14.8264 8.35996 14.973 8.56663 14.7597L10.4266 12.8997C10.56 12.7664 10.56 12.5597 10.4266 12.4264L8.56663 10.5664C8.35996 10.3597 7.99996 10.5064 7.99996 10.8064V11.9997Z"
+									fill="#3654FF"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0">
+									<rect width="16" height="16" fill="white" />
+								</clipPath>
+							</defs>
+						</svg>
+						<span>Change image</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="py-3">
+			<app-loading-shimmer [type]="2"></app-loading-shimmer>
+		</div>
+
+		<div class="bio-row pb-0">
+			<div class="input-wrap pb-0">
+				<h5><img src="./assets/images/bio-icon.png" alt="" /> About me <sup>*</sup></h5>
+				<h6>Write a brief description about yourself with regards to this Facebook group.</h6>
+
+				<app-loading-shimmer [type]="2"></app-loading-shimmer>
+			</div>
+		</div>
+	</div>
+	<div class="bio-card">
+		<h5><img src="./assets/images/pitch-video-icon.png" alt="" /> Pitch video</h5>
+		<h6>Add a video of you talking about why brands should work with you <strong>(max. 2 minute or 500MB)</strong>.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img src="./assets/images/achievements-icon.png" alt="" /> My achievements</h5>
+		<h6>Share your achievements that might interest brands <strong>(max. 5 achievements)</strong>.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img src="./assets/images/media-icon.png" alt="" /> Media coverage</h5>
+		<h6>
+			Share links to articles talking about you in blogs/websites that might interest brands
+			<strong>(max. 5 articles)</strong>.
+		</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img src="./assets/images/groups-icon.png" alt="" /> Your groups</h5>
+		<h6>List the groups that you own/admin and other groups that you support.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img src="./assets/images/files-icon.png" alt="" /> Files</h5>
+		<h6>You can attach supporting documents for your pitch here <strong>(max. 5 files)</strong>.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img src="assets/images/social-icon.png" alt="" /> Social profiles</h5>
+		<h6>Add your social profiles here.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+	<div class="bio-card">
+		<h5><img alt="" src="assets/images/contact-me.png" /> Message button</h5>
+		<h6>Show a ‘Message’ button on your bio to let brands message you.</h6>
+		<app-loading-shimmer [type]="2"></app-loading-shimmer>
+	</div>
+</ng-template>
+
+<!-- Save button Main -->
+<ng-container *ngIf="showPublishButton">
+	<div class="admin-bio-wrapper unsaved-changes-card">
+		<div class="bio-card small-card">
+			<div class="card-left">
+				<p *ngIf="!draftButtonStatus && draftAdminBio.publishedStatus !== 'DRAFT'">
+					<img src="./assets/images/icon-error.svg" alt="" /> You have unsaved changes!
+				</p>
+				<div *ngIf="draftButtonStatus === 'SavingDraft'" class="draft-spinner">
+					<p class="spinner btn-spinner"></p>
+					<p>Saving draft...</p>
+				</div>
+
+				<p *ngIf="draftButtonStatus !== 'SavingDraft' && draftAdminBio.publishedStatus === 'DRAFT'" class="draft-saved">
+					<ng-lottie
+						containerClass="lottie-animation"
+						height="24px"
+						width="24px"
+						[options]="draftSavedAnimationOption"
+					></ng-lottie>
+					The changes you made are saved as a draft. Publish your bio now to make these changes live.
+				</p>
+			</div>
+			<div class="card-right">
+				<button
+					class="convo-btn-normal convo-btn-primary publish-bio"
+					(click)="saveAdminBio(); recordButtonClick($event)"
+					data-cs-id="3c3775d0-43o5-45c1-b9c2-9d9679eb98a3"
+					data-cs-label="Publish Bio"
+					data-cs-source="page"
+					[disabled]="draftButtonStatus === 'SavingDraft'"
+				>
+					<ng-container *ngIf="saveButtonLoading; else saveBtn"><span class="btn-spinner"></span></ng-container>
+					<ng-template #saveBtn>Publish Bio</ng-template>
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="showAdminPopupLoader">
+	<div class="modal file-alert">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="close-btn">
+					<button
+						class="close"
+						data-cs-id="c6893f88-6114-44af-9a40-2c4471b96a39"
+						data-cs-label="Cross"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); closeAdminPopup()"
+					>
+						<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.1999 3.80714C11.9399 3.54714 11.5199 3.54714 11.2599 3.80714L7.99989 7.06047L4.73989 3.80047C4.47989 3.54047 4.05989 3.54047 3.79989 3.80047C3.53989 4.06047 3.53989 4.48047 3.79989 4.74047L7.05989 8.00047L3.79989 11.2605C3.53989 11.5205 3.53989 11.9405 3.79989 12.2005C4.05989 12.4605 4.47989 12.4605 4.73989 12.2005L7.99989 8.94047L11.2599 12.2005C11.5199 12.4605 11.9399 12.4605 12.1999 12.2005C12.4599 11.9405 12.4599 11.5205 12.1999 11.2605L8.93989 8.00047L12.1999 4.74047C12.4532 4.48714 12.4532 4.06047 12.1999 3.80714Z"
+								fill="#707084"
+							/>
+						</svg>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<figure class="icon">
+						<ng-lottie containerClass="lottie-animation" height="120px" [options]="successAnimationOption"></ng-lottie>
+					</figure>
+
+					<h6>Bio published successfully!</h6>
+					<p>Share to get hearts and get discovered faster.</p>
+					<button
+						class="convo-btn-primary convo-btn-normal convo-btn-big w-100"
+						data-cs-id="b75b19e0-4e79-436d-23d5-b2bca81928f9"
+						data-cs-label="Share"
+						data-cs-source="dialog"
+						(click)="openShareModalPopup(); closeAdminPopup(); recordButtonClick($event)"
+					>
+						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12.5 10.9042C11.9933 10.9042 11.54 11.1042 11.1933 11.4176L6.44 8.65091C6.47333 8.49758 6.5 8.34424 6.5 8.18425C6.5 8.02424 6.47333 7.87091 6.44 7.71758L11.14 4.97758C11.5 5.31091 11.9733 5.51758 12.5 5.51758C13.6067 5.51758 14.5 4.62424 14.5 3.51758C14.5 2.41091 13.6067 1.51758 12.5 1.51758C11.3933 1.51758 10.5 2.41091 10.5 3.51758C10.5 3.67758 10.5267 3.83091 10.56 3.98424L5.86 6.72425C5.5 6.39091 5.02667 6.18425 4.5 6.18425C3.39333 6.18425 2.5 7.07758 2.5 8.18425C2.5 9.29091 3.39333 10.1842 4.5 10.1842C5.02667 10.1842 5.5 9.97758 5.86 9.64425L10.6067 12.4176C10.5733 12.5576 10.5533 12.7042 10.5533 12.8509C10.5533 13.9242 11.4267 14.7976 12.5 14.7976C13.5733 14.7976 14.4467 13.9242 14.4467 12.8509C14.4467 11.7776 13.5733 10.9042 12.5 10.9042Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Share</span>
+					</button>
+					<button
+						class="convo-btn-bordered convo-btn-normal convo-btn-big w-100 mt-2"
+						data-cs-id="b75b19e0-4e79-223v-23d5-b2bca81928f9"
+						data-cs-label="Preview"
+						data-cs-source="dialog"
+						(click)="openPreviewOverlay(); recordButtonClick($event)"
+					>
+						<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M11.4375 13.6846H3.875C3.51033 13.6846 3.16059 13.5397 2.90273 13.2818C2.64487 13.024 2.5 12.6742 2.5 12.3096V4.74707C2.5 4.3824 2.64487 4.03266 2.90273 3.7748C3.16059 3.51694 3.51033 3.37207 3.875 3.37207H6.625V4.74707H3.875V12.3096H11.4375V9.55957H12.8125V12.3096C12.8125 12.6742 12.6676 13.024 12.4098 13.2818C12.1519 13.5397 11.8022 13.6846 11.4375 13.6846ZM7.79375 9.35813L6.82438 8.38601L11.1508 4.05957H8.6875V2.68457H13.5V7.49707H12.125V5.03238L7.79375 9.35813Z"
+								fill="#3654FF"
+							/>
+						</svg>
+						<span>Preview</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<ng-container *ngIf="openAdminPreviewOverlay">
+	<app-admin-bio-preview
+		(closePreview)="closePreview($event)"
+		[adminBioFromSetting]="mainAdminBio"
+		[draftAdminBio]="draftAdminBio"
+	></app-admin-bio-preview>
+</ng-container>
+
+<!-- Share modal -->
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		type="bio"
+		[copyUrl]="
+			mainAdminBio?.profileUrlSlug
+				? environment.profileConvosightUrl + mainAdminBio?.profileUrlSlug
+				: environment.profileConvosightUrl + mainAdminBio?.userId
+		"
+		(closePopup)="closePopup($event)"
+	></app-share-widget>
+</ng-container>
+
+<ng-container *ngIf="openPopupToSaveForm">
+	<div class="modal file-alert">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">You have unsaved changes</h5>
+
+					<button
+						type="button"
+						data-cs-id="281fedbd-18ad-82fo-928s-c637e8a330be"
+						data-cs-label="Close"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); openPopupToSaveForm = false"
+						class="close-btn convo-btn-normal"
+					>
+						<img src="./assets/images/close-icon.svg" alt="" />
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="m-0">You are about to leave this page. All unsaved changes will be lost. Save before you go!</p>
+				</div>
+				<div class="modal-footer">
+					<button
+						data-cs-label="Cancel"
+						data-cs-id="281fedbd-9ae4-82fo-8672-c637e8a330be"
+						data-cs-source="page"
+						(click)="recordButtonClick($event); closeTab()"
+						class="px-5 convo-btn-normal convo-btn-bordered"
+						type="button"
+					>
+						Leave anyway
+					</button>
+					<button
+						data-cs-label="Continue"
+						data-cs-id="281fedbd-9ae4-82fo-8672-c637e8a330be"
+						data-cs-source="page"
+						(click)="saveAdminBio(); openPopupToSaveForm = false; recordButtonClick($event)"
+						class="px-5 convo-btn-normal convo-btn-primary"
+						type="button"
+					>
+						Save changes
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>
+
+<!-- Admin Bio Card starts here-->
+<ng-container *ngIf="showAdminPromptModal">
+	<app-admin-bio-profile-overlay (closeAdminOverlay)="closeAdminOverlay($event)"></app-admin-bio-profile-overlay>
+</ng-container>
+<!-- Admin Bio Card ends here -->

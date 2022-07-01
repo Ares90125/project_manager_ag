@@ -1,0 +1,57 @@
+<section class="container">
+	<div class="card-inner-wrapper">
+		<div class="flex-box">
+			<h3>
+				Word Cloud
+				<a class="btn-edit" (click)="openEdit.emit('WordCloud'); wordCloudDataToParent.emit(wordCloudData.slice(0, 50))"
+					>Edit&nbsp;<img src="assets/images/icon-edit-primary.svg"
+				/></a>
+			</h3>
+			<p>Top keywords that were trending during the selected period</p>
+		</div>
+		<mat-slide-toggle id="conversation-word-toggle" checked [(ngModel)]="isWordCloudVisible"></mat-slide-toggle>
+	</div>
+	<div class="word-cloud-wrapper">
+		<div class="row">
+			<div class="col-md-8">
+				<div #wordCloud></div>
+			</div>
+			<div class="col-md-4">
+				<div class="legend" *ngIf="wordCloudDataToBeShown">
+					<label>Top 5 keywords </label>
+					<div class="legend-list" *ngFor="let data of wordCloudDataToBeShown">
+						<div>
+							<h5>{{ data['name'] }}</h5>
+							<p>{{ data['weight'] }} conversations</p>
+						</div>
+						<div class="percentage-value">{{ data['weight'] / totalCount | percent }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width: 100%; padding: 16px 0 16px 0">
+		<a
+			[hidden]="supportingText['wordCloud']"
+			class="supporting-text supporting-text-toggle show"
+			(click)="openSupportingTextArea($event)"
+			>+ Add supporting text</a
+		>
+		<div class="supporting-text-textarea">
+			<textarea maxlength="1000"> {{ supportingText['wordCloud'] }} </textarea>
+			<div class="action">
+				<button
+					class="convo-btn-primary"
+					(click)="saveSupportingText($event, 'wordCloud')"
+					[disabled]="editingSupportingText"
+				>
+					Save</button
+				><button (click)="hideSupportingTextArea($event)" class="btn-outline-primary">Cancel</button>
+			</div>
+		</div>
+		<div class="supporting-text-text show" [hidden]="!supportingText['wordCloud']">
+			<p>{{ supportingText['wordCloud'] }}</p>
+			<a (click)="editSupportingText($event)"><img src="assets/images/icon-edit-primary.svg" />Edit text</a>
+		</div>
+	</div>
+</section>

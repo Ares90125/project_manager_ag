@@ -1,0 +1,406 @@
+<div *ngIf="brand && !showCampaignReportView" class="campaigns-container">
+	<div class="your-campaigns-wrapper">
+		<div class="container">
+			<div class="head-wrapper">
+				<div class="left-section">
+					<h2 class="head-text">Your campaigns</h2>
+					<p class="sub-text">Campaigns helps you to collect insights useful for your brand.</p>
+				</div>
+				<div class="right-section">
+					<img alt="" class="img-campaign" src="assets/images/campaigns_illustration.svg" />
+				</div>
+			</div>
+		</div>
+		<div class="tabs-wrapper">
+			<div class="container">
+				<ul class="nav nav-tabs group-info-tabs" role="tablist">
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('all'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'all'}"
+							class="nav-link"
+							data-toggle="tab"
+							href="#AllCampaigns"
+							id="AllCampaigns"
+							role="tab"
+							data-cs-id="8d733c16-3d3e-4d4d-bace-e3a1c080eab8"
+							data-cs-label="All campaigns"
+							data-cs-source="page"
+						>
+							All campaigns
+							<span class="badge">{{ numberCampaignList.all }}</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('PendingApproval'); recordButtonClick($event)"
+							[ngClass]="{
+								active: currentStateOfCampaigns === 'PendingApproval'
+							}"
+							class="nav-link"
+							data-toggle="tab"
+							href="#ActiveCampaigns"
+							id="active-campaigns-tab"
+							role="tab"
+							data-cs-id="e0cd34ab-b1f4-488e-b9d4-6dcc9128d563"
+							data-cs-label="New proposals"
+							data-cs-source="page"
+						>
+							New proposals
+							<span class="badge">
+								{{ numberCampaignList.pendingApproval }}
+							</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Scheduled'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Scheduled'}"
+							class="nav-link"
+							data-toggle="tab"
+							href="#InactiveCampaigns"
+							id="inactive-campaigns-tab"
+							role="tab"
+							data-cs-id="f6eba776-4138-47d8-b84f-af7accdbcdc8"
+							data-cs-label="Scheduled"
+							data-cs-source="page"
+						>
+							Scheduled
+							<span class="badge">
+								{{ numberCampaignList.scheduled }}
+							</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Active'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Active'}"
+							class="nav-link"
+							data-toggle="tab"
+							href="#InactiveCampaigns"
+							id="inactive-campaigns-tab"
+							role="tab"
+							data-cs-id="8486259c-5031-41f0-97c0-8e13127b318e"
+							data-cs-label="Active"
+							data-cs-source="page"
+							>Active
+							<span class="badge">{{ numberCampaignList.active }}</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a
+							(click)="getCampaignsBasedOnStatus('Completed'); recordButtonClick($event)"
+							[ngClass]="{active: currentStateOfCampaigns === 'Completed'}"
+							class="nav-link"
+							data-toggle="tab"
+							href="#InactiveCampaigns"
+							id="inactive-campaigns-tab"
+							role="tab"
+							data-cs-id="bc06aacc-5726-462d-99ee-129c5c4c62c3"
+							data-cs-label="Completed"
+							data-cs-source="page"
+						>
+							Completed
+							<span class="badge">{{ numberCampaignList.completed }}</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="campaign-content-wrapper">
+		<div *ngIf="numberCampaignList.pendingApproval" class="container">
+			<div class="review-proposal-message">
+				<div class="proposal-message-left">
+					<svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="16" cy="16" fill="#FF9C28" r="16" />
+						<path
+							d="M16.0198 21.2424C14.9426 21.2424 14.0396 22.0991 14.0396 23.1212C14.0396 24.1433 14.9426 25 16.0198 25C17.0574 25 18 24.1433 17.9525 23.1663C18 22.0916 17.105 21.2424 16.0198 21.2424Z"
+							fill="white"
+						/>
+						<path
+							d="M15.5287 8.05304C14.5861 8.30856 14 9.12021 14 10.1047C14.0475 10.6984 14.0871 11.2996 14.1347 11.8933C14.2693 14.1554 14.404 16.3725 14.5386 18.6346C14.5861 19.4011 15.2119 19.9572 16.0198 19.9572C16.8277 19.9572 17.4614 19.3635 17.501 18.5895C17.501 18.1235 17.501 17.6951 17.5485 17.2217C17.6356 15.7712 17.7307 14.3208 17.8178 12.8703C17.8653 11.9309 17.9525 10.9915 18 10.0521C18 9.71392 17.9525 9.41331 17.8178 9.1127C17.4139 8.27098 16.4713 7.84261 15.5287 8.05304Z"
+							fill="white"
+						/>
+					</svg>
+
+					<div>
+						<h6>{{ numberCampaignList.pendingApproval }} campaigns have pending solution(s) for your approval</h6>
+						<small>Review the proposals to continue with the new solution(s)</small>
+					</div>
+				</div>
+				<a
+					(click)="navigateToReviewProposals('PendingApproval'); recordButtonClick($event)"
+					class="convo-btn-primary convo-btn-normal"
+					data-cs-id="fa0ead95-2253-4f90-badd-4a9973a8c2b4"
+					data-cs-label="Review proposals"
+					data-cs-source="page"
+				>
+					Review proposals
+				</a>
+			</div>
+		</div>
+
+		<div class="listening-campaigns-list">
+			<div class="container">
+				<div *ngIf="!isCampaignsLoading && campaignKeys && campaignKeys.length > 0">
+					<div *ngFor="let key of campaignKeys">
+						<div class="month-name">{{ key }}</div>
+						<ng-container *ngFor="let campaign of campaignsSortedByDate[key]">
+							<div class="campaigns-row">
+								<div class="campaigns-row-header">
+									<div class="row">
+										<div class="column-value column-value-name">
+											<div class="content-wrapper">
+												<div class="main-text text-left {{ campaign.status }}">
+													<figure *ngIf="campaign.type === 'CommunityMarketing'">
+														<img alt="" src="assets/images/community-icon.svg" />
+													</figure>
+													<figure *ngIf="campaign.type === 'Listening'">
+														<img alt="" src="assets/images/listening-icon.svg" />
+													</figure>
+													<h5>
+														{{ campaign.campaignName }}
+														<span
+															*ngIf="campaign.type !== 'Listening' && campaign.status === 'Completed'"
+															class="review-badge"
+														>
+														</span>
+													</h5>
+													<span [ngClass]="campaign.status | lowercase" class="badge">{{
+														campaign.status === 'PendingApproval' ? 'Pending...' : campaign.status
+													}}</span>
+												</div>
+												<p class="sub-text text-left">
+													<span *ngIf="campaign.status === 'Active'"
+														>Active since {{ campaign.startDateAtUTC | date: 'd MMMM, y' }}</span
+													>
+													<span *ngIf="campaign.status === 'Scheduled' || campaign.status === 'PendingApproval'"
+														>Will start on {{ campaign.startDateAtUTC | date: 'd MMMM, y' }}</span
+													>
+													<span *ngIf="campaign.status === 'Draft'"
+														>In draft since {{ campaign.createdAtUTC | date: 'd MMMM, y' }}</span
+													>
+													<span *ngIf="campaign.status === 'Suspended'"
+														>Suspended since {{ campaign.updatedAtUTC | date: 'd MMMM, y' }}</span
+													>
+													<span *ngIf="campaign.status === 'Completed'"
+														>Completed on {{ campaign.endDateAtUTC | date: 'd MMMM, y' }}</span
+													>
+													<span *ngIf="campaign.status === 'Reactivating'">Reactivating...</span>
+												</p>
+											</div>
+										</div>
+										<div class="d-flex justify-content-around flex-fill">
+											<div *ngIf="campaign.type === 'Listening'" class="column-value mr-0">
+												<div class="content-wrapper">
+													<p *ngIf="campaign.campaignGroupIds; else loadingCommunities" class="count">
+														{{ campaign.campaignGroupIds.length }}
+													</p>
+													<ng-template #loadingCommunities>
+														<div class="loading-strip primary"></div>
+													</ng-template>
+													<p class="sub-text">Communities</p>
+												</div>
+											</div>
+											<div class="column-value mr-0 mt-0">
+												<div *ngIf="campaign.type === 'Listening'" class="content-wrapper conversation-wrapper">
+													<p
+														*ngIf="campaign.numConversationsListenedInLastThreeMonths; else loadingCampaignSummary"
+														class="count"
+													>
+														{{ campaign.numConversationsListenedInLastThreeMonths | shortNumber }}{{ ' +' }}
+													</p>
+													<ng-template #loadingCampaignSummary>
+														<div class="sub-text">NA</div>
+													</ng-template>
+													<p class="sub-text">Conversations listened</p>
+												</div>
+											</div>
+										</div>
+
+										<div *ngIf="campaign.type === 'CommunityMarketing' && campaign.status === 'Completed'">
+											<button
+												(click)="showCampaignProposalDetails(campaign); recordButtonClick($event)"
+												class="link-btn"
+												data-cs-id="a2265e8d-e1b7-4b0f-ae68-be73bb05e365"
+												data-cs-label="View Report"
+												data-cs-source="page"
+											>
+												View Report
+												<svg fill="none" height="6" viewBox="0 0 7 6" width="7" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M3.19064 0.5891C3.01979 0.454336 3.01979 0.235839 3.19064 0.101074C3.36149 -0.0336912 3.6385 -0.0336912 3.80936 0.101074L6.87186 2.51668C7.04271 2.65145 7.04271 2.86995 6.87186 3.00471L3.80936 5.42032C3.6385 5.55508 3.36149 5.55508 3.19064 5.42032C3.01979 5.28555 3.01979 5.06706 3.19064 4.93229L5.50628 3.10578H0.4375C0.195875 3.10578 0 2.95128 0 2.7607C0 2.57011 0.195875 2.41561 0.4375 2.41561H5.50628L3.19064 0.5891Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</button>
+										</div>
+
+										<div *ngIf="campaign.type === 'Listening'">
+											<button
+												(click)="viewInsights(campaign); recordButtonClick($event)"
+												class="link-btn"
+												data-cs-id="b3eb3422-3509-496b-b957-e42d41eb02c9"
+												data-cs-label="View Insights"
+												data-cs-source="page"
+											>
+												View Insights
+												<svg fill="none" height="6" viewBox="0 0 7 6" width="7" xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M3.19064 0.5891C3.01979 0.454336 3.01979 0.235839 3.19064 0.101074C3.36149 -0.0336912 3.6385 -0.0336912 3.80936 0.101074L6.87186 2.51668C7.04271 2.65145 7.04271 2.86995 6.87186 3.00471L3.80936 5.42032C3.6385 5.55508 3.36149 5.55508 3.19064 5.42032C3.01979 5.28555 3.01979 5.06706 3.19064 4.93229L5.50628 3.10578H0.4375C0.195875 3.10578 0 2.95128 0 2.7607C0 2.57011 0.195875 2.41561 0.4375 2.41561H5.50628L3.19064 0.5891Z"
+														fill="#3654FF"
+													/>
+												</svg>
+											</button>
+										</div>
+
+										<div
+											*ngIf="campaign.type === 'CommunityMarketing' && campaign.status !== 'Completed'"
+											class="row-more-options"
+										>
+											<div class="d-inline-block custom-dropdown">
+												<button
+													class="convo-dropdown convo-normal-dropdown dropdown-toggle"
+													data-toggle="dropdown"
+													aria-haspopup="true"
+													aria-expanded="false"
+												>
+													<svg fill="none" height="16" viewBox="0 0 4 16" width="4" xmlns="http://www.w3.org/2000/svg">
+														<path
+															clip-rule="evenodd"
+															d="M0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12C0.9 12 0 12.9 0 14ZM0 2C0 3.1 0.9 4 2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2ZM0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6C0.9 6 0 6.9 0 8Z"
+															fill="#6D6DA7"
+															fill-rule="evenodd"
+														/>
+													</svg>
+												</button>
+												<div class="convo-dropdown-wrapper dropdown-menu">
+													<button
+														(click)="showCampaignProposalDetails(campaign); recordButtonClick($event)"
+														*ngIf="
+															campaign.type === 'CommunityMarketing' &&
+															(campaign.status === 'Active' || campaign.status === 'Scheduled')
+														"
+														class="dropdown-item"
+														data-cs-id="9b659b44-ce5a-41eb-a933-57441f6b5c13"
+														data-cs-label="Manage"
+														data-cs-source="page"
+													>
+														Manage
+													</button>
+
+													<button
+														(click)="showCampaignProposalDetails(campaign); recordButtonClick($event)"
+														*ngIf="campaign.type === 'CommunityMarketing' && campaign.status === 'PendingApproval'"
+														class="dropdown-item"
+														data-cs-id="90154259-d195-4522-85d2-7674caebc77e"
+														data-cs-label="Edit"
+														data-cs-source="page"
+													>
+														Edit
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+				<div *ngIf="campaignKeys && campaignKeys.length === 0 && !isCampaignsLoading">
+					<div class="no-results-wrapper">
+						<div class="no-results-found">
+							<figure>
+								<img alt="" src="assets/images/empty_state_icon.svg" />
+							</figure>
+							<h5>No Campaigns found</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<ng-container *ngIf="brand.id === 'a60b5777-1557-45f1-97da-4be46880fb46'">
+			<div *ngIf="showMarketingInsightModel" class="listening-campaigns-list">
+				<div class="container">
+					<p class="month-name">DECEMBER, 2019</p>
+					<div class="row campaigns-row">
+						<div class="column-value column-value-name">
+							<div class="content-wrapper">
+								<p class="main-text text-left">Dettol Disinfectant Spray Launch</p>
+								<p class="sub-text text-left">Completed on 22 Dec, 2019</p>
+							</div>
+						</div>
+						<div class="column-value">
+							<div class="content-wrapper">
+								<button class="btn-status Completed" type="button">Completed</button>
+							</div>
+						</div>
+						<div class="d-flex justify-content-around flex-fill">
+							<div class="column-value">
+								<div class="content-wrapper">
+									<p class="count">19,845</p>
+									<p class="sub-text">Total engagement</p>
+								</div>
+							</div>
+
+							<div class="column-value">
+								<div class="content-wrapper hover-wrapper">
+									<p class="count">9760</p>
+									<p class="sub-text">Total entries</p>
+								</div>
+							</div>
+
+							<div class="column-value">
+								<div class="content-wrapper hover-wrapper">
+									<p class="count">4804</p>
+									<p class="sub-text">Comments</p>
+								</div>
+							</div>
+
+							<div class="column-value mt-0">
+								<div class="content-wrapper hover-wrapper">
+									<p class="count">5281</p>
+									<p class="sub-text">Reactions</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="campaigns-row-body">
+							<div class="column-value mr-0 col-12">
+								<div class="content-wrapper">
+									<a download="Dettol DDS Launch Community Campaign Report_Baby Destination.pdf" href="{{ pdfLink }}">
+										<button class="convo-btn-normal convo-btn-secondary btn-view-insights" type="button">
+											<img alt="" class="img-listen" src="assets/images/marketInsight.svg" />
+											<span class="btn-text">Community marketing</span>
+											<span class="insights-text">
+												Download report
+												<svg fill="none" height="11" viewBox="0 0 10 11" width="10" xmlns="http://www.w3.org/2000/svg">
+													<path
+														clip-rule="evenodd"
+														d="M5.44212 1.56699C5.68619 1.32291 5.68619 0.927191 5.44212 0.683117C5.19804 0.439042 4.80232 0.439042 4.55824 0.683117L0.1833 5.05806C-0.0607745 5.30213 -0.0607745 5.69786 0.1833 5.94193L4.55824 10.3169C4.80232 10.561 5.19804 10.561 5.44212 10.3169C5.68619 10.0728 5.68619 9.67708 5.44212 9.433L2.1341 6.12498H9.37513C9.7203 6.12498 10.0001 5.84517 10.0001 5.49999C10.0001 5.15482 9.7203 4.875 9.37513 4.875H2.1341L5.44212 1.56699Z"
+														fill-rule="evenodd"
+													/>
+												</svg>
+											</span>
+										</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<div *ngIf="brand && showCampaignReportView">
+	<app-campaign-proposal
+		(acceptedCampaignProposal)="acceptedCampaignProposal($event)"
+		(closeCampaignProposalView)="closeCampaignProposalView($event)"
+		[selectedCampaign]="selectedCampaign"
+	>
+	</app-campaign-proposal>
+</div>

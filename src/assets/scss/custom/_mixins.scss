@@ -1,0 +1,159 @@
+/*--  Border Radius  --*/
+@mixin border-radius($radius) {
+	border-radius: $radius;
+	-o-border-radius: $radius;
+	-ms-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-webkit-border-radius: $radius;
+}
+
+/*--  Transition  --*/
+@mixin transition($transition) {
+	transition: $transition;
+	-o-transition: $transition;
+	-moz-transition: $transition;
+	-webkit-transition: $transition;
+}
+
+/*--  Transform  --*/
+@mixin transform($transform) {
+	transform: $transform;
+	-o-transform: $transform;
+	-moz-transform: $transform;
+	-webkit-transform: $transform;
+}
+
+/*--  Flex  --*/
+@mixin flex() {
+	display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+	display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+	display: -ms-flexbox; /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Chrome */
+	display: flex;
+}
+/*--  Box Shadow  --*/
+@mixin box-shadow($box-shadow) {
+	box-shadow: $box-shadow;
+	-o-box-shadow: $box-shadow;
+	-moz-box-shadow: $box-shadow;
+	-webkit-box-shadow: $box-shadow;
+}
+
+@mixin shadow-elevation-low {
+	@include box-shadow(0px 1px 2px rgba(51, 51, 79, 0.1));
+}
+@mixin shadow-elevation-medium {
+	@include box-shadow(0px 3px 6px rgba(51, 51, 79, 0.1));
+}
+
+/*--  Shimmer Linear Gradient  --*/
+$shimmerColor: $primary-1 0%, #b2b2c8 46.88%, #81819a 100%;
+@mixin gradient($direcion, $shimmerColor) {
+	background: linear-gradient($direcion, $shimmerColor);
+	background: -moz-linear-gradient($direcion, $shimmerColor);
+	background: -o-linear-gradient($direcion, $shimmerColor);
+	background: -webkit-linear-gradient($direcion, $shimmerColor);
+}
+
+/* Fonts */
+@mixin convo-font($size, $height: normal, $weight: 400) {
+	font-size: $size;
+	line-height: $height;
+	font-weight: $weight;
+}
+
+@mixin font-label-xs {
+	@include convo-font(12px, 14px);
+}
+@mixin font-label-xs-md {
+	@include convo-font(12px, 14px, 500);
+}
+
+@mixin font-label-s {
+	@include convo-font(14px, 16px);
+}
+@mixin font-label-s-md {
+	@include convo-font(14px, 16px, 500);
+}
+
+@mixin font-label-m {
+	@include convo-font(16px, 20px);
+}
+@mixin font-label-m-md {
+	@include convo-font(16px, 20px, 500);
+}
+
+@mixin font-label-l {
+	@include convo-font(18px, 24px);
+}
+@mixin font-label-l-md {
+	@include convo-font(18px, 24px, 500);
+}
+
+@mixin font-paragraph-xs {
+	@include convo-font(12px, 18px);
+}
+@mixin font-paragraph-xs-md {
+	@include convo-font(12px, 18px, 500);
+}
+
+@mixin font-paragraph-s {
+	@include convo-font(14px, 20px);
+}
+@mixin font-paragraph-s-md {
+	@include convo-font(14px, 20px, 500);
+}
+
+@mixin font-paragraph-m {
+	@include convo-font(16px, 22px);
+}
+@mixin font-paragraph-m-md {
+	@include convo-font(16px, 22px, 500);
+}
+
+@mixin font-paragraph-l {
+	@include convo-font(18px, 24px);
+}
+@mixin font-paragraph-l-md {
+	@include convo-font(18px, 24px, 500);
+}
+
+@mixin font-heading-xs {
+	@include convo-font(20px, 28px);
+}
+@mixin font-heading-xs-md {
+	@include convo-font(20px, 28px, 500);
+}
+
+@mixin font-heading-s {
+	@include convo-font(24px, 32px);
+}
+@mixin font-heading-s-md {
+	@include convo-font(24px, 32px, 500);
+}
+
+@mixin font-heading-m {
+	@include convo-font(28px, 36px);
+}
+@mixin font-heading-m-md {
+	@include convo-font(28px, 36px, 500);
+}
+
+@mixin font-heading-l {
+	@include convo-font(32px, 42px);
+}
+@mixin font-heading-l-md {
+	@include convo-font(32px, 42px, 500);
+}
+@mixin font-heading-xl {
+	@include convo-font(36px, 48px);
+}
+@mixin font-heading-xl-md {
+	@include convo-font(36px, 48px, 500);
+}
+@mixin font-heading-xxl {
+	@include convo-font(40px, 52px);
+}
+@mixin font-heading-xxl-md {
+	@include convo-font(40px, 52px, 500);
+}

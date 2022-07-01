@@ -1,0 +1,633 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Results
+		<button
+			(click)="isUserEditingPopupContent = true"
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Phase Idea"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditResultPopup"
+			data-toggle="modal"
+		>
+			<span>Edit</span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn && form?.controls?.visibleToBrand"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle *ngIf="!isBrandLoggedIn" [formControl]="form?.controls?.visibleToBrand" labelPosition="before"
+				><span>
+					{{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }}
+				</span></mat-slide-toggle
+			>
+		</button>
+	</h5>
+	<small>Primary metrics achieved in the campaign</small>
+</div>
+
+<div [ngClass]="{'mb-3': isBrandLoggedIn}" class="content">
+	<form *ngIf="form" [formGroup]="form" class="row ml-0 mr-0 justify-content-between">
+		<div class="row justify-content-between w-100 mb-4 flex-nowrap" formGroupName="content">
+			<div
+				*ngIf="!isBrandLoggedIn || content?.categoryConversationVisibleToBrand"
+				class="metric-section p-3 pt-3 pb-3 flex-grow-1"
+			>
+				<h5 [ngClass]="{'mb-2 mt-2': isBrandLoggedIn}" class="header row justify-content-between">
+					<span class="name">CATEGORY CONVERSATIONS </span>
+					<mat-slide-toggle
+						*ngIf="!isBrandLoggedIn"
+						[checked]="content?.categoryConversationVisibleToBrand"
+						formControlName="categoryConversationVisibleToBrand"
+						labelPosition="before"
+					></mat-slide-toggle>
+				</h5>
+
+				<div class="row align-items-center">
+					<span class="current-value mr-2"> {{ content?.numDuringCatConversations || 0 | number }} </span>
+					<ng-container *ngIf="content?.numDuringCatConversations > content?.numBeforeCatConversations">
+						<span class="difference up mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_upward</em>
+							{{ changeInCategoryConversation }}</span
+						>
+					</ng-container>
+					<ng-container *ngIf="content?.numDuringCatConversations < content?.numBeforeCatConversations">
+						<span class="difference down mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_downward</em>
+							{{ changeInCategoryConversation }}</span
+						>
+					</ng-container>
+
+					<span class="previous-value">(prev: {{ content?.numBeforeCatConversations || 0 | number }} )</span>
+				</div>
+			</div>
+
+			<div
+				*ngIf="!isBrandLoggedIn || content?.brandMentionsVisibleToBrand"
+				class="metric-section p-3 pt-3 pb-3 flex-grow-1"
+			>
+				<h5 [ngClass]="{'mb-2 mt-2': isBrandLoggedIn}" class="header row justify-content-between">
+					<span class="name">BRAND MENTIONS </span>
+					<mat-slide-toggle
+						*ngIf="!isBrandLoggedIn"
+						[checked]="content?.brandMentionsVisibleToBrand"
+						formControlName="brandMentionsVisibleToBrand"
+						labelPosition="before"
+					></mat-slide-toggle>
+				</h5>
+
+				<div class="row align-items-center">
+					<span class="current-value mr-2"> {{ content?.numDuringBrandMentions || 0 | number }} </span>
+					<ng-container *ngIf="content?.numDuringBrandMentions > content?.numBeforeBrandMentions">
+						<span class="difference up mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_upward</em>
+							{{ changeInBrandMentions }}</span
+						>
+					</ng-container>
+					<ng-container *ngIf="content?.numDuringBrandMentions < content?.numBeforeBrandMentions">
+						<span class="difference down mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_downward</em>
+							{{ changeInBrandMentions }}</span
+						>
+					</ng-container>
+
+					<span class="previous-value">(prev: {{ content?.numBeforeBrandMentions || 0 | number }} )</span>
+				</div>
+			</div>
+
+			<div
+				*ngIf="!isBrandLoggedIn || content?.brandShareofVoiceVisibleToBrand"
+				class="metric-section p-3 pt-3 pb-3 flex-grow-1"
+			>
+				<h5 [ngClass]="{'mb-2 mt-2': isBrandLoggedIn}" class="header row justify-content-between">
+					<span class="name">BRAND SHARE OF VOICE </span>
+					<mat-slide-toggle
+						*ngIf="!isBrandLoggedIn"
+						[checked]="content?.brandShareofVoiceVisibleToBrand"
+						formControlName="brandShareofVoiceVisibleToBrand"
+						labelPosition="before"
+					></mat-slide-toggle>
+				</h5>
+
+				<div class="row align-items-center">
+					<span class="current-value mr-2"> {{ content?.brandPercentageDuringSov || 0 | number }} % </span>
+					<ng-container *ngIf="content?.brandPercentageDuringSov > content?.brandPercentageBeforeSov">
+						<span class="difference up mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_upward</em>
+							{{ changeInBrandSov }}%</span
+						>
+					</ng-container>
+					<ng-container *ngIf="content?.brandPercentageDuringSov < content?.brandPercentageBeforeSov">
+						<span class="difference down mr-1 p-1 pl-2 pr-2">
+							<em class="material-icons">arrow_downward</em>
+							{{ changeInBrandSov }}%</span
+						>
+					</ng-container>
+
+					<span class="previous-value">(prev: {{ content?.brandPercentageBeforeSov || 0 | number }} % )</span>
+				</div>
+			</div>
+		</div>
+
+		<div
+			*ngIf="!isBrandLoggedIn || content?.ugcVisibleToBrand || content?.totalReactionAndCommentsVisibleToBrand"
+			class="row justify-content-between w-100 flex-nowrap"
+			formGroupName="content"
+		>
+			<div *ngIf="!isBrandLoggedIn || content?.ugcVisibleToBrand" class="metric-section p-3 pt-3 pb-3 flex-grow-1">
+				<h5
+					[ngClass]="{'mb-2 mt-2': isBrandLoggedIn}"
+					class="header row justify-content-between align-items-center mb-3"
+				>
+					<span class="name">USER GENERATED CONTENT (UGC) </span>
+					<mat-slide-toggle
+						*ngIf="!isBrandLoggedIn"
+						[checked]="content?.ugcVisibleToBrand"
+						formControlName="ugcVisibleToBrand"
+						labelPosition="before"
+					></mat-slide-toggle>
+				</h5>
+
+				<div
+					[ngClass]="{
+						'mr-3 d-inline-block': isBrandLoggedIn && !content?.totalReactionAndCommentsVisibleToBrand,
+						row: !isBrandLoggedIn || content?.totalReactionAndCommentsVisibleToBrand
+					}"
+					class="align-items-baseline ugc-comment"
+				>
+					<span class="current-value mr-2"> {{ content?.numUGCComments || 0 | number }} </span>
+					<span class="previous-value">Comments</span>
+				</div>
+				<div
+					[ngClass]="{
+						'mr-1 d-inline-block': isBrandLoggedIn && !content?.totalReactionAndCommentsVisibleToBrand,
+						row: !isBrandLoggedIn || content?.totalReactionAndCommentsVisibleToBrand
+					}"
+					class="align-items-baseline ugc-post"
+				>
+					<span class="current-value mr-2"> {{ content?.numUGCPosts || 0 | number }} </span>
+					<span class="previous-value">Net New Posts</span>
+				</div>
+			</div>
+
+			<div
+				*ngIf="!isBrandLoggedIn || content?.totalReactionAndCommentsVisibleToBrand"
+				class="metric-section p-3 pt-3 pb-3 total-reaction-comments flex-grow-1"
+			>
+				<h5 [ngClass]="{'mb-2 mt-2': isBrandLoggedIn}" class="header row justify-content-between mb-3">
+					<span class="name"
+						>TOTAL REACTION AND COMMENTS:
+						<span class="total">
+							{{
+								(content?.numCommentAdminPost || 0) +
+									(content?.numReactionAdminPost || 0) +
+									(content?.numCommentUGCPost || 0) +
+									(content?.numReactionUGCPost || 0)
+							}}
+						</span>
+					</span>
+					<mat-slide-toggle
+						*ngIf="!isBrandLoggedIn"
+						[checked]="content?.totalReactionAndCommentsVisibleToBrand"
+						formControlName="totalReactionAndCommentsVisibleToBrand"
+						labelPosition="before"
+					></mat-slide-toggle>
+				</h5>
+
+				<div class="row align-items-center">
+					<div class="section-2">
+						<h5>Admin Posts</h5>
+						<div class="row align-items-baseline">
+							<div class="section-3 mr-3">
+								<span class="current-value mr-2"> {{ content?.numReactionAdminPost || 0 | number }} </span>
+								<span class="previous-value">Reactions</span>
+							</div>
+							<div class="section-3">
+								<span class="current-value mr-2">{{ content?.numCommentAdminPost }}</span>
+								<span class="previous-value">Comments</span>
+							</div>
+						</div>
+					</div>
+					<span class="horizontal-bar ml-3 mr-3"></span>
+
+					<div class="section-2">
+						<h5>UGC Posts</h5>
+						<div class="row align-items-baseline">
+							<div class="section-3 mr-3">
+								<span class="current-value mr-2"> {{ content?.numReactionUGCPost || 0 | number }} </span>
+								<span class="previous-value">Reactions</span>
+							</div>
+							<div class="section-3">
+								<span class="current-value mr-2">{{ content?.numCommentUGCPost || 0 | number }}</span>
+								<span class="previous-value">Comments</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div *ngIf="!editingSupportingText && supportingText" class="supprt-text pb-3 pt-1">
+		{{ supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" *ngIf="form" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button (click)="resetForm()" class="mt-1 cancel" color="primary" mat-stroked-button type="button">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div
+	class="modal fade report-keywords-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="EditResultPopup"
+	role="dialog"
+>
+	<div *ngIf="!isBrandLoggedIn" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit: <span>Results</span></h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="result-popup-content">
+				<form *ngIf="form" [formGroup]="form" class="row section m-0">
+					<div class="form-section mb-5" formGroupName="content">
+						<h5>Overall Metrics</h5>
+						<table class="ml-2 mt-4">
+							<thead>
+								<th scope="col"><span>Metric Name</span></th>
+								<th scope="col"><span>Pre-Campaign</span></th>
+								<th scope="col"><span>Achieved</span></th>
+								<th scope="col"><span>Visiblity to brand</span></th>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span>Category Conversations</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numBeforeCatConversations"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numBeforeCatConversations?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numDuringCatConversations"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numDuringCatConversations?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center">
+											<mat-slide-toggle
+												[checked]="form?.controls?.content?.value?.categoryConversationVisibleToBrand"
+												formControlName="categoryConversationVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle>
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td><span>Brand Mentions</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numBeforeBrandMentions"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numBeforeBrandMentions?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numDuringBrandMentions"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numDuringBrandMentions?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center">
+											<mat-slide-toggle
+												[checked]="form?.controls?.content?.value?.brandMentionsVisibleToBrand"
+												formControlName="brandMentionsVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle
+										></span>
+									</td>
+								</tr>
+								<tr>
+									<td><span>Brand Share of Voice</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="brandPercentageBeforeSov" matInput type="number" />
+												<mat-icon [inline]="true" matSuffix>%</mat-icon>
+											</mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.brandPercentageBeforeSov?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input formControlName="brandPercentageDuringSov" matInput type="number" />
+												<mat-icon [inline]="true" matSuffix>%</mat-icon>
+											</mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.brandPercentageDuringSov?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+												<div *ngIf="error.max" class="">Value cannot be more than 100%.</div>
+												<div *ngIf="error.pattern && !error.min" class="">Only 2 digit decimal values are allowed</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span class="justify-content-center"
+											><mat-slide-toggle
+												[checked]="form.controls?.content?.value?.brandShareofVoiceVisibleToBrand"
+												formControlName="brandShareofVoiceVisibleToBrand"
+												labelPosition="before"
+											></mat-slide-toggle
+										></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="form-section mb-5" formGroupName="content">
+						<h5 class="d-flex align-items-center">
+							UGC Metrics
+							<mat-slide-toggle
+								[checked]="form.controls?.content?.value?.ugcVisibleToBrand"
+								class="ml-2"
+								formControlName="ugcVisibleToBrand"
+								labelPosition="before"
+							></mat-slide-toggle>
+						</h5>
+						<table class="ml-2 mt-4">
+							<thead>
+								<th scope="col"><span>UGC Type</span></th>
+								<th scope="col"><span>Achieved</span></th>
+								<th class="border-bottom-0" scope="col"><span></span></th>
+								<th class="border-bottom-0" scope="col"><span></span></th>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span>UGC Comments</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numUGCComments"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div *ngIf="form?.controls?.content?.controls?.numUGCComments?.errors as error" class="error-msg">
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><span>UGC Net New Posts</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numUGCPosts"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div *ngIf="form?.controls?.content?.controls?.numUGCPosts?.errors as error" class="error-msg">
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-section mb-5" formGroupName="content">
+						<h5 class="d-flex align-items-center">
+							Results & Comments
+							<mat-slide-toggle
+								[checked]="form.controls?.content?.value?.totalReactionAndCommentsVisibleToBrand"
+								class="ml-2"
+								formControlName="totalReactionAndCommentsVisibleToBrand"
+								labelPosition="before"
+							></mat-slide-toggle>
+						</h5>
+						<table class="ml-2 mt-4">
+							<thead>
+								<th scope="col"><span>Post Type</span></th>
+								<th scope="col"><span>Reactions</span></th>
+								<th scope="col"><span>Comments</span></th>
+								<th class="border-bottom-0" scope="col"><span></span></th>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span>Admin Posts</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numReactionAdminPost"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numReactionAdminPost?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numCommentAdminPost"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numCommentAdminPost?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><span>UGC Posts</span></td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numReactionUGCPost"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numReactionUGCPost?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td>
+										<span>
+											<mat-form-field appearance="outline" class="col-11 pl-0">
+												<input
+													formControlName="numCommentUGCPost"
+													matInput
+													onkeydown="return event.keyCode !== 190"
+													type="number"
+											/></mat-form-field>
+											<div
+												*ngIf="form?.controls?.content?.controls?.numCommentUGCPost?.errors as error"
+												class="error-msg"
+											>
+												<div *ngIf="error.min" class="">Value must be min 0.</div>
+											</div>
+										</span>
+									</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button
+					(click)="saveUpdatedDetails()"
+					[disabled]="form.invalid"
+					class="btn btn-secondary pl-5 pr-5 save"
+					data-dismiss="modal"
+					type="button"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

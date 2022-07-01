@@ -1,0 +1,253 @@
+<div class="bio-card small-card">
+	<div class="card-left">
+		<div>
+			<ng-container *ngIf="loadingAnalytics">
+				<app-loading-shimmer [type]="2"></app-loading-shimmer>
+			</ng-container>
+			<ng-container *ngIf="!loadingAnalytics && !adminBio?.isBioCompleted">
+				<h5>What is your bio?</h5>
+				<p>It's the introduction to who you are as a group admin and what you have achieved.</p>
+			</ng-container>
+		</div>
+		<div *ngIf="adminBio?.isBioCompleted && adminBioAnalytics" class="stats-wrap">
+			<ul class="list-unstyled">
+				<li
+					class="clickable-item"
+					data-cs-id="61d37668-aa56-4891-bd3e-670ff9f3acd1"
+					data-cs-label="Message"
+					data-cs-source="page"
+					(click)="recordButtonClick($event)"
+					data-target="#heartedMyBio"
+					data-toggle="modal"
+				>
+					<div class="stat-title">
+						<span>Hearts</span>
+						<button class="view-btn" *ngIf="renderedOn === 'Desktop'">View</button>
+					</div>
+					<div class="stat-value">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10 17.5L8.9125 16.421C5.05 12.6035 2.5 10.0858 2.5 6.99591C2.5 4.4782 4.315 2.5 6.625 2.5C7.93 2.5 9.1825 3.16213 10 4.20845C10.8175 3.16213 12.07 2.5 13.375 2.5C15.685 2.5 17.5 4.4782 17.5 6.99591C17.5 10.0858 14.95 12.6035 11.0875 16.4292L10 17.5Z"
+								fill="#F73F51"
+							/>
+						</svg>
+						<span>{{ adminBioAnalytics?.totalKudos ?? '0' | shortNumber }}</span>
+					</div>
+					<button class="view-btn" *ngIf="renderedOn === 'Mobile'">View</button>
+				</li>
+
+				<li
+					class="clickable-item"
+					data-cs-id="bcdb718c-57c3-484e-b83a-a6ce810940c0"
+					data-cs-label="Message"
+					data-cs-source="page"
+					(click)="openMessageLeadPopup($event)"
+				>
+					<div class="stat-title">
+						<span>Messages</span>
+						<button class="view-btn" *ngIf="renderedOn === 'Desktop'">View</button>
+					</div>
+					<div class="stat-value">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M16.6666 3.33203H3.33329C2.41663 3.33203 1.67496 4.08203 1.67496 4.9987L1.66663 14.9987C1.66663 15.9154 2.41663 16.6654 3.33329 16.6654H16.6666C17.5833 16.6654 18.3333 15.9154 18.3333 14.9987V4.9987C18.3333 4.08203 17.5833 3.33203 16.6666 3.33203ZM16.3333 6.8737L10.4416 10.557C10.175 10.7237 9.82496 10.7237 9.55829 10.557L3.66663 6.8737C3.45829 6.74036 3.33329 6.51536 3.33329 6.2737C3.33329 5.71536 3.94163 5.38203 4.41663 5.6737L9.99996 9.16536L15.5833 5.6737C16.0583 5.38203 16.6666 5.71536 16.6666 6.2737C16.6666 6.51536 16.5416 6.74036 16.3333 6.8737Z"
+								fill="#2FA84F"
+							/>
+						</svg>
+						<span>{{ adminBioAnalytics?.totalContactRequests ?? '0' | shortNumber }}</span>
+					</div>
+					<button class="view-btn" *ngIf="renderedOn === 'Mobile'">View</button>
+				</li>
+				<li *ngIf="false">
+					<div class="stat-title">Bio views</div>
+					<div class="stat-value">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M10 3.33203C5.83337 3.33203 2.27504 5.9237 0.833374 9.58203C2.27504 13.2404 5.83337 15.832 10 15.832C14.1667 15.832 17.725 13.2404 19.1667 9.58203C17.725 5.9237 14.1667 3.33203 10 3.33203ZM10 13.7487C7.70004 13.7487 5.83337 11.882 5.83337 9.58203C5.83337 7.28203 7.70004 5.41536 10 5.41536C12.3 5.41536 14.1667 7.28203 14.1667 9.58203C14.1667 11.882 12.3 13.7487 10 13.7487ZM10 7.08203C8.61671 7.08203 7.50004 8.1987 7.50004 9.58203C7.50004 10.9654 8.61671 12.082 10 12.082C11.3834 12.082 12.5 10.9654 12.5 9.58203C12.5 8.1987 11.3834 7.08203 10 7.08203Z"
+								fill="#2BA2DD"
+							/>
+						</svg>
+						<span>1.2k</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="card-right">
+		<button
+			class="convo-btn-normal convo-btn-bordered"
+			(click)="openPreviewOverlay(); recordButtonClick($event)"
+			data-cs-id="7d15d85f-cddd-43da-b976-ddd7952013bf"
+			data-cs-label="Preview bio"
+			data-cs-source="page"
+			data-test-id="button-previewbio-adminbio-page"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M11.4374 13.5H3.87491C3.51024 13.5 3.1605 13.3551 2.90264 13.0973C2.64477 12.8394 2.49991 12.4897 2.49991 12.125V4.5625C2.49991 4.19783 2.64477 3.84809 2.90264 3.59023C3.1605 3.33237 3.51024 3.1875 3.87491 3.1875H6.62491V4.5625H3.87491V12.125H11.4374V9.375H12.8124V12.125C12.8124 12.4897 12.6675 12.8394 12.4097 13.0973C12.1518 13.3551 11.8021 13.5 11.4374 13.5ZM7.79366 9.17356L6.82428 8.20144L11.1507 3.875H8.68741V2.5H13.4999V7.3125H12.1249V4.84781L7.79366 9.17356Z"
+					fill="#3654FF"
+				/>
+			</svg>
+			<span>Preview bio</span>
+		</button>
+		<button
+			class="convo-btn-normal convo-btn-primary"
+			(click)="shareWidgetClicked(); recordButtonClick($event)"
+			data-cs-id="3c3775d0-3ac5-45c1-b9c2-9d9679eb98a3"
+			data-cs-label="Share bio"
+			data-cs-source="page"
+			data-test-id="button-sharebio-adminbio-page"
+		>
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M12 10.7199C11.4933 10.7199 11.04 10.9199 10.6933 11.2333L5.94 8.46659C5.97333 8.31325 6 8.15992 6 7.99992C6 7.83992 5.97333 7.68659 5.94 7.53325L10.64 4.79325C11 5.12659 11.4733 5.33325 12 5.33325C13.1067 5.33325 14 4.43992 14 3.33325C14 2.22659 13.1067 1.33325 12 1.33325C10.8933 1.33325 10 2.22659 10 3.33325C10 3.49325 10.0267 3.64659 10.06 3.79992L5.36 6.53992C5 6.20659 4.52667 5.99992 4 5.99992C2.89333 5.99992 2 6.89325 2 7.99992C2 9.10659 2.89333 9.99992 4 9.99992C4.52667 9.99992 5 9.79325 5.36 9.45992L10.1067 12.2333C10.0733 12.3733 10.0533 12.5199 10.0533 12.6666C10.0533 13.7399 10.9267 14.6133 12 14.6133C13.0733 14.6133 13.9467 13.7399 13.9467 12.6666C13.9467 11.5933 13.0733 10.7199 12 10.7199Z"
+					fill="white"
+				/>
+			</svg>
+			<span>Share bio</span>
+		</button>
+	</div>
+</div>
+
+<!-- Share modal -->
+<ng-container *ngIf="openShareModal">
+	<app-share-widget
+		type="bio"
+		[copyUrl]="
+			adminBio?.profileUrlSlug
+				? environment.profileConvosightUrl + adminBio?.profileUrlSlug
+				: environment.profileConvosightUrl + adminBio?.userId
+		"
+		(closePopup)="closePopup($event)"
+	></app-share-widget>
+</ng-container>
+
+<ng-container *ngIf="openAdminPreviewOverlay">
+	<app-admin-bio-preview
+		(closePreview)="closePreview($event)"
+		[adminBioFromSetting]="adminBio"
+		[draftAdminBio]="draftAdminBio"
+	></app-admin-bio-preview>
+</ng-container>
+
+<!-- Heart Modal -->
+<div
+	aria-hidden="true"
+	class="modal hearted-bio-modal"
+	data-backdrop="static"
+	data-keyboard="false"
+	id="heartedMyBio"
+	tabindex="-1"
+>
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 *ngIf="adminBioAnalytics?.totalKudos && adminBioAnalytics?.totalKudos !== 0" class="modal-title">
+					You have {{ adminBioAnalytics?.totalKudos | shortNumber }}
+					{{ adminBioAnalytics?.totalKudos === 1 ? 'heart' : 'hearts' }} on your bio
+				</h5>
+				<h5 *ngIf="!adminBioAnalytics?.totalKudos || adminBioAnalytics?.totalKudos?.length === 0" class="modal-title">
+					You have not received any hearts yet
+				</h5>
+				<button
+					aria-label="Close"
+					data-cs-id="8d3a576c-27ee-41c0-9406-0fb1fc735dab"
+					data-cs-label="Close"
+					data-cs-source="dialog"
+					(click)="recordButtonClick($event)"
+					class="close"
+					data-dismiss="modal"
+					type="button"
+				>
+					<img alt="" src="./assets/images/close-icon.svg" />
+				</button>
+			</div>
+			<div *ngIf="adminBioAnalytics" class="modal-body p-0">
+				<div *ngIf="adminBioAnalytics?.kudosList?.length > 0" class="groups-list-wrap">
+					<ul class="list-unstyled">
+						<li *ngFor="let kudos of adminBioAnalytics?.kudosList | orderBy: 'createdAtUTCTick'" class="user-row">
+							<div class="user-row-left">
+								<figure><img (error)="showDefaultUserImage($event)" [src]="kudos?.profilePictureUrl" alt="" /></figure>
+								<div>
+									<h6>{{ kudos?.fullName }}</h6>
+									<p>{{ kudos?.createdAtUTCTick * 1000 | timeFromXTime }}</p>
+								</div>
+							</div>
+							<div *ngIf="kudos?.isBioAvailable" class="user-row-right">
+								<a
+									href="{{ kudos?.profileUrl }}"
+									data-cs-id="ae2dc906-5101-4c85-aa2d-616e799faafa"
+									data-cs-label="View Bio"
+									data-cs-source="dialog"
+									(click)="recordButtonClick($event)"
+									target="_blank"
+									>View Bio</a
+								>
+							</div>
+						</li>
+					</ul>
+					<!-- <button class="convo-btn-normal convo-btn-bordered w-100">
+            <span>Load more</span> <span class="btn-spinner" *ngIf="false"></span>
+          </button> -->
+				</div>
+
+				<!-- Shimmers -->
+				<div *ngIf="loadingAnalytics" class="groups-list-wrap my-4">
+					<div class="mb-4">
+						<app-loading-shimmer [type]="3"></app-loading-shimmer>
+					</div>
+					<div class="mb-4">
+						<app-loading-shimmer [type]="3"></app-loading-shimmer>
+					</div>
+					<div class="mb-4">
+						<app-loading-shimmer [type]="3"></app-loading-shimmer>
+					</div>
+					<div class="mb-4">
+						<app-loading-shimmer [type]="3"></app-loading-shimmer>
+					</div>
+					<div>
+						<app-loading-shimmer [type]="3"></app-loading-shimmer>
+					</div>
+				</div>
+
+				<!-- No hearts -->
+				<div *ngIf="adminBioAnalytics?.kudosList?.length === 0 || !adminBioAnalytics?.kudosList" class="no-result">
+					<ng-lottie
+						[options]="noHeartAnimationOption"
+						containerClass="lottie-animation"
+						height="150px"
+						width="150px"
+					></ng-lottie>
+					<h6>No hearts yet!</h6>
+					<p>Share your bio with others to receive more hearts on your bio.</p>
+					<button
+						(click)="shareWidgetClicked(); recordButtonClick($event)"
+						class="convo-btn-normal convo-btn-primary share-btn"
+						data-cs-id="bc9e1829-8f73-4403-85c6-b9f7207d5c15"
+						data-cs-label="Share bio"
+						data-cs-source="page"
+						data-dismiss="modal"
+					>
+						<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M12 10.7199C11.4933 10.7199 11.04 10.9199 10.6933 11.2333L5.94 8.46659C5.97333 8.31325 6 8.15992 6 7.99992C6 7.83992 5.97333 7.68659 5.94 7.53325L10.64 4.79325C11 5.12659 11.4733 5.33325 12 5.33325C13.1067 5.33325 14 4.43992 14 3.33325C14 2.22659 13.1067 1.33325 12 1.33325C10.8933 1.33325 10 2.22659 10 3.33325C10 3.49325 10.0267 3.64659 10.06 3.79992L5.36 6.53992C5 6.20659 4.52667 5.99992 4 5.99992C2.89333 5.99992 2 6.89325 2 7.99992C2 9.10659 2.89333 9.99992 4 9.99992C4.52667 9.99992 5 9.79325 5.36 9.45992L10.1067 12.2333C10.0733 12.3733 10.0533 12.5199 10.0533 12.6666C10.0533 13.7399 10.9267 14.6133 12 14.6133C13.0733 14.6133 13.9467 13.7399 13.9467 12.6666C13.9467 11.5933 13.0733 10.7199 12 10.7199Z"
+								fill="white"
+							/>
+						</svg>
+						<span>Share bio</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Message modal -->
+<ng-container *ngIf="showMessageLeadPopup">
+	<app-bio-message-lead-overlay
+		(openShareModalFromLead)="openShareModalFromLead($event)"
+		(closePopup)="closeMessageLeadPopup($event)"
+		[messageLeadCount]="adminBioAnalytics?.totalContactRequests"
+	></app-bio-message-lead-overlay>
+</ng-container>
+

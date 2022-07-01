@@ -1,0 +1,85 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+fileList.*
+
+# dependencies
+/node_modules
+# profiling files
+chrome-profiler-events.json
+speed-measure-plugin.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/libpeerconnection.log
+/test-reports
+/playwright/screenshots
+/playwright/videos
+/cypress/videos
+/cypress/screenshots
+/cypress/logs
+/cypress/fixtures/api-test/tokens.json
+/cypress/fixtures/api-test/convosightLoginWithGroups.json
+/cypress/fixtures/api-test/convosightWithNoGroups.json
+/cypress/fixtures/api-test/convosightWithOneGroup.json
+/cypress/fixtures/api-test/convosightWithAdminGroup.json
+/cypress/fixtures/api-test/convosightWithGroupsNotificationPath.json
+/cypress/fixtures/api-test/convosightLoginWithAdminBioEnabledNotCompletedUser.json
+/cypress/excelDownloads
+/coverage
+/.nyc_output
+npm-debug.log
+yarn-error.log
+debug.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+#Codegen
+amplify/\#current-cloud-backend
+amplify/.config/local-*
+amplify/mock-data
+amplify/backend/awscloudformation
+build/
+dist/
+node_modules/
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+.graphqlconfig.yml
+src/app/API.service.ts
+src/graphql/mutations.graphql
+src/graphql/queries.graphql
+src/graphql/schema.json
+src/graphql/subscriptions.graphql
+
+#Ide
+.idea/
+.vscode/
+

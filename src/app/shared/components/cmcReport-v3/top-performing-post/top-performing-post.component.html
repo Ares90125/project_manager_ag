@@ -1,0 +1,399 @@
+<div class="header mb-4">
+	<h5 class="mb-0">
+		Top Performing Posts
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton"
+			data-backdrop="static"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Phase Idea"
+			data-cs-source="page"
+			data-keyboard="false"
+			data-target="#EditTopPerformingPost"
+			data-toggle="modal"
+		>
+			<span>Edit</span>&nbsp;
+			<span class="material-icons"> edit </span>
+		</button>
+
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="convo-btn-normal outline editButton hide-from-brand"
+			data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+			data-cs-label="Campaign Stats"
+			data-cs-source="page"
+		>
+			<span class="material-icons">
+				{{ !form?.value?.visibleToBrand ? 'visibility_off' : 'visibility_on' }}
+			</span>
+			<mat-slide-toggle [formControl]="form?.controls?.visibleToBrand" labelPosition="before"
+				><span>
+					{{ form?.value?.visibleToBrand ? 'Visible to brand' : 'Hidden from Brand' }}
+				</span></mat-slide-toggle
+			>
+		</button>
+	</h5>
+	<small>Top posts with high level of engagement during the campaign</small>
+</div>
+
+<div class="content">
+	<div class="d-flex justify-content-between">
+		<span class="d-inline-flex align-items-center w-100">
+			<span
+				(click)="updateBrandLevelFilters({showAdminPosts: !brandLevelFilters.showAdminPosts})"
+				[ngClass]="{active: brandLevelFilters.showAdminPosts}"
+				class="d-inline-flex filter"
+			>
+				<span *ngIf="brandLevelFilters.showAdminPosts" class="material-icons"> done </span>
+				Admin Posts</span
+			>
+			<span
+				(click)="updateBrandLevelFilters({showUGCPost: !brandLevelFilters.showUGCPost})"
+				[ngClass]="{active: brandLevelFilters.showUGCPost}"
+				class="d-inline-flex filter"
+			>
+				<span *ngIf="brandLevelFilters.showUGCPost" class="material-icons"> done </span>
+				UGC
+			</span>
+		</span>
+
+		<button
+			*ngIf="!isBrandLoggedIn"
+			class="upload-screenshot brand-view"
+			data-dismiss="modal"
+			data-target="#upload-screenshot-modal-top-performing-post"
+			data-toggle="modal"
+		>
+			Upload Screenshot <span class="material-icons"> upload </span>
+		</button>
+	</div>
+
+	<div class="post-wrapper">
+		<div>
+			<div class="shadow-box px-0 mb-3 mt-4">
+				<div #topPostBasicContainer class="fb-posts-wrapper">
+					<div *ngIf="!posts?.length" class="font-weight-bold text-center">No Data Available</div>
+
+					<div class="masonry-wrapper">
+						<ul *ngIf="baseLevelFilteredPost" class="grid effect-1" id="grid">
+							<li
+								*ngFor="let post of baseLevelFilteredPost | slice: brandLevelFilters.from:brandLevelFilters.end"
+								class="masonry-box"
+								data-target="#topPostModel"
+								data-toggle="modal"
+							>
+								<div class="post-item">
+									<div class="post-name">{{ post?.groupName }}</div>
+									<span class="post-type"> {{ post['type'] || 'POST' }} </span>
+									<ng-container *ngIf="post.sourceId; else manualUploadScreenshotBrandLevel">
+										<ng-container *ngIf="getScreenshot(post.sourceId) | async as screenshotData; else loading">
+											<div class="header font-weight-bold">
+												<div *ngIf="screenshotsObservablesErrors[post.sourceId]" class="screenshot-error">
+													Failed to load screenshot
+												</div>
+												<app-facebook-post-screenshot
+													*ngIf="screenshotData?.data && !screenshotsObservablesErrors[post.sourceId]"
+													[postData]="screenshotData?.data"
+												></app-facebook-post-screenshot>
+											</div>
+										</ng-container>
+										<ng-template #loading>
+											<div class="screenshot-error header font-weight-bold" *ngIf="screenshotProcessed[post.sourceId]">
+												Screenshot not available
+											</div>
+
+											<div class="screenshot-error header font-weight-bold" *ngIf="!screenshotProcessed[post.sourceId]">
+												Loading...
+											</div>
+										</ng-template>
+									</ng-container>
+
+									<ng-template #manualUploadScreenshotBrandLevel>
+										<ng-container *ngIf="post.s3Key">
+											<div class="header font-weight-bold">
+												<figure *ngIf="post.s3Key">
+													<img [src]="post.s3Key" alt="" srcset="" />
+												</figure>
+												<div *ngIf="!post.s3Key">Screenshot not available</div>
+											</div>
+										</ng-container>
+									</ng-template>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div
+						*ngIf="brandLevelFilters?.end < baseLevelFilteredPost?.length"
+						class="d-flex justify-content-center mt-4"
+					>
+						<mat-spinner></mat-spinner>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="supportingText">
+	<hr *ngIf="!isBrandLoggedIn || form?.value?.supportingText" />
+	<div
+		(click)="editingSupportingText = true"
+		*ngIf="!editingSupportingText && !supportingText && !isBrandLoggedIn"
+		class="add-text pb-3 pt-1"
+	>
+		<span class="plus">+</span>&nbsp; Add supporting text
+	</div>
+
+	<div *ngIf="!editingSupportingText && form?.value?.supportingText" class="supprt-text pb-3 pt-1">
+		{{ form?.value?.supportingText }}
+		<div class="edit-text mt-3">
+			<button
+				(click)="editingSupportingText = true"
+				*ngIf="!isBrandLoggedIn"
+				class="convo-btn-normal outline editButton"
+				data-cs-id="9546c6dd-7190-4617-b53d-ddb711c8c652"
+				data-cs-label="Campaign Stats"
+				data-cs-source="page"
+				data-target="#camapaignStatsModal"
+				data-toggle="modal"
+			>
+				<span class="material-icons"> edit </span>&nbsp;
+				<span>Edit text</span>
+			</button>
+		</div>
+	</div>
+
+	<div *ngIf="editingSupportingText">
+		<form (ngSubmit)="onSubmittingSuportingText()" [formGroup]="form" class="d-flex flex-wrap">
+			<mat-form-field appearance="outline" class="col-11 pl-0">
+				<textarea formControlName="supportingText" matInput placeholder="Type Supporting Text" rows="3"></textarea>
+			</mat-form-field>
+
+			<div class="col-1 d-inline-flex flex-wrap pl-0 pr-0 btn-wrapper">
+				<button
+					[disabled]="form?.invalid"
+					class="convo-btn-normal convo-btn-primary save"
+					mat-flat-button
+					type="submit"
+				>
+					Save
+				</button>
+
+				<button (click)="resetForm()" class="mt-1 cancel" color="primary" mat-stroked-button type="button">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade report-keywords-modal" id="EditTopPerformingPost" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title">Edit Top Performing Posts</h6>
+				<mat-icon (click)="cancelContentEdit()" class="closePopIcon" data-dismiss="modal">close </mat-icon>
+			</div>
+			<div class="filter-wrapper">
+				<div class="row m-0 justify-content-between w-100 align-items-center">
+					<span class="font-weight-bolder">{{ totalPostVisibleToBrand }} screenshots visible to brand</span>
+					<div class="text-filter-wrapper d-flex align-items-center search-wrapper">
+						<mat-form-field appearance="outline" class="col-11 pl-0">
+							<mat-icon [inline]="true" class="search-icon" matPrefix>search </mat-icon>
+							<input
+								[formControl]="form?.controls?.searchText"
+								matInput
+								placeholder="Search Post, Comment and Group name"
+								type="text"
+						/></mat-form-field>
+						<button
+							(click)="onClickingSearchPost()"
+							class="convo-btn-normal convo-btn-primary searchPost"
+							mat-flat-button
+							type="submit"
+						>
+							Search Post
+						</button>
+					</div>
+				</div>
+				<div class="d-flex justify-content-between mt-3 check-filter">
+					<span class="d-inline-flex align-items-center w-100">
+						<span
+							(click)="
+								updateEditPopupLevelFilters({showIsSystemGeenrated: !EditPopupLevelFilters.showIsSystemGeenrated})
+							"
+							[ngClass]="{active: EditPopupLevelFilters.showIsSystemGeenrated}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showIsSystemGeenrated" class="material-icons"> done </span>
+							System Generated</span
+						>
+						<span
+							(click)="updateEditPopupLevelFilters({showManuallyUploaded: !EditPopupLevelFilters.showManuallyUploaded})"
+							[ngClass]="{active: EditPopupLevelFilters.showManuallyUploaded}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showManuallyUploaded" class="material-icons"> done </span>
+							Manually Uploaded
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showPost: !EditPopupLevelFilters.showPost})"
+							[ngClass]="{active: EditPopupLevelFilters.showPost}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showPost" class="material-icons"> done </span>
+							Posts
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showComment: !EditPopupLevelFilters.showComment})"
+							[ngClass]="{active: EditPopupLevelFilters.showComment}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showComment" class="material-icons"> done </span>
+							Comments
+						</span>
+						<span
+							(click)="updateEditPopupLevelFilters({showVisibleToBrand: !EditPopupLevelFilters.showVisibleToBrand})"
+							[ngClass]="{active: EditPopupLevelFilters.showVisibleToBrand}"
+							class="d-inline-flex filter"
+						>
+							<span *ngIf="EditPopupLevelFilters.showVisibleToBrand" class="material-icons"> done </span>
+							Conversation visible to brand
+						</span>
+					</span>
+
+					<div class="date-picker-wrapper">
+						<span>Date Range:&nbsp;</span>
+						<mat-form-field appearance="outline" class="range-picker-for-screenshot">
+							<!-- <mat-label>Enter a date range</mat-label> -->
+							<mat-date-range-input [rangePicker]="picker">
+								<input #startDate matStartDate placeholder="Start date" />
+								<input
+									(dateChange)="onSelectingDateRange(startDate.value, $event.value)"
+									matEndDate
+									placeholder="End date"
+								/>
+							</mat-date-range-input>
+							<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+							<mat-date-range-picker #picker></mat-date-range-picker>
+						</mat-form-field>
+					</div>
+				</div>
+			</div>
+			<div class="phase-idea">
+				<div class="post-wrapper">
+					<div>
+						<div class="shadow-box px-0 mb-3 mt-2">
+							<div #topPerformingPostPopupContainer class="fb-posts-wrapper">
+								<div *ngIf="!posts?.length" class="font-weight-bold text-center">No Data Available</div>
+
+								<div class="masonry-wrapper">
+									<ul *ngIf="posts" class="grid effect-1" id="grid">
+										<li
+											*ngFor="
+												let post of popupFilteredPosts | slice: EditPopupLevelFilters.from:EditPopupLevelFilters.end;
+												let i = index
+											"
+											class="masonry-box"
+											data-target="#topPostModel"
+											data-toggle="modal"
+										>
+											<div class="post-item">
+												<div class="header font-weight-bold">
+													<div class="row m-0 justify-content-between p-2 pt-0 pb-0">
+														<div class="post-name">
+															{{ post['groupName'] }}
+															<br />
+															<span class="post-type"> {{ post['type'] || 'POST' }} </span>
+														</div>
+
+														<mat-slide-toggle
+															(change)="onTogglePostVisibility(post, $event)"
+															[checked]="post.visibleToBrand"
+															[disabled]="!visibleToBrand"
+															labelPosition="before"
+														></mat-slide-toggle>
+													</div>
+												</div>
+												<ng-container *ngIf="post.isSystemGenerated; else manualUploadScreenshot">
+													<ng-container *ngIf="getScreenshot(post.sourceId) | async as screenshotData; else loading2">
+														<div *ngIf="screenshotsObservablesErrors[post.sourceId]" class="screenshot-error">
+															Failed to load screnshot
+														</div>
+														<app-facebook-post-screenshot
+															*ngIf="screenshotData?.data && !screenshotsObservablesErrors[post.sourceId]"
+															[postData]="screenshotData?.data"
+														></app-facebook-post-screenshot>
+													</ng-container>
+													<ng-template #loading2>
+														<div
+															class="screenshot-error header font-weight-bold"
+															*ngIf="screenshotProcessed[post.sourceId]"
+														>
+															Screenshot not available
+														</div>
+
+														<div
+															class="screenshot-error header font-weight-bold"
+															*ngIf="!screenshotProcessed[post.sourceId]"
+														>
+															Loading...
+														</div>
+													</ng-template>
+												</ng-container>
+												<ng-template #manualUploadScreenshot>
+													<ng-container *ngIf="post.s3Key">
+														<div class="header font-weight-bold">
+															<figure *ngIf="post.s3Key">
+																<img [src]="post.s3Key" alt="" srcset="" />
+															</figure>
+														</div>
+													</ng-container>
+												</ng-template>
+
+												<div *ngIf="post.order" class="order-container w-100 d-flex">
+													<div class="wrapper">
+														<span class="current-value">
+															<input
+																(focusout)="
+																	onFocusOfffFromOrderInput(post, $event.target.valueAsNumber, 'visible_' + i)
+																"
+																[id]="'visible_' + i"
+																[max]="totalPostVisibleToBrand"
+																[value]="post.order"
+																type="number"
+															/>
+														</span>
+														of {{ totalPostVisibleToBrand }} conversations
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div
+									*ngIf="EditPopupLevelFilters?.end < popupFilteredPosts?.length"
+									class="d-flex justify-content-center mt-4"
+								>
+									<mat-spinner></mat-spinner>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer"></div>
+		</div>
+	</div>
+</div>
+
+<app-upload-screenshot
+	(newScreenshotAdded)="onNewScreenshotAdded($event)"
+	[campaignGroups]="campaignGroups"
+	[campaignId]="campaign?.campaignId"
+	[id]="'upload-screenshot-modal-top-performing-post'"
+	[order]="totalPostVisibleToBrand + 1"
+	[sectionName]="sectionName"
+></app-upload-screenshot>

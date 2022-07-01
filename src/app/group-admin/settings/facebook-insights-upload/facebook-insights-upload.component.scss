@@ -1,0 +1,165 @@
+@import '../../../../assets/scss/custom/_variables.scss';
+@import '../../../../assets/scss/custom/_mixins.scss';
+
+.insights-upload-wrap {
+	padding-top: 30px;
+	width: 800px;
+	margin: 32px auto;
+	max-width: 100%;
+	@media (max-width: 767px) {
+		padding-top: 0;
+		margin-top: 0;
+		padding-bottom: 50px;
+	}
+	.headers {
+		margin-bottom: 24px;
+		@media (max-width: 767px) {
+			background: #fff;
+			padding: 16px;
+			margin-bottom: 8px;
+		}
+		.back-btn {
+			border: none;
+			padding: 0;
+			background: none;
+			font-size: 12px;
+			line-height: 14px;
+			color: $black-70;
+			display: flex;
+			align-items: center;
+		}
+		h3 {
+			@include font-heading-s-md;
+			margin-bottom: 8px;
+			margin-top: 4px;
+			@media (max-width: 767px) {
+				display: none;
+			}
+		}
+		h6 {
+			@include font-paragraph-s;
+			color: $black-70;
+			margin: 0;
+		}
+		.back-btn-wrap {
+			@media (max-width: 767px) {
+				display: flex;
+				align-items: center;
+				padding-bottom: 8px;
+				h5 {
+					font-weight: 500;
+					font-size: 16px;
+					line-height: 22px;
+					color: #33334f;
+					margin: 0;
+					padding-left: 4px;
+				}
+			}
+		}
+	}
+
+	.card {
+		margin-bottom: 12px;
+		@media (max-width: 767px) {
+			border-radius: 0;
+		}
+		.card-title {
+			@include font-paragraph-m-md;
+			margin-bottom: 12px;
+		}
+		.note {
+			padding: 10px;
+			background: #f7f7f8;
+			border-radius: 8px;
+			@include font-label-xs;
+			color: $black-70;
+			display: flex;
+			svg {
+				min-width: 16px;
+			}
+			strong {
+				font-weight: 500;
+			}
+			span {
+				padding-left: 6px;
+			}
+		}
+	}
+	.video-wrapper {
+		display: flex;
+		align-items: center;
+		.video-wrap {
+			width: 128px;
+			min-width: 128px;
+			height: 72px;
+			border-radius: 4px;
+			background: $primary-1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 16px;
+			@media (max-width: 767px) {
+				width: 112px;
+				min-width: 112px;
+				height: 63px;
+			}
+			.play-btn {
+				border: none;
+				background: none;
+				outline: none;
+				@media (max-width: 767px) {
+					img {
+						width: 32px;
+						height: 32px;
+					}
+				}
+			}
+		}
+		.video-info {
+			color: $black-70;
+			@include font-paragraph-xs;
+			h6 {
+				margin: 0;
+				color: $primary-1;
+				@include font-paragraph-s-md;
+			}
+		}
+	}
+}
+
+.video-modal {
+	.modal-content {
+		background: none;
+		box-shadow: none;
+	}
+	iframe {
+		width: 100%;
+		height: 500px;
+		@media (max-width: 767px) {
+			height: 280px;
+		}
+	}
+	.close {
+		position: absolute;
+		right: -10px;
+		top: -10px;
+		z-index: 1;
+		height: 40px;
+		width: 40px;
+		background: #fff;
+		opacity: 1;
+		border-radius: 40px;
+		@media (max-width: 767px) {
+			top: -45px;
+			right: 0;
+		}
+	}
+}
+.insights-upload-card {
+	border-bottom: 1px solid #ebebed;
+	padding: 12px 0;
+	&:last-child {
+		border: none;
+		padding-bottom: 0;
+	}
+}

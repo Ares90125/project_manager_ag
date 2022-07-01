@@ -1,0 +1,161 @@
+<div class="top-profiles-wrap">
+	<div class="profile-top-header">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<circle cx="12" cy="12" r="12" fill="url(#paint0_linear_11960_2402)" />
+			<g clip-path="url(#clip0_11960_2402)">
+				<path
+					d="M11.3552 15.9569C11.673 15.7651 12.0709 15.7651 12.3887 15.9569L13.8158 16.8183C14.5731 17.2754 15.5073 16.5964 15.3064 15.7349L14.9276 14.1114C14.8433 13.7499 14.9661 13.3715 15.2467 13.1284L16.5091 12.0348C17.1777 11.4556 16.8203 10.3573 15.9389 10.2825L14.2792 10.1417C13.9096 10.1104 13.5878 9.87704 13.443 9.53554L12.7926 8.00098C12.4481 7.18795 11.2958 7.18795 10.9512 8.00098L10.3008 9.53554C10.1561 9.87704 9.83422 10.1104 9.46464 10.1417L7.80499 10.2825C6.92356 10.3573 6.56616 11.4556 7.23475 12.0348L8.49715 13.1284C8.77772 13.3715 8.90057 13.7499 8.81623 14.1114L8.43749 15.7349C8.23653 16.5964 9.17076 17.2754 9.92807 16.8183L11.3552 15.9569Z"
+					fill="white"
+				/>
+			</g>
+			<defs>
+				<linearGradient
+					id="paint0_linear_11960_2402"
+					x1="24"
+					y1="12"
+					x2="3.73335"
+					y2="20.6984"
+					gradientUnits="userSpaceOnUse"
+				>
+					<stop stop-color="#FF566B" />
+					<stop offset="1" stop-color="#FF9D7E" />
+				</linearGradient>
+				<clipPath id="clip0_11960_2402">
+					<rect width="17.1429" height="17.1429" fill="white" transform="translate(3.42969 3.42871)" />
+				</clipPath>
+			</defs>
+		</svg>
+		<span>
+			{{
+				isPitch
+					? 'Examples of brand pitches for a top earning group'
+					: 'Examples of Group Profiles of the top earning groups'
+			}}
+		</span>
+	</div>
+
+	<div
+		*ngIf="isPitch"
+		class="profile-top-item"
+		data-cs-id="de71bdb1-0975-4a13-bedb-6a02868f2df5"
+		data-cs-label="Home Remedies for babies and Moms"
+		data-cs-source="page"
+		(click)="
+			openPitch($event, 'https://cnvo.site/home-remedies-for-babies-and-moms-home-remedies-for-babies-and-moms-2')
+		"
+	>
+		<div class="profile-top-image">
+			<img src="assets/images/pitch_profile_example.png" alt="" />
+		</div>
+		<span> <strong>Home Remedies for babies and Moms</strong> </span>
+		<a target="_blank" href="javascript:void(0)">
+			<button class="convo-btn-primary convo-btn-normal">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#3654FF" />
+				</svg>
+			</button>
+		</a>
+	</div>
+	<p *ngIf="!isPitch" class="profile-top-description">
+		Get inspired from the group profiles of some of the top earning groups before creating your own group profile
+	</p>
+	<p *ngIf="isPitch" class="profile-top-description pitch-description">
+		The <strong>admin of the group profile above created 3 customised brand pitches</strong> seen below from their group
+		profile to pitch their group to three different brands belonging to 3 different categories:
+	</p>
+	<ul class="profile-top-list list-unstyled">
+		<li
+			class="profile-top-item"
+			data-cs-id="9bcc86f4-a5f3-4a17-ae27-849205c45e97"
+			[attr.data-cs-label]="
+				isPitch ? 'A customized pitch for a Nutrition Brand' : 'Kids learning and Milestones ( 3-10 Year)'
+			"
+			data-cs-source="page"
+			(click)="openPitchProfile($event, isPitch, 'type1')"
+		>
+			<div class="profile-top-image">
+				<img *ngIf="isPitch" class="pitch-example-image" src="assets/images/example_pitch_apple.png" alt="" />
+				<img
+					[fbEntityId]="fbGroupId"
+					src="{{
+						isPitch
+							? 'assets/images/pitch_profile_example.png'
+							: 'https://media.convosight.com/public/pics/34117788_10160316225200063_2197533455951069184_n.jpg'
+					}}"
+					alt=""
+				/>
+			</div>
+			<span *ngIf="!isPitch"> Kids' learning and Milestones ( 3-10 Year) </span>
+			<span *ngIf="isPitch" class="pitch-name"> A customized pitch for a <strong>Nutrition Brand</strong> </span>
+			<a target="_blank" href="javascript:void(0)">
+				<button class="convo-btn-primary convo-btn-normal">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#3654FF" />
+					</svg>
+				</button>
+			</a>
+		</li>
+		<li
+			class="profile-top-item"
+			data-cs-id="5b807963-3338-4b48-a19d-281793148d88"
+			[attr.data-cs-label]="
+				isPitch ? 'A customized pitch for a Parenting Brand' : 'Growth and Monetisation for Facebook Group Admins'
+			"
+			data-cs-source="page"
+			(click)="openPitchProfile($event, isPitch, 'type2')"
+		>
+			<div class="profile-top-image">
+				<img *ngIf="isPitch" class="pitch-example-image" src="assets/images/example_pitch_child.png" alt="" />
+				<img
+					[fbEntityId]="fbGroupId"
+					src="{{
+						isPitch
+							? 'assets/images/pitch_profile_example.png'
+							: 'https://media.convosight.com/public/pics/273891995_5095919610472623_4891296409821579254_n.jpg'
+					}}"
+					alt=""
+				/>
+			</div>
+			<span *ngIf="!isPitch"> Growth and Monetisation for Facebook Group Admins </span>
+			<span *ngIf="isPitch" class="pitch-name"> A customized pitch for a <strong>Parenting Brand</strong> </span>
+			<a target="_blank" href="javascript:void(0)">
+				<button class="convo-btn-primary convo-btn-normal">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#3654FF" />
+					</svg>
+				</button>
+			</a>
+		</li>
+		<li
+			class="profile-top-item"
+			data-cs-id="17a9acfc-cc2e-4423-98e2-53b93cec239e"
+			[attr.data-cs-label]="
+				isPitch ? 'A customized pitch for a Healthcare Brand' : 'Girl Gone International | Global Community'
+			"
+			data-cs-source="page"
+			(click)="openPitchProfile($event, isPitch, 'type3')"
+		>
+			<div class="profile-top-image">
+				<img *ngIf="isPitch" class="pitch-example-image" src="assets/images/example_pitch_health.png" alt="" />
+				<img
+					[fbEntityId]="fbGroupId"
+					src="{{
+						isPitch
+							? 'assets/images/pitch_profile_example.png'
+							: 'https://media.convosight.com/public/pics/255403149_10159269328470469_8325243041134028378_n.jpg'
+					}}"
+					alt=""
+				/>
+			</div>
+			<span *ngIf="!isPitch"> Girl Gone International | Global Community </span>
+			<span *ngIf="isPitch" class="pitch-name"> A customized pitch for a <strong>Healthcare Brand</strong> </span>
+			<a target="_blank" href="javascript:void(0)">
+				<button class="convo-btn-primary convo-btn-normal">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M6.66656 4L5.72656 4.94L8.7799 8L5.72656 11.06L6.66656 12L10.6666 8L6.66656 4Z" fill="#3654FF" />
+					</svg>
+				</button>
+			</a>
+		</li>
+	</ul>
+</div>

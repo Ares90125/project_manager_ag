@@ -1,0 +1,8 @@
+<div class="brand-wrapper" *ngIf="brand">
+	<app-keyword-tracker
+		(showNavTabDetailsEvent)="showDivsOnNavigation($event)"
+		[group]="brand"
+		[type]="'brand'"
+		[user]="user"
+	></app-keyword-tracker>
+</div>

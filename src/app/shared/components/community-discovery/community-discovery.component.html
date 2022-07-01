@@ -1,0 +1,1195 @@
+<div class="community-header">
+	<a class="go-back" (click)="closeCommunityOverlay()">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M18.2997 5.70997C17.9097 5.31997 17.2797 5.31997 16.8897 5.70997L11.9997 10.59L7.10973 5.69997C6.71973 5.30997 6.08973 5.30997 5.69973 5.69997C5.30973 6.08997 5.30973 6.71997 5.69973 7.10997L10.5897 12L5.69973 16.89C5.30973 17.28 5.30973 17.91 5.69973 18.3C6.08973 18.69 6.71973 18.69 7.10973 18.3L11.9997 13.41L16.8897 18.3C17.2797 18.69 17.9097 18.69 18.2997 18.3C18.6897 17.91 18.6897 17.28 18.2997 16.89L13.4097 12L18.2997 7.10997C18.6797 6.72997 18.6797 6.08997 18.2997 5.70997Z"
+				fill="#707084"
+			/>
+		</svg>
+	</a>
+	<span>Select communities</span>
+</div>
+
+<div class="container-discovery">
+	<div class="discovery-content-wrap">
+		<div class="filters-wrap">
+			<h2>Filters</h2>
+			<div>
+				<h4>Group qualification</h4>
+				<p class="label-text-small">
+					Filter groups based on monetization frequency, the minimum and maximum numbers represent number of campaigns
+					done in last 3 months.
+				</p>
+				<div class="range-input">
+					<input
+						type="number"
+						max="10"
+						min="0"
+						[(ngModel)]="minCampaigns"
+						(change)="updateCommunitiesByGroupQualification($event.target.value, true, 'min')"
+					/>
+					<input
+						type="text"
+						max="11"
+						min="0"
+						[value]="maxCampaigns > 10 ? '10+' : maxCampaigns"
+						(change)="updateCommunitiesByGroupQualification($event.target.value, true, 'max')"
+					/>
+				</div>
+				<app-range-slider
+					[id]="'1'"
+					(rangeValue)="updateCommunitiesByGroupQualification($event)"
+					[minLimit]="0"
+					[maxLimit]="11"
+					[maxValueFromInput]="maxCampaigns"
+					[minValueFromInput]="minCampaigns"
+				></app-range-slider>
+				<div style="height: 24px"></div>
+			</div>
+			<div *ngFor="let filters of initialFilters | keyvalue: defaultComparator">
+				<h4 class="target-audience-filter-wrapper" *ngIf="filters.key === 'Gender Criteria'">Target Audience</h4>
+				<h4 *ngIf="!selectedFilters[filters.key].isTargetAudience">{{ filters.key }}</h4>
+				<h2 class="target-audience-filter-wrapper" *ngIf="selectedFilters[filters.key].isTargetAudience">
+					{{ filters.key }}
+				</h2>
+				<ul
+					[class.target-audience-filter-wrapper]="
+						filters.key === 'Gender Criteria' ||
+						filters.key === 'Age Criteria' ||
+						filters.key === 'Members Matching Criteria'
+					"
+					[id]="filters.key === 'Business Category' ? 'businessCategory' : ''"
+					class="list-unstyled"
+				>
+					<div *ngIf="filters.value?.length > 6 && !selectedFilters[filters.key].isTargetAudience" class="search">
+						<input
+							(input)="onFilterSearchChange($event.target); searchKey = filters.key"
+							autocomplete="off"
+							type="text"
+							name="search"
+							placeholder="Search..."
+							class="search-for-filter"
+							#ngSearchInput
+						/>
+					</div>
+					<div *ngIf="selectedFilters[filters.key].isRadioButton">
+						<ul class="list-unstyled">
+							<li>
+								<mat-radio-group [(ngModel)]="memberMatchingCriteria" (change)="onUpdateMemberMatchingCriteria()">
+									<mat-radio-button
+										class="w-100"
+										[value]="filter.name"
+										[disabled]="!isMemberCriteriaEnabled"
+										*ngFor="let filter of filters.value; let i = index"
+										color="primary"
+										><h5>{{ filter.displayName }}</h5>
+									</mat-radio-button>
+								</mat-radio-group>
+							</li>
+						</ul>
+						<div class="member-min-max">
+							<div
+								class="input"
+								[ngClass]="
+									minMembersMatchingCriteria < 0 ||
+									(minMembersMatchingCriteria > 100 && memberMatchingCriteria === 'Percentage') ||
+									(isMemberCriteriaEnabled && !minMembersMatchingCriteria)
+										? 'error'
+										: ''
+								"
+							>
+								<input
+									placeholder="min"
+									type="number"
+									min="0"
+									max="100"
+									[readonly]="!memberMatchingCriteria"
+									[(ngModel)]="minMembersMatchingCriteria"
+									(change)="updateTargetAudience(null, true)"
+									*ngIf="memberMatchingCriteria === 'Percentage'"
+								/>
+								<input
+									placeholder="min"
+									type="number"
+									min="0"
+									[readonly]="!memberMatchingCriteria"
+									[(ngModel)]="minMembersMatchingCriteria"
+									(change)="updateTargetAudience(null, true)"
+									*ngIf="memberMatchingCriteria !== 'Percentage'"
+								/>
+								<span *ngIf="memberMatchingCriteria === 'Percentage'">%</span>
+							</div>
+							<span>-</span>
+							<div
+								class="input"
+								[ngClass]="
+									maxMembersMatchingCriteria < 0 ||
+									(maxMembersMatchingCriteria > 100 && memberMatchingCriteria === 'Percentage') ||
+									(isMemberCriteriaEnabled && !maxMembersMatchingCriteria)
+										? 'error'
+										: ''
+								"
+							>
+								<input
+									placeholder="max"
+									type="number"
+									min="0"
+									max="100"
+									[readonly]="!memberMatchingCriteria"
+									[(ngModel)]="maxMembersMatchingCriteria"
+									(change)="updateTargetAudience(null, true)"
+									*ngIf="memberMatchingCriteria === 'Percentage'"
+								/>
+								<input
+									placeholder="max"
+									type="number"
+									min="0"
+									[readonly]="!memberMatchingCriteria"
+									[(ngModel)]="maxMembersMatchingCriteria"
+									(change)="updateTargetAudience(null, true)"
+									*ngIf="memberMatchingCriteria !== 'Percentage'"
+								/>
+								<span *ngIf="memberMatchingCriteria === 'Percentage'">%</span>
+							</div>
+						</div>
+					</div>
+					<div
+						class="target-audience-filter-wrapper"
+						*ngIf="selectedFilters[filters.key].isTargetAudience && !selectedFilters[filters.key].isRadioButton"
+					>
+						<li *ngFor="let filter of filters.value; let i = index">
+							<div
+								*ngIf="
+									!searchTextForFilter ||
+									searchTextForFilter === '' ||
+									(((filter?.name?.toString()?.toLowerCase().includes(searchTextForFilter?.toLowerCase()) &&
+										filters.key !== 'Group location (country)') ||
+										(geographyService
+											.getCountryNameFromCountryCode(filter.name)
+											?.toLowerCase()
+											.includes(searchTextForFilter?.toLowerCase()) &&
+											filters.key === 'Group location (country)')) &&
+										searchTextForFilter !== '' &&
+										searchTextForFilter &&
+										searchKey === filters.key)
+								"
+								(click)="updateTargetAudience(filter, true)"
+							>
+								<mat-checkbox [indeterminate]="false" [checked]="filter.isSelected">
+									<div>
+										<h5>
+											{{ filter.name }}
+										</h5>
+									</div>
+								</mat-checkbox>
+							</div>
+						</li>
+					</div>
+					<div *ngIf="!selectedFilters[filters.key].isTargetAudience">
+						<li
+							*ngFor="let filter of filters.value; let i = index"
+							(click)="changeFilterSelection(filters.key, filter); recordButtonClick($event)"
+							[attr.data-cs-id]="'5a61bf9b-f3b4-4c44-91e5-a349119fbe4' + i"
+							[attr.data-cs-label]="filter"
+							data-cs-source="page"
+						>
+							<div
+								*ngIf="
+									(i < 6 && (!searchTextForFilter || searchTextForFilter === '' || searchKey !== filters.key)) ||
+									(((filter?.toLowerCase().includes(searchTextForFilter?.toLowerCase()) &&
+										filters.key !== 'Group location (country)') ||
+										(geographyService
+											.getCountryNameFromCountryCode(filter)
+											?.toLowerCase()
+											.includes(searchTextForFilter?.toLowerCase()) &&
+											filters.key === 'Group location (country)')) &&
+										searchTextForFilter !== '' &&
+										searchTextForFilter &&
+										searchKey === filters.key)
+								"
+							>
+								<mat-checkbox [indeterminate]="false" [checked]="selectedFilters[filters.key].value.includes(filter)">
+									<div>
+										<h5
+											*ngIf="
+												filter !== 'NonBD' &&
+												filter !== 'NotInstalled' &&
+												filter !== 'Group type' &&
+												filter !== 'NonMonetizable'
+											"
+										>
+											{{
+												filters.key !== 'Group location (country)'
+													? filter
+													: geographyService.getCountryNameFromCountryCode(filter)
+											}}
+										</h5>
+										<h5 *ngIf="filter === 'NonBD'">Non-BD</h5>
+										<h5 *ngIf="filter === 'NotInstalled'">Not installed</h5>
+										<h5 *ngIf="filter === 'NonMonetizable'">Non-monetizable</h5>
+										<h5 *ngIf="filter === 'Group type'">
+											{{ filter | titlecase }}
+										</h5>
+									</div>
+								</mat-checkbox>
+							</div>
+						</li>
+					</div>
+					<a
+						class="see-more"
+						*ngIf="filters.value?.length > 6 && !selectedFilters[filters.key].isTargetAudience"
+						(click)="openMoreFiltersDialog(filters); searchTextForFilter = ''"
+						>See more...</a
+					>
+				</ul>
+			</div>
+			<h4>Select followers count</h4>
+			<div class="range-input">
+				<input type="number" [(ngModel)]="followersCountMin" (change)="updateCommunityFilters('memberCount')" />
+				<input type="number" [(ngModel)]="followersCountMax" (change)="updateCommunityFilters('memberCount')" />
+			</div>
+			<h4>Post Engagement</h4>
+			<div class="range-input">
+				<input
+					type="number"
+					[(ngModel)]="activityMin"
+					(change)="updateCommunityFilters('postsEngagementRateLastNinetyDays')"
+				/>
+				<input
+					type="number"
+					[(ngModel)]="activityMax"
+					(change)="updateCommunityFilters('postsEngagementRateLastNinetyDays')"
+				/>
+			</div>
+			<h4>FB Group ID</h4>
+			<div class="input">
+				<input [(ngModel)]="fbGroupId" (change)="updateCommunityFilters('fbGroupId')" />
+			</div>
+			<h4>Convosight ID</h4>
+			<div class="input">
+				<textarea
+					(change)="updateCommunityFiltersForMultipleId($event)"
+					(keyup)="updateCommunityFiltersForMultipleId($event)"
+					[value]="multipleId"
+				></textarea>
+			</div>
+			<h4>Trainings</h4>
+			<div>
+				<mat-checkbox [checked]="isCMCTrained" (change)="toggleCMCTrained()">
+					<h5 class="checkbox-label">CMC Trained</h5></mat-checkbox
+				>
+			</div>
+			<div>
+				<mat-checkbox [checked]="isPerformanceTrained" (change)="togglePerformanceTrained()">
+					<h5 class="checkbox-label">Performance Trained</h5>
+				</mat-checkbox>
+			</div>
+
+			<h4>Group Profile</h4>
+			<mat-checkbox [checked]="groupProfileRequired" (change)="toggleGroupProfileRequired()">
+				<h5 class="checkbox-label">Group Profile required</h5></mat-checkbox
+			>
+			<h4>CMC Rating</h4>
+			<div class="range-input">
+				<input
+					type="number"
+					max="5"
+					min="0"
+					[value]="minRating"
+					(change)="setMinAndMaxRating($event.target.value, true, 'min')"
+				/>
+				<input
+					type="number"
+					max="5"
+					min="0"
+					[value]="maxRating"
+					(change)="setMinAndMaxRating($event.target.value, true, 'max')"
+				/>
+			</div>
+			<app-range-slider
+				[id]="'2'"
+				[type]="'rating'"
+				(rangeValue)="setMinAndMaxRating($event)"
+				[minLimit]="0"
+				[maxLimit]="5"
+				[maxValueFromInput]="maxRating"
+				[minValueFromInput]="minRating"
+			></app-range-slider>
+			<div style="height: 100px"></div>
+			<div class="apply-all-filters">
+				<button [disabled]="isLoading" (click)="applyAllFilters()" class="convo-btn-primary">Apply Filters</button>
+			</div>
+		</div>
+		<div class="discovery-content">
+			<div *ngIf="!isLoading" class="discovery-data-wrap">
+				<div class="search-and-type-wrapper">
+					<div class="custom-dropdown-for-search-type">
+						<app-custom-dropdown
+							[items]="['Group Meta Data', 'Conversations']"
+							(selectionChange)="
+								typeOfSearch = $event; itemsInAndList = [[]]; doesNotContainList = []; searchQuery = ''; searchTerm = ''
+							"
+							[value]="typeOfSearch"
+						>
+						</app-custom-dropdown>
+					</div>
+					<div class="search search-wrap" *ngIf="typeOfSearch === 'Conversations'; else defaultSearch">
+						<input
+							[value]="searchQueryString.replaceAll('\\', '')"
+							(keypress)="enterSearch($event)"
+							autocomplete="off"
+							type="text"
+							name="search"
+							readonly
+						/>
+						<a
+							style="right: 64px"
+							*ngIf="searchQueryString && searchQueryString !== ''"
+							(click)="
+								itemsInAndList = [[]]; doesNotContainList = []; searchQuery = ''; updateCommunityFilters('searchQuery')
+							"
+							class="clear"
+							><img src="assets/images/remove-icon.svg" width="16px"
+						/></a>
+						<a class="btn-filter" (click)="showSearchFilter = true"><img src="assets/images/filter-icon-grey.svg" /></a>
+						<a
+							class="btn-search"
+							(click)="updateCommunityFilters('searchQuery')"
+							[class.disabled]="!this.searchQueryString || this.searchQueryString === ''"
+							><img src="assets/images/search-icon-white.svg" width="14px"
+						/></a>
+					</div>
+					<ng-template #defaultSearch>
+						<div class="search search-wrap">
+							<input
+								(keypress)="enterSearch($event)"
+								autocomplete="off"
+								type="text"
+								name="search"
+								placeholder="Group name, description and facebook ID"
+								[(ngModel)]="searchTerm"
+							/>
+							<a *ngIf="searchTerm !== ''" (click)="searchTerm = ''; updateCommunityFilters('searchTerm')" class="clear"
+								><img src="assets/images/remove-icon.svg" width="16px"
+							/></a>
+							<a
+								class="btn-search"
+								(click)="updateCommunityFilters('searchTerm')"
+								[class.disabled]="!searchTerm || searchTerm === ''"
+								><img src="assets/images/search-icon-white.svg" width="14px"
+							/></a>
+						</div>
+					</ng-template>
+				</div>
+				<div class="filters-header">
+					<span class="filters-add" *ngFor="let filters of selectedFilters | keyvalue: defaultComparator">
+						<ng-container>
+							<span class="filter-chip" *ngFor="let filter of filters.value.value">
+								{{ filters.key }} : <strong>{{ filter }}</strong>
+								<span
+									class="remove-filter"
+									(click)="
+										selectedFilters[filters.key].isTargetAudience
+											? removeAudienceFilter(filters.key, filter, true)
+											: changeFilterSelection(
+													filters.key,
+													filters.key === 'BD or Non-BD' ? filter.replace('-', '') : filter
+											  )
+									"
+								>
+									<img src="assets/images/cross-icon-small.svg" alt="" />
+								</span>
+							</span>
+						</ng-container>
+					</span>
+					<span class="filters-remove-all" *ngIf="totalFiltersAdded > 0">
+						<span class="filter-chip">
+							<strong>Clear all filters</strong>
+							<span class="remove-filter" (click)="removeAllFilters()">
+								<img src="assets/images/cross-icon-small.svg" alt="" />
+							</span>
+						</span>
+					</span>
+				</div>
+				<div class="community-header-sort">
+					<h2 *ngIf="communities?.length > 0">Showing {{ totalCommunityCount }} communities</h2>
+					<h2 *ngIf="!communities">No communities found</h2>
+					<div class="sort-and-search">
+						<div class="sort" [formGroup]="sort">
+							<app-custom-dropdown
+								*ngIf="!isSortValueToBeChanged"
+								[items]="sortOptions"
+								[defaultText]="sortBy"
+								(selectionChange)="sortOptionsForBackend($event); updateCommunityFilters('sortBy'); overrideSort = true"
+								[value]="sortBy"
+								[type]="'sort'"
+								formControlName="sortValue"
+							>
+							</app-custom-dropdown>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="communities && communities?.length > 0" class="communities-body no-text-selection">
+					<table
+						mat-table
+						[dataSource]="dataSource"
+						class="mat-elevation-z8"
+						rangeSelection
+						(rangeChanged)="onRangeChanged($event)"
+					>
+						<ng-container matColumnDef="select">
+							<th mat-header-cell *matHeaderCellDef>
+								<mat-checkbox #selectAllGroups (click)="toggleAllGroups()" [indeterminate]="false"></mat-checkbox>
+							</th>
+							<td *matCellDef="let row" [class.row-selected]="isGroupSelected.includes(row.groupId)" mat-cell>
+								<mat-checkbox [checked]="isGroupSelected.includes(row.groupId)" [indeterminate]="false"></mat-checkbox>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="fbGroupLink">
+							<th mat-header-cell *matHeaderCellDef></th>
+							<td
+								*matCellDef="let element"
+								[class.row-selected]="isGroupSelected.includes(element.groupId)"
+								class="fb-group-link"
+								mat-cell
+							>
+								<a [href]="'https://facebook.com/groups/' + element.fbGroupId" target="_blank"
+									><img src="assets/images/icon-outbond.svg"
+								/></a>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="name">
+							<th mat-header-cell *matHeaderCellDef>Name</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.name }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="memberCount">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									(click)="sortColumn('Member count'); recordButtonClick($event)"
+									data-cs-id="d22c2951-bd6c-40c3-8e4a-aa16732097cf"
+									data-cs-label="Sort by Member count"
+									data-cs-source="page"
+									>Members
+									<span *ngIf="sortByOptionForBackend === 'memberCount'; else memberCountSort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #memberCountSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.memberCount }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="queryConversationCount">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									*ngIf="searchQueryString && searchQueryString !== ''"
+									(click)="sortColumn('Query Conversation Count'); recordButtonClick($event)"
+									data-cs-id="8f5af406-e948-4522-bc84-8cfc8578b56c"
+									data-cs-label="Sort by Query Conversation Count"
+									data-cs-source="page"
+									>Query Conversation Count
+									<span *ngIf="sortByOptionForBackend === 'queryConversationCount'; else queryConversationCountSort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #queryConversationCountSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								<span *ngIf="searchQueryString && searchQueryString !== ''">{{
+									element.queryConversationCount ? element.queryConversationCount : '0'
+								}}</span>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="categoryConversationCount">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									(click)="sortColumn('Category Conversation Count'); recordButtonClick($event)"
+									data-cs-id="8f5af406-e948-4522-bc84-8cfc8578b56c"
+									data-cs-label="Sort by Category Conversation Count"
+									data-cs-source="page"
+									>Category Conversation Count
+									<span
+										*ngIf="sortByOptionForBackend === 'categoryConversationCount'; else categoryConversationCountSort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #categoryConversationCountSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.categoryConversationCount ? element.categoryConversationCount : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="campaignCount">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									(click)="sortColumn('Campaign Count'); recordButtonClick($event)"
+									data-cs-id="8f5af406-e948-4522-bc84-8cfc8578b56c"
+									data-cs-label="Sort by Monetization Frequency"
+									data-cs-source="page"
+									>Monetization Frequency
+									<span *ngIf="sortByOptionForBackend === 'campaignCount'; else campaignCountSort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #campaignCountSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								<a
+									class="campaign-count"
+									(click)="showCampaignList = true; openCampaignListDialog(element.campaignList, element.name)"
+									>{{ element.campaignCount ? element.campaignCount : '0' }}</a
+								>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="campaignPostEngagementRateLastNinetyDays">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									*ngIf="groupQualification === 'FrequentlyMonetized'"
+									(click)="sortColumn('Campaign Engagement'); recordButtonClick($event)"
+									data-cs-id="8f5af406-e948-4522-bc84-8cfc8578b56c"
+									data-cs-label="Sort by Campaign Engagement"
+									data-cs-source="page"
+									>Campaign Engagement
+									<span
+										*ngIf="
+											sortByOptionForBackend === 'campaignPostEngagementRateLastNinetyDays';
+											else campaignEngagementSort
+										"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #campaignEngagementSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								<span *ngIf="groupQualification === 'FrequentlyMonetized'">{{
+									element.campaignPostEngagementRateLastNinetyDays
+										? element.campaignPostEngagementRateLastNinetyDays
+										: '-'
+								}}</span>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="postsEngagementRateLastNinetyDays">
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									(click)="sortColumn('Post Engagement'); recordButtonClick($event)"
+									data-cs-id="e89e1938-5176-407d-93ea-52afc6cbe6fb"
+									data-cs-label="Sort by Post Engagement"
+									data-cs-source="page"
+									>Post Engagement
+									<span *ngIf="sortByOptionForBackend === 'postsEngagementRateLastNinetyDays'; else postsEngagementSort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #postsEngagementSort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.postsEngagementRateLastNinetyDays ? element.postsEngagementRateLastNinetyDays : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="averageActiveMember">
+							<th mat-header-cell *matHeaderCellDef>
+								<div class="with-tooltip">
+									Daily Active members
+									<app-tooltip
+										class="ml-1 tooltip-small"
+										setTooltipText="Average active members in the group in last 28 days"
+									>
+									</app-tooltip>
+								</div>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.averageActiveMember ? element.averageActiveMember : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="averageTopPostsReach">
+							<th mat-header-cell *matHeaderCellDef>
+								<div class="with-tooltip">
+									Top Posts Reach
+									<app-tooltip class="ml-1 tooltip-small" setTooltipText="Average reach for top 100 posts in the group">
+									</app-tooltip>
+								</div>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.averageTopPostsReach ? element.averageTopPostsReach : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="averageReachPercentage">
+							<th mat-header-cell *matHeaderCellDef>
+								<div class="with-tooltip">
+									Reach %
+									<app-tooltip
+										class="ml-1 tooltip-small"
+										setTooltipText="Average Reach of top 100 posts divided by Total Members count in percent"
+									>
+									</app-tooltip>
+								</div>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.averageReachPercentage ? element.averageReachPercentage + ' %' : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="audienceMatch">
+							<th
+								mat-header-cell
+								*matHeaderCellDef
+								[hidden]="!minMembersMatchingCriteria && !maxMembersMatchingCriteria"
+							>
+								<div class="with-tooltip">
+									Audience Match
+									<app-tooltip
+										class="ml-1 tooltip-small"
+										*ngIf="memberMatchingCriteria === 'Percentage'"
+										setTooltipText="Percentage of members in the group matching the Target Audience criteria"
+									>
+									</app-tooltip>
+									<app-tooltip
+										class="ml-1 tooltip-small"
+										*ngIf="memberMatchingCriteria !== 'Percentage'"
+										setTooltipText="Number of members in the group matching the Target Audience criteria"
+									>
+									</app-tooltip>
+								</div>
+							</th>
+							<td
+								mat-cell
+								*matCellDef="let element"
+								[hidden]="!minMembersMatchingCriteria && !maxMembersMatchingCriteria"
+								[class.row-selected]="isGroupSelected.includes(element.groupId)"
+							>
+								{{ element.audienceMatch ? element.audienceMatch : '-' }}
+								<span *ngIf="memberMatchingCriteria === 'Percentage' && element.audienceMatch && element.audienceMatch"
+									>%</span
+								>
+							</td>
+						</ng-container>
+						<ng-container
+							matColumnDef="categoryDensity"
+							*ngIf="user?.csAdminTeam !== 'Brand Partnership' && user?.csAdminTeam !== 'Community Partnership'"
+						>
+							<th mat-header-cell *matHeaderCellDef>
+								<span
+									(click)="sortColumn('Category density'); recordButtonClick($event)"
+									data-cs-id="34e84c43-d957-48ff-a377-1f9668b1d678"
+									data-cs-label="Sort by Category density"
+									data-cs-source="page"
+									>Category Density
+									<span *ngIf="sortByOptionForBackend === 'categoryDensity'; else categoryDensitySort"
+										><span *ngIf="this.inputObjForBackend['descendingOrder']; else up"
+											><img src="assets/images/arrow_drop_down.svg" /></span
+										><ng-template #up><img src="assets/images/arrow_drop_up.svg" /></ng-template></span
+									><ng-template #categoryDensitySort
+										><span class="not-selected-column"
+											><img src="assets/images/arrow_drop_down.svg" /></span></ng-template
+								></span>
+							</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.categoryDensity ? element.categoryDensity + '%' : '0%' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="state">
+							<th mat-header-cell *matHeaderCellDef>Group State</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.state ? element.state : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="country">
+							<th mat-header-cell *matHeaderCellDef>Location</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ geographyService.getCountryNameFromCountryCode(element.country) }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="topTenCities">
+							<th mat-header-cell *matHeaderCellDef>Top 10 cities</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.topTenCities ? element.topTenCities : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="groupInstallationStartedAtUTC">
+							<th *matHeaderCellDef mat-header-cell>Installed Date</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{
+									element.groupInstallationStartedAtUTC !== '000' && element.groupInstallationStartedAtUTC
+										? (element.groupInstallationStartedAtUTC | date: 'MMM dd, YYYY')
+										: '-'
+								}}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="businessCategory">
+							<th mat-header-cell *matHeaderCellDef>Business Category</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.businessCategory ? element.businessCategory : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="cmcTrained">
+							<th mat-header-cell *matHeaderCellDef>CMC Trained</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.cmcTrained ? element.cmcTrained : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="performanceTrained">
+							<th mat-header-cell *matHeaderCellDef>Performance Trained</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.performanceTrained ? element.performanceTrained : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="groupProfileId">
+							<th mat-header-cell *matHeaderCellDef>GroupProfile</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								<a
+									*ngIf="element.groupProfileId != null && element.groupProfileId != undefined"
+									[href]="'/public/group-profile/' + element.groupProfileId"
+									target="_blank"
+									>Link</a
+								>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="cmcRatingAvg">
+							<th mat-header-cell *matHeaderCellDef>CmcRatingAvg</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.cmcRatingAvg ? element.cmcRatingAvg : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="cmcRatingTotal">
+							<th mat-header-cell *matHeaderCellDef>CmcRatingTotal</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.cmcRatingTotal ? element.cmcRatingTotal : '-' }}
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="cmcRatingCount">
+							<th mat-header-cell *matHeaderCellDef>CmcRatingCount</th>
+							<td *matCellDef="let element" [class.row-selected]="isGroupSelected.includes(element.groupId)" mat-cell>
+								{{ element.cmcRatingCount ? element.cmcRatingCount : '-' }}
+							</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedColumns" [id]="row.groupId"></tr>
+					</table>
+				</div>
+				<div class="more-communities-footer">
+					<ul>
+						<li *ngIf="selectedGroups?.length > 0">
+							Selected
+							<div class="bold-text">
+								{{ selectedGroups?.length }}
+								<span *ngIf="selectedGroups?.length === 1"> community</span>
+								<span *ngIf="selectedGroups?.length > 1"> communities</span>
+								(<a class="view-list-link" (click)="showCommunityListPopup = true">View List</a>)
+							</div>
+						</li>
+						<li *ngIf="selectedGroups?.length > 0">
+							Total Members
+							<div class="bold-text">{{ totalMembersInSelectedCommunities | shortNumber }}</div>
+						</li>
+						<li *ngIf="selectedGroups?.length > 0" hidden>
+							Total post engagement
+							<div class="bold-text">
+								{{
+									totalPEInSelectedCommunities < 1000
+										? (totalPEInSelectedCommunities | number: '1.0-0')
+										: (totalPEInSelectedCommunities | shortNumber)
+								}}
+							</div>
+						</li>
+						<li *ngIf="selectedGroups?.length > 0">
+							Fill Rate
+							<div class="bold-text">{{ fillRate | percent }}</div>
+						</li>
+						<li *ngIf="totalAverageTopPostReach > 0">
+							<div class="with-tooltip">
+								Avg. Top Posts Reach
+								<app-tooltip
+									class="ml-1 tooltip-small"
+									setTooltipText="Average of Top Posts Reach in all the selected groups"
+								>
+								</app-tooltip>
+								<app-tooltip
+									class="ml-1 tooltip-small"
+									isErrorMessage="true"
+									setTooltipText="Average is only shown for {{
+										selectedReachGroups.length
+									}} groups for which insights upload data is available out of {{
+										selectedGroups.length
+									}} selected groups"
+									*ngIf="isErrorTooltipEnabled"
+								>
+								</app-tooltip>
+							</div>
+							<div class="bold-text">{{ totalAverageTopPostReach }}</div>
+						</li>
+						<li *ngIf="totalAverageTopPostReach > 0">
+							<div class="with-tooltip">
+								Total Reach %
+								<app-tooltip
+									class="ml-1 tooltip-small"
+									setTooltipText="Total of Top Posts Reach divided by Total Members count in all selected groups in percent"
+								>
+								</app-tooltip>
+								<app-tooltip
+									class="ml-1 tooltip-small"
+									isErrorMessage="true"
+									setTooltipText="Percent is only shown for {{
+										selectedReachGroups.length
+									}} groups for which insights upload data is available out of {{
+										selectedGroups.length
+									}} selected groups"
+									*ngIf="isErrorTooltipEnabled"
+								>
+								</app-tooltip>
+							</div>
+							<div class="bold-text">{{ totalAverageTopPostReachPercentage }} %</div>
+						</li>
+					</ul>
+					<button
+						(click)="saveCommunitiesForCampaignCreation(); recordButtonClick($event)"
+						class="convo-btn-normal convo-btn-primary"
+						data-cs-id="e9afa458-7fd3-4232-afb2-93513aad3a66"
+						data-cs-label="Add to Campaign"
+						data-cs-source="page"
+					>
+						Add to Campaign
+					</button>
+				</div>
+			</div>
+
+			<div *ngIf="!isLoading && !communities && !showErrorMessage" class="pre-message text-center">
+				<img src="assets/images/search-icon-grey.svg" />
+				<h3>Oops! No relevant communities found</h3>
+				<p>Try modifying your filter criteria to find relevant communities</p>
+			</div>
+			<div *ngIf="!isLoading && showErrorMessage && !communities" class="pre-message text-center">
+				<img src="assets/images/grin-emoji.svg" />
+				<h3>Oops! Something went wrong!</h3>
+				<p>Please try again</p>
+			</div>
+			<div *ngIf="isLoading" class="loading-table">
+				<table>
+					<tbody>
+						<ng-container *ngFor="let i of [].constructor(6)">
+							<tr>
+								<td>
+									<div class="group-name-wrapper">
+										<div class="loading-strip image"></div>
+										<div class="loading-strip name"></div>
+									</div>
+								</td>
+								<td class="text-center">
+									<div class="loading-strip secondary"></div>
+								</td>
+								<td class="text-center">
+									<div class="loading-strip secondary"></div>
+								</td>
+								<td class="text-center">
+									<div class="loading-strip secondary"></div>
+								</td>
+								<td class="text-center">
+									<div class="loading-strip secondary"></div>
+								</td>
+								<td>
+									<div class="loading-strip tertiary float-right"></div>
+								</td>
+							</tr>
+						</ng-container>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Community list Popup -->
+<div class="success-campaign-wrapper list-view-wrapper" *ngIf="showCommunityListPopup">
+	<div class="modal-body p-0">
+		<div class="modal-header">
+			<h6>Selected Communities ({{ selectedGroups?.length }})</h6>
+			<button (click)="closeCommunityListPopup()"><img alt="" src="assets/images/close-icon.svg" /></button>
+		</div>
+		<div class="success-campaign">
+			<div class="success-campaign-body">
+				<table class="community-list-wrapper">
+					<thead>
+						<tr>
+							<th>Group Name</th>
+							<th>Members</th>
+							<th>Campaign Engagement</th>
+							<th>Post Engagement</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let community of selectedGroups">
+							<td>
+								<div class="group-name-wrapper" title="{{ community.name }}">
+									<img
+										*ngIf="!community.coverImageUrl || community.coverImageUrl === ''"
+										src="assets/images/default_group_image.jpg"
+									/><img *ngIf="community.coverImageUrl" [src]="community.coverImageUrl" />{{ community.name }}
+								</div>
+							</td>
+							<td>{{ community.memberCount | shortNumber }}</td>
+							<td>
+								{{ community.campaignPostEngagementRateLastNinetyDays }}
+							</td>
+							<td>
+								{{ community.postsEngagementRateLastNinetyDays }}
+							</td>
+							<!--							<td>-->
+							<!--								{{ community.weeklyConversationalVolume | shortNumber }}-->
+							<!--							</td>-->
+							<td>
+								<button
+									class="remove-btn"
+									(click)="removeCommunity(community); recordButtonClick($event)"
+									data-cs-id="1bb6c503-a3b4-429a-a4a3-0df132ec961c"
+									data-cs-label="Remove"
+									data-cs-source="dialog"
+								>
+									<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path
+											d="M4.00065 12.6667C4.00065 13.4 4.60065 14 5.33398 14H10.6673C11.4007 14 12.0007 13.4 12.0007 12.6667V4.66667H4.00065V12.6667ZM5.33398 6H10.6673V12.6667H5.33398V6ZM10.334 2.66667L9.66732 2H6.33398L5.66732 2.66667H3.33398V4H12.6673V2.66667H10.334Z"
+											fill="#EB5757"
+										/>
+									</svg>
+									<span>Remove</span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="success-campaign-wrapper see-more-dialog" *ngIf="showMoreFilters">
+	<div class="p-0 modal-body">
+		<div class="modal-header">
+			<h6>Filter by {{ showMoreFilterValue.key }}</h6>
+			<button (click)="showMoreFilters = false; searchTextForFilter = ''">
+				<img alt="" src="./assets/images/close-icon.svg" />
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="search">
+				<input
+					(input)="onFilterSearchChange($event.target); searchKey = showMoreFilterValue.key"
+					autocomplete="off"
+					type="text"
+					name="search"
+					[placeholder]="'Search for a ' + showMoreFilterValue.key"
+				/>
+			</div>
+			<ul
+				*ngIf="
+					showMoreFilterValue.key === 'Business Category' ||
+					showMoreFilterValue.key === 'Category' ||
+					showMoreFilterValue.key === 'Subcategory' ||
+					showMoreFilterValue.key === 'Top 10 Cities'
+				"
+			>
+				<li
+					*ngFor="let filter of showMoreFilterValue.value"
+					(click)="changeFilterSelection(showMoreFilterValue.key, filter); recordButtonClick($event)"
+					[attr.data-cs-id]="'5a61bf9b-f3b4-4c44-91e5-a349119fbe4' + i"
+					[attr.data-cs-label]="filter"
+					data-cs-source="page"
+				>
+					<div
+						*ngIf="
+							(filter?.toLowerCase().includes(searchTextForFilter?.toLowerCase()) &&
+								searchTextForFilter !== '' &&
+								searchTextForFilter) ||
+							searchTextForFilter === '' ||
+							!searchTextForFilter ||
+							(searchKey !== showMoreFilterValue.key && searchKey && searchKey !== '')
+						"
+					>
+						<mat-checkbox
+							[indeterminate]="false"
+							[checked]="selectedFilters[showMoreFilterValue.key].value.includes(filter)"
+						>
+							<div>
+								<h5>
+									{{ filter }}
+								</h5>
+							</div>
+						</mat-checkbox>
+					</div>
+				</li>
+			</ul>
+			<ul *ngIf="showMoreFilterValue.key === 'Group location (country)'">
+				<li
+					*ngFor="let filter of showMoreFilterValue.value"
+					(click)="changeFilterSelection(showMoreFilterValue.key, filter); recordButtonClick($event)"
+					[attr.data-cs-id]="'5a61bf9b-f3b4-4c44-91e5-a349119fbe4' + i"
+					[attr.data-cs-label]="filter"
+					data-cs-source="page"
+				>
+					<div
+						*ngIf="
+							(geographyService
+								.getCountryNameFromCountryCode(filter)
+								?.toLowerCase()
+								.includes(searchTextForFilter?.toLowerCase()) &&
+								searchTextForFilter !== '' &&
+								searchTextForFilter) ||
+							searchTextForFilter === '' ||
+							!searchTextForFilter ||
+							(searchKey !== showMoreFilterValue.key && searchKey && searchKey !== '')
+						"
+					>
+						<mat-checkbox
+							[indeterminate]="false"
+							[checked]="selectedFilters[showMoreFilterValue.key].value.includes(filter)"
+						>
+							<div>
+								<h5>
+									{{ geographyService.getCountryNameFromCountryCode(filter) }}
+								</h5>
+							</div>
+						</mat-checkbox>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="modal-footer">
+			<button class="btn-primary" (click)="showMoreFilters = false; searchTextForFilter = ''">Done</button>
+		</div>
+	</div>
+</div>
+
+<div class="success-campaign-wrapper add-filters-dialog" *ngIf="showSearchFilter">
+	<div class="p-0 modal-body">
+		<div class="modal-header">
+			<div>
+				<h6>Setup Query</h6>
+				<p>Setup keyword rules to search through conversations from communities</p>
+			</div>
+			<button (click)="showSearchFilter = false">
+				<img alt="" src="./assets/images/close-icon.svg" />
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="contains">
+				<p class="label">Conversations containing <sup>*</sup></p>
+				<div *ngFor="let itemInAnd of itemsInAndList; let i = index">
+					<mat-form-field
+						[class.last-input-element]="i === itemsInAndList?.length - 1"
+						class="example-chip-list"
+						appearance="fill"
+					>
+						<mat-chip-list #chipListForFilters>
+							<mat-chip *ngFor="let filterWithAnd of itemsInAndList[i]" (removed)="removeFilter(filterWithAnd, i)">
+								{{ filterWithAnd.replaceAll('"', '').replaceAll('\\', '') }}
+								<button matChipRemove>
+									<mat-icon>cancel</mat-icon>
+								</button>
+							</mat-chip>
+							<input
+								[placeholder]="
+									itemsInAndList[i]?.length > 0
+										? ''
+										: 'Type Keywords and Press Enter. Use commas to enter new keywords.'
+								"
+								[matChipInputFor]="chipListForFilters"
+								[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								[matChipInputAddOnBlur]="addOnBlur"
+								(matChipInputTokenEnd)="addFilter($event, i)"
+							/>
+						</mat-chip-list>
+					</mat-form-field>
+					<a *ngIf="i === itemsInAndList?.length - 1" class="add-new-and-list" (click)="addNewAndList()">AND</a>
+					<a *ngIf="itemsInAndList?.length > 1" class="remove-from-and-list" (click)="removeFromAndList(i)"
+						><img src="assets/images/delete-icon-black.svg"
+					/></a>
+				</div>
+				<p class="label">Conversations containing none of</p>
+				<div>
+					<mat-form-field class="example-chip-list" appearance="fill">
+						<mat-chip-list #chipListForFilters>
+							<mat-chip
+								*ngFor="let doesNotContainItem of doesNotContainList"
+								(removed)="removeDoesNotContainFilter(doesNotContainItem)"
+							>
+								{{ doesNotContainItem.replaceAll('"', '').replaceAll('\\', '') }}
+								<button matChipRemove>
+									<mat-icon>cancel</mat-icon>
+								</button>
+							</mat-chip>
+							<input
+								[placeholder]="
+									doesNotContainList?.length > 0
+										? ''
+										: 'Type Keywords and Press Enter. Use commas to enter new keywords.'
+								"
+								[matChipInputFor]="chipListForFilters"
+								[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								[matChipInputAddOnBlur]="addOnBlur"
+								(matChipInputTokenEnd)="addDoesNotContainFilter($event)"
+							/>
+						</mat-chip-list>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="search-query-string">
+			Query Preview: <span>{{ searchQueryString.replaceAll('\\', '') }}</span>
+		</div>
+		<div class="modal-footer">
+			<button
+				class="convo-btn-primary"
+				(click)="showSearchFilter = false; searchQuery = searchQueryString; updateCommunityFilters('searchQuery')"
+			>
+				Search
+			</button>
+		</div>
+	</div>
+</div>
+<div class="success-campaign-wrapper campaign-list-modal" *ngIf="showCampaignList">
+	<div class="p-0 modal-body">
+		<div class="modal-header">
+			<div>
+				<h6>Monetization Frequency</h6>
+				<p>{{ selectedCommunityName }}</p>
+			</div>
+			<button (click)="showCampaignList = false">
+				<img alt="" src="./assets/images/close-icon.svg" />
+			</button>
+		</div>
+		<div class="modal-body campaign-list">
+			<div class="row">
+				<div class="col-md-2"><span>SERIAL NO.</span></div>
+				<div class="col-md-10"><span>CAMPAIGN NAME</span></div>
+			</div>
+			<div class="row" *ngFor="let campaign of campaignList; let i = index">
+				<div class="col-md-2">
+					<b> {{ i + 1 }} </b>
+				</div>
+				<div class="col-md-10">
+					<b> {{ campaign }} </b>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

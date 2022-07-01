@@ -1,0 +1,90 @@
+{
+	"data": {
+		"getUserSelfMonetizationCampaigns": {
+			"__typename": "CampaignConnection",
+			"items": [
+				{
+					"__typename": "Campaign",
+					"campaignId": "2628a8a3-3aec-42c7-af1f-327fcce57c2e",
+					"createdAtUTC": "2021-06-10T08:14:35.699Z",
+					"updatedAtUTC": "2021-07-12T03:51:41.007Z",
+					"campaignName": "New Test Campaign",
+					"startDateAtUTC": "2021-07-11T03:51:40.885Z",
+					"endDateAtUTC": "2021-12-16T03:51:40.886Z",
+					"groupIds": ["85478556-88c6-44c3-af49-9028fab66f74"],
+					"brandKeywords": ["Test1"],
+					"customKeywords": ["Test1"],
+					"hashtags": ["Test1"],
+					"campaignSummary": null,
+					"isReportAvailable": false
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "fd20243a-dcd8-4fc1-b979-3f31ba9cae43",
+					"createdAtUTC": "2021-06-10T08:32:13.407Z",
+					"updatedAtUTC": "2021-06-10T08:41:48.425Z",
+					"campaignName": "New Test Campaign",
+					"startDateAtUTC": "2021-07-11T03:51:40.885Z",
+					"endDateAtUTC": "2021-06-16T03:51:40.886Z",
+					"groupIds": [
+						"be52327e-2310-4cd0-8b87-2231e8b3def9",
+						"713ce969-bef9-46aa-a6d2-674be9c158bd",
+						"85478556-88c6-44c3-af49-9028fab66f74",
+						"c40d1bd5-4737-40b3-9e40-de78b64454df"
+					],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": ["Test"],
+					"campaignSummary": null,
+					"isReportAvailable": true
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "c136e2e0-0388-48b8-8303-67767ca24ac8",
+					"createdAtUTC": "2021-06-14T06:38:42.062Z",
+					"updatedAtUTC": "2021-06-14T06:38:42.062Z",
+					"campaignName": "New Test Campaign",
+					"startDateAtUTC": "2021-07-11T03:51:40.885Z",
+					"endDateAtUTC": "2021-12-16T03:51:40.886Z",
+					"groupIds": ["c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": ["Test"],
+					"campaignSummary": null,
+					"isReportAvailable": null
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "0402b6cd-e278-4548-98f8-cbd936fed0a3",
+					"createdAtUTC": "2021-06-14T06:51:30.351Z",
+					"updatedAtUTC": "2021-06-14T06:51:30.351Z",
+					"campaignName": "New Test Campaign",
+					"startDateAtUTC": "2021-07-11T03:51:40.885Z",
+					"endDateAtUTC": "2021-12-16T03:51:40.886Z",
+					"groupIds": ["c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": ["Test"],
+					"campaignSummary": null,
+					"isReportAvailable": null
+				},
+				{
+					"__typename": "Campaign",
+					"campaignId": "0993f1de-726d-44d2-a29d-dc369d3827aa",
+					"createdAtUTC": "2021-06-16T07:22:19.373Z",
+					"updatedAtUTC": "2021-06-16T07:22:19.373Z",
+					"campaignName": "New Test Campaign",
+					"startDateAtUTC": "2021-07-11T03:51:40.885Z",
+					"endDateAtUTC": "2021-12-16T03:51:40.886Z",
+					"groupIds": ["c40d1bd5-4737-40b3-9e40-de78b64454df"],
+					"brandKeywords": ["Test"],
+					"customKeywords": ["Test"],
+					"hashtags": ["Test"],
+					"campaignSummary": null,
+					"isReportAvailable": null
+				}
+			],
+			"nextToken": "eyJ2ZXJzaW9uIjoyLCJ0b2tlbiI6IkFRSUNBSGg5OUIvN3BjWU41eE96NDZJMW5GeGM4WUNGeG1acmFOMUpqajZLWkFDQ25BSG4waG4yQVArNTlHMDF2NDEzTWZsMUFBQUN6akNDQXNvR0NTcUdTSWIzRFFFSEJxQ0NBcnN3Z2dLM0FnRUFNSUlDc0FZSktvWklodmNOQVFjQk1CNEdDV0NHU0FGbEF3UUJMakFSQkF5T2VWWVNOQzdoRzFjUFRqZ0NBUkNBZ2dLQk5rcG1CeUxMSWhqeE1PL2VQMFZkUTA1azdjTDZoMzJkNml6c1htNkJMbTU4ck13b0JlWGtwMTlUTWw0NVhJeGg2YXd0blVtV3FSRmlndjFjSTlsRWJHNEsweTJjTlFrdCs1TzlIb0NSU2RPWGpjZEdGeW9tek5acVl2NzU5S2Z3aHdSUCtxSnEvWVlyQlhCVHJTTjlNTGVqMUo4bzhzVnFDSC82Vkd6REsvQ1NmUHYxUVNGTnp1NXVLQU0zZ2xxcVc2TDZjWDNtM1hiaGhoeVRuNFhmcXUreEhsSTg2QTk3eWZ5VWV2RDlwNlhVQXFwbnIvVjZENEtIUDdjNGR6eFlMeHh2SzNOeWsvTDI5bi9jNWxrVHhveDNLTkdHT1JialRhR0FUK3JNbkxGaXRLRmJudEE0WFMyRmNxQnVrRlpXWEhlSU9ROTd5U0kzWUhRM1dSM3JRaFJOMUtFazl1dlg2ODhYMGkwOU44YVBkczRyRFBCOTZvNUJaOHUvZ0hNRWxETXhBRFpRUkU4VFJhdlIvdlVFb1FuRTFvalduS3hzSlhoTXozdzhpRXRlTUVWZ01hVjVKTnUxZk1lSWdUQU9kUkhnS1NkbDEvNDV4U29MR2hBdnQ5blZvcS9YWmVtajVIcFJ1UHVZdEI3OXZNOVpvS0JiYXFwazFvRS9TMEhma3VHR0xTZnUzakJ2R0NIcEQ0NU1UYUhnNEVsNDd5UUZHRDY5OS82WmJGV1luVm5NUnBKS3ZnWVBLbmJCc29kWlB0cEtzdDlSb3FrWTVCdlNKNkxjMU5Yb2tkeUVDODFIblpNcEtiZlhFWnhUUytyOVRSMDRJVUJzVm1MSUY2OGVXT2FRZDUvQjRudm44elRkNm1uazdlL0FtcmNMazNPeVdQKzBKbnlrMldEa1N1WkRyZERPUWN2T01aRzhSaEpXVG5SS0ZCV081U3h0TnNBNHVoSmJFNmwyeTBKSjl1WUdQMFpPZ2dodjRwb0dXdTU2U3c5Q3EyNUppUDZUekNIb1cvSkdGN3NzaVFadlR5S2FCcjMrNkMxT3crSEpCYUJIWHZTNHBBZk42ZS9USDhzSmxjakFiVWdIcUwvbUZPOU1KY1Z4b1d5RTZEVTdUcGZvNXAwamwyOD0ifQ=="
+		}
+	}
+}

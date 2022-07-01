@@ -1,0 +1,39 @@
+<!-- permission required modal -->
+<div class="modal file-alert">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h5 data-test-id="heading-publish-permission-overlay">Publishing permission required</h5>
+				<p class="m-0" data-test-id="subheading-publish-permission-overlay">
+					To use Convosight publishing features, you need to give publishing permission from your facebook account
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					(click)="cancelPublishPermission($event)"
+					class="btn convo-btn-normal btn-light"
+					data-cs-id="7f18583a-ad50-48af-811f-3928bdd65921"
+					data-cs-label="Not now"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+				>
+					Not now
+				</button>
+				<button
+					(click)="requestFBForPermission($event)"
+					class="convo-btn-normal convo-btn-primary"
+					data-cs-id="fc880ff7-839e-4d5d-9bac-81b6d30a2148"
+					data-cs-label="Grant permission"
+					data-cs-source="dialog"
+					data-dismiss="modal"
+					type="button"
+					[disabled]="loading"
+				>
+					<span *ngIf="loading" class="bt-spinner"></span>
+					Grant permission
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

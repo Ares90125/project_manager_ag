@@ -1,0 +1,519 @@
+@import '../../../../../assets/scss/custom/_variables.scss';
+@import '../../../../../assets/scss/custom/_mixins.scss';
+
+.onboarding-head {
+	position: fixed;
+	top: 0;
+	z-index: 1002;
+	background: #fff;
+	height: 58px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 11px 16px;
+	border-bottom: 1px solid #ebebed;
+	.back-button {
+		background: none;
+		border: none;
+		outline: none;
+		margin-right: 12px;
+	}
+	.head-profile-data {
+		display: flex;
+		.head-profile-image {
+			width: 36px;
+			height: 36px;
+			overflow: hidden;
+			border-radius: 2px;
+			margin-right: 12px;
+			img {
+				height: 100%;
+				width: 100%;
+				object-fit: cover;
+				object-position: top;
+			}
+		}
+		.head-profile-description {
+			.head-name-profile {
+				@include font-label-m-md;
+				margin-bottom: 2px;
+				@media (max-width: 768px) {
+					white-space: nowrap;
+					width: 230px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+			span {
+				@include font-label-xs;
+				color: $black-70;
+				margin: 0;
+				display: block;
+			}
+		}
+	}
+}
+
+.success-published-page-wrap {
+	display: flex;
+	justify-content: center;
+}
+
+.success-published-page {
+	z-index: 1001;
+	padding-top: 50px;
+	margin-bottom: 32px;
+	display: flex;
+	justify-content: center;
+	background-color: $convo-bg;
+	background-image: url('../../../../../assets/images/group_admin/pattern.png');
+	background-size: 12%;
+	@media (max-width: 768px) {
+		padding: 12px;
+		margin-bottom: 0;
+	}
+}
+
+.success-published-frame {
+	background-color: #fff;
+	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.12);
+	border-radius: 12px;
+	padding: 32px;
+	max-width: 660px;
+	margin-top: 32px;
+	margin-bottom: 32px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	@media (max-width: 768px) {
+		margin-top: 0px;
+		margin-bottom: 0px;
+		padding: 16px;
+	}
+	.success-logo {
+		height: 120px;
+		width: 120px;
+		margin-bottom: 16px;
+		img {
+			width: 100%;
+		}
+	}
+	h3 {
+		text-align: center;
+		@include font-heading-xs-md;
+		margin-bottom: 10px;
+	}
+	.share-profile-description {
+		text-align: center;
+		max-width: 460px;
+		width: 100%;
+		@include font-paragraph-s;
+		margin-bottom: 24px;
+	}
+	.convo-btn-primary {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 32px;
+		background-color: $light-blue-1;
+		border-radius: 100px;
+		color: $emp-blue-1;
+		border: none;
+		padding-left: 16px;
+		padding-right: 16px;
+		svg {
+			margin-right: 4px;
+		}
+	}
+}
+
+.share-profile-frame {
+	@include font-label-s;
+	max-width: 460px;
+	width: 100%;
+	margin-bottom: 24px;
+	padding: 24px 21px;
+	border: 1px solid #d3d8eb;
+	box-shadow: 0px 3px 6px rgba(51, 51, 79, 0.1);
+	border-radius: 8px;
+	h5 {
+		@include font-paragraph-s-md;
+		margin-bottom: 6px;
+	}
+	p {
+		color: #707084;
+		margin-bottom: 16px;
+	}
+	ul {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		margin: 0;
+		padding: 0;
+		li {
+			margin-right: 16px;
+			figure {
+				margin: 0;
+				cursor: pointer;
+			}
+			img {
+				width: 50px;
+				height: 50px;
+				@media (max-width: 768px) {
+					width: 40px;
+					height: 40px;
+				}
+			}
+		}
+	}
+	.share-link-wrap {
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		border-bottom: 1px solid #efeff1;
+	}
+	.input-wrap {
+		background: #f4f6f8;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-right: 8px;
+		border: 1px solid #efeff1;
+		input {
+			padding: 12px;
+			color: $black-70;
+			border: none;
+			outline: none;
+			background: #f4f6f8;
+			flex: 1;
+		}
+		button {
+			@include shadow-elevation-medium;
+			@include font-label-s-md;
+			color: $emp-blue-1;
+			border: none;
+			background: #fff;
+			padding: 6px 10px;
+			border-radius: 2px;
+		}
+	}
+}
+
+.modal-dialog {
+	&.modal-dialog-centered {
+		@media (max-width: 767px) {
+			align-items: flex-end;
+			height: 100%;
+			padding-top: 60px;
+			margin: 0;
+			overflow: hidden;
+		}
+		.modal-content {
+			@media (max-width: 767px) {
+				border-radius: 0;
+				box-shadow: none;
+			}
+		}
+	}
+}
+.modal-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	border: none;
+	.modal-title {
+		@include font-label-m-md;
+		margin: 0;
+	}
+	button {
+		padding: 0;
+		border: none;
+		background: none;
+		outline: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		img {
+			width: 12px;
+		}
+	}
+}
+.modal-footer {
+	.convo-btn-normal {
+		width: 100%;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.create-pitch-body {
+	.input-wrap {
+		label {
+			@include font-label-xs-md;
+			margin-bottom: 8px;
+			sup {
+				color: $error-red;
+			}
+		}
+		.convo-input {
+			border-radius: 4px;
+			width: 100%;
+			height: 40px;
+			padding: 4px 12px;
+			border: 1px solid $borders-grey;
+			@include font-label-s;
+			&:focus {
+				border-color: $emp-blue-1;
+				box-shadow: 0 0 0 1px $emp-blue-1;
+			}
+			&:disabled {
+				cursor: not-allowed;
+				background: $hover-grey;
+			}
+		}
+		.error-wrap {
+			color: $error-red;
+			@include font-label-xs;
+			display: flex;
+			align-items: center;
+			padding-top: 4px;
+			span {
+				padding-left: 4px;
+			}
+		}
+	}
+}
+
+.success-published-frame-footer {
+	width: 100%;
+	padding-top: 32px;
+	border-top: 1px solid #efeff1;
+	&.success-published-pitch-footer {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-column-gap: 8px;
+		@media (max-width: 767px) {
+			grid-template-columns: none;
+			grid-row-gap: 8px;
+		}
+		button {
+			margin-bottom: 0px;
+		}
+		.convo-btn-primary {
+			border-radius: 3px;
+			background-color: $emp-blue-1;
+			color: #fff;
+		}
+		.convo-btn-outline {
+			margin-bottom: 0;
+		}
+	}
+	button {
+		width: 100%;
+		padding: 16px 0;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		span {
+			@include font-label-s-md;
+		}
+		&.convo-btn-outline {
+			color: $emp-blue-1;
+			border-radius: 4px;
+			border: 1px solid $borders-grey;
+			background-color: #fff;
+			margin-bottom: 8px;
+		}
+	}
+}
+
+.share-modal {
+	.modal-content {
+		max-width: 532px;
+		width: 100%;
+		overflow: inherit;
+	}
+	.modal-dialog {
+		padding-top: 0px;
+	}
+	.modal-header {
+		padding: 24px 16px 24px 50px;
+		display: flex;
+		align-items: flex-start;
+		border: none;
+		.modal-title {
+			width: 100%;
+			text-align: center;
+			@include font-label-l-md;
+		}
+		@media (max-width: 767px) {
+			padding: 16px 16px 33px;
+			.modal-title {
+				@include font-paragraph-m-md;
+				text-align: left;
+			}
+		}
+		button {
+			padding: 7px;
+			border-radius: 50%;
+			height: 24px;
+			width: 24px;
+			display: flex;
+			border: none;
+			background-color: $cta-bg-grey;
+		}
+	}
+	.share-modal-wrap {
+		padding: 0 16px;
+		margin-bottom: 24px;
+		@media (max-width: 767px) {
+			margin-bottom: 0px;
+		}
+		.share-modal-frame {
+			height: 373px;
+			width: 100%;
+			background: linear-gradient(133.56deg, #226fa5 6.2%, #021037 88.57%);
+			box-shadow: inset 0px -4px 12px rgba(0, 0, 0, 0.12);
+			border-radius: 12px;
+
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			@media (max-width: 767px) {
+				padding-top: 32px;
+				height: 268px;
+			}
+			.share-modal-iplement-steps {
+				position: absolute;
+				bottom: 24px;
+				margin: 0;
+				padding: 0;
+				align-items: center;
+				display: flex;
+				justify-content: space-between;
+				max-width: 380px;
+				width: 100%;
+				list-style: none;
+				@media (max-width: 767px) {
+					max-width: 280px;
+					width: 100%;
+				}
+				.share-modal-iplement-item {
+					.share-modal-iplement-circle {
+						width: 60px;
+						height: 60px;
+						margin-left: 5px;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						background: radial-gradient(
+							107.52% 105.76% at 0% -0.91%,
+							rgba(255, 255, 255, 0.36) 0%,
+							rgba(255, 255, 255, 0) 100%
+						);
+						backdrop-filter: blur(3px);
+						border: 0.6px solid;
+						border-image-source: radial-gradient(72.82% 45% at -1.21% 95%, #000000 0%, rgba(0, 0, 0, 0) 100%)
+								/* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */,
+							radial-gradient(42.23% 33.33% at 92.23% 100%, rgba(230, 68, 103, 0.66) 0%, rgba(230, 68, 103, 0) 100%)
+								/* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */,
+							radial-gradient(108.33% 108.33% at 13.35% -2.88%, rgba(255, 255, 255, 0.83) 0%, rgba(0, 0, 0, 0) 100%)
+								/* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+
+						border-radius: 40px;
+						position: relative;
+						margin-bottom: 12px;
+						@media (max-width: 767px) {
+							width: 40px;
+							height: 40px;
+							svg {
+								width: 20px;
+							}
+						}
+						img {
+							width: 42px;
+						}
+					}
+					span {
+						color: #fff;
+						@include font-label-xs;
+						display: inline-block;
+						width: 70px;
+						text-align: center;
+						@media (max-width: 767px) {
+							width: 40px;
+							@include font-label-xs;
+						}
+						strong {
+							margin-top: 2px;
+						}
+					}
+					.share-items-arrow {
+						right: -35px;
+						top: 25px;
+						position: absolute;
+						@media (max-width: 767px) {
+							right: -27px;
+							top: 15px;
+						}
+					}
+				}
+			}
+		}
+		.share-modal-profile-screen {
+			max-width: 371px;
+			width: 100%;
+			max-height: 288px;
+			height: 100%;
+			border-radius: 6px;
+
+			overflow: hidden;
+			position: relative;
+			@media (max-width: 767px) {
+				max-width: 271px;
+			}
+			img {
+				width: 100%;
+			}
+		}
+	}
+	.share-modal-footer {
+		display: flex;
+		justify-content: center;
+		padding: 16px 16px 32px;
+		.allow-staff-wrap {
+			max-width: 380px;
+			width: 100%;
+			@include font-paragraph-s;
+			.allow-staff-list {
+				margin: 0;
+				padding: 0;
+			}
+			h5 {
+				@include font-paragraph-s;
+				margin-bottom: 16px;
+			}
+			.allow-staff-item {
+				margin-bottom: 12px;
+				display: flex;
+				&:last-child {
+					margin-bottom: 0;
+				}
+				svg {
+					max-width: 14px;
+					width: 100%;
+				}
+				span {
+					display: inline-block;
+					margin-left: 8px;
+				}
+			}
+		}
+	}
+}

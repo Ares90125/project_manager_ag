@@ -1,0 +1,123 @@
+<div class="communities-list-container">
+	<div class="head-wrapper">
+		<h3 class="head-text">{{ headerText }}</h3>
+		<button (click)="closeList()" class="btn-close" type="button">
+			<img alt="" src="assets/images/close-icon.svg" />
+		</button>
+		<div class="dropdown-wrapper">
+			<app-convosight-filters
+				(filterChanged)="filterChanged($event)"
+				[filters]="sortByFilter"
+				[headerText]="''"
+			></app-convosight-filters>
+		</div>
+	</div>
+	<!-- Loading state -->
+	<div *ngIf="groupsList.length === 0" class="conversation-wrapper">
+		<div class="bt-spinner-center"></div>
+	</div>
+
+	<!-- Main list wrapper -->
+	<div class="community-list-wrapper">
+		<div class="communities-list">
+			<div *ngFor="let group of groupsList" class="community-card-wrapper">
+				<div *ngIf="group" class="head-section">
+					<div class="image-wrapper">
+						<ng-container *ngIf="group?.coverImageUrl; else defaultCoverImage">
+							<img alt="" class="img-group" src="{{ group.coverImageUrl }}" [fbEntityId]="group.fbGroupId" />
+						</ng-container>
+						<ng-template #defaultCoverImage>
+							<div class="wa-group-name-image">
+								<img alt="" src="assets/images/whats-app-placeholder.png" />
+							</div>
+						</ng-template>
+					</div>
+					<p *ngIf="group" class="group-name">{{ group.name }}</p>
+					<span class="group-details status">
+						<svg
+							*ngIf="group.groupType === 'Facebook'"
+							fill="none"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<g clip-path="url(#clip0)">
+								<path
+									d="M18.8951 0.00115967H1.10407C0.49486 0.00115967 0.000244141 0.494788 0.000244141 1.10499V18.896C0.000244141 19.5062 0.49486 20.0005 1.10407 20.0005H10.6822V12.2556H8.07612V9.23684H10.6822V7.01074C10.6822 4.42801 12.2593 3.02089 14.5637 3.02089C15.6686 3.02089 16.616 3.10354 16.8923 3.13944V5.83908L15.2938 5.83974C14.0408 5.83974 13.7991 6.43545 13.7991 7.30909V9.23586H16.7885L16.3976 12.2543H13.7988V19.9995H18.8948C19.5046 19.9995 19.9996 19.5046 19.9996 18.896V1.10433C19.9993 0.494788 19.505 0.00115967 18.8951 0.00115967Z"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0">
+									<rect fill="white" height="19.9997" transform="translate(0.000244141 0.000152588)" width="20" />
+								</clipPath>
+							</defs>
+						</svg>
+						<svg
+							*ngIf="group.groupType === 'WhatsApp'"
+							fill="none"
+							height="20"
+							viewBox="0 0 21 20"
+							width="21"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								clip-rule="evenodd"
+								d="M10.1518 0H10.1568C15.6705 0 20.1543 4.48625 20.1543 10C20.1543 15.5138 15.6705 20 10.1568 20C8.12305 20 6.2368 19.395 4.65555 18.3475L0.811797 19.5763L2.05805 15.8613C0.859297 14.215 0.154297 12.1875 0.154297 10C0.154297 4.485 4.63805 0 10.1518 0ZM14.013 15.5326C14.7767 15.3676 15.7342 14.8026 15.9755 14.1214C16.2167 13.4389 16.2167 12.8576 16.1467 12.7339C16.0902 12.6357 15.9566 12.5713 15.757 12.4752C15.7051 12.4502 15.6487 12.4231 15.588 12.3926C15.2942 12.2464 13.8655 11.5401 13.5955 11.4464C13.3305 11.3464 13.078 11.3814 12.878 11.6638C12.84 11.7171 12.802 11.7705 12.7643 11.8235C12.523 12.1629 12.2902 12.4902 12.0967 12.6988C11.9205 12.8863 11.633 12.9101 11.3917 12.8101C11.3654 12.7991 11.3353 12.787 11.3015 12.7733C10.9196 12.6191 10.0723 12.2769 9.04674 11.3639C8.18174 10.5939 7.59424 9.6351 7.42424 9.3476C7.25733 9.05919 7.4013 8.89007 7.53436 8.73377C7.53682 8.73088 7.53928 8.72799 7.54174 8.7251C7.62753 8.61896 7.71078 8.53057 7.79444 8.44175C7.85463 8.37785 7.91503 8.31373 7.97674 8.2426C7.9859 8.23204 7.99482 8.22179 8.0035 8.21181C8.13453 8.06114 8.21256 7.97143 8.30049 7.78385C8.40049 7.5901 8.32924 7.3901 8.25799 7.2426C8.20897 7.1393 7.90613 6.40453 7.64616 5.77377C7.53492 5.50388 7.43153 5.25303 7.35924 5.07885C7.16549 4.6151 7.01799 4.5976 6.72424 4.5851C6.71524 4.58465 6.70615 4.58419 6.69698 4.58373C6.60412 4.57903 6.50186 4.57385 6.38924 4.57385C6.00674 4.57385 5.60799 4.68635 5.36674 4.9326C5.35831 4.94121 5.34952 4.95015 5.3404 4.95942C5.03176 5.27331 4.34424 5.97253 4.34424 7.36635C4.34424 8.76287 5.33512 10.1144 5.51846 10.3645C5.52351 10.3714 5.52795 10.3774 5.53174 10.3826C5.54277 10.3971 5.56356 10.4272 5.59382 10.471C5.96817 11.0131 7.79153 13.6537 10.5105 14.7801C12.808 15.7326 13.4905 15.6438 14.013 15.5326Z"
+								fill="#36BA49"
+								fill-rule="evenodd"
+							/>
+						</svg>
+						<span *ngIf="group.groupType === 'Facebook'" class="group-type">
+							{{ group.privacy === 'OPEN' ? 'Public' : (group.privacy | titlecase) }}{{ ' group' }}
+						</span>
+						<span *ngIf="group.groupType === 'WhatsApp'" class="group-type"> WhatsApp group </span>
+					</span>
+					<span class="group-details location hide">
+						<svg fill="none" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M7.00026 0C4.2045 0 1.92999 2.27451 1.92999 5.07024C1.92999 8.53984 6.46739 13.6334 6.66057 13.8485C6.84202 14.0506 7.15883 14.0503 7.33995 13.8485C7.53314 13.6334 12.0705 8.53984 12.0705 5.07024C12.0705 2.27451 9.79599 0 7.00026 0ZM7.00026 7.62122C5.59364 7.62122 4.44931 6.47686 4.44931 5.07024C4.44931 3.66362 5.59367 2.51929 7.00026 2.51929C8.40685 2.51929 9.55119 3.66365 9.55119 5.07027C9.55119 6.47689 8.40685 7.62122 7.00026 7.62122Z"
+							/>
+						</svg>
+						Mumbai
+					</span>
+				</div>
+				<div class="bottom-section">
+					<div class="count-wrapper">
+						<p class="name">Members</p>
+						<p *ngIf="group" class="value">
+							{{ group.memberCount | shortNumber }}
+						</p>
+					</div>
+					<div class="count-wrapper">
+						<p class="name">Conversations</p>
+						<p *ngIf="group?.summaryReportForLast30Days | async" class="value">
+							{{ (group.summaryReportForLast30Days | async).totalConversations | shortNumber }}
+						</p>
+					</div>
+					<div *ngIf="group.groupType === 'Facebook'" class="count-wrapper">
+						<div class="name">
+							Engagement Rate %
+							<div class="tooltip-wrapper position-static">
+								<app-tooltip
+									setTooltipText="Average number of actions (posts + comments + reactions + shares) done per 100 members in your group in 30 days"
+								>
+								</app-tooltip>
+							</div>
+						</div>
+						<p
+							*ngIf="group?.summaryReportForLast30Days | async"
+							[class.green]="(group.summaryReportForLast30Days | async).totalEngagementRate > 70"
+							[class.orange]="
+								(group.summaryReportForLast30Days | async).totalEngagementRate > 40 &&
+								(group.summaryReportForLast30Days | async).totalEngagementRate <= 70
+							"
+							[class.red]="(group.summaryReportForLast30Days | async).totalEngagementRate <= 40"
+							class="value"
+						>
+							{{ (group.summaryReportForLast30Days | async).totalEngagementRate | shortNumber }}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
